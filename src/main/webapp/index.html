@@ -47,6 +47,9 @@
         dom_id: "swagger-ui-container",
         supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
         onComplete: function(swaggerApi, swaggerUi){
+
+        swaggerApi.clientAuthorizations.add("key", new SwaggerClient.ApiKeyAuthorization("Authorization", "Basic YWRtaW46YWRtaW4=", "header"));
+
           if(typeof initOAuth == "function") {
             initOAuth({
               clientId: "your-client-id",
