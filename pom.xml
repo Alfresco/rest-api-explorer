@@ -12,6 +12,7 @@
     <dependencies>
     </dependencies>
     <build>
+       <finalName>api-play</finalName>      
         <plugins>
       <plugin>
         <groupId>com.googlecode.maven-download-plugin</groupId>
