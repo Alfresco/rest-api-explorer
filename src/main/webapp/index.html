@@ -82,6 +82,12 @@
 
       window.swaggerUi.load();
 
+      $('#select_baseUrl').change(function() {
+        window.swaggerUi.headerView.trigger('update-swagger-ui', {
+          url: $('#select_baseUrl').val()
+        });
+      });
+
       function log() {
         if ('console' in window) {
           console.log.apply(console, arguments);
@@ -95,6 +101,14 @@
 <div id='header'>
   <div class="swagger-ui-wrap">
     <a id="alflogo" href="../"><img src="images/logo.png" height="44px" width="160px" /></a>
+    <form id="api_selector">
+      <div class="input">
+        <select id="select_baseUrl" name="select_baseUrl">
+          <option value="definitions/alfresco-core-5.1.yaml">Alfresco Core</option>
+          <option value="definitions/alfresco-file-folder.yaml">Files and Folders</option>
+        </select>
+      </div>
+    </form>
   </div>
 </div>
 
