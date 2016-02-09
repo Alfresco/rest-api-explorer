@@ -44,14 +44,11 @@
         supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
         onComplete: function(swaggerApi, swaggerUi){
 
-        //Add default admin/admin
-   //     swaggerApi.clientAuthorizations.add("key", new SwaggerClient.ApiKeyAuthorization("Authorization", "Basic YWRtaW46YWRtaW4=", "header"));
-
           $('pre code').each(function(i, e) {
             hljs.highlightBlock(e)
           });
 
-          addApiKeyAuthorization();
+          addAuthorization();
         },
         onFailure: function(data) {
           log("Unable to Load SwaggerUI");
@@ -63,22 +60,17 @@
         showRequestHeaders: false
       });
 
-      function addApiKeyAuthorization(){
-        var key = encodeURIComponent($('#input_apiKey')[0].value);
-        if(key && key.trim() != "") {
-            var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("api_key", key, "query");
-            window.swaggerUi.api.clientAuthorizations.add("api_key", apiKeyAuth);
-            log("added key " + key);
+      function addAuthorization(){
+        var username = $('#input_username').val();
+        var password = $('#input_password').val();
+        if (username.trim() != "" && password.trim() != "") {
+          var basicAuth = new SwaggerClient.PasswordAuthorization(username, password);
+          window.swaggerUi.api.clientAuthorizations.add("basicAuth", basicAuth);
+          log("authorization added: username = " + username + ", auth = " + basicAuth);
         }
       }
-
-      $('#input_apiKey').change(addApiKeyAuthorization);
-
-      // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
-      /*
-        var apiKey = "myApiKeyXXXX123456789";
-        $('#input_apiKey').val(apiKey);
-      */
+      $('#input_username').change(addAuthorization);
+      $('#input_password').change(addAuthorization);
 
       window.swaggerUi.load();
 
@@ -109,6 +101,8 @@
           <option value="definitions/alfresco-workflow-5.1.yaml">Workflow</option>
         </select>
       </div>
+      <div class="input"><input alt="Username" type="text" name="username" id="input_username" placeholder="username" size="10" value="admin"></div>
+      <div class="input"><input alt="Password" type="password" name="password" id="input_password" placeholder="password" size="10" value="admin"></div>
     </form>
   </div>
 </div>
