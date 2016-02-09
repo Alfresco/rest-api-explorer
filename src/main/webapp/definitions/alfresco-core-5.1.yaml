@@ -5,7 +5,6 @@ info:
   title: Alfresco Core REST API (5.1)
   contact:
     url: 'http://docs.alfresco.com/5.1/pra/1/concepts/pra-resources.html'
-host: 'localhost:8080'
 basePath: /alfresco/api/-default-/public/alfresco/versions/1
 securityDefinitions:
   basicAuth:
