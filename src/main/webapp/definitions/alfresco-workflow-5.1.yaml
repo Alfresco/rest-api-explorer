@@ -5,7 +5,6 @@ info:
   title: Alfresco Workflow REST API (5.1)
   contact:
     url: 'http://docs.alfresco.com/5.1/pra/1/concepts/pra-resources.html'
-
 basePath: /alfresco/api/-default-/public/workflow/versions/1
 consumes:
   - application/json
@@ -330,11 +329,11 @@ paths:
         - application/json
       parameters:
         - in: body
-          name: PROCESSCREATEREQUEST
+          name: process
           description: process properties
           required: true
           schema:
-            $ref: '#/definitions/ProcessInput'
+            $ref: '#/definitions/ProcessBody'
       responses:
         '200':
           description: Successful response
@@ -431,14 +430,14 @@ paths:
       parameters:
         - $ref: "#/parameters/processIdParam"
         - in: body
-          name: VariableContent
+          name: variable
           description: An array of variables.
           required: true
           schema:
             type: array
             items:
               type: object
-              $ref: '#/definitions/VariableInput'
+              $ref: '#/definitions/VariableBody'
       responses:
         '201':
           description: Successful response
@@ -460,12 +459,12 @@ paths:
         - $ref: "#/parameters/processIdParam"
         - $ref: "#/parameters/variableNameParam"
         - in: body
-          name: VariableContent
+          name: variable
           description: A variable
           required: true
           schema:
             type: object
-            $ref: '#/definitions/VariableInput'
+            $ref: '#/definitions/VariableBody'
       responses:
         '201':
           description: Successful response
@@ -828,11 +827,11 @@ paths:
         - $ref: "#/parameters/taskIdParam"
         - $ref: "#/parameters/selectParam"
         - in: body
-          name: TASKUPDATE
+          name: task
           description: An object containing the properties to be updated
           required: true
           schema:
-            $ref: '#/definitions/TaskUpdate'
+            $ref: '#/definitions/TaskBody'
       responses:
         '200':
           description: Successful response
@@ -910,14 +909,14 @@ paths:
       parameters:
         - $ref: "#/parameters/taskIdParam"
         - in: body
-          name: VariableContent
+          name: variable
           description: An array of variables.
           required: true
           schema:
             type: array
             items:
               type: object
-              $ref: '#/definitions/VariableInput'
+              $ref: '#/definitions/VariableBody'
       responses:
         '201':
           description: Successful response
@@ -932,19 +931,19 @@ paths:
       summary: Add a variable
       description: |
         Creates or updates a specific variable **variableName** for a given task **taskId**.
-      operationId: puttaskVariable
+      operationId: putTaskVariable
       produces:
         - application/json
       parameters:
         - $ref: "#/parameters/taskIdParam"
         - $ref: "#/parameters/variableNameParam"
         - in: body
-          name: VariableContent
+          name: variable
           description: A variable
           required: true
           schema:
             type: object
-            $ref: '#/definitions/VariableInput'
+            $ref: '#/definitions/VariableBody'
       responses:
         '201':
           description: Successful response
@@ -1390,7 +1389,7 @@ definitions:
         type: integer
       type:
         type: string
-  VariableInput:
+  VariableBody:
     type: object
     description: |
       An input process variable.
@@ -1401,7 +1400,7 @@ definitions:
         type: integer
       type:
         type: string
-  ProcessInput:
+  ProcessBody:
     type: object
     description: |
       required to start a process.
@@ -1410,8 +1409,8 @@ definitions:
         type: string
       variables:
         type: object
-        $ref: '#/definitions/ProcessInputVariable'
-  ProcessInputVariable:
+        $ref: '#/definitions/ProcessBodyVariable'
+  ProcessBodyVariable:
     type: object
     description: |
       A set of process variables of differing types.
@@ -1578,7 +1577,7 @@ definitions:
         type: string
       email:
         type: string
-  TaskUpdate:
+  TaskBody:
     type: object
     description: |
       Input body to update a specific task.
