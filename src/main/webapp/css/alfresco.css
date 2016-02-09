@@ -1,3 +1,9 @@
 .swagger-section #header #alflogo {
-     text-decoration: none;
+     background: transparent;
+}
+
+.swagger-section #header {
+     padding: 14px;
+     border-bottom: 1px solid #e6e6ec;
+     background: linear-gradient(to bottom,white 0%,#f9fafa 47%,#f4f4f4 100%);
 }
