@@ -21,16 +21,14 @@ tags:
     description: Retrieve and manage Comments
     externalDocs:
       description: Find more information on comments here
-      url: 'http://docs.alfresco.com/5.1/pra/1/concepts/pra-nodes-comments.html'
+      url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-nodes-comments.html
   - name: favorites
     description: Retrieve and manage Favorites
     externalDocs:
       description: Find more information on favorites here
-      url: 'http://docs.alfresco.com/5.1/pra/1/concepts/pra-favorites.html'
+      url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-favorites.html
   - name: networks
-    description: Retrieve and manage Network
-  - name: nodes
-    description: Retrieve and manage Nodes
+    description: Retrieve and manage Networks
   - name: people
     description: Retrieve and manage People
   - name: ratings
@@ -70,6 +68,24 @@ parameters:
     description: The identifier of a network.
     required: true
     type: string
+  commentIdParam:
+    name: commentId
+    in: path
+    description: The identifier of a comment.
+    required: true
+    type: string
+  ratingIdParam:
+    name: ratingId
+    in: path
+    description: The identifier of a rating.
+    required: true
+    type: string
+  favoriteIdParam:
+    name: favoriteId
+    in: path
+    description: The identifier of a favorite.
+    required: true
+    type: string
   skipCountParam:
     name: skipCount
     in: query
@@ -92,31 +108,30 @@ parameters:
       type: string
     collectionFormat: csv
   orderByParam:
-    name: orderBy
-    in: query
+    name: "orderBy"
+    in: "query"
     description: A string to control the order of the entities returned.
     required: false
-    type: string
+    type: "string"
   whereParam:
-    name: where
-    in: query
+    name: "where"
+    in: "query"
     description: A string to restrict the returned objects by using a predicate.
     required: false
-    type: string
+    type: "string"
   relationsParam:
-    name: relations
-    in: query
+    name: "relations"
+    in: "query"
     description: Use the relations parameter to include one or more related entities in a single response.
     required: false
-    type: string
+    type: "string"
 paths:
   '/nodes/{nodeId}/comments':
     get:
       tags:
-        - nodes
         - comments
       summary: Get comments
-      description: 'Returns a list of comments for the file or folder identified by **nodeId**, sorted chronologically with the newest first.'
+      description: Returns a list of comments for the file or folder identified by **nodeId**, sorted chronologically with the newest first.
       operationId: getComments
       produces:
         - application/json
@@ -131,15 +146,27 @@ paths:
           schema:
             $ref: '#/definitions/CommentPaging'
         '400':
-          description: 'If the **nodeId** exists, but does not identify a file or a folder'
+          description: If the **nodeId** exists, but does not identify a file or a folder
         '404':
-          description: 'If **nodeId** does not exist'
+          description: If **nodeId** does not exist
     post:
       tags:
-        - nodes
         - comments
       summary: Add a comment
-      description: "Creates one or more comments on node **nodeId**. You can create more than one comment by \nspecifying a list of comments in the JSON body like this:      \n\n```JSON\n[\n  {\n    \"content\": \"This is a comment\"\n  },\n  {\n    \"content\": \"This is another comment\"\n  }\n]\n```\n"
+      description: |
+        Creates one or more comments on node **nodeId**. You can create more than one comment by 
+        specifying a list of comments in the JSON body like this:      
+        
+        ```JSON
+        [
+          {
+            "content": "This is a comment"
+          },
+          {
+            "content": "This is another comment"
+          }
+        ]
+        ```
       operationId: addComment
       produces:
         - application/json
@@ -147,7 +174,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/propertiesParam'
         - in: body
-          name: CommentContent
+          name: comment
           description: The comment text. Note that you can provide an array of comments.
           required: true
           schema:
@@ -160,26 +187,22 @@ paths:
           schema:
             $ref: '#/definitions/CommentEntry'
         '404':
-          description: 'If **nodeId** does not exist'
+          description: If **nodeId** does not exist
   '/nodes/{nodeId}/comments/{commentId}':
     put:
       tags:
         - comments
       summary: Update a comment
-      description: 'Updates an existing comment **commentId** on node **nodeId**.'
+      description: Updates an existing comment **commentId** on node **nodeId**.
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/propertiesParam'
-        - name: commentId
-          in: path
-          description: The identifier of a comment.
-          required: true
-          type: string
+        - $ref: '#/parameters/commentIdParam'
         - in: body
-          name: CommentContent
-          description: The JSON representing the comment to be created.
+          name: comment
+          description: The JSON representing the comment to be updated.
           required: true
           schema:
             properties:
@@ -191,33 +214,28 @@ paths:
           schema:
             $ref: '#/definitions/CommentEntry'
         '404':
-          description: 'If **nodeId** or **commentId** does not exist'
+          description: If **nodeId** or **commentId** does not exist
     delete:
       tags:
         - comments
       summary: Delete a comment
-      description: 'Removes the comment **commentId** from node **nodeId**.'
+      description: Removes the comment **commentId** from node **nodeId**.
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - name: commentId
-          in: path
-          description: The identifier of a comment.
-          required: true
-          type: string
+        - $ref: '#/parameters/commentIdParam'
       responses:
         '204':
           description: Successful response
         '404':
-          description: 'If **nodeId** or **commentId** does not exist'
+          description: If **nodeId** or **commentId** does not exist
   '/nodes/{nodeId}/ratings':
     get:
       tags:
-        - nodes
         - ratings
       summary: Get ratings
-      description: 'Get the ratings for node **nodeId**.'
+      description: Get the ratings for node **nodeId**.
       operationId: getRatings
       produces:
         - application/json
@@ -226,22 +244,23 @@ paths:
         - $ref: '#/parameters/propertiesParam'
       responses:
         '200':
-          description: 'If **nodeId** does not exist'
+          description: Successful response
           schema:
             $ref: '#/definitions/RatingPaging'
+        '404':
+          description: If **nodeId** does not exist
     post:
       tags:
-        - nodes
         - ratings
       summary: Rate
-      description: 'Rate the node **nodeId**.'
+      description: Rate the node **nodeId**.
       operationId: rate
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: Rating
+          name: rating
           required: true
           schema:
             properties:
@@ -254,31 +273,26 @@ paths:
                   - fiveStar
               myRating:
                 type: string
-                description: 'The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar'
+                description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar
       responses:
         '201':
           description: Successful response
           schema:
             $ref: '#/definitions/RatingEntry'
         '404':
-          description: 'If **nodeId** does not exist'
+          description: If **nodeId** does not exist
   '/nodes/{nodeId}/ratings/{ratingId}':
     get:
       tags:
-        - nodes
         - ratings
       summary: Get a rating
-      description: 'Get the specific rating **ratingId** on node **nodeId**.'
+      description: Get the specific rating **ratingId** on node **nodeId**.
       produces:
         - application/json
       operationId: getRating
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - name: ratingId
-          in: path
-          description: The identifier of a rating.
-          required: true
-          type: string
+        - $ref: '#/parameters/ratingIdParam'
         - $ref: '#/parameters/propertiesParam'
       responses:
         '200':
@@ -286,37 +300,31 @@ paths:
           schema:
             $ref: '#/definitions/RatingEntry'
         '400':
-          description: 'If **ratingId** does not exist'
+          description: If **ratingId** does not exist
         '404':
-          description: 'If **nodeId** does not exist'
+          description: If **nodeId** does not exist
     delete:
       tags:
-        - nodes
         - ratings
       summary: Delete a rating
-      description: 'Removes rating **ratingId** from node **nodeId**.'
+      description: Removes rating **ratingId** from node **nodeId**.
       operationId: removeRating
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - name: ratingId
-          in: path
-          description: The identifier of a rating.
-          required: true
-          type: string
+        - $ref: '#/parameters/ratingIdParam'
       responses:
         '204':
           description: Successful response
         '404':
-          description: 'If **nodeId** or **ratingId** does not exist'
+          description: If **nodeId** or **ratingId** does not exist
   '/nodes/{nodeId}/tags':
     get:
       tags:
-        - nodes
         - tags
       summary: Get tags
-      description: 'Returns a list of tags for node **nodeId**.'
+      description: Returns a list of tags for node **nodeId**.
       produces:
         - application/json
       parameters:
@@ -330,19 +338,31 @@ paths:
           schema:
             $ref: '#/definitions/TagPaging'
         '404':
-          description: 'If **nodeId** does not exist'
+          description: If **nodeId** does not exist
     post:
       tags:
-        - nodes
         - tags
       summary: Add a tag
-      description: "Adds one or more tags to the node **nodeId**. You can create more than one tag by \nspecifying a list of tags in the JSON body like this:      \n\n```JSON\n[\n  {\n    \"tag\":\"test-tag-1\"\n  },\n  {\n    \"tag\":\"test-tag-2\"\n  }\n]\n```\n"
+      description: |
+        Adds one or more tags to the node **nodeId**. You can create more than one tag by 
+        specifying a list of tags in the JSON body like this:      
+        
+        ```JSON
+        [
+          {
+            "tag":"test-tag-1"
+          },
+          {
+            "tag":"test-tag-2"
+          }
+        ]
+        ```
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: TagBody
+          name: tag
           description: Unique entity properties
           required: true
           schema:
@@ -355,14 +375,13 @@ paths:
           schema:
             $ref: '#/definitions/TagEntry'
         '404':
-          description: 'If **nodeId** does not exist'
+          description: If **nodeId** does not exist
   '/nodes/{nodeId}/tags/{tagId}':
     delete:
       tags:
-        - nodes
         - tags
       summary: Delete a tag
-      description: 'Removes tag **tagId** from node **nodeId**.'
+      description: Removes tag **tagId** from node **nodeId**.
       produces:
         - application/json
       parameters:
@@ -372,13 +391,13 @@ paths:
         '204':
           description: Successful response
         '404':
-          description: 'If **nodeId** or **tagId** does not exist'
+          description: If **nodeId** or **tagId** does not exist
   '/people/{personId}':
     get:
       tags:
         - people
       summary: Get a person
-      description: 'Gets information for the person **personId**.'
+      description: Gets information for the person **personId**.
       produces:
         - application/json
       parameters:
@@ -390,13 +409,13 @@ paths:
           schema:
             $ref: '#/definitions/PersonEntry'
         '404':
-          description: 'If **personId** does not exist'
+          description: If **personId** does not exist
   '/people/{personId}/activities':
     get:
       tags:
         - people
       summary: Get activities
-      description: 'Returns a list of activities for person **personId**.'
+      description: Returns a list of activities for person **personId**.
       produces:
         - application/json
       parameters:
@@ -406,9 +425,8 @@ paths:
         - $ref: '#/parameters/propertiesParam'
         - name: who
           in: query
-          description: >
-            A filter to include the user's activities only `-me-`, other user's
-            activities only `-others-`'
+          description: |
+            A filter to include the user's activities only `-me-`, other user's activities only `-others-`'
           required: false
           type: string
         - name: siteId
@@ -422,21 +440,17 @@ paths:
           schema:
             $ref: '#/definitions/ActivityPaging'
         '404':
-          description: 'If **personId** does not exist'
+          description: If **personId** does not exist
   '/people/{personId}/favorite-sites':
     get:
       deprecated: true
       tags:
         - people
       summary: Get favorite sites
-      description: >
+      description: |
         Get a person's favorite sites.
 
-
-
-        **Please note that this method is deprecated and will be removed in the
-        future**.
-
+        **Please note that this method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
       produces:
         - application/json
@@ -449,34 +463,45 @@ paths:
         '200':
           description: Successful response
         '404':
-          description: 'If **personId** does not exist'
+          description: If **personId** does not exist
     post:
       deprecated: true
       tags:
         - people
       summary: Favorite a site
-      description: "Add a favorite site for person **personId**. \n  \n**Please note that this method is deprecated and will be removed in the future**.\nUse `/people/{personId}/favorites` instead.\n"
+      description: |
+        Add a favorite site for person **personId**. 
+          
+        **Please note that this method is deprecated and will be removed in the future**.
+        Use `/people/{personId}/favorites` instead.
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: FAVORITESITE
+          name: favoriteSite
           description: Unique entity properties
           required: true
-          schema: {}
+          schema: 
+            properties:
+              id:
+                type: string
       responses:
         '200':
           description: Successful response
         '404':
-          description: 'If **personId** does not exist'
+          description: If **personId** does not exist
   '/people/{personId}/favorite-sites/{siteId}':
     get:
       deprecated: true
       tags:
         - people
       summary: Get a favorite site
-      description: "Returns information on favorite site **siteId** of person **personId**. \n\n**Please note that this method is deprecated and will be removed in the future.**\nUse `/people/{personId}/favorites` instead.\n"
+      description: |
+        Returns information on favorite site **siteId** of person **personId**. 
+        
+        **Please note that this method is deprecated and will be removed in the future.**
+        Use `/people/{personId}/favorites` instead.
       produces:
         - application/json
       parameters:
@@ -487,13 +512,17 @@ paths:
         '200':
           description: Successful response
         '404':
-          description: 'If **personId** or **siteId** does not exist'
+          description: If **personId** or **siteId** does not exist
     delete:
       deprecated: true
       tags:
         - people
       summary: Delete favorite site
-      description: "Removes site **siteId** from the favorite site list of person **personId**. \n\n**Please note that this method is deprecated and will be removed in the future.**\nUse `/people/{personId}/favorites` instead.\n"
+      description: |
+        Removes site **siteId** from the favorite site list of person **personId**. 
+        
+        **Please note that this method is deprecated and will be removed in the future.**
+        Use `/people/{personId}/favorites` instead.
       produces:
         - application/json
       parameters:
@@ -503,14 +532,41 @@ paths:
         '200':
           description: Successful response
         '404':
-          description: 'If **personId** or **siteId** does not exist'
+          description: If **personId** or **siteId** does not exist
   '/people/{personId}/favorites':
     get:
       tags:
         - favorites
         - people
       summary: Get favorites
-      description: "Returns a list of favorites person **personId**.\n\nYou can us the `-me-` string in place of `<personId>` to get the favorites of the currently authenticated user.        \n\nYou can use the **where** parameter to restrict the list in the response\nto entries of a specific kind. The **where** parameter takes a value.\nThe value is a single predicate that can include one or more **EXISTS** \nconditions. The **EXISTS** condition uses a single operand to limit the\nlist to include entries that include that one property. The property values are:-\n\n*   `target/file`\n*   `target/folder`\n*   `target/site`\n\nFor example, the following **where** parameter restricts the returned list to the file favorites for a person:\n\n```SQL\n(EXISTS(target/file))\n```\nYou can specify more than one condition using **OR**. The predicate must be enclosed in parentheses.\n\n\nFor example, the following **where** parameter restricts the returned list to the file and folder favorites for a person:\n\n```SQL\n(EXISTS(target/file OR EXISTS(target/folder))\n```\n"
+      description: |
+        Returns a list of favorites person **personId**.
+        
+        You can us the `-me-` string in place of `<personId>` to get the favorites of the currently authenticated user.        
+        
+        You can use the **where** parameter to restrict the list in the response
+        to entries of a specific kind. The **where** parameter takes a value.
+        The value is a single predicate that can include one or more **EXISTS** 
+        conditions. The **EXISTS** condition uses a single operand to limit the
+        list to include entries that include that one property. The property values are:-
+        
+        *   `target/file`
+        *   `target/folder`
+        *   `target/site`
+        
+        For example, the following **where** parameter restricts the returned list to the file favorites for a person:
+
+        ```SQL
+        (EXISTS(target/file))
+        ```
+        You can specify more than one condition using **OR**. The predicate must be enclosed in parentheses.
+        
+        
+        For example, the following **where** parameter restricts the returned list to the file and folder favorites for a person:
+
+        ```SQL
+        (EXISTS(target/file OR EXISTS(target/folder))
+        ```
       produces:
         - application/json
       parameters:
@@ -523,49 +579,53 @@ paths:
           schema:
             $ref: '#/definitions/FavoritePaging'
         '400':
-          description: 'An invalid **where** parameter was specified'
+          description: An invalid **where** parameter was specified
         '404':
-          description: 'If **personId** does not exist, or the current user does not have permission to access the favorites of **personId**'
+          description: If **personId** does not exist, or the current user does not have permission to access the favorites of **personId**
     post:
       tags:
         - favorites
         - people
       summary: Add a favorite
-      description: 'Favorite a **site**, **file**, or **folder** in the repository.'
+      description: Favorite a **site**, **file**, or **folder** in the repository.
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: favouriteInput
-          description: "An object identifying the entity to be favorited. \nThe object consists of a single property which is an object with the name `site`, `file`, or `folder`. \nThe content of that object is the `guid` of the target entity.\n"
+          name: favorite
+          description: |      
+            An object identifying the entity to be favorited. 
+            The object consists of a single property which is an object with the name `site`, `file`, or `folder`. 
+            The content of that object is the `guid` of the target entity.
           required: true
           schema:
-            $ref: '#/definitions/FavoriteInput'
+            $ref: '#/definitions/FavoriteBody'
       responses:
         '201':
           description: Successful response
           schema:
             $ref: '#/definitions/FavoriteEntry'
         '400':
-          description: 'The target **guid** does not describe a site, file, or folder'
+          description: The target **guid** does not describe a site, file, or folder 
         '404':
-          description: "If **personId** does not exist, or the target entity does not exist, \nor a favorite already exists with the specified id, or an \nentity does exist with the id of the posted object, \nbut is not of the same type of the posted object\n"
+          description: |
+            If **personId** does not exist, or the target entity does not exist, 
+            or a favorite already exists with the specified id, or an 
+            entity does exist with the id of the posted object, 
+            but is not of the same type of the posted object
   '/people/{personId}/favorites/{favoriteId}':
     get:
       tags:
         - favorites
         - people
       summary: Get a favorite
-      description: 'Returns favorite **favoriteId** for person **personId**.'
+      description: Returns favorite **favoriteId** for person **personId**.
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
-        - name: favoriteId
-          in: path
-          required: true
-          type: string
+        - $ref: '#/parameters/favoriteIdParam'
         - $ref: '#/parameters/propertiesParam'
       responses:
         '200':
@@ -580,15 +640,12 @@ paths:
         - favorites
         - people
       summary: Delete a favorite
-      description: 'Removes **favoriteId** as a favorite of person **personId**.'
+      description: Removes **favoriteId** as a favorite of person **personId**.
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
-        - name: favoriteId
-          in: path
-          required: true
-          type: string
+        - $ref: '#/parameters/favoriteIdParam'
       responses:
         '204':
           description: Successful response
@@ -601,7 +658,7 @@ paths:
         - people
         - networks
       summary: Get network membership for a person
-      description: 'Gets a list of network memberships for person **personId**.'
+      description: Gets a list of network memberships for person **personId**.
       produces:
         - application/json
       parameters:
@@ -613,14 +670,14 @@ paths:
           schema:
             $ref: '#/definitions/PersonNetworkPaging'
         '404':
-          description: 'If **personId** does not exist'
+          description: If **personId** does not exist
   '/people/{personId}/networks/{networkId}':
     get:
       tags:
         - people
         - networks
       summary: Get network information
-      description: 'Returns network information on a single network specified by **networkId** for **personId**.'
+      description: Returns network information on a single network specified by **networkId** for **personId**.
       produces:
         - application/json
       parameters:
@@ -633,13 +690,17 @@ paths:
           schema:
             $ref: '#/definitions/PersonNetworkEntry'
         '404':
-          description: 'If **personId** or **networkId** does not exist'
+          description: If **personId** or **networkId** does not exist
   '/people/{personId}/preferences':
     get:
       tags:
         - people
       summary: Get preferences
-      description: "Returns a list of preferences for person **personId**.\n\nNote that each preference consists of an **id** and a **value**. \nThe **value** can be of any JSON type.\n"
+      description: |
+        Returns a list of preferences for person **personId**.
+        
+        Note that each preference consists of an **id** and a **value**. 
+        The **value** can be of any JSON type.
       produces:
         - application/json
       parameters:
@@ -651,13 +712,13 @@ paths:
           schema:
             $ref: '#/definitions/PreferencePaging'
         '404':
-          description: 'If **personId** does not exist'
+          description: If **personId** does not exist
   '/people/{personId}/preferences/{preferenceName}':
     get:
       tags:
         - people
       summary: Get a preference
-      description: 'Returns a specific preference for person **personId**.'
+      description: Returns a specific preference for person **personId**.
       produces:
         - application/json
       parameters:
@@ -674,14 +735,14 @@ paths:
           schema:
             $ref: '#/definitions/PreferenceEntry'
         '404':
-          description: 'If **personId** or **preferenceName** does not exist'
+          description: If **personId** or **preferenceName** does not exist
   '/people/{personId}/site-membership-requests':
     get:
       tags:
         - people
         - sites
       summary: Get site membership requests
-      description: 'Returns the current site membership requests for person **personId**.'
+      description: Returns the current site membership requests for person **personId**.
       produces:
         - application/json
       parameters:
@@ -691,19 +752,19 @@ paths:
         '200':
           description: Successful response
         '404':
-          description: 'If **personId** does not exist'
+          description: If **personId** does not exist
     post:
       tags:
         - people
         - sites
       summary: Create a site membership request
-      description: 'Create a site membership request for **personId** and **siteId**. The **personId** will be invited to the site as a SiteConsumer.'
+      description: Create a site membership request for **personId** and **siteId**. The **personId** will be invited to the site as a SiteConsumer.
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: SITEMEMBERSHIPREQUEST
+          name: siteMembershipRequest
           description: Unique entity properties
           required: true
           schema:
@@ -718,14 +779,14 @@ paths:
         '200':
           description: Successful response
         '404':
-          description: 'If **personId** or **siteId** does not exist'
+          description: If **personId** or **siteId** does not exist
   '/people/{personId}/site-membership-requests/{siteId}':
     get:
       tags:
         - people
-        - sites
+        - sites      
       summary: Get a site membership request
-      description: 'Returns the site membership request for site **siteId** for person **personId**, if one exists.'
+      description: Returns the site membership request for site **siteId** for person **personId**, if one exists.
       produces:
         - application/json
       parameters:
@@ -736,13 +797,13 @@ paths:
         '200':
           description: Successful response
         '404':
-          description: 'If **personId** or **siteId** does not exist'
+          description: If **personId** or **siteId** does not exist
     put:
       tags:
         - people
         - sites
       summary: Update a site membership request
-      description: 'Updates the message for the site membership request to site **siteId** for person **personId**.'
+      description: Updates the message for the site membership request to site **siteId** for person **personId**.
       consumes:
         - application/json
       produces:
@@ -750,6 +811,14 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
+        - in: body
+          name: siteMembershipRequestMessage
+          description: The new message to display
+          required: true
+          schema:
+            properties:
+              message:
+                type: string
       responses:
         '200':
           description: Successful response
@@ -758,7 +827,7 @@ paths:
         - people
         - sites
       summary: Cancel a site membership
-      description: 'Cancels the site membership request to site **siteId** for person **personId**.'
+      description: Cancels the site membership request to site **siteId** for person **personId**.
       produces:
         - application/json
       parameters:
@@ -768,14 +837,26 @@ paths:
         '200':
           description: Successful response
         '404':
-          description: 'If **personId** or **siteId** does not exist'
+          description: If **personId** or **siteId** does not exist
   '/people/{personId}/sites':
     get:
       tags:
         - people
         - sites
       summary: Get site membership information
-      description: "Returns a list if site membership information for person **personId**.\nYou can sort the list if sites using the **orderBy** parameter.\n\n**orderBy** specifies the name of one or more \ncomma separated properties. \nFor each property you can optionally specify the order direction. \nBoth of the these **orderBy** examples retrieve sites ordered by ascending name:\n\n```\nname\nname ASC\n```\n"
+      description: |
+        Returns a list if site membership information for person **personId**.
+        You can sort the list if sites using the **orderBy** parameter.
+        
+        **orderBy** specifies the name of one or more 
+        comma separated properties. 
+        For each property you can optionally specify the order direction. 
+        Both of the these **orderBy** examples retrieve sites ordered by ascending name:
+        
+        ```
+        name
+        name ASC
+        ```
       produces:
         - application/json
       parameters:
@@ -789,13 +870,35 @@ paths:
           schema:
             $ref: '#/definitions/SitePaging'
         '404':
-          description: 'If **personId** does not exist'
+          description: If **personId** does not exist
   /sites:
     get:
       tags:
         - sites
       summary: Get sites
-      description: "Returns a list of sites in this repository. You can sort the list if sites using the **orderBy** parameter.\n**orderBy** specifies the name of one or more \ncomma separated properties. \nFor each property you can optionally specify the order direction. \nBoth of the these **orderBy** examples retrieve sites ordered by ascending name:\n\n```\nname\nname ASC\n```\n\nYou can use the **relations** parameter to include one or more related\nentities in a single response and so reduce network traffic.\n\nThe entity types in Alfresco are organized in a tree structure. T\nhe **sites** entity has two children, **containers** and **members**. \nThe following relations parameter returns all the conatiner and member \nobjects related to each site:\n\n```\ncontainers,members\n```\n"
+      description: |
+        Returns a list of sites in this repository. You can sort the list if sites using the **orderBy** parameter.
+        **orderBy** specifies the name of one or more 
+        comma separated properties. 
+        For each property you can optionally specify the order direction. 
+        Both of the these **orderBy** examples retrieve sites ordered by ascending name:
+        
+        ```
+        name
+        name ASC
+        ```
+        
+        You can use the **relations** parameter to include one or more related
+        entities in a single response and so reduce network traffic.
+        
+        The entity types in Alfresco are organized in a tree structure. T
+        he **sites** entity has two children, **containers** and **members**. 
+        The following relations parameter returns all the conatiner and member 
+        objects related to each site:
+        
+        ```
+        containers,members
+        ```
       operationId: getSites
       parameters:
         - $ref: '#/parameters/skipCountParam'
@@ -815,7 +918,20 @@ paths:
       tags:
         - sites
       summary: Get a site
-      description: "Returns information for site **siteId**.\n\nYou can use the **relations** parameter to include one or more related\nentities in a single response and so reduce network traffic.\n\nThe entity types in Alfresco are organized in a tree structure. T\nhe **sites** entity has two children, **containers** and **members**. \nThe following relations parameter returns all the conatiner and member \nobjects related to the site **siteId**:\n\n```\ncontainers,members\n```\n"
+      description: |
+        Returns information for site **siteId**.
+        
+        You can use the **relations** parameter to include one or more related
+        entities in a single response and so reduce network traffic.
+        
+        The entity types in Alfresco are organized in a tree structure. T
+        he **sites** entity has two children, **containers** and **members**. 
+        The following relations parameter returns all the conatiner and member 
+        objects related to the site **siteId**:
+        
+        ```
+        containers,members
+        ```
       produces:
         - application/json
       parameters:
@@ -828,13 +944,13 @@ paths:
           schema:
             $ref: '#/definitions/SiteEntry'
         '404':
-          description: 'If **siteId** does not exist'
+          description: If **siteId** does not exist
   '/sites/{siteId}/containers':
     get:
       tags:
         - sites
       summary: Get containers
-      description: 'Returns a list of containers information for site identified by **siteId**.'
+      description: Returns a list of containers information for site identified by **siteId**.
       produces:
         - application/json
       parameters:
@@ -846,13 +962,13 @@ paths:
           schema:
             $ref: '#/definitions/SiteContainerPaging'
         '404':
-          description: 'If **siteId** does not exist'
+          description: If **siteId** does not exist
   '/sites/{siteId}/containers/{containerId}':
     get:
       tags:
         - sites
       summary: Get a container
-      description: 'Returns information on the container **containerId** in site **siteId**.'
+      description: Returns information on the container **containerId** in site **siteId**.
       produces:
         - application/json
       parameters:
@@ -869,13 +985,13 @@ paths:
           schema:
             $ref: '#/definitions/SiteContainerEntry'
         '404':
-          description: 'If **siteId** or **containerId** does not exist'
+          description: If **siteId** or **containerId** does not exist
   '/sites/{siteId}/members':
     get:
       tags:
         - sites
       summary: Get members
-      description: 'Returns a list of site memberships for site **siteId**.'
+      description: Returns a list of site memberships for site **siteId**.
       produces:
         - application/json
       parameters:
@@ -887,16 +1003,16 @@ paths:
           schema:
             $ref: '#/definitions/SiteMemberPaging'
         '404':
-          description: 'If **siteId** does not exist'
+          description: If **siteId** does not exist
     post:
       tags:
         - sites
       summary: Add a person
       description: |
         Adds person **personId** as a member of site **siteId**.
-
+        
         You can set the **role** to one of four types:
-
+        
         * SiteConsumer
         * SiteCollaborator
         * SiteContributor
@@ -906,7 +1022,7 @@ paths:
       parameters:
         - $ref: '#/parameters/siteIdParam'
         - in: body
-          name: SITEMEMBER
+          name: siteMember
           description: Unique entity properties
           required: true
           schema:
@@ -919,14 +1035,14 @@ paths:
         '200':
           description: Successful response
         '404':
-          description: 'If **siteId** or **personId** does not exist'
+          description: If **siteId** or **personId** does not exist
   '/sites/{siteId}/members/{personId}':
     get:
       tags:
         - sites
         - people
       summary: Get a site member
-      description: 'Returns site membership information for person **personId** on site **siteId**.'
+      description: Returns site membership information for person **personId** on site **siteId**.
       produces:
         - application/json
       parameters:
@@ -939,16 +1055,16 @@ paths:
           schema:
             $ref: '#/definitions/SiteMemberEntry'
         '404':
-          description: 'If **siteId** or **personId** does not exist'
+          description: If **siteId** or **personId** does not exist
     put:
       tags:
         - sites
       summary: Update a site member
       description: |
         Update the membership of person **personId** in site **siteId**.
-
+        
         You can set the **role** to one of four types:
-
+        
         * SiteConsumer
         * SiteCollaborator
         * SiteContributor
@@ -959,7 +1075,7 @@ paths:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: SiteMemberRole
+          name: siteMemberRole
           description: Unique entity properties
           required: true
           schema:
@@ -972,12 +1088,12 @@ paths:
         '400':
           description: If the role does not exist
         '404':
-          description: 'If **siteId** or **personId** does not exist'
+          description: If **siteId** or **personId** does not exist
     delete:
       tags:
         - sites
       summary: Delete a site member
-      description: 'Removes person **personId** as a member of site **siteId**.'
+      description: Removes person **personId** as a member of site **siteId**.
       produces:
         - application/json
       parameters:
@@ -987,7 +1103,7 @@ paths:
         '204':
           description: Successful response
         '404':
-          description: 'If **personId** does not exist'
+          description: If **personId** does not exist
   /tags:
     get:
       tags:
@@ -1011,7 +1127,7 @@ paths:
       tags:
         - tags
       summary: Get a tag
-      description: 'Return a specific tag with **tagId**.'
+      description: Return a specific tag with **tagId**.
       produces:
         - application/json
       operationId: getTag
@@ -1037,13 +1153,13 @@ paths:
       tags:
         - tags
       summary: Update a tag
-      description: 'Updates the tag **tagId**.'
+      description: Updates the tag **tagId**.
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/tagIdParam'
         - in: body
-          name: TAG
+          name: tag
           description: Unique entity properties
           required: true
           schema:
@@ -1060,7 +1176,7 @@ paths:
       tags:
         - networks
       summary: Get a network
-      description: 'Returns information for a network **networkId**.'
+      description: Returns information for a network **networkId**.
       operationId: getNetwork
       parameters:
         - $ref: '#/parameters/networkIdParam'
@@ -1073,7 +1189,7 @@ paths:
           schema:
             $ref: '#/definitions/PersonNetworkEntry'
         '404':
-          description: 'If **networkId** does not exist'
+          description: If **networkId** does not exist
 definitions:
   Error:
     type: object
@@ -1102,15 +1218,23 @@ definitions:
           The number of objects in the entries array.
       hasMoreItems:
         type: boolean
-        description: "A boolean value which is **true** if there are more entities in the collection \nbeyond those in this response. A true value means a request with a larger value \nfor the **skipCount** or the **maxItems** parameter will return more entities.\n"
+        description: |
+          A boolean value which is **true** if there are more entities in the collection 
+          beyond those in this response. A true value means a request with a larger value 
+          for the **skipCount** or the **maxItems** parameter will return more entities.
       totalItems:
         type: integer
         format: int64
-        description: "An integer describing the total number of entities in the collection. \nThe API might not be able to determine this value, \nin which case this property will not be present.\n"
+        description: |
+          An integer describing the total number of entities in the collection. 
+          The API might not be able to determine this value, 
+          in which case this property will not be present.
       skipCount:
         type: integer
         format: int64
-        description: "An integer describing how many entities exist in the collection before \nthose included in this list.\n"
+        description: |
+          An integer describing how many entities exist in the collection before 
+          those included in this list.
       maxItems:
         type: integer
         format: int64
@@ -1390,7 +1514,7 @@ definitions:
     properties:
       id:
         type: string
-        description: "This network's unique id"
+        description: This network's unique id
       homeNetwork:
         type: boolean
         description: Is this the home network?
@@ -1414,11 +1538,9 @@ definitions:
           $ref: '#/definitions/NetworkQuota'
   NetworkQuota:
     type: object
-    description: >
+    description: |
       Limits and usage of each quota. A network will have quotas for File space,
-
       the number of sites in the network, the number of people in the network,
-
       and the number of network administrators
     required:
       - id
@@ -1494,10 +1616,8 @@ definitions:
         $ref: '#/definitions/Favorite'
   Favorite:
     type: object
-    description: >
-      A favorite describes an Alfresco entity that a person has marked as
-      a favorite.
-
+    description: |
+      A favorite describes an Alfresco entity that a person has marked as a favorite.
       The target can be a site, file or folder.
     required:
       - targetGuid
@@ -1512,7 +1632,7 @@ definitions:
         description: The time the object was made a favorite.
       target:
         $ref: '#/definitions/Site'
-  FavoriteInput:
+  FavoriteBody:
     type: object
     properties:
       target:
@@ -1642,5 +1762,5 @@ definitions:
         type: string
         description: The unique id of the preference
       value:
-        type: string
+        type: string        
         description: The value of the preference. Note that this can be of any JSON type.
