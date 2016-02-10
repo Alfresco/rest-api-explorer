@@ -65,6 +65,7 @@
         var password = $('#input_password').val();
         if (username.trim() != "" && password.trim() != "") {
           var basicAuth = new SwaggerClient.PasswordAuthorization(username, password);
+          window.swaggerUi.api.clientAuthorizations.remove("basicAuth");
           window.swaggerUi.api.clientAuthorizations.add("basicAuth", basicAuth);
           log("authorization added: username = " + username + ", auth = " + basicAuth);
         }
