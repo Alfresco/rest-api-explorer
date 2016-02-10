@@ -891,9 +891,9 @@ paths:
         You can use the **relations** parameter to include one or more related
         entities in a single response and so reduce network traffic.
         
-        The entity types in Alfresco are organized in a tree structure. T
-        he **sites** entity has two children, **containers** and **members**. 
-        The following relations parameter returns all the conatiner and member 
+        The entity types in Alfresco are organized in a tree structure.
+        The **sites** entity has two children, **containers** and **members**. 
+        The following relations parameter returns all the container and member 
         objects related to each site:
         
         ```
@@ -924,9 +924,9 @@ paths:
         You can use the **relations** parameter to include one or more related
         entities in a single response and so reduce network traffic.
         
-        The entity types in Alfresco are organized in a tree structure. T
-        he **sites** entity has two children, **containers** and **members**. 
-        The following relations parameter returns all the conatiner and member 
+        The entity types in Alfresco are organized in a tree structure.
+        The **sites** entity has two children, **containers** and **members**. 
+        The following relations parameter returns all the container and member 
         objects related to the site **siteId**:
         
         ```
