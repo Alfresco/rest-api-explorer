@@ -1,11 +1,17 @@
 swagger: '2.0'
 info:
-  description: Provides access to the workflow features of Alfresco 5.1
+  description: Provides access to the workflow features of Alfresco
   version: '1'
-  title: Alfresco Workflow REST API (5.1)
+  title: Alfresco Workflow REST API
   contact:
     url: 'http://docs.alfresco.com/5.1/pra/1/concepts/pra-resources.html'
 basePath: /alfresco/api/-default-/public/workflow/versions/1
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication
+security:
+  - basicAuth: []
 consumes:
   - application/json
 produces:
@@ -329,7 +335,7 @@ paths:
         - application/json
       parameters:
         - in: body
-          name: process
+          name: processBody
           description: process properties
           required: true
           schema:
@@ -430,7 +436,7 @@ paths:
       parameters:
         - $ref: "#/parameters/processIdParam"
         - in: body
-          name: variable
+          name: variableBody
           description: An array of variables.
           required: true
           schema:
@@ -459,7 +465,7 @@ paths:
         - $ref: "#/parameters/processIdParam"
         - $ref: "#/parameters/variableNameParam"
         - in: body
-          name: variable
+          name: variableBody
           description: A variable
           required: true
           schema:
@@ -533,7 +539,7 @@ paths:
       parameters:
         - $ref: "#/parameters/processIdParam"
         - in: body
-          name: itemId
+          name: itemBody
           description: The **nodeId** of the item
           required: true
           schema:
@@ -827,7 +833,7 @@ paths:
         - $ref: "#/parameters/taskIdParam"
         - $ref: "#/parameters/selectParam"
         - in: body
-          name: task
+          name: taskBody
           description: An object containing the properties to be updated
           required: true
           schema:
@@ -909,7 +915,7 @@ paths:
       parameters:
         - $ref: "#/parameters/taskIdParam"
         - in: body
-          name: variable
+          name: variableBody
           description: An array of variables.
           required: true
           schema:
@@ -938,7 +944,7 @@ paths:
         - $ref: "#/parameters/taskIdParam"
         - $ref: "#/parameters/variableNameParam"
         - in: body
-          name: variable
+          name: variableBody
           description: A variable
           required: true
           schema:
@@ -1013,7 +1019,7 @@ paths:
       parameters:
         - $ref: "#/parameters/taskIdParam"
         - in: body
-          name: itemId
+          name: itemBody
           description: The nodeId of the item
           required: true
           schema:

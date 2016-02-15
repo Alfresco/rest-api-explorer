@@ -1,4 +1,4 @@
-# Alfresco Rest Api Explorer
+# Alfresco REST API Explorer
 Public REST API Definition Explorer
 
 #### Building and deploying the war

@@ -1,15 +1,15 @@
 swagger: '2.0'
 info:
-  description: Provides access to the core features of Alfresco 5.1
+  description: Provides access to the core features of Alfresco
   version: '1'
-  title: Alfresco Core REST API (5.1)
+  title: Alfresco Core REST API
   contact:
     url: 'http://docs.alfresco.com/5.1/pra/1/concepts/pra-resources.html'
 basePath: /alfresco/api/-default-/public/alfresco/versions/1
 securityDefinitions:
   basicAuth:
     type: basic
-    description: HTTP Basic Authentication. Works over both `HTTP` and `HTTPS`.
+    description: HTTP Basic Authentication
 security:
   - basicAuth: []
 consumes:
@@ -174,7 +174,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/propertiesParam'
         - in: body
-          name: comment
+          name: commentBody
           description: The comment text. Note that you can provide an array of comments.
           required: true
           schema:
@@ -201,7 +201,7 @@ paths:
         - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/commentIdParam'
         - in: body
-          name: comment
+          name: commentBody
           description: The JSON representing the comment to be updated.
           required: true
           schema:
@@ -260,7 +260,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: rating
+          name: ratingBody
           required: true
           schema:
             properties:
@@ -362,7 +362,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: tag
+          name: tagBody
           description: Unique entity properties
           required: true
           schema:
@@ -479,7 +479,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: favoriteSite
+          name: favoriteSiteBody
           description: Unique entity properties
           required: true
           schema: 
@@ -593,7 +593,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: favorite
+          name: favoriteBody
           description: |      
             An object identifying the entity to be favorited. 
             The object consists of a single property which is an object with the name `site`, `file`, or `folder`. 
@@ -764,7 +764,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: siteMembershipRequest
+          name: siteMembershipBody
           description: Unique entity properties
           required: true
           schema:
@@ -812,7 +812,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
         - in: body
-          name: siteMembershipRequestMessage
+          name: siteMembershipRequestMessageBody
           description: The new message to display
           required: true
           schema:
@@ -1022,8 +1022,8 @@ paths:
       parameters:
         - $ref: '#/parameters/siteIdParam'
         - in: body
-          name: siteMember
-          description: Unique entity properties
+          name: siteMemberBody
+          description: The person to add and their role
           required: true
           schema:
             properties:
@@ -1075,8 +1075,8 @@ paths:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: siteMemberRole
-          description: Unique entity properties
+          name: siteMemberRoleBody
+          description: The persons new role
           required: true
           schema:
             properties:
@@ -1159,7 +1159,7 @@ paths:
       parameters:
         - $ref: '#/parameters/tagIdParam'
         - in: body
-          name: tag
+          name: tagBody
           description: Unique entity properties
           required: true
           schema:
