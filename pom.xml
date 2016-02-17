@@ -95,4 +95,14 @@
           </plugin>
         </plugins>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>alfresco-internal-releases</id>
+            <url>https://nexus.alfresco.com/nexus/content/repositories/internal-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>alfresco-internal-snapshots</id>
+            <url>https://nexus.alfresco.com/nexus/content/repositories/internal-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
