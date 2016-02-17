@@ -27,6 +27,8 @@ tags:
       url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-favorites.html
   - name: networks
     description: Retrieve and manage Networks
+  - name: nodes
+    description: Retrieve and manage Nodes
   - name: people
     description: Retrieve and manage People
   - name: ratings
@@ -1191,6 +1193,100 @@ paths:
             $ref: '#/definitions/PersonNetworkEntry'
         '404':
           description: If **networkId** does not exist
+  '/nodes/{nodeId}':
+    get:
+      tags:
+        - nodes
+      summary: Get a node
+      description: Returns information for the node with identifier **nodeId**.
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+    put:
+      tags:
+        - nodes
+      summary: Updates a node
+      description: Updates the node with identifier **nodeId**.
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      tags:
+        - nodes
+      summary: Deletes a node
+      description: Deletes the node with identifier **nodeId**.
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+  '/nodes/{nodeId}/children':
+    get:
+      tags:
+        - nodes
+      summary: Get node children
+      description: Returns the children of the node with identifier **nodeId**.
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - $ref: '#/parameters/whereParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+    post:
+      tags:
+        - nodes
+      summary: Create a node
+      description: |
+        Creates a node as a child of the node with identifier **nodeId**.
+        The body can be JSON or multipart/formdata.
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      consumes:
+        - application/json
+        - multipart/formdata
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+  '/nodes/{nodeId}/content':
+    get:
+      tags:
+        - nodes
+      summary: Get content
+      description: Returns the content of the node with identifier **nodeId**.
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      responses:
+        '200':
+          description: Successful response
+    put:
+      tags:
+        - nodes
+      summary: Update content
+      description: Updates the content of the node with identifier **nodeId**.
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
 definitions:
   Error:
     type: object
