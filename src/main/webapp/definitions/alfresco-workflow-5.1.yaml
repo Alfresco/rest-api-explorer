@@ -3,8 +3,6 @@ info:
   description: Provides access to the workflow features of Alfresco
   version: '1'
   title: Alfresco Workflow REST API
-  contact:
-    url: 'http://docs.alfresco.com/5.1/pra/1/concepts/pra-resources.html'
 basePath: /alfresco/api/-default-/public/workflow/versions/1
 securityDefinitions:
   basicAuth:
@@ -35,13 +33,13 @@ parameters:
   processDefinitionIdParam:
     name: "processDefinitionId"
     in: "path"
-    description: The unique id must be a String. It is returned as an **id** from the entity.
+    description: The identifier of a process definition.
     required: true
     type: "string"
   taskIdParam:
     name: taskId
     in: path
-    description: The unique id must be a String. It is returned as an **id** from the entity. 
+    description: The identifier of a task.
     required: true
     type: string
   skipCountParam:
@@ -68,13 +66,13 @@ parameters:
   variableNameParam:
     name: "variableName"
     in: path
-    description:  The name of variable, which must be a String. It is returned as a **name** from the entity. 
+    description:  The name of a variable.
     required: true
     type: "string"
   itemIdParam:
     name: "itemId"
     in: "path"
-    description: The **nodeId** of the item.
+    description: The identifier of an item.
     required: true
     type: "string"
   selectParam:
@@ -132,7 +130,7 @@ paths:
         The authenticated user must have role admin (non-network deployments) or
         network admin (networks enabled).
 
-        If networks is enabled, the deployment is only returned if the deployment
+        If networks are enabled, the deployment is only returned if the deployment
         is in the given network.
       operationId: getDeployment
       produces:
@@ -162,8 +160,8 @@ paths:
       description: |
         This request will delete the deployment including the tasks, process definitions contained in the deployment. 
         
-        The request will also delete processes and history information associated with the deployment.'
-        operationId: removeDeployment
+        The request will also delete processes and history information associated with the deployment.
+      operationId: removeDeployment
       produces:
         - application/json
       parameters:
@@ -351,14 +349,14 @@ paths:
       description: |
         Returns the process identified by **processId**.
         
-        An authenticated user will have access to a processes if the user  has
+        An authenticated user will have access to a process if the user has
         started the process or if the user is involved in any of the process’s
         tasks. In a network, only processes that are inside the given network are
         returned.
 
         In non-network deployments, administrators can see all processes and
-        perform all  operations on tasks. In network deployments, network
-        administrators can see all  processes in their network and perform all
+        perform all operations on tasks. In network deployments, network
+        administrators can see all processes in their network and perform all
         operations on tasks in their network.
       operationId: getProcess
       produces:
@@ -530,7 +528,7 @@ paths:
         - processes
       summary: Add an item 
       description: |
-        Creates an item for process **processId".
+        Creates an item for process **processId**".
         
         If the item  already is part of that process the request will have no effect.
       operationId: addProcessItem
@@ -614,12 +612,12 @@ paths:
         
         Tasks are returned for which the authenticated user is the assignee  or
         a candidate. If networks are enabled, the only tasks that are inside
-        the  given network are returned.
+        the given network are returned.
 
         In non-network deployments, administrators can see all processes and
-        perform  all operations on tasks. In network deployments, network
-        administrators can  see all processes in their network and perform all
-        operations on tasks in  their network.
+        perform all operations on tasks. In network deployments, network
+        administrators can see all processes in their network and perform all
+        operations on tasks in their network.
       operationId: getTasks
       parameters:
         - $ref: "#/parameters/skipCountParam"
@@ -642,14 +640,14 @@ paths:
       description: |
         Returns the task identified by **taskId**.
         
-        An authenticated user will have access to a processes if the user  has
+        An authenticated user will have access to a task if the user has
         started the process or if the user is involved in any of the process’s
         tasks. In a network, only tasks that are inside the given network are
         returned.
 
         In non-network deployments, administrators can see all processes and
-        perform all  operations on tasks. In network deployments, network
-        administrators can see all  processes in their network and perform all
+        perform all operations on tasks. In network deployments, network
+        administrators can see all processes in their network and perform all
         operations on tasks in their network.
       operationId: getTask
       produces:

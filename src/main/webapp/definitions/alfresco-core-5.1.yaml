@@ -3,8 +3,6 @@ info:
   description: Provides access to the core features of Alfresco
   version: '1'
   title: Alfresco Core REST API
-  contact:
-    url: 'http://docs.alfresco.com/5.1/pra/1/concepts/pra-resources.html'
 basePath: /alfresco/api/-default-/public/alfresco/versions/1
 securityDefinitions:
   basicAuth:
@@ -131,7 +129,7 @@ paths:
       tags:
         - comments
       summary: Get comments
-      description: Returns a list of comments for the file or folder identified by **nodeId**, sorted chronologically with the newest first.
+      description: Returns a list of comments for the node identified by **nodeId**, sorted chronologically with the newest first.
       operationId: getComments
       produces:
         - application/json
@@ -261,6 +259,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
           name: ratingBody
+          description: Rating details
           required: true
           schema:
             properties:
@@ -480,7 +479,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - in: body
           name: favoriteSiteBody
-          description: Unique entity properties
+          description: The id of the site to favorite.
           required: true
           schema: 
             properties:
@@ -501,7 +500,7 @@ paths:
         Returns information on favorite site **siteId** of person **personId**. 
         
         **Please note that this method is deprecated and will be removed in the future.**
-        Use `/people/{personId}/favorites` instead.
+        Use `/people/{personId}/favorites/{favoriteId}` instead.
       produces:
         - application/json
       parameters:
@@ -522,7 +521,7 @@ paths:
         Removes site **siteId** from the favorite site list of person **personId**. 
         
         **Please note that this method is deprecated and will be removed in the future.**
-        Use `/people/{personId}/favorites` instead.
+        Use `/people/{personId}/favorites/{favoriteId}` instead.
       produces:
         - application/json
       parameters:
@@ -540,7 +539,7 @@ paths:
         - people
       summary: Get favorites
       description: |
-        Returns a list of favorites person **personId**.
+        Returns a list of favorites for person **personId**.
         
         You can us the `-me-` string in place of `<personId>` to get the favorites of the currently authenticated user.        
         
@@ -565,7 +564,7 @@ paths:
         For example, the following **where** parameter restricts the returned list to the file and folder favorites for a person:
 
         ```SQL
-        (EXISTS(target/file OR EXISTS(target/folder))
+        (EXISTS(target/file) OR EXISTS(target/folder))
         ```
       produces:
         - application/json
@@ -765,7 +764,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - in: body
           name: siteMembershipBody
-          description: Unique entity properties
+          description: Site membership request details
           required: true
           schema:
             properties:
@@ -812,7 +811,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
         - in: body
-          name: siteMembershipRequestMessageBody
+          name: siteMembershipBody
           description: The new message to display
           required: true
           schema:
@@ -845,8 +844,8 @@ paths:
         - sites
       summary: Get site membership information
       description: |
-        Returns a list if site membership information for person **personId**.
-        You can sort the list if sites using the **orderBy** parameter.
+        Returns a list of site membership information for person **personId**.
+        You can sort the list of sites using the **orderBy** parameter.
         
         **orderBy** specifies the name of one or more 
         comma separated properties. 
@@ -1171,6 +1170,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagEntry'
+        '404':
+          description: If **tagId** does not exist
   '/networks/{networkId}':
     get:
       tags:
