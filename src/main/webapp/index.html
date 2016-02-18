@@ -35,7 +35,7 @@
       if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
-        url = "definitions/alfresco-core-5.1.yaml";
+        url = "definitions/alfresco-core.yaml";
       }
 
       window.swaggerUi = new SwaggerUi({
@@ -95,10 +95,10 @@
   <div class="swagger-ui-wrap">
     <a id="alflogo" href="#"><img src="images/logo.png" height="44px" width="160px" /></a>
     <form id="api_selector">
-      <div class="input">
+      <div class="input" id="select-wrapper">
         <select id="select_baseUrl" name="select_baseUrl">
-          <option value="definitions/alfresco-core-5.1.yaml">Core API</option>
-          <option value="definitions/alfresco-workflow-5.1.yaml">Workflow API</option>
+          <option value="definitions/alfresco-core.yaml">Core API</option>
+          <option value="definitions/alfresco-workflow.yaml">Workflow API</option>
         </select>
       </div>
       <div class="input"><input alt="Username" type="text" name="username" id="input_username" placeholder="username" size="10" value="admin"></div>
