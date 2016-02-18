@@ -13,7 +13,7 @@ This is useful for changing documentation and endpoint descriptions but it means
 
 - ` mvn tomcat7:run-war`
 
-Now the application is running at [http://localhost:8085/rest-api-explorer](http://localhost:8085/rest-api-explorer/)
+Now the application is running at [http://localhost:8085/api-explorer](http://localhost:8085/api-explorer/)
 
 ### License
 Copyright (C) 2016 Alfresco Software Limited
