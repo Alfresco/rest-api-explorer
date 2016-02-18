@@ -364,11 +364,11 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
           name: tagBody
-          description: Unique entity properties
+          description: The new tag
           required: true
           schema:
             properties:
-              Tag:
+              tag:
                 type: string
       responses:
         '201':
@@ -1161,11 +1161,11 @@ paths:
         - $ref: '#/parameters/tagIdParam'
         - in: body
           name: tagBody
-          description: Unique entity properties
+          description: The updated tag
           required: true
           schema:
             properties:
-              Tag:
+              tag:
                 type: string
       responses:
         '200':

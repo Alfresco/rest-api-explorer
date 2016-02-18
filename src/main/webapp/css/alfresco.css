@@ -2,6 +2,10 @@ body {
      padding: 10px;
 }
 
+#select-wrapper {
+     padding-top: 3px;
+}
+
 .swagger-section #header #alflogo {
      background: transparent;
 }
