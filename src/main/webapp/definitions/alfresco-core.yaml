@@ -28,11 +28,13 @@ tags:
   - name: networks
     description: Retrieve and manage Networks
   - name: nodes
-    description: Retrieve and manage Nodes
+    description: Retrieve and manage Nodes (**NEW**)
   - name: people
     description: Retrieve and manage People
   - name: ratings
     description: Retrieve and manage Ratings
+  - name: shared-links
+    description: Retrieve and manage Shared Links (**NEW**)
   - name: sites
     description: Retrieve and manage Sites
   - name: tags
@@ -42,6 +44,12 @@ parameters:
     name: nodeId
     in: path
     description: The identifier of a node.
+    required: true
+    type: string
+  sharedIdParam:
+    name: sharedId
+    in: path
+    description: The identifier of a shared id (quick share link).
     required: true
     type: string
   personIdParam:
@@ -1201,11 +1209,28 @@ paths:
       description: Returns information for the node with identifier **nodeId**.
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/propertiesParam'
+        - name: select
+          in: query
+          description: return additional info, eg. path, isLink
+          required: false
+          type: string
+        - name: relativePath
+          in: query
+          description: return info on node resolved by this path (relative to the specified nodeId as the starting parent folder)
+          required: false
+          type: string
       produces:
         - application/json
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format
+        '404':
+          description: If **nodeId** does not exist
     put:
       tags:
         - nodes
@@ -1213,11 +1238,20 @@ paths:
       description: Updates the node with identifier **nodeId**.
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/propertiesParam'
       produces:
         - application/json
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the update request is invalid or if the **nodeId** is not a valid format
+        '403':
+          description: If current user does not have permission to update **nodeId**
+        '404':
+          description: If **nodeId** does not exist
     delete:
       tags:
         - nodes
@@ -1228,25 +1262,48 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        '204':
           description: Successful response
+        '400':
+          description: If **nodeId** is not a valid format
+        '403':
+          description: If current user does not have permission to delete **nodeId**
+        '404':
+          description: If **nodeId** does not exist
   '/nodes/{nodeId}/children':
     get:
       tags:
         - nodes
       summary: Get node children
-      description: Returns the children of the node with identifier **nodeId**.
+      description: Returns the children of the node with identifier **nodeId**. Returns minimal info for each child, although 'select' can be used to return addtional info.
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/whereParam'
+        - $ref: '#/parameters/propertiesParam'
+        - name: select
+          in: query
+          description: return additional info, eg. aspectNames, properties, isLink, path
+          required: false
+          type: string
+        - name: relativePath
+          in: query
+          description: return info on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
+          required: false
+          type: string
       produces:
         - application/json
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/NodePaging'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '404':
+          description: If **nodeId** does not exist
     post:
       tags:
         - nodes
@@ -1256,6 +1313,7 @@ paths:
         The body can be JSON or multipart/formdata.
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/propertiesParam'
       consumes:
         - application/json
         - multipart/formdata
@@ -1264,6 +1322,14 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to add children to **nodeId**
+        '404':
+          description: If **nodeId** does not exist
   '/nodes/{nodeId}/content':
     get:
       tags:
@@ -1275,6 +1341,10 @@ paths:
       responses:
         '200':
           description: Successful response
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '404':
+          description: If **nodeId** does not exist
     put:
       tags:
         - nodes
@@ -1282,11 +1352,96 @@ paths:
       description: Updates the content of the node with identifier **nodeId**.
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/propertiesParam'
       produces:
         - application/json
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to update **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+  '/shared-links/{sharedId}':
+    get:
+      tags:
+        - shared-links
+      summary: Get a shared link - no authentication required !!
+      description: Returns minimal information for the file  identifier **sharedId**.
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+        - $ref: '#/parameters/propertiesParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeSharedLinkEntry'
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+    delete:
+      tags:
+        - shared-links
+      summary: Deletes a shared link
+      description: Deletes the shared link with identifier **sharedId**.
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: If **sharedId** is not a valid format
+        '403':
+          description: If current user does not have permission to delete **sharedId**
+        '404':
+          description: If **sharedId** does not exist
+  '/shared-links':
+    post:
+      tags:
+        - shared-links
+      summary: Create a shared link to a file
+      description: |
+        Create (or get) a shared link to specfied file identified by nodeId
+      parameters:
+        - $ref: '#/parameters/propertiesParam'
+      consumes:
+        - application/json
+        - multipart/formdata
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeSharedLinkEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+        '404':
+          description: If **nodeId** does not exist
+  '/shared-links/{sharedId}/content':
+    get:
+      tags:
+        - shared-links
+      summary: Get file content - no authentication required !!
+      description: Returns the content of the node with identifier **sharedId**.
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
 definitions:
   Error:
     type: object
@@ -1830,3 +1985,83 @@ definitions:
       value:
         type: string        
         description: The value of the preference. Note that this can be of any JSON type.
+  UserInfo:
+    type: object
+    properties:
+      displayName:
+        type: string
+      id:
+        type: string
+  NodePaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/NodeMinimalEntry'
+  NodeMinimalEntry:
+    type: object
+    properties:
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+      modifiedByUser: 
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+  NodeSharedLinkEntry:
+    type: object
+    properties:
+      name:
+        type: string
+      sharedId:
+        type: string
+      modifiedAt:
+        type: string
+      modifiedByUser: 
+        $ref: '#/definitions/UserInfo'
+  NodeEntry:
+    type: object
+    properties:
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+      modifiedByUser: 
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        properties:
+          prefix1:localname1:
+            type: string
+          prefix1:localname2:
+            type: string
+        
