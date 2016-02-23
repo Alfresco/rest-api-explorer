@@ -1347,15 +1347,12 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
-            type: array
             items:
-              type: object
               $ref: '#/definitions/SiteEntry'
   SiteEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Site'
   Site:
     type: object
@@ -1385,15 +1382,12 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
-            type: array
             items:
-              type: object
               $ref: '#/definitions/SiteContainerEntry'
   SiteContainerEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/SiteContainer'
   SiteContainer:
     type: object
@@ -1411,15 +1405,12 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
-            type: array
             items:
-              type: object
               $ref: '#/definitions/SiteMemberEntry'
   SiteMemberEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/SiteMember'
   SiteMember:
     type: object
@@ -1430,7 +1421,6 @@ definitions:
       id:
         type: string
       person:
-        type: object
         $ref: '#/definitions/Person'
       role:
         type: string
@@ -1443,7 +1433,6 @@ definitions:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Person'
   Person:
     type: object
@@ -1473,7 +1462,6 @@ definitions:
       location:
         type: string
       company:
-        type: object
         $ref: '#/definitions/Company'
       mobile:
         type: string
@@ -1519,13 +1507,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/CommentEntry'
   CommentEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Comment'
   Comment:
     type: object
@@ -1535,7 +1521,6 @@ definitions:
       content:
         type: string
       createdBy:
-        type: object
         $ref: '#/definitions/Person'
       createdAt:
         type: string
@@ -1543,7 +1528,6 @@ definitions:
       edited:
         type: boolean
       modifiedBy:
-        type: object
         $ref: '#/definitions/Person'
       modifiedAt:
         type: string
@@ -1563,13 +1547,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/TagEntry'
   TagEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Tag'
   Tag:
     type: object
@@ -1592,13 +1574,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/PersonNetworkEntry'
   PersonNetworkEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/PersonNetwork'
   PersonNetwork:
     type: object
@@ -1631,7 +1611,6 @@ definitions:
       quotas:
         type: array
         items:
-          type: object
           $ref: '#/definitions/NetworkQuota'
   NetworkQuota:
     type: object
@@ -1661,13 +1640,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/RatingEntry'
   RatingEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Rating'
   Rating:
     type: object
@@ -1703,13 +1680,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/FavoriteEntry'
   FavoriteEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Favorite'
   Favorite:
     type: object
@@ -1733,13 +1708,11 @@ definitions:
     type: object
     properties:
       target:
-        type: object
         $ref: '#/definitions/FavoriteTarget'
   FavoriteTarget:
     type: object
     properties:
       site:
-        type: object
         $ref: '#/definitions/FavoriteTargetSite'
   FavoriteTargetSite:
     type: object
@@ -1757,13 +1730,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/ActivityEntry'
   ActivityEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Activity'
   Activity:
     type: object
@@ -1840,13 +1811,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/PreferenceEntry'
   PreferenceEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Preference'
   Preference:
     type: object
