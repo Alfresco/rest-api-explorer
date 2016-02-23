@@ -329,6 +329,7 @@ paths:
 
         If networks are enabled, the authenticated user can start a new process for a
         process definition in the user's network.
+      operationId: addProcess
       produces:
         - application/json
       parameters:
@@ -380,6 +381,7 @@ paths:
         - processes
       summary: Delete a process
       description: Deletes the process with the specified **processId**.
+      operationId: removeProcess
       produces:
         - application/json
       parameters:
@@ -456,7 +458,7 @@ paths:
       summary: Add a variable
       description: |
         Creates or updates a specific variable **variableName** for process **processId**.
-      operationId: putProcessVariable
+      operationId: addProcessVariable
       produces:
         - application/json
       parameters:
@@ -481,6 +483,7 @@ paths:
         - processes
       summary: Delete a variable
       description: Deletes the variable **variableName** from the process with the specified **processId**.
+      operationId: removeProcessVariable
       produces:
         - application/json
       parameters:
@@ -558,6 +561,7 @@ paths:
       summary: Delete an item 
       description: |
         Deletes the item with the specified **itemId** from the process with the specified **processId**.
+      operationId: removeProcessItem
       produces:
         - application/json
       parameters:
@@ -825,6 +829,7 @@ paths:
           “state : “resolved”
         }
         ```
+      operationId: updateTask
       produces:
         - application/json
       parameters:
@@ -935,7 +940,7 @@ paths:
       summary: Add a variable
       description: |
         Creates or updates a specific variable **variableName** for a given task **taskId**.
-      operationId: putTaskVariable
+      operationId: updateTaskVariable
       produces:
         - application/json
       parameters:
@@ -961,6 +966,7 @@ paths:
       summary: Delete a variable
       description: |
         Deletes the variable with the specified **variableName** from the task with the specified **taskId**.
+      operationId: removeTaskVariable
       produces:
         - application/json
       parameters:
@@ -1038,6 +1044,7 @@ paths:
       summary: Delete an item
       description: |
         Deletes the item with the specified **itemId** from the task with the specified **taskId**.
+      operationId: removeTaskItem
       produces:
         - application/json
       parameters:
