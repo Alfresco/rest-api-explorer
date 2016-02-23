@@ -342,6 +342,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/ProcessEntry'
   '/processes/{processId}':
     get:
       tags:
@@ -844,6 +846,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/TaskEntry'
   '/tasks/{taskId}/task-form-model':
     get:
       tags:

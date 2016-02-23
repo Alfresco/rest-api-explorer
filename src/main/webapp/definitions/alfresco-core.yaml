@@ -469,6 +469,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/FavoriteSitePaging'
         '404':
           description: If **personId** does not exist
     post:
@@ -497,6 +499,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/FavoriteSite'
         '404':
           description: If **personId** does not exist
   '/people/{personId}/favorite-sites/{siteId}':
@@ -520,6 +524,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/FavoriteSite'
         '404':
           description: If **personId** or **siteId** does not exist
     delete:
@@ -770,6 +776,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMembershipRequestPaging'
         '404':
           description: If **personId** does not exist
     post:
@@ -798,6 +806,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMembershipRequestEntry'
         '404':
           description: If **personId** or **siteId** does not exist
   '/people/{personId}/site-membership-requests/{siteId}':
@@ -817,6 +827,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMembershipRequestEntry'
         '404':
           description: If **personId** or **siteId** does not exist
     put:
@@ -1063,6 +1075,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMemberEntry'
         '404':
           description: If **siteId** or **personId** does not exist
   '/sites/{siteId}/members/{personId}':
@@ -1116,6 +1130,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMemberEntry'
         '400':
           description: If the role does not exist
         '404':
@@ -1799,3 +1815,67 @@ definitions:
       value:
         type: string        
         description: The value of the preference. Note that this can be of any JSON type.
+  FavoriteSitePaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/FavoriteSiteEntry'
+  FavoriteSiteEntry:
+    type: object
+    properties:
+      entry:
+        type: object
+        $ref: '#/definitions/FavoriteSite'
+  FavoriteSite:
+    type: object
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      visibility:
+        type: string
+        enum:
+          - PRIVATE
+          - MODERATED
+          - PUBLIC
+  SiteMembershipRequestPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/SiteMembershipRequestEntry'
+  SiteMembershipRequestEntry:
+    type: object
+    properties:
+      entry:
+        type: object
+        $ref: '#/definitions/SiteMembershipRequest'
+  SiteMembershipRequest:
+    type: object
+    properties:
+      id:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      entry:
+        type: object
+        $ref: '#/definitions/Site'
