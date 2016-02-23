@@ -15,30 +15,32 @@ consumes:
 produces:
   - application/json
 tags:
+  - name: nodes
+    description: Retrieve and manage Nodes - Files & Folders (**NEW**)
+  - name: renditions
+    description: Retrieve and manage File Renditions (**NEW**)
+  - name: shared-links
+    description: Retrieve and manage Shared Links to Files (**NEW**)
   - name: comments
-    description: Retrieve and manage Comments
+    description: Retrieve and manage Node Comments
     externalDocs:
       description: Find more information on comments here
       url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-nodes-comments.html
+  - name: ratings
+    description: Retrieve and manage Node Ratings
+  - name: tags
+    description: Retrieve and manage Node Tags
   - name: favorites
-    description: Retrieve and manage Favorites
+    description: Retrieve and manage Personal Favorites
     externalDocs:
       description: Find more information on favorites here
       url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-favorites.html
   - name: networks
     description: Retrieve and manage Networks
-  - name: nodes
-    description: Retrieve and manage Nodes (**NEW**)
   - name: people
     description: Retrieve and manage People
-  - name: ratings
-    description: Retrieve and manage Ratings
-  - name: shared-links
-    description: Retrieve and manage Shared Links (**NEW**)
   - name: sites
     description: Retrieve and manage Sites
-  - name: tags
-    description: Retrieve and manage Tags
 parameters:
   nodeIdParam:
     name: nodeId
@@ -46,10 +48,22 @@ parameters:
     description: The identifier of a node.
     required: true
     type: string
+  nodeIdWithAliasParam:
+    name: nodeId
+    in: path
+    description: The identifier of a node. Can also use well-known alias (-my-, -shared- or -root-).
+    required: true
+    type: string
   sharedIdParam:
     name: sharedId
     in: path
     description: The identifier of a shared id (quick share link).
+    required: true
+    type: string
+  renditionIdParam:
+    name: renditionId
+    in: path
+    description: The name of a thumbnail rendition (eg. doclib, pdf).
     required: true
     type: string
   personIdParam:
@@ -1208,7 +1222,7 @@ paths:
       summary: Get a node
       description: Returns information for the node with identifier **nodeId**.
       parameters:
-        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/propertiesParam'
         - name: select
           in: query
@@ -1237,7 +1251,7 @@ paths:
       summary: Updates a node
       description: Updates the node with identifier **nodeId**.
       parameters:
-        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/propertiesParam'
       produces:
         - application/json
@@ -1252,13 +1266,20 @@ paths:
           description: If current user does not have permission to update **nodeId**
         '404':
           description: If **nodeId** does not exist
+        '409':
+          description: If name is updated and clashes with an existing node in the current parent folder
     delete:
       tags:
         - nodes
       summary: Deletes a node
-      description: Deletes the node with identifier **nodeId**.
+      description: Deletes the node with identifier **nodeId**. Deleting a folder will cascade delete all of it's children. Deleted nodes are moved to the trashcan (archive store) unless 'permanent' query parameter is true.
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - name: permanent
+          in: query
+          description: If true then, the owner or an admin, can permanently delete the node without moving to trashcan (archive store). False by default.
+          required: false
+          type: string
       produces:
         - application/json
       responses:
@@ -1277,7 +1298,7 @@ paths:
       summary: Get node children
       description: Returns the children of the node with identifier **nodeId**. Returns minimal info for each child, although 'select' can be used to return addtional info.
       parameters:
-        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
@@ -1312,8 +1333,13 @@ paths:
         Creates a node as a child of the node with identifier **nodeId**.
         The body can be JSON or multipart/formdata.
       parameters:
-        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/propertiesParam'
+        - name: select
+          in: query
+          description: return additional info, eg. isLink, path
+          required: false
+          type: string
       consumes:
         - application/json
         - multipart/formdata
@@ -1330,6 +1356,8 @@ paths:
           description: If current user does not have permission to add children to **nodeId**
         '404':
           description: If **nodeId** does not exist
+        '409':
+          description: If new name clashes with an existing node in the current parent folder
   '/nodes/{nodeId}/content':
     get:
       tags:
@@ -1353,6 +1381,11 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/propertiesParam'
+        - name: select
+          in: query
+          description: return additional info, eg. isLink, path
+          required: false
+          type: string
       produces:
         - application/json
       responses:
@@ -1366,6 +1399,53 @@ paths:
           description: If current user does not have permission to update **nodeId**
         '404':
           description: If **nodeId** does not exist
+  '/nodes/{nodeId}/renditions':
+    get:
+      tags:
+        - renditions
+      summary: List rendition info
+      description: Returns the rendition infos for node with identifier **nodeId**.
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+        '404':
+          description: If **nodeId** does not exist
+  '/nodes/{nodeId}/renditions/{renditionId}':
+    get:
+      tags:
+        - renditions
+      summary: Get rendition info
+      description: Returns the rendition info for node with identifier **nodeId**.
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
+        '404':
+          description: If **nodeId** or **renditionId** does not exist
+  '/nodes/{nodeId}/renditions/{renditionId}/content':
+    get:
+      tags:
+        - renditions
+      summary: Get rendition content
+      description: Returns the rendition content for node with identifier **nodeId**.
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
+        '404':
+          description: If **nodeId** or **renditionId** does not exist
   '/shared-links/{sharedId}':
     get:
       tags:
@@ -1992,6 +2072,17 @@ definitions:
         type: string
       id:
         type: string
+  ContentInfo:
+    type: object
+    properties:
+      mimeType:
+        type: string
+      mimeTypeName:
+        type: string
+      sizeInBytes:
+        type: integer
+      encoding:
+        type: string
   NodePaging:
     type: object
     properties:
@@ -2007,6 +2098,10 @@ definitions:
   NodeMinimalEntry:
     type: object
     properties:
+      id:
+        type: string
+      parentId:
+        type: string
       name:
         type: string
       nodeType:
@@ -2017,26 +2112,41 @@ definitions:
         type: boolean
       modifiedAt:
         type: string
+        format: date-time
       modifiedByUser: 
         $ref: '#/definitions/UserInfo'
       createdAt:
         type: string
+        format: date-time
       createdByUser:
         $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
   NodeSharedLinkEntry:
     type: object
     properties:
-      name:
+      id:
         type: string
-      sharedId:
+      nodeId:
+        type: string
+      name:
         type: string
       modifiedAt:
         type: string
+        format: date-time
       modifiedByUser: 
         $ref: '#/definitions/UserInfo'
+      sharedByUser: 
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
   NodeEntry:
     type: object
     properties:
+      id:
+        type: string
+      parentId:
+        type: string
       name:
         type: string
       nodeType:
@@ -2047,12 +2157,16 @@ definitions:
         type: boolean
       modifiedAt:
         type: string
+        format: date-time
       modifiedByUser: 
         $ref: '#/definitions/UserInfo'
       createdAt:
         type: string
+        format: date-time
       createdByUser:
         $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
       aspectNames:
         type: array
         items:
