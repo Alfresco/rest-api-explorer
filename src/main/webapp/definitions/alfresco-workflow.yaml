@@ -864,6 +864,8 @@ paths:
         - application/json
       parameters:
         - $ref: "#/parameters/taskIdParam"
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: "#/parameters/propertiesParam"
       responses:
         '200':

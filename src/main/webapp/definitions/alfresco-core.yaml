@@ -170,7 +170,6 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/propertiesParam'
         - in: body
           name: commentBody
           description: The comment text. Note that you can provide an array of comments.
@@ -241,6 +240,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/propertiesParam'
       responses:
         '200':
@@ -588,6 +589,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/whereParam'
       responses:
@@ -684,6 +687,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/propertiesParam'
       responses:
         '200':
@@ -728,6 +733,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/propertiesParam'
       responses:
         '200':
@@ -772,6 +779,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/propertiesParam'
       responses:
         '200':
@@ -897,6 +906,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/relationsParam'
@@ -993,6 +1004,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/propertiesParam'
       responses:
         '200':
@@ -1036,6 +1049,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/propertiesParam'
       responses:
         '200':
