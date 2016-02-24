@@ -16,11 +16,11 @@ produces:
   - application/json
 tags:
   - name: nodes
-    description: Retrieve and manage Nodes - Files & Folders (**NEW**)
+    description: Retrieve and manage Nodes - Files & Folders (**since 5.2**)
   - name: renditions
-    description: Retrieve and manage File Renditions (**NEW**)
+    description: Retrieve and manage File Renditions (**since 5.2**)
   - name: shared-links
-    description: Retrieve and manage Shared Links to Files (**NEW**)
+    description: Retrieve and manage Shared Links to Files (**since 5.2**)
   - name: comments
     description: Retrieve and manage Node Comments
     externalDocs:
@@ -41,6 +41,8 @@ tags:
     description: Retrieve and manage People
   - name: sites
     description: Retrieve and manage Sites
+  - name: since 5.2
+    description: New and updated endpoints (**since 5.2**)
 parameters:
   nodeIdParam:
     name: nodeId
@@ -350,7 +352,7 @@ paths:
         - tags
       summary: Get tags
       description: Returns a list of tags for node **nodeId**.
-      operationId: getTags
+      operationId: getNodeTags
       produces:
         - application/json
       parameters:
@@ -1269,6 +1271,7 @@ paths:
     get:
       tags:
         - nodes
+        - since 5.2
       summary: Get a node
       description: Returns information for the node with identifier **nodeId**.
       operationId: getNode
@@ -1299,12 +1302,20 @@ paths:
     put:
       tags:
         - nodes
+        - since 5.2
       summary: Updates a node
       description: Updates the node with identifier **nodeId**.
+         <p>**TODO** add more here ... !!
       operationId: updateNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/propertiesParam'
+        - in: body
+          name: requestBody
+          description: The node info to update.
+          required: true
+          schema:
+            $ref: '#/definitions/NodeUpdateEntry'
       produces:
         - application/json
       responses:
@@ -1323,8 +1334,12 @@ paths:
     delete:
       tags:
         - nodes
+        - since 5.2
       summary: Deletes a node
-      description: Deletes the node with identifier **nodeId**. Deleting a folder will cascade delete all of it's children. Deleted nodes are moved to the trashcan (archive store) unless 'permanent' query parameter is true.
+      description: |
+         Deletes the node with identifier **nodeId**. 
+         If the **nodeId** is a folder then all of it's children will also be cascade deleted.
+         Deleted nodes are moved to the trashcan (archive store) unless 'permanent' query parameter is true.
       operationId: deleteNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1348,6 +1363,7 @@ paths:
     get:
       tags:
         - nodes
+        - since 5.2
       summary: Get node children
       description: Returns the children of the node with identifier **nodeId**. Returns minimal info for each child, although 'select' can be used to return addtional info.
       operationId: getNodeChildren
@@ -1382,6 +1398,7 @@ paths:
     post:
       tags:
         - nodes
+        - since 5.2
       summary: Create a node
       description: |
         Creates a node as a child of the node with identifier **nodeId**.
@@ -1413,10 +1430,107 @@ paths:
           description: If **nodeId** does not exist
         '409':
           description: If new name clashes with an existing node in the current parent folder
+        '413':
+          description: If file content exceeds individual file size limit (configured for network/system)
+        '507':
+          description: If file content exceeds overall storage quota limit (configured for network/system)
+  '/nodes/{nodeId}/copy':
+    post:
+      tags:
+        - nodes
+        - since 5.2       
+      summary: Copy a node
+      description: |
+        Copy a node with identifier **nodeId** to parent folder node with identifier **targetParentId** in request body.
+        The new node will have the same name as source unless, optionally, renamed with **name** in request body.
+        If the source **nodeId** is a folder then all of it's children will be cascade copied to the **targetParentId** destination.
+      operationId: copyNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/propertiesParam'
+        - name: select
+          in: query
+          description: return additional info, eg. isLink, path
+          required: false
+          type: string
+        - in: body
+          name: requestBody
+          description: The targetParentId and optionally a (new) name.
+          required: true
+          schema:
+            properties:
+              targetParentId:
+                type: string
+              name:
+                type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to add children to **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If new name clashes with an existing node in the destination parent folder
+  '/nodes/{nodeId}/move':
+    post:
+      tags:
+        - nodes
+        - since 5.2       
+      summary: Move a node
+      description: |
+        Move a node with identifier **nodeId** to parent folder node with identifier **parentId** in request body.
+        The node can be, optionally, renamed with **name** in request body.
+        If the source **nodeId** is a folder then all of it's children will be cascade moved to the **targetParentId** destination.
+      operationId: moveNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/propertiesParam'
+        - name: select
+          in: query
+          description: return additional info, eg. isLink, path
+          required: false
+          type: string
+        - in: body
+          name: requestBody
+          description: The targetParentId and optionally a (new) name.
+          required: true
+          schema:
+            properties:
+              targetParentId:
+                type: string
+              name:
+                type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to add children to **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If new name clashes with an existing node in the destination parent folder
   '/nodes/{nodeId}/content':
     get:
       tags:
         - nodes
+        - since 5.2       
       summary: Get file content
       description: Returns the file content of the node with identifier **nodeId**.
       operationId: getFileContent
@@ -1429,9 +1543,14 @@ paths:
           description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
         '404':
           description: If **nodeId** does not exist
+        '413':
+          description: If file content exceeds individual file size limit (configured for network/system)
+        '507':
+          description: If file content exceeds overall storage quota limit (configured for network/system)
     put:
       tags:
         - nodes
+        - since 5.2        
       summary: Update file content
       description: Updates the content of the node with identifier **nodeId**.
       operationId: updateFileContent
@@ -1460,6 +1579,7 @@ paths:
     get:
       tags:
         - renditions
+        - since 5.2       
       summary: List info for renditions
       description: Returns the rendition infos for file node with identifier **nodeId**.
       operationId: getRenditions
@@ -1476,6 +1596,7 @@ paths:
     get:
       tags:
         - renditions
+        - since 5.2       
       summary: Get rendition info
       description: Returns the rendition info for file node with identifier **nodeId**.
       operationId: getRendition
@@ -1493,6 +1614,7 @@ paths:
     get:
       tags:
         - renditions
+        - since 5.2       
       summary: Get rendition content
       description: Returns the rendition content for file node with identifier **nodeId**.
       operationId: getRenditionContent
@@ -1510,8 +1632,9 @@ paths:
     get:
       tags:
         - shared-links
+        - since 5.2        
       summary: Get a shared link - no authentication required !!
-      description: Returns minimal information for the file  identifier **sharedId**.
+      description: Returns minimal information for the file identifier **sharedId**.
       operationId: getSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -1527,9 +1650,12 @@ paths:
           description: If the **sharedId** is not a valid format
         '404':
           description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system
     delete:
       tags:
         - shared-links
+        - since 5.2       
       summary: Deletes a shared link
       description: Deletes the shared link with identifier **sharedId**.
       operationId: deleteSharedLink
@@ -1546,10 +1672,13 @@ paths:
           description: If current user does not have permission to delete **sharedId**
         '404':
           description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system
   '/shared-links':
     post:
       tags:
         - shared-links
+        - since 5.2      
       summary: Create a shared link to a file
       description: Create (or get exisiting) shared link to specfied file identified by nodeId in request body.
       operationId: addSharedLink
@@ -1569,10 +1698,13 @@ paths:
           description: If the **nodeId** is not a valid format, or exists, but does not identify a file
         '404':
           description: If **nodeId** does not exist
+        '501':
+          description: If shared links are disabled for the system
   '/shared-links/{sharedId}/content':
     get:
       tags:
         - shared-links
+        - since 5.2      
       summary: Get file content - no authentication required !!
       description: Returns the content of the node with identifier **sharedId**.
       operationId: getSharedLinkContent
@@ -1585,6 +1717,28 @@ paths:
           description: If the **sharedId** is not a valid format
         '404':
           description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system
+  '/shared-links/{sharedId}/email':
+    post:
+      tags:
+        - shared-links
+        - since 5.2       
+      summary: Email shared link
+      description: Sends email with app-specific url including identifier **sharedId**. 
+        <p>**TODO** add more here ... !!
+      operationId: emailSharedLink
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system
 definitions:
   Error:
     type: object
@@ -2139,13 +2293,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/FavoriteSiteEntry'
   FavoriteSiteEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/FavoriteSite'
   FavoriteSite:
     type: object
@@ -2173,13 +2325,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/SiteMembershipRequestEntry'
   SiteMembershipRequestEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/SiteMembershipRequest'
   SiteMembershipRequest:
     type: object
@@ -2190,7 +2340,6 @@ definitions:
         type: string
         format: date-time
       entry:
-        type: object
         $ref: '#/definitions/Site'
   UserInfo:
     type: object
@@ -2292,6 +2441,26 @@ definitions:
         format: date-time
       createdByUser:
         $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        properties:
+          prefix1:localname1:
+            type: string
+          prefix1:localname2:
+            type: string
+  NodeUpdateEntry:
+    type: object
+    properties:
+      name:
+        type: string
+      nodeType:
+        type: string
       content:
         $ref: '#/definitions/ContentInfo'
       aspectNames:
