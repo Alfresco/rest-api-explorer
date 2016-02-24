@@ -216,6 +216,7 @@ paths:
         - comments
       summary: Update a comment
       description: Updates an existing comment **commentId** on node **nodeId**.
+      operationId: updateComment
       produces:
         - application/json
       parameters:
@@ -242,6 +243,7 @@ paths:
         - comments
       summary: Delete a comment
       description: Removes the comment **commentId** from node **nodeId**.
+      operationId: removeComment
       produces:
         - application/json
       parameters:
@@ -348,6 +350,7 @@ paths:
         - tags
       summary: Get tags
       description: Returns a list of tags for node **nodeId**.
+      operationId: getTags
       produces:
         - application/json
       parameters:
@@ -380,6 +383,7 @@ paths:
           }
         ]
         ```
+      operationId: addTag
       produces:
         - application/json
       parameters:
@@ -405,6 +409,7 @@ paths:
         - tags
       summary: Delete a tag
       description: Removes tag **tagId** from node **nodeId**.
+      operationId: removeTag
       produces:
         - application/json
       parameters:
@@ -421,6 +426,7 @@ paths:
         - people
       summary: Get a person
       description: Gets information for the person **personId**.
+      operationId: getPerson
       produces:
         - application/json
       parameters:
@@ -439,6 +445,7 @@ paths:
         - people
       summary: Get activities
       description: Returns a list of activities for person **personId**.
+      operationId: getActivities
       produces:
         - application/json
       parameters:
@@ -475,6 +482,7 @@ paths:
 
         **Please note that this method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
+      operationId: getFavoriteSites
       produces:
         - application/json
       parameters:
@@ -485,6 +493,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/FavoriteSitePaging'
         '404':
           description: If **personId** does not exist
     post:
@@ -497,6 +507,7 @@ paths:
           
         **Please note that this method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
+      operationId: favoriteSite
       produces:
         - application/json
       parameters:
@@ -512,6 +523,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/FavoriteSite'
         '404':
           description: If **personId** does not exist
   '/people/{personId}/favorite-sites/{siteId}':
@@ -525,6 +538,7 @@ paths:
         
         **Please note that this method is deprecated and will be removed in the future.**
         Use `/people/{personId}/favorites/{favoriteId}` instead.
+      operationId: getFavoriteSite
       produces:
         - application/json
       parameters:
@@ -534,6 +548,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/FavoriteSite'
         '404':
           description: If **personId** or **siteId** does not exist
     delete:
@@ -546,6 +562,7 @@ paths:
         
         **Please note that this method is deprecated and will be removed in the future.**
         Use `/people/{personId}/favorites/{favoriteId}` instead.
+      operationId: deleteFavoriteSite
       produces:
         - application/json
       parameters:
@@ -590,6 +607,7 @@ paths:
         ```SQL
         (EXISTS(target/file) OR EXISTS(target/folder))
         ```
+      operationId: getFavorites
       produces:
         - application/json
       parameters:
@@ -611,6 +629,7 @@ paths:
         - people
       summary: Add a favorite
       description: Favorite a **site**, **file**, or **folder** in the repository.
+      operationId: addFavorite
       produces:
         - application/json
       parameters:
@@ -644,6 +663,7 @@ paths:
         - people
       summary: Get a favorite
       description: Returns favorite **favoriteId** for person **personId**.
+      operationId: getFavorite
       produces:
         - application/json
       parameters:
@@ -664,6 +684,7 @@ paths:
         - people
       summary: Delete a favorite
       description: Removes **favoriteId** as a favorite of person **personId**.
+      operationId: removeFavoriteSite
       produces:
         - application/json
       parameters:
@@ -682,6 +703,7 @@ paths:
         - networks
       summary: Get network membership for a person
       description: Gets a list of network memberships for person **personId**.
+      operationId: getPersonNetworks
       produces:
         - application/json
       parameters:
@@ -701,6 +723,7 @@ paths:
         - networks
       summary: Get network information
       description: Returns network information on a single network specified by **networkId** for **personId**.
+      operationId: getPersonNetwork
       produces:
         - application/json
       parameters:
@@ -724,6 +747,7 @@ paths:
         
         Note that each preference consists of an **id** and a **value**. 
         The **value** can be of any JSON type.
+      operationId: getPreferences
       produces:
         - application/json
       parameters:
@@ -742,6 +766,7 @@ paths:
         - people
       summary: Get a preference
       description: Returns a specific preference for person **personId**.
+      operationId: getPreference
       produces:
         - application/json
       parameters:
@@ -766,6 +791,7 @@ paths:
         - sites
       summary: Get site membership requests
       description: Returns the current site membership requests for person **personId**.
+      operationId: getSiteMembershipRequests
       produces:
         - application/json
       parameters:
@@ -774,6 +800,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMembershipRequestPaging'
         '404':
           description: If **personId** does not exist
     post:
@@ -782,6 +810,7 @@ paths:
         - sites
       summary: Create a site membership request
       description: Create a site membership request for **personId** and **siteId**. The **personId** will be invited to the site as a SiteConsumer.
+      operationId: addSiteMembershipRequest
       produces:
         - application/json
       parameters:
@@ -801,6 +830,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMembershipRequestEntry'
         '404':
           description: If **personId** or **siteId** does not exist
   '/people/{personId}/site-membership-requests/{siteId}':
@@ -810,6 +841,7 @@ paths:
         - sites      
       summary: Get a site membership request
       description: Returns the site membership request for site **siteId** for person **personId**, if one exists.
+      operationId: getSiteMembershipRequest
       produces:
         - application/json
       parameters:
@@ -819,6 +851,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMembershipRequestEntry'
         '404':
           description: If **personId** or **siteId** does not exist
     put:
@@ -827,6 +861,7 @@ paths:
         - sites
       summary: Update a site membership request
       description: Updates the message for the site membership request to site **siteId** for person **personId**.
+      operationId: updateSiteMembershipRequest
       consumes:
         - application/json
       produces:
@@ -851,6 +886,7 @@ paths:
         - sites
       summary: Cancel a site membership
       description: Cancels the site membership request to site **siteId** for person **personId**.
+      operationId: removeSiteMembershipRequest
       produces:
         - application/json
       parameters:
@@ -880,6 +916,7 @@ paths:
         name
         name ASC
         ```
+      operationId: getSiteMembership
       produces:
         - application/json
       parameters:
@@ -955,6 +992,7 @@ paths:
         ```
         containers,members
         ```
+      operationId: getSite
       produces:
         - application/json
       parameters:
@@ -974,6 +1012,7 @@ paths:
         - sites
       summary: Get containers
       description: Returns a list of containers information for site identified by **siteId**.
+      operationId: getSiteContainers
       produces:
         - application/json
       parameters:
@@ -992,6 +1031,7 @@ paths:
         - sites
       summary: Get a container
       description: Returns information on the container **containerId** in site **siteId**.
+      operationId: getSiteContainer
       produces:
         - application/json
       parameters:
@@ -1015,6 +1055,7 @@ paths:
         - sites
       summary: Get members
       description: Returns a list of site memberships for site **siteId**.
+      operationId: getSiteMembers
       produces:
         - application/json
       parameters:
@@ -1040,6 +1081,7 @@ paths:
         * SiteCollaborator
         * SiteContributor
         * SiteManager
+      operationId: addSiteMember
       produces:
         - application/json
       parameters:
@@ -1057,6 +1099,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMemberEntry'
         '404':
           description: If **siteId** or **personId** does not exist
   '/sites/{siteId}/members/{personId}':
@@ -1066,6 +1110,7 @@ paths:
         - people
       summary: Get a site member
       description: Returns site membership information for person **personId** on site **siteId**.
+      operationId: getSiteMember
       produces:
         - application/json
       parameters:
@@ -1092,6 +1137,7 @@ paths:
         * SiteCollaborator
         * SiteContributor
         * SiteManager
+      operationId: updateSiteMember
       produces:
         - application/json
       parameters:
@@ -1108,6 +1154,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMemberEntry'
         '400':
           description: If the role does not exist
         '404':
@@ -1117,6 +1165,7 @@ paths:
         - sites
       summary: Delete a site member
       description: Removes person **personId** as a member of site **siteId**.
+      operationId: removeSiteMember
       produces:
         - application/json
       parameters:
@@ -1177,6 +1226,7 @@ paths:
         - tags
       summary: Update a tag
       description: Updates the tag **tagId**.
+      operationId: updateTag
       produces:
         - application/json
       parameters:
@@ -2065,6 +2115,70 @@ definitions:
       value:
         type: string        
         description: The value of the preference. Note that this can be of any JSON type.
+  FavoriteSitePaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/FavoriteSiteEntry'
+  FavoriteSiteEntry:
+    type: object
+    properties:
+      entry:
+        type: object
+        $ref: '#/definitions/FavoriteSite'
+  FavoriteSite:
+    type: object
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      visibility:
+        type: string
+        enum:
+          - PRIVATE
+          - MODERATED
+          - PUBLIC
+  SiteMembershipRequestPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/SiteMembershipRequestEntry'
+  SiteMembershipRequestEntry:
+    type: object
+    properties:
+      entry:
+        type: object
+        $ref: '#/definitions/SiteMembershipRequest'
+  SiteMembershipRequest:
+    type: object
+    properties:
+      id:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      entry:
+        type: object
+        $ref: '#/definitions/Site'
   UserInfo:
     type: object
     properties:
