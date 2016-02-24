@@ -1271,6 +1271,7 @@ paths:
         - nodes
       summary: Get a node
       description: Returns information for the node with identifier **nodeId**.
+      operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/propertiesParam'
@@ -1300,6 +1301,7 @@ paths:
         - nodes
       summary: Updates a node
       description: Updates the node with identifier **nodeId**.
+      operationId: updateNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/propertiesParam'
@@ -1323,6 +1325,7 @@ paths:
         - nodes
       summary: Deletes a node
       description: Deletes the node with identifier **nodeId**. Deleting a folder will cascade delete all of it's children. Deleted nodes are moved to the trashcan (archive store) unless 'permanent' query parameter is true.
+      operationId: deleteNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - name: permanent
@@ -1347,6 +1350,7 @@ paths:
         - nodes
       summary: Get node children
       description: Returns the children of the node with identifier **nodeId**. Returns minimal info for each child, although 'select' can be used to return addtional info.
+      operationId: getNodeChildren
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/skipCountParam'
@@ -1382,6 +1386,7 @@ paths:
       description: |
         Creates a node as a child of the node with identifier **nodeId**.
         The body can be JSON or multipart/formdata.
+      operationId: addNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/propertiesParam'
@@ -1412,8 +1417,9 @@ paths:
     get:
       tags:
         - nodes
-      summary: Get content
-      description: Returns the content of the node with identifier **nodeId**.
+      summary: Get file content
+      description: Returns the file content of the node with identifier **nodeId**.
+      operationId: getFileContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
       responses:
@@ -1426,8 +1432,9 @@ paths:
     put:
       tags:
         - nodes
-      summary: Update content
+      summary: Update file content
       description: Updates the content of the node with identifier **nodeId**.
+      operationId: updateFileContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/propertiesParam'
@@ -1453,8 +1460,9 @@ paths:
     get:
       tags:
         - renditions
-      summary: List rendition info
-      description: Returns the rendition infos for node with identifier **nodeId**.
+      summary: List info for renditions
+      description: Returns the rendition infos for file node with identifier **nodeId**.
+      operationId: getRenditions
       parameters:
         - $ref: '#/parameters/nodeIdParam'
       responses:
@@ -1469,7 +1477,8 @@ paths:
       tags:
         - renditions
       summary: Get rendition info
-      description: Returns the rendition info for node with identifier **nodeId**.
+      description: Returns the rendition info for file node with identifier **nodeId**.
+      operationId: getRendition
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/renditionIdParam'
@@ -1485,7 +1494,8 @@ paths:
       tags:
         - renditions
       summary: Get rendition content
-      description: Returns the rendition content for node with identifier **nodeId**.
+      description: Returns the rendition content for file node with identifier **nodeId**.
+      operationId: getRenditionContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/renditionIdParam'
@@ -1502,6 +1512,7 @@ paths:
         - shared-links
       summary: Get a shared link - no authentication required !!
       description: Returns minimal information for the file  identifier **sharedId**.
+      operationId: getSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
         - $ref: '#/parameters/propertiesParam'
@@ -1521,6 +1532,7 @@ paths:
         - shared-links
       summary: Deletes a shared link
       description: Deletes the shared link with identifier **sharedId**.
+      operationId: deleteSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
       produces:
@@ -1539,8 +1551,8 @@ paths:
       tags:
         - shared-links
       summary: Create a shared link to a file
-      description: |
-        Create (or get) a shared link to specfied file identified by nodeId
+      description: Create (or get exisiting) shared link to specfied file identified by nodeId in request body.
+      operationId: addSharedLink
       parameters:
         - $ref: '#/parameters/propertiesParam'
       consumes:
@@ -1563,6 +1575,7 @@ paths:
         - shared-links
       summary: Get file content - no authentication required !!
       description: Returns the content of the node with identifier **sharedId**.
+      operationId: getSharedLinkContent
       parameters:
         - $ref: '#/parameters/sharedIdParam'
       responses:
