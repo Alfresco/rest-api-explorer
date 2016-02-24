@@ -330,7 +330,7 @@ paths:
         - tags
       summary: Get tags
       description: Returns a list of tags for node **nodeId**.
-      operationId: getTags
+      operationId: getNodeTags
       produces:
         - application/json
       parameters:
@@ -1088,6 +1088,11 @@ paths:
             properties:
               Role:
                 type: string
+                enum:
+                - SiteConsumer
+                - SiteCollaborator
+                - SiteContributor
+                - SiteManager
               PersonId:
                 type: string
       responses:
@@ -1145,6 +1150,11 @@ paths:
             properties:
               role:
                 type: string
+                enum:
+                - SiteConsumer
+                - SiteCollaborator
+                - SiteContributor
+                - SiteManager
       responses:
         '200':
           description: Successful response
