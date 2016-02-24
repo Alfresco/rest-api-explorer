@@ -119,6 +119,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DeploymentPaging'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/deployments/{deploymentId}':
     get:
       tags:
@@ -149,7 +153,7 @@ paths:
             $ref: '#/definitions/DeploymentEntry'
         '404':
           description: If **deploymentId** does not exist
-        '500':
+        default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
@@ -173,6 +177,10 @@ paths:
       responses:
         '204':
           description: Successful response
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   /process-definitions:
     get:
       tags:
@@ -200,6 +208,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessDefinitionPaging'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/process-definitions/{processDefinitionId}':
     get:
       tags:
@@ -224,7 +236,7 @@ paths:
             $ref: '#/definitions/ProcessDefinitionEntry'
         '404':
           description: If **processDefinitionId** does not exist
-        '500':
+        default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
@@ -254,7 +266,7 @@ paths:
             type: file
         '404':
           description: If **processDefinitionId** does not exist
-        '500':
+        default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
@@ -281,7 +293,7 @@ paths:
             $ref: '#/definitions/ProcessDefinitionEntry'
         '404':
           description: If **processDefinitionId** does not exist
-        '500':
+        default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
@@ -317,6 +329,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessPaging'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - processes
@@ -344,6 +360,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessEntry'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/processes/{processId}':
     get:
       tags:
@@ -374,7 +394,7 @@ paths:
             $ref: '#/definitions/ProcessEntry'
         '404':
           description: If **processId** does not exist
-        '500':
+        default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
@@ -393,6 +413,10 @@ paths:
           description: Successful response
         '404':
           description: The processId does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/processes/{processId}/variables':
     get:
       tags:
@@ -425,6 +449,10 @@ paths:
             $ref: '#/definitions/VariablePaging'
         '404':
           description: If **processId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - processes
@@ -453,6 +481,10 @@ paths:
             $ref: '#/definitions/VariablePaging'
         '404':
           description: If **processId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/processes/{processId}/variables/{variableName}':
     put:
       tags:
@@ -480,6 +512,10 @@ paths:
             $ref: '#/definitions/VariablePaging'
         '404':
           description: If **processId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - processes
@@ -496,6 +532,10 @@ paths:
           description: Successful response
         '404':
           description: The **processId** does not exist, or the **variableName** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/processes/{processId}/items':
     get:
       tags:
@@ -528,6 +568,10 @@ paths:
             $ref: '#/definitions/ItemPaging'
         '404':
           description: If **processId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - processes
@@ -556,6 +600,10 @@ paths:
             $ref: '#/definitions/ItemPaging'
         '404':
           description: If **processId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/processes/{processId}/items/{itemId}':
     delete:
       tags:
@@ -574,6 +622,10 @@ paths:
           description: Successful response
         '404':
           description: The **processId** does not exist, or the **itemId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/processes/{processId}/tasks':
     get:
       tags:
@@ -608,6 +660,10 @@ paths:
             $ref: '#/definitions/TaskPaging'
         '404':
           description: If **processId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   /tasks:
     get:
       tags:
@@ -638,6 +694,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskPaging'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}':
     get:
       tags:
@@ -668,7 +728,7 @@ paths:
             $ref: '#/definitions/TaskEntry'
         '404':
           description: If **taskId** does not exist
-        '500':
+        default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
@@ -848,6 +908,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskEntry'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}/task-form-model':
     get:
       tags:
@@ -874,7 +938,7 @@ paths:
             $ref: '#/definitions/TaskFormModelPaging'
         '404':
           description: If **taskId** does not exist
-        '500':
+        default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
@@ -911,6 +975,10 @@ paths:
             $ref: '#/definitions/VariablePaging'
         '404':
           description: If **taskId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - tasks
@@ -939,6 +1007,10 @@ paths:
             $ref: '#/definitions/VariablePaging'
         '404':
           description: If **taskId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}/variables/{variableName}':
     put:
       tags:
@@ -966,6 +1038,10 @@ paths:
             $ref: '#/definitions/VariablePaging'
         '404':
           description: If **taskId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - tasks
@@ -983,6 +1059,10 @@ paths:
           description: Successful response
         '404':
           description: The **taskId** does not exist, or the **variableName** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}/items':
     get:
       tags:
@@ -1015,6 +1095,10 @@ paths:
             $ref: '#/definitions/ItemPaging'
         '404':
           description: If **taskId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - tasks
@@ -1043,6 +1127,10 @@ paths:
             $ref: '#/definitions/ItemPaging'
         '404':
           description: If **taskId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}/items/{itemId}':
     delete:
       tags:
@@ -1061,6 +1149,10 @@ paths:
           description: Successful response
         '404':
           description: The **taskId** does not exist, or the **itemId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object

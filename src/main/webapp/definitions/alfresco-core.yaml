@@ -150,6 +150,10 @@ paths:
           description: If the **nodeId** exists, but does not identify a file or a folder
         '404':
           description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - comments
@@ -188,6 +192,10 @@ paths:
             $ref: '#/definitions/CommentEntry'
         '404':
           description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/comments/{commentId}':
     put:
       tags:
@@ -216,6 +224,10 @@ paths:
             $ref: '#/definitions/CommentEntry'
         '404':
           description: If **nodeId** or **commentId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - comments
@@ -232,6 +244,10 @@ paths:
           description: Successful response
         '404':
           description: If **nodeId** or **commentId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/ratings':
     get:
       tags:
@@ -253,6 +269,10 @@ paths:
             $ref: '#/definitions/RatingPaging'
         '404':
           description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - ratings
@@ -286,6 +306,10 @@ paths:
             $ref: '#/definitions/RatingEntry'
         '404':
           description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/ratings/{ratingId}':
     get:
       tags:
@@ -308,6 +332,10 @@ paths:
           description: If **ratingId** does not exist
         '404':
           description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - ratings
@@ -324,6 +352,10 @@ paths:
           description: Successful response
         '404':
           description: If **nodeId** or **ratingId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/tags':
     get:
       tags:
@@ -345,6 +377,10 @@ paths:
             $ref: '#/definitions/TagPaging'
         '404':
           description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - tags
@@ -383,6 +419,10 @@ paths:
             $ref: '#/definitions/TagEntry'
         '404':
           description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/tags/{tagId}':
     delete:
       tags:
@@ -400,6 +440,10 @@ paths:
           description: Successful response
         '404':
           description: If **nodeId** or **tagId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}':
     get:
       tags:
@@ -419,6 +463,10 @@ paths:
             $ref: '#/definitions/PersonEntry'
         '404':
           description: If **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/activities':
     get:
       tags:
@@ -451,6 +499,10 @@ paths:
             $ref: '#/definitions/ActivityPaging'
         '404':
           description: If **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/favorite-sites':
     get:
       deprecated: true
@@ -477,6 +529,10 @@ paths:
             $ref: '#/definitions/FavoriteSitePaging'
         '404':
           description: If **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       deprecated: true
       tags:
@@ -507,6 +563,10 @@ paths:
             $ref: '#/definitions/FavoriteSite'
         '404':
           description: If **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/favorite-sites/{siteId}':
     get:
       deprecated: true
@@ -532,6 +592,10 @@ paths:
             $ref: '#/definitions/FavoriteSite'
         '404':
           description: If **personId** or **siteId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       deprecated: true
       tags:
@@ -553,6 +617,10 @@ paths:
           description: Successful response
         '404':
           description: If **personId** or **siteId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/favorites':
     get:
       tags:
@@ -605,6 +673,10 @@ paths:
           description: An invalid **where** parameter was specified
         '404':
           description: If **personId** does not exist, or the current user does not have permission to access the favorites of **personId**
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - favorites
@@ -638,6 +710,10 @@ paths:
             or a favorite already exists with the specified id, or an 
             entity does exist with the id of the posted object, 
             but is not of the same type of the posted object
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/favorites/{favoriteId}':
     get:
       tags:
@@ -660,6 +736,10 @@ paths:
         '404':
           description: |
             If **personId** does not exist, or the target entity does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - favorites
@@ -678,6 +758,10 @@ paths:
         '404':
           description: |
             If **personId** does not exist, or the target entity does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/networks':
     get:
       tags:
@@ -700,6 +784,10 @@ paths:
             $ref: '#/definitions/PersonNetworkPaging'
         '404':
           description: If **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/networks/{networkId}':
     get:
       tags:
@@ -721,6 +809,10 @@ paths:
             $ref: '#/definitions/PersonNetworkEntry'
         '404':
           description: If **personId** or **networkId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/preferences':
     get:
       tags:
@@ -746,6 +838,10 @@ paths:
             $ref: '#/definitions/PreferencePaging'
         '404':
           description: If **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/preferences/{preferenceName}':
     get:
       tags:
@@ -770,6 +866,10 @@ paths:
             $ref: '#/definitions/PreferenceEntry'
         '404':
           description: If **personId** or **preferenceName** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/site-membership-requests':
     get:
       tags:
@@ -792,6 +892,10 @@ paths:
             $ref: '#/definitions/SiteMembershipRequestPaging'
         '404':
           description: If **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - people
@@ -822,6 +926,10 @@ paths:
             $ref: '#/definitions/SiteMembershipRequestEntry'
         '404':
           description: If **personId** or **siteId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/site-membership-requests/{siteId}':
     get:
       tags:
@@ -843,6 +951,10 @@ paths:
             $ref: '#/definitions/SiteMembershipRequestEntry'
         '404':
           description: If **personId** or **siteId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     put:
       tags:
         - people
@@ -868,6 +980,10 @@ paths:
       responses:
         '200':
           description: Successful response
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - people
@@ -885,6 +1001,10 @@ paths:
           description: Successful response
         '404':
           description: If **personId** or **siteId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/sites':
     get:
       tags:
@@ -921,6 +1041,10 @@ paths:
             $ref: '#/definitions/SitePaging'
         '404':
           description: If **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   /sites:
     get:
       tags:
@@ -963,6 +1087,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SitePaging'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/sites/{siteId}':
     get:
       tags:
@@ -996,6 +1124,10 @@ paths:
             $ref: '#/definitions/SiteEntry'
         '404':
           description: If **siteId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/sites/{siteId}/containers':
     get:
       tags:
@@ -1017,6 +1149,10 @@ paths:
             $ref: '#/definitions/SiteContainerPaging'
         '404':
           description: If **siteId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/sites/{siteId}/containers/{containerId}':
     get:
       tags:
@@ -1041,6 +1177,10 @@ paths:
             $ref: '#/definitions/SiteContainerEntry'
         '404':
           description: If **siteId** or **containerId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/sites/{siteId}/members':
     get:
       tags:
@@ -1062,6 +1202,10 @@ paths:
             $ref: '#/definitions/SiteMemberPaging'
         '404':
           description: If **siteId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - sites
@@ -1102,6 +1246,10 @@ paths:
             $ref: '#/definitions/SiteMemberEntry'
         '404':
           description: If **siteId** or **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/sites/{siteId}/members/{personId}':
     get:
       tags:
@@ -1123,6 +1271,10 @@ paths:
             $ref: '#/definitions/SiteMemberEntry'
         '404':
           description: If **siteId** or **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     put:
       tags:
         - sites
@@ -1164,6 +1316,10 @@ paths:
           description: If the role does not exist
         '404':
           description: If **siteId** or **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - sites
@@ -1180,6 +1336,10 @@ paths:
           description: Successful response
         '404':
           description: If **personId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   /tags:
     get:
       tags:
@@ -1198,6 +1358,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagPaging'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/tags/{tagId}':
     get:
       tags:
@@ -1221,7 +1385,7 @@ paths:
               tag: test tag 1
         '404':
           description: Tag Not Found
-        '500':
+        default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
@@ -1250,6 +1414,10 @@ paths:
             $ref: '#/definitions/TagEntry'
         '404':
           description: If **tagId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/networks/{networkId}':
     get:
       tags:
@@ -1269,6 +1437,10 @@ paths:
             $ref: '#/definitions/PersonNetworkEntry'
         '404':
           description: If **networkId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
