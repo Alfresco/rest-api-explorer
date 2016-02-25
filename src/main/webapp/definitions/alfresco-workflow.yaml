@@ -1157,7 +1157,7 @@ paths:
     get:
       tags:
         - tasks
-      summary: Get a list of candidates for this task
+      summary: Get task candidates
       description: |
         Returns a list of candidate users and groups for the specified task **taskId**.
       operationId: getTaskCandidates
