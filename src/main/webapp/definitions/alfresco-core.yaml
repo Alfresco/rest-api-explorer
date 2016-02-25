@@ -1651,7 +1651,7 @@ paths:
         - shared-links
         - since 5.2        
       summary: Get a shared link - no authentication required !!
-      description: Returns minimal information for the file identifier **sharedId**.
+      description: Returns minimal information for the file with shared link identifier **sharedId**.
       operationId: getSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -1697,7 +1697,7 @@ paths:
         - shared-links
         - since 5.2      
       summary: Create a shared link to a file
-      description: Create (or get exisiting) shared link to specfied file identified by nodeId in request body.
+      description: Create shared link to specfied file identified by nodeId in request body.
       operationId: addSharedLink
       parameters:
         - $ref: '#/parameters/propertiesParam'
@@ -1712,7 +1712,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeSharedLinkEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+          description: If the **nodeId** is not a valid format or does not identify a file or already exists
+        '403':
+          description: If current user does not have permission to create **sharedId** (eg. no read permission)
         '404':
           description: If **nodeId** does not exist
         '501':
@@ -1723,7 +1725,7 @@ paths:
         - shared-links
         - since 5.2      
       summary: Get file content - no authentication required !!
-      description: Returns the content of the node with identifier **sharedId**.
+      description: Returns the content of the file with shared link identifier **sharedId**.
       operationId: getSharedLinkContent
       parameters:
         - $ref: '#/parameters/sharedIdParam'
