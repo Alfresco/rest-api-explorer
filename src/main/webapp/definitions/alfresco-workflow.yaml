@@ -1153,6 +1153,32 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
+  '/tasks/{taskId}/candidates':
+    get:
+      tags:
+        - tasks
+      summary: Get a list of candidates for this task
+      description: |
+        Returns a list of candidate users and groups for the specified task **taskId**.
+      operationId: getTaskCandidates
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/taskIdParam"
+        - $ref: "#/parameters/skipCountParam"
+        - $ref: "#/parameters/maxItemsParam"
+        - $ref: "#/parameters/propertiesParam"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CandidatePaging'
+        '404':
+          description: If **taskId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -1721,3 +1747,34 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/Variable'
+  CandidatePaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/CandidateEntry'
+  CandidateEntry:
+    type: object
+    properties:
+      entry:
+        type: object
+        $ref: '#/definitions/Candidate'
+  Candidate:
+    type: object
+    description: |
+      A candidate item.
+    properties:
+      candidateType:
+        type: string
+        enum:
+          - user
+          - group
+      candidateId:
+        type: string
