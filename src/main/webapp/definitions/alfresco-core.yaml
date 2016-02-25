@@ -1371,8 +1371,25 @@ paths:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/orderByParam'
-        - $ref: '#/parameters/whereParam'
+        - name: orderBy
+          in: query
+          description: If not specified then default sort is for folders to be sorted before files, and by ascending name. This default can be completely overridden by specifying a specific orderBy consisting of one, two or three comma-separated list of properties (with optional ASCending or DESCending). For example, specifying “orderBy=name DESC” would return a mixed folder/file list. It should be noted that the default sort order can be explicitly specified as “orderBy=isFolder DESC,name ASC” or reversed as “orderBy=isFolder DESC,name ASC”. Other orderBy properties include:- sizeInBytes, mimeType, nodeType, cm:title, modifiedAt, createdAt, modifiedByUser, createdByUser, ... 
+          required: false
+          type: string
+        - name: where
+          in: query
+          description: optionally filter the list. Examples include:-
+          
+            *   where=(isFolder=true)
+            
+            *   where=(isFile=true)
+            
+            *   where=(nodeType='my:specialtype')
+            
+            *   where=(nodeType='my:specialtype' INCLUDESUBTYPES)
+            
+          required: false
+          type: string
         - $ref: '#/parameters/propertiesParam'
         - name: select
           in: query
