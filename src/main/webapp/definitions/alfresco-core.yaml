@@ -1613,6 +1613,11 @@ paths:
           description: return info on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
           required: false
           type: string
+        - name: includeSource
+          in: query
+          description: also include "source" (in addition to "entries") with folder info on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
+          required: false
+          type: string
       produces:
         - application/json
       responses:
