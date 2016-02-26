@@ -132,26 +132,37 @@ parameters:
       type: string
     collectionFormat: csv
   orderByParam:
-    name: "orderBy"
-    in: "query"
+    name: orderBy
+    in: query
     description: A string to control the order of the entities returned.
     required: false
-    type: "string"
+    type: string
   whereParam:
-    name: "where"
-    in: "query"
+    name: where
+    in: query
     description: A string to restrict the returned objects by using a predicate.
     required: false
-    type: "string"
+    type: string
   relationsParam:
-    name: "relations"
-    in: "query"
+    name: relations
+    in: query
     description: Use the relations parameter to include one or more related entities in a single response.
     required: false
     type: array
     items:
       type: string
     collectionFormat: csv
+  attachmentParam:
+    name: attachment
+    in: query
+    description: |
+       True by default. This enables, for example, a web browser to download the file as an attachment. 
+       If false, a web browser may preview file (eg. in a new tab or window) instead of 
+       downloading. However, we restrict this to a specific white list of content types, eg. certain image types & pdf.
+       If the content type is not in the white list then the false setting is ignored and 
+       the attachment will be returned in the response.
+    required: true
+    type: string
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -1786,6 +1797,7 @@ paths:
       operationId: getFileContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/attachmentParam'
       responses:
         '200':
           description: Successful response
@@ -1887,6 +1899,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/renditionIdParam'
+        - $ref: '#/parameters/attachmentParam'
       responses:
         '200':
           description: Successful response
@@ -1994,6 +2007,7 @@ paths:
       operationId: getSharedLinkContent
       parameters:
         - $ref: '#/parameters/sharedIdParam'
+        - $ref: '#/parameters/attachmentParam'
       responses:
         '200':
           description: Successful response
