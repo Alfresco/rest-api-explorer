@@ -15,12 +15,14 @@ consumes:
 produces:
   - application/json
 tags:
+  - name: 5.2 changes
+    description: New and updated endpoints (since 5.2)
   - name: nodes
-    description: Retrieve and manage Nodes - Files & Folders (**since 5.2**)
+    description: Retrieve and manage Nodes - Files & Folders (since 5.2)
   - name: renditions
-    description: Retrieve and manage File Renditions (**since 5.2**)
+    description: Retrieve and manage File Renditions (since 5.2)
   - name: shared-links
-    description: Retrieve and manage Shared Links to Files (**since 5.2**)
+    description: Retrieve and manage public Shared Links (since 5.2)
   - name: comments
     description: Retrieve and manage Node Comments
     externalDocs:
@@ -41,8 +43,6 @@ tags:
     description: Retrieve and manage People
   - name: sites
     description: Retrieve and manage Sites
-  - name: since 5.2
-    description: New and updated endpoints (**since 5.2**)
 parameters:
   nodeIdParam:
     name: nodeId
@@ -1471,7 +1471,7 @@ paths:
     get:
       tags:
         - nodes
-        - since 5.2
+        - 5.2 changes
       summary: Get a node
       description: Returns information for the node with identifier **nodeId**.
       operationId: getNode
@@ -1506,7 +1506,7 @@ paths:
     put:
       tags:
         - nodes
-        - since 5.2
+        - 5.2 changes
       summary: Updates a node
       description: Updates the node with identifier **nodeId**.
          <p>**TODO** add more here ... !!
@@ -1542,7 +1542,7 @@ paths:
     delete:
       tags:
         - nodes
-        - since 5.2
+        - 5.2 changes
       summary: Deletes a node
       description: |
          Deletes the node with identifier **nodeId**. 
@@ -1575,7 +1575,7 @@ paths:
     get:
       tags:
         - nodes
-        - since 5.2
+        - 5.2 changes
       summary: Get node children
       description: Returns the children of the node with identifier **nodeId**. Returns minimal info for each child, although 'select' can be used to return addtional info.
       operationId: getNodeChildren
@@ -1636,7 +1636,7 @@ paths:
     post:
       tags:
         - nodes
-        - since 5.2
+        - 5.2 changes
       summary: Create a node
       description: |
         Creates a node as a child of the node with identifier **nodeId**.
@@ -1680,7 +1680,7 @@ paths:
     post:
       tags:
         - nodes
-        - since 5.2       
+        - 5.2 changes       
       summary: Copy a node
       description: |
         Copy a node with identifier **nodeId** to parent folder node with identifier **targetParentId** in request body.
@@ -1730,7 +1730,7 @@ paths:
     post:
       tags:
         - nodes
-        - since 5.2       
+        - 5.2 changes       
       summary: Move a node
       description: |
         Move a node with identifier **nodeId** to parent folder node with identifier **parentId** in request body.
@@ -1780,7 +1780,7 @@ paths:
     get:
       tags:
         - nodes
-        - since 5.2       
+        - 5.2 changes       
       summary: Get file content
       description: Returns the file content of the node with identifier **nodeId**.
       operationId: getFileContent
@@ -1804,7 +1804,7 @@ paths:
     put:
       tags:
         - nodes
-        - since 5.2        
+        - 5.2 changes        
       summary: Update file content
       description: Updates the content of the node with identifier **nodeId**.
       operationId: updateFileContent
@@ -1837,7 +1837,7 @@ paths:
     get:
       tags:
         - renditions
-        - since 5.2       
+        - 5.2 changes       
       summary: List info for renditions
       description: Returns the rendition infos for file node with identifier **nodeId**.
       operationId: getRenditions
@@ -1858,7 +1858,7 @@ paths:
     get:
       tags:
         - renditions
-        - since 5.2       
+        - 5.2 changes       
       summary: Get rendition info
       description: Returns the rendition info for file node with identifier **nodeId**.
       operationId: getRendition
@@ -1880,7 +1880,7 @@ paths:
     get:
       tags:
         - renditions
-        - since 5.2       
+        - 5.2 changes       
       summary: Get rendition content
       description: Returns the rendition content for file node with identifier **nodeId**.
       operationId: getRenditionContent
@@ -1902,7 +1902,7 @@ paths:
     get:
       tags:
         - shared-links
-        - since 5.2        
+        - 5.2 changes        
       summary: Get a shared link - no authentication required !!
       description: Returns minimal information for the file with shared link identifier **sharedId**.
       operationId: getSharedLink
@@ -1929,7 +1929,7 @@ paths:
     delete:
       tags:
         - shared-links
-        - since 5.2       
+        - 5.2 changes       
       summary: Deletes a shared link
       description: Deletes the shared link with identifier **sharedId**.
       operationId: deleteSharedLink
@@ -1956,7 +1956,7 @@ paths:
     post:
       tags:
         - shared-links
-        - since 5.2      
+        - 5.2 changes      
       summary: Create a shared link to a file
       description: Create shared link to specfied file identified by nodeId in request body.
       operationId: addSharedLink
@@ -1988,7 +1988,7 @@ paths:
     get:
       tags:
         - shared-links
-        - since 5.2      
+        - 5.2 changes      
       summary: Get file content - no authentication required !!
       description: Returns the content of the file with shared link identifier **sharedId**.
       operationId: getSharedLinkContent
@@ -2011,7 +2011,7 @@ paths:
     post:
       tags:
         - shared-links
-        - since 5.2       
+        - 5.2 changes       
       summary: Email shared link
       description: Sends email with app-specific url including identifier **sharedId**. 
         <p>**TODO** add more here ... !!
