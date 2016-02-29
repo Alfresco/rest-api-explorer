@@ -1520,7 +1520,26 @@ paths:
         - 5.2 changes
       summary: Updates a node
       description: Updates the node with identifier **nodeId**.
-         <p>**TODO** add more here ... !!
+        For example, to rename a node (eg. file or folder):
+        ```JSON
+        {
+          "name":"My new name",
+        }
+        ```
+        You can also set or update one or more properties:
+        ```JSON
+        {
+          "properties":
+            {
+              "cm:title":"Folder title"
+            }
+        }
+        ```
+        Note, if aspects need to be added (or removed) then the complete set of "aspectNames"
+        should be passed back in (eg. use get node info first to get existing aspects).
+        
+        As of now, there is no optimistic locking for updates, hence they are effectively "last one wins".
+        <p>**TODO** add more here ... !
       operationId: updateNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -1652,6 +1671,50 @@ paths:
       description: |
         Creates a node as a child of the node with identifier **nodeId**.
         The body can be JSON or multipart/formdata.
+        
+        The name and nodeType fields are mandatory. For example, to create a folder:
+        ```JSON
+        {
+          "name":"My Folder",
+          "nodeType":"cm:folder"
+        }
+        ```
+        You can also set properties:
+        ```JSON
+        {
+          "name":"My Other Folder",
+          "nodeType":"cm:folder",
+          "properties":
+            {
+              "cm:title":"Folder title",
+              "cm:description":"This is an important folder"
+            }
+        }
+        ```
+        Any missing aspects will be auto-applied, eg. "cm:titled" in the example above. Aspects can
+        also be explicitly set, if needed, via "aspectNames" field.
+        
+        A file can be uploaded using multi-part/form-data. 
+        
+        The form data can optionally include an "autoRename" field. If true then on name clash 
+        the system will try to auto­rename the file with an integer counter.
+        
+        <p>**TODO** add more here ... !
+        
+        Alternatively, an empty file can be created using JSON as follows:
+        ```JSON
+        {
+          "name":"My text file.txt",
+          "nodeType":"cm:content",
+          "content": 
+           {
+             "mimType":"text/plain"
+           }
+        }
+        ```
+        The binary content can then be updated using separate PUT call.
+        
+        <p>**TODO** add more here ... !
       operationId: addNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -1846,6 +1909,55 @@ paths:
           schema:
             $ref: '#/definitions/Error'          
   '/nodes/{nodeId}/renditions':
+    post:
+      tags:
+        - renditions
+        - 5.2 changes       
+      summary: Create rendition(s)
+      description: |
+        Async request to create rendition/thumbnail (or mutliple renditions) for file with identifier
+        **node**. The rendition is specified by name "id" in the request body:
+        ```JSON
+        {
+          "id":"doclib"
+        }
+        ```
+        To request creation of multiple renditions either call multiple times or request:
+        ```JSON
+        [
+          {"id":"doclib"},
+          {"id":"pdf"},
+          {"id":"imgpreview"}
+        ]
+        ```
+      operationId: createRendition
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - in: body
+          name: requestBody
+          description: The rendition "id".
+          required: true
+          schema:
+            properties:
+              id:
+                type: string
+      consumes:
+        - application/json
+      responses:
+        '202':
+          description: Successful accepted
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+        '403':
+          description: If current user does not have permission for **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '501':
+          description: If rendition/thumbnails are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
     get:
       tags:
         - renditions
@@ -2020,7 +2132,32 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error' 
+  '/shared-links/{sharedId}/renditions/{renditionId}/content':
+    get:
+      tags:
+        - renditions
+        - 5.2 changes       
+      summary: Get shared link rendition content
+      description: Returns the rendition content for file with shared link identifier **sharedId**.
+      operationId: getSharedLinkRenditionContent
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - $ref: '#/parameters/attachmentParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system          
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'           
   '/shared-links/{sharedId}/email':
     post:
       tags:
