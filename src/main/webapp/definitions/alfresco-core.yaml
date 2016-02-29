@@ -1519,8 +1519,8 @@ paths:
         - nodes
         - 5.2 changes
       summary: Updates a node
-      description: Updates the node with identifier **nodeId**.
-        For example, to rename a node (eg. file or folder):
+      description: |
+        Updates the node with identifier **nodeId**. For example, to rename a node (eg. file or folder):
         ```JSON
         {
           "name":"My new name",
@@ -1537,9 +1537,8 @@ paths:
         ```
         Note, if aspects need to be added (or removed) then the complete set of "aspectNames"
         should be passed back in (eg. use get node info first to get existing aspects).
-        
+          
         As of now, there is no optimistic locking for updates, hence they are effectively "last one wins".
-        <p>**TODO** add more here ... !
       operationId: updateNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -1699,8 +1698,6 @@ paths:
         The form data can optionally include an "autoRename" field. If true then on name clash 
         the system will try to auto­rename the file with an integer counter.
         
-        <p>**TODO** add more here ... !
-        
         Alternatively, an empty file can be created using JSON as follows:
         ```JSON
         {
@@ -1713,8 +1710,6 @@ paths:
         }
         ```
         The binary content can then be updated using separate PUT call.
-        
-        <p>**TODO** add more here ... !
       operationId: addNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
