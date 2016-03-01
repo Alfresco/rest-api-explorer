@@ -1942,11 +1942,13 @@ paths:
         '202':
           description: Successful accepted
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+          description: If the **nodeId** is not a valid format or does not identify a file
         '403':
           description: If current user does not have permission for **nodeId**
         '404':
           description: If **nodeId** does not exist
+        '409':
+          description: If rendition already exists
         '501':
           description: If rendition/thumbnails are disabled for the system
         default:
@@ -2093,11 +2095,13 @@ paths:
           schema:
             $ref: '#/definitions/NodeSharedLinkEntry'
         '400':
-          description: If the **nodeId** is not a valid format or does not identify a file or already exists
+          description: If the **nodeId** is not a valid format or does not identify a file
         '403':
           description: If current user does not have permission to create **sharedId** (eg. no read permission)
         '404':
           description: If **nodeId** does not exist
+        '409':
+          description: If shared link already exists for **nodeId**          
         '501':
           description: If shared links are disabled for the system
         default:
