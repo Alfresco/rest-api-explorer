@@ -122,10 +122,14 @@ parameters:
     description: The maximum number of items to return in the list.
     required: false
     type: integer
-  propertiesParam:
-    name: properties
+  fieldsParam:
+    name: fields
     in: query
-    description: A list of property names. You can use the properties parameter to restrict the number of returned properties.
+    description: |
+      A list of field names. You can use the fields parameter to restrict the fields 
+      returned within a response, eg. to save on overall bandwidth. This applies to an individual 
+      returned entity or entries within a collection. If the api method also supports the include
+      parameter then those will be auto included in addition to the fields parameter.
     required: false
     type: array
     items:
@@ -177,7 +181,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -244,8 +248,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/commentIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: commentBody
           description: The JSON representing the comment to be updated.
@@ -298,7 +302,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -359,7 +363,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/ratingIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -406,7 +410,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -492,7 +496,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -517,7 +521,6 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
         - name: who
           in: query
           description: |
@@ -529,6 +532,7 @@ paths:
           description: Include only activity feed entries relating to this site.
           required: false
           type: string
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -558,7 +562,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -621,7 +625,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -699,8 +703,8 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/whereParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -764,7 +768,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/favoriteIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -813,7 +817,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -838,7 +842,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/networkIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -867,7 +871,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -895,7 +899,7 @@ paths:
           description: The name of the preference.
           required: true
           type: string
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -921,7 +925,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -980,7 +984,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1068,9 +1072,9 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/relationsParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1114,9 +1118,9 @@ paths:
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/relationsParam'
+        - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
       responses:
@@ -1152,8 +1156,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/siteIdParam'
-        - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/relationsParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1178,7 +1182,7 @@ paths:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1206,7 +1210,7 @@ paths:
           description: The unique identifier of a site container.
           required: true
           type: string
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1231,7 +1235,7 @@ paths:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1300,7 +1304,7 @@ paths:
       parameters:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/personIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1387,7 +1391,7 @@ paths:
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
       responses:
@@ -1410,7 +1414,7 @@ paths:
       operationId: getTag
       parameters:
         - $ref: '#/parameters/tagIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1464,7 +1468,7 @@ paths:
       operationId: getNetwork
       parameters:
         - $ref: '#/parameters/networkIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
       responses:
@@ -1488,8 +1492,7 @@ paths:
       operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - $ref: '#/parameters/propertiesParam'
-        - name: select
+        - name: include
           in: query
           description: return additional info, eg. path, isLink
           required: false
@@ -1499,6 +1502,7 @@ paths:
           description: return info on node resolved by this path (relative to the specified nodeId as the starting parent folder)
           required: false
           type: string
+        - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
       responses:
@@ -1542,7 +1546,7 @@ paths:
       operationId: updateNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: requestBody
           description: The node info to update.
@@ -1606,7 +1610,7 @@ paths:
         - nodes
         - 5.2 changes
       summary: Get node children
-      description: Returns the children of the node with identifier **nodeId**. Returns minimal info for each child, although 'select' can be used to return addtional info.
+      description: Returns the children of the node with identifier **nodeId**. Returns minimal info for each child, although 'include' can be used to return addtional info.
       operationId: getNodeChildren
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -1631,8 +1635,7 @@ paths:
             
           required: false
           type: string
-        - $ref: '#/parameters/propertiesParam'
-        - name: select
+        - name: include
           in: query
           description: return additional info, eg. aspectNames, properties, isLink, path
           required: false
@@ -1647,6 +1650,7 @@ paths:
           description: also include "source" (in addition to "entries") with folder info on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
           required: false
           type: string
+        - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
       responses:
@@ -1713,12 +1717,12 @@ paths:
       operationId: addNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - $ref: '#/parameters/propertiesParam'
-        - name: select
+        - name: include
           in: query
           description: return additional info, eg. isLink, path
           required: false
           type: string
+        - $ref: '#/parameters/fieldsParam'
       consumes:
         - application/json
         - multipart/formdata
@@ -1758,8 +1762,7 @@ paths:
       operationId: copyNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - $ref: '#/parameters/propertiesParam'
-        - name: select
+        - name: include
           in: query
           description: return additional info, eg. isLink, path
           required: false
@@ -1774,6 +1777,7 @@ paths:
                 type: string
               name:
                 type: string
+        - $ref: '#/parameters/fieldsParam'
       consumes:
         - application/json
       produces:
@@ -1808,12 +1812,12 @@ paths:
       operationId: moveNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - $ref: '#/parameters/propertiesParam'
-        - name: select
+        - name: include
           in: query
           description: return additional info, eg. isLink, path
           required: false
           type: string
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: requestBody
           description: The targetParentId and optionally a (new) name.
@@ -1880,12 +1884,12 @@ paths:
       operationId: updateFileContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/propertiesParam'
-        - name: select
+        - name: include
           in: query
           description: return additional info, eg. isLink, path
           required: false
           type: string
+        - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
       responses:
@@ -2030,7 +2034,12 @@ paths:
       operationId: getSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - name: include
+          in: query
+          description: if authenticated then can return additional info, eg. allowableOperations
+          required: false
+          type: string
+        - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
       responses:
@@ -2083,7 +2092,7 @@ paths:
       description: Create shared link to specfied file identified by nodeId in request body.
       operationId: addSharedLink
       parameters:
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       consumes:
         - application/json
         - multipart/formdata
@@ -2107,7 +2116,48 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - shared-links
+        - 5.2 changes        
+      summary: Find shared links
+      description: Find (search for) links that current user has read permission on source node.
+      operationId: findSharedLinks
+      parameters:
+        - name: where
+          in: query
+          description: optionally filter the list by "sharedByUser" userid of person who shared the link (can also use -me-)
+          
+            *   where=(sharedByUser='jbloggs')
+            
+            *   where=(sharedByUser='-me-')
+            
+          required: false
+          type: string
+        - name: include
+          in: query
+          description: return additional info, eg. allowableOperations
+          required: false
+          type: string
+        - $ref: '#/parameters/fieldsParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeSharedLinkEntry'
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'           
   '/shared-links/{sharedId}/content':
     get:
       tags:
