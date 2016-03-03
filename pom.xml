@@ -10,8 +10,8 @@
       <swagger-ui.version>2.1.4</swagger-ui.version>
     </properties>
     <scm>
-      <connection>scm:git:git@github.com/Alfresco/rest-api-explorer.git</connection>
-      <developerConnection>scm:git:git@github.com/Alfresco/rest-api-explorer.git</developerConnection>
+      <connection>scm:git:https://github.com/Alfresco/rest-api-explorer.git</connection>
+      <developerConnection>scm:git:https://github.com/Alfresco/rest-api-explorer.git</developerConnection>
       <url>https://github.com/Alfresco/rest-api-explorer</url>
     </scm>
     <licenses>
