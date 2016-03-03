@@ -9,6 +9,17 @@
     <properties>
       <swagger-ui.version>2.1.4</swagger-ui.version>
     </properties>
+    <scm>
+      <connection>scm:git:https://github.com/Alfresco/rest-api-explorer.git</connection>
+      <developerConnection>scm:git:https://github.com/Alfresco/rest-api-explorer.git</developerConnection>
+      <url>https://github.com/Alfresco/rest-api-explorer</url>
+    </scm>
+    <licenses>
+      <license>
+         <name>Apache License 2.0</name>
+         <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      </license>
+   </licenses>
     <dependencies>
         <dependency>
             <groupId>org.webjars</groupId>
@@ -68,7 +79,7 @@
                     <Build-Key>${bamboo_fullBuildKey}</Build-Key>
                     <Build-Number>${bamboo_buildNumber}</Build-Number>
                     <Build-Revision>${bamboo_repository_revision_number}</Build-Revision>
-                  </manifestEntries>                    
+                  </manifestEntries> 
                   <manifestSections>
                     <manifestSection>
                         <name>Libraries</name>
@@ -76,13 +87,13 @@
                             <swaggerui-version>${swagger-ui.version}</swaggerui-version>
                         </manifestEntries>
                     </manifestSection>
-                  </manifestSections>                 
+                  </manifestSections>
 
                   <manifest>
                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                     <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                   </manifest>
-                </archive>              
+                </archive>
             </configuration>
           </plugin>
           <plugin>
@@ -97,12 +108,12 @@
     </build>
     <distributionManagement>
         <repository>
-            <id>alfresco-internal-releases</id>
-            <url>https://nexus.alfresco.com/nexus/content/repositories/internal-releases</url>
+            <id>alfresco-releases</id>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
-            <id>alfresco-internal-snapshots</id>
-            <url>https://nexus.alfresco.com/nexus/content/repositories/internal-snapshots</url>
+            <id>alfresco-snapshots</id>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
