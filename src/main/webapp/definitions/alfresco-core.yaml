@@ -1717,6 +1717,41 @@ paths:
       operationId: addNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
+        - name: filedata
+          in: formData
+          description: file data - required if uploading using multi-part/form-data
+          required: false
+          type: string
+        - name: filename
+          in: formData
+          description: file name - if the name should be different from file data
+          required: false
+          type: string
+        - name: nodeType
+          in: formData
+          description: node type, must be subtype of "cm:content" (which is the default)
+          required: false
+          type: string
+        - name: autoRename
+          in: formData
+          description: if true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
+          required: false
+          type: string
+        - name: overwrite
+          in: formData
+          description: if true, then if file already exists (by matching name) and is versionable then will update the existing file content.
+          required: false
+          type: string
+        - name: majorVersion
+          in: formData
+          description: used with overwrite. If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
+          required: false
+          type: string
+        - name: comment
+          in: formData
+          description: used with overwrite. Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
+          required: false
+          type: string
         - name: include
           in: query
           description: return additional info, eg. isLink, path
@@ -1884,6 +1919,16 @@ paths:
       operationId: updateFileContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - name: majorVersion
+          in: query
+          description: if true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
+          required: false
+          type: string
+        - name: comment
+          in: query
+          description: add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
+          required: false
+          type: string
         - name: include
           in: query
           description: return additional info, eg. isLink, path
