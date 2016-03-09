@@ -957,7 +957,7 @@ paths:
       tags:
         - renditions
         - 5.2 changes       
-      summary: Create rendition(s)
+      summary: Create rendition
       description: |
         Async request to create a rendition for file with identifier
         **nodeId**. The rendition is specified by name "id" in the request body:
@@ -1383,7 +1383,6 @@ paths:
     get:
       tags:
         - people
-        - networks
       summary: Get network membership for a person
       description: Gets a list of network memberships for person **personId**.
       operationId: getPersonNetworks
@@ -1409,7 +1408,6 @@ paths:
     get:
       tags:
         - people
-        - networks
       summary: Get network information
       description: Returns network information on a single network specified by **networkId** for **personId**.
       operationId: getPersonNetwork
@@ -1491,7 +1489,6 @@ paths:
     get:
       tags:
         - people
-        - sites
       summary: Get site membership requests
       description: Returns the current site membership requests for person **personId**.
       operationId: getSiteMembershipRequests
@@ -1516,7 +1513,6 @@ paths:
     post:
       tags:
         - people
-        - sites
       summary: Create a site membership request
       description: Create a site membership request for **personId** and **siteId**. The **personId** will be invited to the site as a SiteConsumer.
       operationId: addSiteMembershipRequest
@@ -1550,8 +1546,7 @@ paths:
   '/people/{personId}/site-membership-requests/{siteId}':
     get:
       tags:
-        - people
-        - sites      
+        - people     
       summary: Get a site membership request
       description: Returns the site membership request for site **siteId** for person **personId**, if one exists.
       operationId: getSiteMembershipRequest
@@ -1575,7 +1570,6 @@ paths:
     put:
       tags:
         - people
-        - sites
       summary: Update a site membership request
       description: Updates the message for the site membership request to site **siteId** for person **personId**.
       operationId: updateSiteMembershipRequest
@@ -1604,7 +1598,6 @@ paths:
     delete:
       tags:
         - people
-        - sites
       summary: Cancel a site membership
       description: Cancels the site membership request to site **siteId** for person **personId**.
       operationId: removeSiteMembershipRequest
@@ -1626,7 +1619,6 @@ paths:
     get:
       tags:
         - people
-        - sites
       summary: Get site membership information
       description: |
         Returns a list of site membership information for person **personId**.
@@ -1871,7 +1863,6 @@ paths:
     get:
       tags:
         - sites
-        - people
       summary: Get a site member
       description: Returns site membership information for person **personId** on site **siteId**.
       operationId: getSiteMember
@@ -3008,9 +2999,6 @@ definitions:
           type: string
       properties:
         type: object
-        properties:
-          prefix1:localname1:
-            type: string
-          prefix1:localname2:
+        additionalProperties:
             type: string
         
