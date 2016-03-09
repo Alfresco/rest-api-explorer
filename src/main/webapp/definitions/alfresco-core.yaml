@@ -1488,7 +1488,7 @@ paths:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - name: include
           in: query
-          description: Return additional info, eg. path, isLink
+          description: Return additional info, eg. path, allowableOperations, isLink
           required: false
           type: string
         - name: relativePath
@@ -1638,7 +1638,7 @@ paths:
           type: string
         - name: include
           in: query
-          description: Return additional info, eg. aspectNames, properties, isLink, path
+          description: Return additional info, eg. aspectNames, properties, path, allowableOperations, isLink
           required: false
           type: string
         - name: relativePath
@@ -2988,6 +2988,10 @@ definitions:
       properties:
         type: object
         additionalProperties:
+            type: string
+      allowableOperations:
+        type: array
+        items:
           type: string
   NodeUpdateEntry:
     type: object
