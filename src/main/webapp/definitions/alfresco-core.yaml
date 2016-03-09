@@ -16,33 +16,27 @@ produces:
   - application/json
 tags:
   - name: 5.2 changes
-    description: New and updated endpoints (since 5.2)
+    description: Endpoints added in the 5.2 release
   - name: nodes
-    description: Retrieve and manage Nodes - Files & Folders (since 5.2)
+    description: Retrieve and manage nodes - files & folders
   - name: renditions
-    description: Retrieve and manage File Renditions (since 5.2)
+    description: Retrieve and manage file renditions
   - name: shared-links
-    description: Retrieve and manage public Shared Links (since 5.2)
+    description: Retrieve and manage public shared links
   - name: comments
-    description: Retrieve and manage Node Comments
-    externalDocs:
-      description: Find more information on comments here
-      url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-nodes-comments.html
+    description: Retrieve and manage node comments
   - name: ratings
-    description: Retrieve and manage Node Ratings
+    description: Retrieve and manage node ratings
   - name: tags
-    description: Retrieve and manage Node Tags
+    description: Retrieve and manage node tags
   - name: favorites
-    description: Retrieve and manage Personal Favorites
-    externalDocs:
-      description: Find more information on favorites here
-      url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-favorites.html
+    description: Retrieve and manage personal favorites
   - name: networks
-    description: Retrieve and manage Networks
+    description: Retrieve and manage networks
   - name: people
-    description: Retrieve and manage People
+    description: Retrieve and manage people
   - name: sites
-    description: Retrieve and manage Sites
+    description: Retrieve and manage sites
 parameters:
   nodeIdParam:
     name: nodeId
@@ -165,7 +159,7 @@ parameters:
        downloading. However, we restrict this to a specific white list of content types, eg. certain image types & pdf.
        If the content type is not in the white list then the false setting is ignored and 
        the attachment will be returned in the response.
-    required: true
+    required: false
     type: string
 paths:
   '/nodes/{nodeId}/comments':
@@ -1494,12 +1488,12 @@ paths:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - name: include
           in: query
-          description: return additional info, eg. path, isLink
+          description: Return additional info, eg. path, isLink
           required: false
           type: string
         - name: relativePath
           in: query
-          description: return info on node resolved by this path (relative to the specified nodeId as the starting parent folder)
+          description: Return info on node resolved by this path (relative to the specified nodeId as the starting parent folder)
           required: false
           type: string
         - $ref: '#/parameters/fieldsParam'
@@ -1548,7 +1542,7 @@ paths:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: requestBody
+          name: nodeBody
           description: The node info to update.
           required: true
           schema:
@@ -1618,12 +1612,19 @@ paths:
         - $ref: '#/parameters/maxItemsParam'
         - name: orderBy
           in: query
-          description: If not specified then default sort is for folders to be sorted before files, and by ascending name. This default can be completely overridden by specifying a specific orderBy consisting of one, two or three comma-separated list of properties (with optional ASCending or DESCending). For example, specifying “orderBy=name DESC” would return a mixed folder/file list. It should be noted that the default sort order can be explicitly specified as “orderBy=isFolder DESC,name ASC” or reversed as “orderBy=isFolder DESC,name ASC”. Other orderBy properties include:- sizeInBytes, mimeType, nodeType, cm:title, modifiedAt, createdAt, modifiedByUser, createdByUser, ... 
+          description: |
+            If not specified then default sort is for folders to be sorted before files, and by ascending name. 
+            This default can be completely overridden by specifying a specific orderBy consisting of one, two or 
+            three comma-separated list of properties (with optional ASCending or DESCending). 
+            For example, specifying “orderBy=name DESC” would return a mixed folder/file list. 
+            It should be noted that the default sort order can be explicitly specified as “orderBy=isFolder DESC,name ASC” 
+            or reversed as “orderBy=isFolder ASC,name DESC”. 
+            Other orderBy properties include:- sizeInBytes, mimeType, nodeType, cm:title, modifiedAt, createdAt, modifiedByUser, createdByUser 
           required: false
           type: string
         - name: where
           in: query
-          description: optionally filter the list. Examples include:-
+          description: Optionally filter the list. Examples include:-
           
             *   where=(isFolder=true)
             
@@ -1637,17 +1638,17 @@ paths:
           type: string
         - name: include
           in: query
-          description: return additional info, eg. aspectNames, properties, isLink, path
+          description: Return additional info, eg. aspectNames, properties, isLink, path
           required: false
           type: string
         - name: relativePath
           in: query
-          description: return info on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
+          description: Return info on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
           required: false
           type: string
         - name: includeSource
           in: query
-          description: also include "source" (in addition to "entries") with folder info on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
+          description: Also include "source" (in addition to "entries") with folder info on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
           required: false
           type: string
         - $ref: '#/parameters/fieldsParam'
@@ -1695,7 +1696,7 @@ paths:
         }
         ```
         Any missing aspects will be auto-applied, eg. "cm:titled" in the example above. Aspects can
-        also be explicitly set, if needed, via "aspectNames" field.
+        also be explicitly set, if needed, via an "aspectNames" field.
         
         A file can be uploaded using multi-part/form-data. 
         
@@ -1709,7 +1710,7 @@ paths:
           "nodeType":"cm:content",
           "content": 
            {
-             "mimType":"text/plain"
+             "mimeType":"text/plain"
            }
         }
         ```
@@ -1719,42 +1720,42 @@ paths:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - name: filedata
           in: formData
-          description: file data - required if uploading using multi-part/form-data
+          description: File data - required if uploading using multi-part/form-data
           required: false
-          type: string
+          type: file
         - name: filename
           in: formData
-          description: file name - if the name should be different from file data
+          description: File name - if the name should be different from file data
           required: false
           type: string
         - name: nodeType
           in: formData
-          description: node type, must be subtype of "cm:content" (which is the default)
+          description: Node type, must be subtype of "cm:content" (which is the default)
           required: false
           type: string
         - name: autoRename
           in: formData
-          description: if true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
+          description: If true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
           required: false
           type: string
         - name: overwrite
           in: formData
-          description: if true, then if file already exists (by matching name) and is versionable then will update the existing file content.
+          description: If true, then if file already exists (by matching name) and is versionable then will update the existing file content.
           required: false
           type: string
         - name: majorVersion
           in: formData
-          description: used with overwrite. If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
+          description: Used with overwrite. If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
           required: false
           type: string
         - name: comment
           in: formData
-          description: used with overwrite. Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
+          description: Used with overwrite. Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
           required: false
           type: string
         - name: include
           in: query
-          description: return additional info, eg. isLink, path
+          description: Return additional info, eg. isLink, path
           required: false
           type: string
         - $ref: '#/parameters/fieldsParam'
@@ -1799,11 +1800,12 @@ paths:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - name: include
           in: query
-          description: return additional info, eg. isLink, path
+          description: Return additional info, eg. isLink, path
           required: false
           type: string
+        - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: requestBody
+          name: copyBody
           description: The targetParentId and optionally a (new) name.
           required: true
           schema:
@@ -1812,7 +1814,6 @@ paths:
                 type: string
               name:
                 type: string
-        - $ref: '#/parameters/fieldsParam'
       consumes:
         - application/json
       produces:
@@ -1849,12 +1850,12 @@ paths:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - name: include
           in: query
-          description: return additional info, eg. isLink, path
+          description: Return additional info, eg. isLink, path
           required: false
           type: string
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: requestBody
+          name: moveBody
           description: The targetParentId and optionally a (new) name.
           required: true
           schema:
@@ -1899,13 +1900,9 @@ paths:
         '200':
           description: Successful response
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
         '404':
           description: If **nodeId** does not exist
-        '413':
-          description: If file content exceeds individual file size limit (configured for network/system)
-        '507':
-          description: If file content exceeds overall storage quota limit (configured for network/system)
         default:
           description: Error response
           schema:
@@ -1921,17 +1918,17 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - name: majorVersion
           in: query
-          description: if true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
+          description: If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
           required: false
           type: string
         - name: comment
           in: query
-          description: add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
+          description: Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
           required: false
           type: string
         - name: include
           in: query
-          description: return additional info, eg. isLink, path
+          description: Return additional info, eg. isLink, path
           required: false
           type: string
         - $ref: '#/parameters/fieldsParam'
@@ -1959,26 +1956,18 @@ paths:
         - 5.2 changes       
       summary: Create rendition(s)
       description: |
-        Async request to create rendition/thumbnail (or mutliple renditions) for file with identifier
-        **node**. The rendition is specified by name "id" in the request body:
+        Async request to create a rendition for file with identifier
+        **nodeId**. The rendition is specified by name "id" in the request body:
         ```JSON
         {
           "id":"doclib"
         }
         ```
-        To request creation of multiple renditions either call multiple times or request:
-        ```JSON
-        [
-          {"id":"doclib"},
-          {"id":"pdf"},
-          {"id":"imgpreview"}
-        ]
-        ```
       operationId: createRendition
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - in: body
-          name: requestBody
+          name: renditionBody
           description: The rendition "id".
           required: true
           schema:
@@ -2074,14 +2063,17 @@ paths:
       tags:
         - shared-links
         - 5.2 changes        
-      summary: Get a shared link - no authentication required !!
-      description: Returns minimal information for the file with shared link identifier **sharedId**.
+      summary: Get a shared link
+      description: |
+        Returns minimal information for the file with shared link identifier **sharedId**.
+        
+        NOTE: No authentication is required to call this endpoint.
       operationId: getSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
         - name: include
           in: query
-          description: if authenticated then can return additional info, eg. allowableOperations
+          description: If authenticated then can return additional info, eg. allowableOperations
           required: false
           type: string
         - $ref: '#/parameters/fieldsParam'
@@ -2134,9 +2126,14 @@ paths:
         - shared-links
         - 5.2 changes      
       summary: Create a shared link to a file
-      description: Create shared link to specfied file identified by nodeId in request body.
+      description: Create shared link to specfied file identified by **nodeId** in request body.
       operationId: addSharedLink
       parameters:
+        - name: include
+          in: query
+          description: If authenticated then can return additional info, eg. allowableOperations
+          required: false
+          type: string
         - $ref: '#/parameters/fieldsParam'
       consumes:
         - application/json
@@ -2172,7 +2169,7 @@ paths:
       parameters:
         - name: where
           in: query
-          description: optionally filter the list by "sharedByUser" userid of person who shared the link (can also use -me-)
+          description: Optionally filter the list by "sharedByUser" userid of person who shared the link (can also use -me-)
           
             *   where=(sharedByUser='jbloggs')
             
@@ -2182,7 +2179,7 @@ paths:
           type: string
         - name: include
           in: query
-          description: return additional info, eg. allowableOperations
+          description: Return additional info, eg. allowableOperations
           required: false
           type: string
         - $ref: '#/parameters/fieldsParam'
@@ -2193,10 +2190,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/NodeSharedLinkEntry'
-        '400':
-          description: If the **sharedId** is not a valid format
-        '404':
-          description: If **sharedId** does not exist
         '501':
           description: If shared links are disabled for the system
         default:
@@ -2208,8 +2201,11 @@ paths:
       tags:
         - shared-links
         - 5.2 changes      
-      summary: Get file content - no authentication required !!
-      description: Returns the content of the file with shared link identifier **sharedId**.
+      summary: Get file content
+      description: |
+        Returns the content of the file with shared link identifier **sharedId**.
+        
+        NOTE: No authentication is required to call this endpoint.
       operationId: getSharedLinkContent
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -2233,7 +2229,10 @@ paths:
         - renditions
         - 5.2 changes       
       summary: Get shared link rendition content
-      description: Returns the rendition content for file with shared link identifier **sharedId**.
+      description: |
+        Returns the rendition content for file with shared link identifier **sharedId**.
+        
+        NOTE: No authentication is required to call this endpoint.
       operationId: getSharedLinkRenditionContent
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -2258,8 +2257,10 @@ paths:
         - shared-links
         - 5.2 changes       
       summary: Email shared link
-      description: Sends email with app-specific url including identifier **sharedId**. 
-        <p>**TODO** add more here ... !!
+      description: |
+        Sends email with app-specific url including identifier **sharedId**. 
+        
+        **TODO** add more here ... !!
       operationId: emailSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -2986,11 +2987,8 @@ definitions:
           type: string
       properties:
         type: object
-        properties:
-          prefix1:localname1:
-            type: string
-          prefix1:localname2:
-            type: string
+        additionalProperties:
+          type: string
   NodeUpdateEntry:
     type: object
     properties:

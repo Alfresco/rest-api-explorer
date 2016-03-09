@@ -16,13 +16,13 @@ produces:
   - application/json
 tags:
   - name: deployments
-    description: Retrieve and manage Deployments
+    description: Retrieve and manage deployments
   - name: process-definitions
-    description: Retrieve and manage Process Definitions
+    description: Retrieve and manage process definitions
   - name: processes
-    description: Retrieve and manage Processes
+    description: Retrieve and manage processes
   - name: tasks
-    description: Retrieve and manage Tasks
+    description: Retrieve and manage tasks
 parameters:
   processIdParam:
     name: "processId"
