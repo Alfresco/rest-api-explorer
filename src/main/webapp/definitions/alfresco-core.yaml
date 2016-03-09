@@ -479,6 +479,588 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}':
+    get:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Get a node
+      description: Returns information for the node with identifier **nodeId**.
+      operationId: getNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - name: include
+          in: query
+          description: Return additional info, eg. path, allowableOperations, isLink
+          required: false
+          type: string
+        - name: relativePath
+          in: query
+          description: Return info on node resolved by this path (relative to the specified nodeId as the starting parent folder)
+          required: false
+          type: string
+        - $ref: '#/parameters/fieldsParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'          
+    put:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Updates a node
+      description: |
+        Updates the node with identifier **nodeId**. For example, to rename a node (eg. file or folder):
+        ```JSON
+        {
+          "name":"My new name",
+        }
+        ```
+        You can also set or update one or more properties:
+        ```JSON
+        {
+          "properties":
+            {
+              "cm:title":"Folder title"
+            }
+        }
+        ```
+        Note, if aspects need to be added (or removed) then the complete set of "aspectNames"
+        should be passed back in (eg. use get node info first to get existing aspects).
+          
+        As of now, there is no optimistic locking for updates, hence they are effectively "last one wins".
+      operationId: updateNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: nodeBody
+          description: The node info to update.
+          required: true
+          schema:
+            $ref: '#/definitions/NodeUpdateEntry'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the update request is invalid or if the **nodeId** is not a valid format
+        '403':
+          description: If current user does not have permission to update **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If name is updated and clashes with an existing node in the current parent folder
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'          
+    delete:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Deletes a node
+      description: |
+         Deletes the node with identifier **nodeId**. 
+         If the **nodeId** is a folder then all of it's children will also be cascade deleted.
+         Deleted nodes are moved to the trashcan (archive store) unless 'permanent' query parameter is true.
+      operationId: deleteNode
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - name: permanent
+          in: query
+          description: If true then, the owner or an admin, can permanently delete the node without moving to trashcan (archive store). False by default.
+          required: false
+          type: string
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: If **nodeId** is not a valid format
+        '403':
+          description: If current user does not have permission to delete **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'          
+  '/nodes/{nodeId}/children':
+    get:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Get node children
+      description: Returns the children of the node with identifier **nodeId**. Returns minimal info for each child, although 'include' can be used to return addtional info.
+      operationId: getNodeChildren
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - name: orderBy
+          in: query
+          description: |
+            If not specified then default sort is for folders to be sorted before files, and by ascending name. 
+            This default can be completely overridden by specifying a specific orderBy consisting of one, two or 
+            three comma-separated list of properties (with optional ASCending or DESCending). 
+            For example, specifying “orderBy=name DESC” would return a mixed folder/file list. 
+            It should be noted that the default sort order can be explicitly specified as “orderBy=isFolder DESC,name ASC” 
+            or reversed as “orderBy=isFolder ASC,name DESC”. 
+            Other orderBy properties include:- sizeInBytes, mimeType, nodeType, cm:title, modifiedAt, createdAt, modifiedByUser, createdByUser 
+          required: false
+          type: string
+        - name: where
+          in: query
+          description: Optionally filter the list. Examples include:-
+          
+            *   where=(isFolder=true)
+            
+            *   where=(isFile=true)
+            
+            *   where=(nodeType='my:specialtype')
+            
+            *   where=(nodeType='my:specialtype' INCLUDESUBTYPES)
+            
+          required: false
+          type: string
+        - name: include
+          in: query
+          description: Return additional info, eg. aspectNames, properties, path, allowableOperations, isLink
+          required: false
+          type: string
+        - name: relativePath
+          in: query
+          description: Return info on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
+          required: false
+          type: string
+        - name: includeSource
+          in: query
+          description: Also include "source" (in addition to "entries") with folder info on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
+          required: false
+          type: string
+        - $ref: '#/parameters/fieldsParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodePaging'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'          
+    post:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Create a node
+      description: |
+        Creates a node as a child of the node with identifier **nodeId**.
+        The body can be JSON or multipart/formdata.
+        
+        The name and nodeType fields are mandatory. For example, to create a folder:
+        ```JSON
+        {
+          "name":"My Folder",
+          "nodeType":"cm:folder"
+        }
+        ```
+        You can also set properties:
+        ```JSON
+        {
+          "name":"My Other Folder",
+          "nodeType":"cm:folder",
+          "properties":
+            {
+              "cm:title":"Folder title",
+              "cm:description":"This is an important folder"
+            }
+        }
+        ```
+        Any missing aspects will be auto-applied, eg. "cm:titled" in the example above. Aspects can
+        also be explicitly set, if needed, via an "aspectNames" field.
+        
+        A file can be uploaded using multi-part/form-data. 
+        
+        The form data can optionally include an "autoRename" field. If true then on name clash 
+        the system will try to auto­rename the file with an integer counter.
+        
+        Alternatively, an empty file can be created using JSON as follows:
+        ```JSON
+        {
+          "name":"My text file.txt",
+          "nodeType":"cm:content",
+          "content": 
+           {
+             "mimeType":"text/plain"
+           }
+        }
+        ```
+        The binary content can then be updated using separate PUT call.
+      operationId: addNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - name: filedata
+          in: formData
+          description: File data - required if uploading using multi-part/form-data
+          required: false
+          type: file
+        - name: filename
+          in: formData
+          description: File name - if the name should be different from file data
+          required: false
+          type: string
+        - name: nodeType
+          in: formData
+          description: Node type, must be subtype of "cm:content" (which is the default)
+          required: false
+          type: string
+        - name: autoRename
+          in: formData
+          description: If true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
+          required: false
+          type: string
+        - name: overwrite
+          in: formData
+          description: If true, then if file already exists (by matching name) and is versionable then will update the existing file content.
+          required: false
+          type: string
+        - name: majorVersion
+          in: formData
+          description: Used with overwrite. If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
+          required: false
+          type: string
+        - name: comment
+          in: formData
+          description: Used with overwrite. Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
+          required: false
+          type: string
+        - name: include
+          in: query
+          description: Return additional info, eg. isLink, path
+          required: false
+          type: string
+        - $ref: '#/parameters/fieldsParam'
+      consumes:
+        - application/json
+        - multipart/formdata
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to add children to **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If new name clashes with an existing node in the current parent folder
+        '413':
+          description: If file content exceeds individual file size limit (configured for network/system)
+        '507':
+          description: If file content exceeds overall storage quota limit (configured for network/system)
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'          
+  '/nodes/{nodeId}/copy':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes       
+      summary: Copy a node
+      description: |
+        Copy a node with identifier **nodeId** to parent folder node with identifier **targetParentId** in request body.
+        The new node will have the same name as source unless, optionally, renamed with **name** in request body.
+        If the source **nodeId** is a folder then all of it's children will be cascade copied to the **targetParentId** destination.
+      operationId: copyNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - name: include
+          in: query
+          description: Return additional info, eg. isLink, path
+          required: false
+          type: string
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: copyBody
+          description: The targetParentId and optionally a (new) name.
+          required: true
+          schema:
+            properties:
+              targetParentId:
+                type: string
+              name:
+                type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to add children to **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If new name clashes with an existing node in the destination parent folder
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'          
+  '/nodes/{nodeId}/move':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes       
+      summary: Move a node
+      description: |
+        Move a node with identifier **nodeId** to parent folder node with identifier **parentId** in request body.
+        The node can be, optionally, renamed with **name** in request body.
+        If the source **nodeId** is a folder then all of it's children will be cascade moved to the **targetParentId** destination.
+      operationId: moveNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - name: include
+          in: query
+          description: Return additional info, eg. isLink, path
+          required: false
+          type: string
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: moveBody
+          description: The targetParentId and optionally a (new) name.
+          required: true
+          schema:
+            properties:
+              targetParentId:
+                type: string
+              name:
+                type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to add children to **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If new name clashes with an existing node in the destination parent folder
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'          
+  '/nodes/{nodeId}/content':
+    get:
+      tags:
+        - nodes
+        - 5.2 changes       
+      summary: Get file content
+      description: Returns the file content of the node with identifier **nodeId**.
+      operationId: getFileContent
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/attachmentParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'          
+    put:
+      tags:
+        - nodes
+        - 5.2 changes        
+      summary: Update file content
+      description: Updates the content of the node with identifier **nodeId**.
+      operationId: updateFileContent
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - name: majorVersion
+          in: query
+          description: If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
+          required: false
+          type: string
+        - name: comment
+          in: query
+          description: Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
+          required: false
+          type: string
+        - name: include
+          in: query
+          description: Return additional info, eg. isLink, path
+          required: false
+          type: string
+        - $ref: '#/parameters/fieldsParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to update **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'          
+  '/nodes/{nodeId}/renditions':
+    post:
+      tags:
+        - renditions
+        - 5.2 changes       
+      summary: Create rendition(s)
+      description: |
+        Async request to create a rendition for file with identifier
+        **nodeId**. The rendition is specified by name "id" in the request body:
+        ```JSON
+        {
+          "id":"doclib"
+        }
+        ```
+      operationId: createRendition
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - in: body
+          name: renditionBody
+          description: The rendition "id".
+          required: true
+          schema:
+            properties:
+              id:
+                type: string
+      consumes:
+        - application/json
+      responses:
+        '202':
+          description: Successful accepted
+        '400':
+          description: If the **nodeId** is not a valid format or does not identify a file
+        '403':
+          description: If current user does not have permission for **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If rendition already exists
+        '501':
+          description: If rendition/thumbnails are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - renditions
+        - 5.2 changes       
+      summary: List info for renditions
+      description: Returns the rendition infos for file node with identifier **nodeId**.
+      operationId: getRenditions
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'         
+  '/nodes/{nodeId}/renditions/{renditionId}':
+    get:
+      tags:
+        - renditions
+        - 5.2 changes       
+      summary: Get rendition info
+      description: Returns the rendition info for file node with identifier **nodeId**.
+      operationId: getRendition
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
+        '404':
+          description: If **nodeId** or **renditionId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'         
+  '/nodes/{nodeId}/renditions/{renditionId}/content':
+    get:
+      tags:
+        - renditions
+        - 5.2 changes       
+      summary: Get rendition content
+      description: Returns the rendition content for file node with identifier **nodeId**.
+      operationId: getRenditionContent
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - $ref: '#/parameters/attachmentParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
+        '404':
+          description: If **nodeId** or **renditionId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}':
     get:
       tags:
@@ -1475,651 +2057,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'
-  '/nodes/{nodeId}':
-    get:
-      tags:
-        - nodes
-        - 5.2 changes
-      summary: Get a node
-      description: Returns information for the node with identifier **nodeId**.
-      operationId: getNode
-      parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
-        - name: include
-          in: query
-          description: Return additional info, eg. path, allowableOperations, isLink
-          required: false
-          type: string
-        - name: relativePath
-          in: query
-          description: Return info on node resolved by this path (relative to the specified nodeId as the starting parent folder)
-          required: false
-          type: string
-        - $ref: '#/parameters/fieldsParam'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/NodeEntry'
-        '400':
-          description: If the **nodeId** is not a valid format
-        '404':
-          description: If **nodeId** does not exist
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-    put:
-      tags:
-        - nodes
-        - 5.2 changes
-      summary: Updates a node
-      description: |
-        Updates the node with identifier **nodeId**. For example, to rename a node (eg. file or folder):
-        ```JSON
-        {
-          "name":"My new name",
-        }
-        ```
-        You can also set or update one or more properties:
-        ```JSON
-        {
-          "properties":
-            {
-              "cm:title":"Folder title"
-            }
-        }
-        ```
-        Note, if aspects need to be added (or removed) then the complete set of "aspectNames"
-        should be passed back in (eg. use get node info first to get existing aspects).
-          
-        As of now, there is no optimistic locking for updates, hence they are effectively "last one wins".
-      operationId: updateNode
-      parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
-        - $ref: '#/parameters/fieldsParam'
-        - in: body
-          name: nodeBody
-          description: The node info to update.
-          required: true
-          schema:
-            $ref: '#/definitions/NodeUpdateEntry'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/NodeEntry'
-        '400':
-          description: If the update request is invalid or if the **nodeId** is not a valid format
-        '403':
-          description: If current user does not have permission to update **nodeId**
-        '404':
-          description: If **nodeId** does not exist
-        '409':
-          description: If name is updated and clashes with an existing node in the current parent folder
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-    delete:
-      tags:
-        - nodes
-        - 5.2 changes
-      summary: Deletes a node
-      description: |
-         Deletes the node with identifier **nodeId**. 
-         If the **nodeId** is a folder then all of it's children will also be cascade deleted.
-         Deleted nodes are moved to the trashcan (archive store) unless 'permanent' query parameter is true.
-      operationId: deleteNode
-      parameters:
-        - $ref: '#/parameters/nodeIdParam'
-        - name: permanent
-          in: query
-          description: If true then, the owner or an admin, can permanently delete the node without moving to trashcan (archive store). False by default.
-          required: false
-          type: string
-      produces:
-        - application/json
-      responses:
-        '204':
-          description: Successful response
-        '400':
-          description: If **nodeId** is not a valid format
-        '403':
-          description: If current user does not have permission to delete **nodeId**
-        '404':
-          description: If **nodeId** does not exist
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-  '/nodes/{nodeId}/children':
-    get:
-      tags:
-        - nodes
-        - 5.2 changes
-      summary: Get node children
-      description: Returns the children of the node with identifier **nodeId**. Returns minimal info for each child, although 'include' can be used to return addtional info.
-      operationId: getNodeChildren
-      parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
-        - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/maxItemsParam'
-        - name: orderBy
-          in: query
-          description: |
-            If not specified then default sort is for folders to be sorted before files, and by ascending name. 
-            This default can be completely overridden by specifying a specific orderBy consisting of one, two or 
-            three comma-separated list of properties (with optional ASCending or DESCending). 
-            For example, specifying “orderBy=name DESC” would return a mixed folder/file list. 
-            It should be noted that the default sort order can be explicitly specified as “orderBy=isFolder DESC,name ASC” 
-            or reversed as “orderBy=isFolder ASC,name DESC”. 
-            Other orderBy properties include:- sizeInBytes, mimeType, nodeType, cm:title, modifiedAt, createdAt, modifiedByUser, createdByUser 
-          required: false
-          type: string
-        - name: where
-          in: query
-          description: Optionally filter the list. Examples include:-
-          
-            *   where=(isFolder=true)
-            
-            *   where=(isFile=true)
-            
-            *   where=(nodeType='my:specialtype')
-            
-            *   where=(nodeType='my:specialtype' INCLUDESUBTYPES)
-            
-          required: false
-          type: string
-        - name: include
-          in: query
-          description: Return additional info, eg. aspectNames, properties, path, allowableOperations, isLink
-          required: false
-          type: string
-        - name: relativePath
-          in: query
-          description: Return info on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
-          required: false
-          type: string
-        - name: includeSource
-          in: query
-          description: Also include "source" (in addition to "entries") with folder info on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
-          required: false
-          type: string
-        - $ref: '#/parameters/fieldsParam'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/NodePaging'
-        '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
-        '404':
-          description: If **nodeId** does not exist
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-    post:
-      tags:
-        - nodes
-        - 5.2 changes
-      summary: Create a node
-      description: |
-        Creates a node as a child of the node with identifier **nodeId**.
-        The body can be JSON or multipart/formdata.
-        
-        The name and nodeType fields are mandatory. For example, to create a folder:
-        ```JSON
-        {
-          "name":"My Folder",
-          "nodeType":"cm:folder"
-        }
-        ```
-        You can also set properties:
-        ```JSON
-        {
-          "name":"My Other Folder",
-          "nodeType":"cm:folder",
-          "properties":
-            {
-              "cm:title":"Folder title",
-              "cm:description":"This is an important folder"
-            }
-        }
-        ```
-        Any missing aspects will be auto-applied, eg. "cm:titled" in the example above. Aspects can
-        also be explicitly set, if needed, via an "aspectNames" field.
-        
-        A file can be uploaded using multi-part/form-data. 
-        
-        The form data can optionally include an "autoRename" field. If true then on name clash 
-        the system will try to auto­rename the file with an integer counter.
-        
-        Alternatively, an empty file can be created using JSON as follows:
-        ```JSON
-        {
-          "name":"My text file.txt",
-          "nodeType":"cm:content",
-          "content": 
-           {
-             "mimeType":"text/plain"
-           }
-        }
-        ```
-        The binary content can then be updated using separate PUT call.
-      operationId: addNode
-      parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
-        - name: filedata
-          in: formData
-          description: File data - required if uploading using multi-part/form-data
-          required: false
-          type: file
-        - name: filename
-          in: formData
-          description: File name - if the name should be different from file data
-          required: false
-          type: string
-        - name: nodeType
-          in: formData
-          description: Node type, must be subtype of "cm:content" (which is the default)
-          required: false
-          type: string
-        - name: autoRename
-          in: formData
-          description: If true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
-          required: false
-          type: string
-        - name: overwrite
-          in: formData
-          description: If true, then if file already exists (by matching name) and is versionable then will update the existing file content.
-          required: false
-          type: string
-        - name: majorVersion
-          in: formData
-          description: Used with overwrite. If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
-          required: false
-          type: string
-        - name: comment
-          in: formData
-          description: Used with overwrite. Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
-          required: false
-          type: string
-        - name: include
-          in: query
-          description: Return additional info, eg. isLink, path
-          required: false
-          type: string
-        - $ref: '#/parameters/fieldsParam'
-      consumes:
-        - application/json
-        - multipart/formdata
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/NodeEntry'
-        '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
-        '403':
-          description: If current user does not have permission to add children to **nodeId**
-        '404':
-          description: If **nodeId** does not exist
-        '409':
-          description: If new name clashes with an existing node in the current parent folder
-        '413':
-          description: If file content exceeds individual file size limit (configured for network/system)
-        '507':
-          description: If file content exceeds overall storage quota limit (configured for network/system)
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-  '/nodes/{nodeId}/copy':
-    post:
-      tags:
-        - nodes
-        - 5.2 changes       
-      summary: Copy a node
-      description: |
-        Copy a node with identifier **nodeId** to parent folder node with identifier **targetParentId** in request body.
-        The new node will have the same name as source unless, optionally, renamed with **name** in request body.
-        If the source **nodeId** is a folder then all of it's children will be cascade copied to the **targetParentId** destination.
-      operationId: copyNode
-      parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
-        - name: include
-          in: query
-          description: Return additional info, eg. isLink, path
-          required: false
-          type: string
-        - $ref: '#/parameters/fieldsParam'
-        - in: body
-          name: copyBody
-          description: The targetParentId and optionally a (new) name.
-          required: true
-          schema:
-            properties:
-              targetParentId:
-                type: string
-              name:
-                type: string
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/NodeEntry'
-        '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
-        '403':
-          description: If current user does not have permission to add children to **nodeId**
-        '404':
-          description: If **nodeId** does not exist
-        '409':
-          description: If new name clashes with an existing node in the destination parent folder
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-  '/nodes/{nodeId}/move':
-    post:
-      tags:
-        - nodes
-        - 5.2 changes       
-      summary: Move a node
-      description: |
-        Move a node with identifier **nodeId** to parent folder node with identifier **parentId** in request body.
-        The node can be, optionally, renamed with **name** in request body.
-        If the source **nodeId** is a folder then all of it's children will be cascade moved to the **targetParentId** destination.
-      operationId: moveNode
-      parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
-        - name: include
-          in: query
-          description: Return additional info, eg. isLink, path
-          required: false
-          type: string
-        - $ref: '#/parameters/fieldsParam'
-        - in: body
-          name: moveBody
-          description: The targetParentId and optionally a (new) name.
-          required: true
-          schema:
-            properties:
-              targetParentId:
-                type: string
-              name:
-                type: string
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/NodeEntry'
-        '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
-        '403':
-          description: If current user does not have permission to add children to **nodeId**
-        '404':
-          description: If **nodeId** does not exist
-        '409':
-          description: If new name clashes with an existing node in the destination parent folder
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-  '/nodes/{nodeId}/content':
-    get:
-      tags:
-        - nodes
-        - 5.2 changes       
-      summary: Get file content
-      description: Returns the file content of the node with identifier **nodeId**.
-      operationId: getFileContent
-      parameters:
-        - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/attachmentParam'
-      responses:
-        '200':
-          description: Successful response
-        '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
-        '404':
-          description: If **nodeId** does not exist
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-    put:
-      tags:
-        - nodes
-        - 5.2 changes        
-      summary: Update file content
-      description: Updates the content of the node with identifier **nodeId**.
-      operationId: updateFileContent
-      parameters:
-        - $ref: '#/parameters/nodeIdParam'
-        - name: majorVersion
-          in: query
-          description: If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
-          required: false
-          type: string
-        - name: comment
-          in: query
-          description: Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
-          required: false
-          type: string
-        - name: include
-          in: query
-          description: Return additional info, eg. isLink, path
-          required: false
-          type: string
-        - $ref: '#/parameters/fieldsParam'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/NodeEntry'
-        '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
-        '403':
-          description: If current user does not have permission to update **nodeId**
-        '404':
-          description: If **nodeId** does not exist
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-  '/nodes/{nodeId}/renditions':
-    post:
-      tags:
-        - renditions
-        - 5.2 changes       
-      summary: Create rendition(s)
-      description: |
-        Async request to create a rendition for file with identifier
-        **nodeId**. The rendition is specified by name "id" in the request body:
-        ```JSON
-        {
-          "id":"doclib"
-        }
-        ```
-      operationId: createRendition
-      parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
-        - in: body
-          name: renditionBody
-          description: The rendition "id".
-          required: true
-          schema:
-            properties:
-              id:
-                type: string
-      consumes:
-        - application/json
-      responses:
-        '202':
-          description: Successful accepted
-        '400':
-          description: If the **nodeId** is not a valid format or does not identify a file
-        '403':
-          description: If current user does not have permission for **nodeId**
-        '404':
-          description: If **nodeId** does not exist
-        '409':
-          description: If rendition already exists
-        '501':
-          description: If rendition/thumbnails are disabled for the system
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'
-    get:
-      tags:
-        - renditions
-        - 5.2 changes       
-      summary: List info for renditions
-      description: Returns the rendition infos for file node with identifier **nodeId**.
-      operationId: getRenditions
-      parameters:
-        - $ref: '#/parameters/nodeIdParam'
-      responses:
-        '200':
-          description: Successful response
-        '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
-        '404':
-          description: If **nodeId** does not exist
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'         
-  '/nodes/{nodeId}/renditions/{renditionId}':
-    get:
-      tags:
-        - renditions
-        - 5.2 changes       
-      summary: Get rendition info
-      description: Returns the rendition info for file node with identifier **nodeId**.
-      operationId: getRendition
-      parameters:
-        - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/renditionIdParam'
-      responses:
-        '200':
-          description: Successful response
-        '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
-        '404':
-          description: If **nodeId** or **renditionId** does not exist
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'         
-  '/nodes/{nodeId}/renditions/{renditionId}/content':
-    get:
-      tags:
-        - renditions
-        - 5.2 changes       
-      summary: Get rendition content
-      description: Returns the rendition content for file node with identifier **nodeId**.
-      operationId: getRenditionContent
-      parameters:
-        - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/renditionIdParam'
-        - $ref: '#/parameters/attachmentParam'
-      responses:
-        '200':
-          description: Successful response
-        '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
-        '404':
-          description: If **nodeId** or **renditionId** does not exist
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-  '/shared-links/{sharedId}':
-    get:
-      tags:
-        - shared-links
-        - 5.2 changes        
-      summary: Get a shared link
-      description: |
-        Returns minimal information for the file with shared link identifier **sharedId**.
-        
-        NOTE: No authentication is required to call this endpoint.
-      operationId: getSharedLink
-      parameters:
-        - $ref: '#/parameters/sharedIdParam'
-        - name: include
-          in: query
-          description: If authenticated then can return additional info, eg. allowableOperations
-          required: false
-          type: string
-        - $ref: '#/parameters/fieldsParam'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/NodeSharedLinkEntry'
-        '400':
-          description: If the **sharedId** is not a valid format
-        '404':
-          description: If **sharedId** does not exist
-        '501':
-          description: If shared links are disabled for the system
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
-    delete:
-      tags:
-        - shared-links
-        - 5.2 changes       
-      summary: Deletes a shared link
-      description: Deletes the shared link with identifier **sharedId**.
-      operationId: deleteSharedLink
-      parameters:
-        - $ref: '#/parameters/sharedIdParam'
-      produces:
-        - application/json
-      responses:
-        '204':
-          description: Successful response
-        '400':
-          description: If **sharedId** is not a valid format
-        '403':
-          description: If current user does not have permission to delete **sharedId**
-        '404':
-          description: If **sharedId** does not exist
-        '501':
-          description: If shared links are disabled for the system
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'    
   '/shared-links':
     post:
       tags:
@@ -2190,6 +2128,68 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/NodeSharedLinkEntry'
+        '501':
+          description: If shared links are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'      
+  '/shared-links/{sharedId}':
+    get:
+      tags:
+        - shared-links
+        - 5.2 changes        
+      summary: Get a shared link
+      description: |
+        Returns minimal information for the file with shared link identifier **sharedId**.
+        
+        NOTE: No authentication is required to call this endpoint.
+      operationId: getSharedLink
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+        - name: include
+          in: query
+          description: If authenticated then can return additional info, eg. allowableOperations
+          required: false
+          type: string
+        - $ref: '#/parameters/fieldsParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeSharedLinkEntry'
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'          
+    delete:
+      tags:
+        - shared-links
+        - 5.2 changes       
+      summary: Deletes a shared link
+      description: Deletes the shared link with identifier **sharedId**.
+      operationId: deleteSharedLink
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: If **sharedId** is not a valid format
+        '403':
+          description: If current user does not have permission to delete **sharedId**
+        '404':
+          description: If **sharedId** does not exist
         '501':
           description: If shared links are disabled for the system
         default:
