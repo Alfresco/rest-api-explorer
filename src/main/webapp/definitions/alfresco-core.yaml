@@ -686,7 +686,20 @@ paths:
           "nodeType":"cm:folder"
         }
         ```
-        You can also set properties:
+        
+        You can also optionally create a folder (or other node) under a folder hierarchy:
+        ```JSON
+        {
+          "name":"My Special Folder",
+          "nodeType":"cm:folder",
+          "relativePath":"X/Y/Z"
+        }
+        ```
+        The value of the relativePath (e.g. "X/Y/Z") specifies the folder structure to be 
+        used beneath the node, referenced by the **nodeId**. Therefore, any folders in the 
+        relativePath that do not exist, are created before the node is created.
+        
+        You can also set properties when creating a new node:
         ```JSON
         {
           "name":"My Other Folder",
