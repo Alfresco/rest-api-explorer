@@ -747,7 +747,20 @@ paths:
           "nodeType":"cm:folder"
         }
         ```
-        You can also set properties:
+        
+        You can also optionally create a folder (or other node) under a folder hierarchy:
+        ```JSON
+        {
+          "name":"My Special Folder",
+          "nodeType":"cm:folder",
+          "relativePath":"X/Y/Z"
+        }
+        ```
+        The value of the relativePath (e.g. "X/Y/Z") specifies the folder structure to be 
+        used beneath the node, referenced by the **nodeId**. Therefore, any folders in the 
+        relativePath that do not exist, are created before the node is created.
+        
+        You can also set properties when creating a new node:
         ```JSON
         {
           "name":"My Other Folder",
@@ -785,7 +798,7 @@ paths:
         - name: filedata
           in: formData
           description: File data - required if uploading using multi-part/form-data
-          required: false
+          required: true
           type: file
         - name: filename
           in: formData
@@ -802,6 +815,11 @@ paths:
           description: If true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
           required: false
           type: boolean
+        - name: relativePath
+          in: formData
+          description: The value of the relativePath (e.g. "X/Y/Z") specifies the folder structure to be used beneath the node, referenced by the **nodeId**. Therefore, any folders in the relativePath that do not exist, are created before the content is created.
+          required: false
+          type: string
         - name: overwrite
           in: formData
           description: If true, then if file already exists (by matching name) and is versionable then will update the existing file content.
