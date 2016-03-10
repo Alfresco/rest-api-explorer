@@ -724,7 +724,7 @@ paths:
         - name: filedata
           in: formData
           description: File data - required if uploading using multi-part/form-data
-          required: false
+          required: true
           type: file
         - name: filename
           in: formData
@@ -739,6 +739,11 @@ paths:
         - name: autoRename
           in: formData
           description: If true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
+          required: false
+          type: string
+        - name: relativePath
+          in: formData
+          description: The value of the relativePath (e.g. "X/Y/Z") specifies the folder structure to be used beneath the node, referenced by the **nodeId**. Therefore, any folders in the relativePath that do not exist, are created before the content is created.
           required: false
           type: string
         - name: overwrite
