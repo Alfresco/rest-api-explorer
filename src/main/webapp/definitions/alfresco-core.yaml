@@ -1,6 +1,14 @@
 swagger: '2.0'
 info:
-  description: Provides access to the core features of Alfresco
+  description: |
+    Provides access to the core features of Alfresco.
+    
+    The generic term used in the API for any object in an Alfresco repository is entity. 
+    An entity is of a specific entity type, and has a unique entity id.
+    
+    The unique entity id for a node is a NodeRef with the "workspace://SpacesStore" prefix removed, 
+    the unique entity id for a site is the site short name and the unique entity id for a person is 
+    the username.
   version: '1'
   title: Alfresco Core REST API
 basePath: /alfresco/api/-default-/public/alfresco/versions/1
@@ -50,12 +58,51 @@ parameters:
     description: The identifier of a node. Can also use well-known alias (-my-, -shared- or -root-).
     required: true
     type: string
+  nodeMinimalEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional info about the node, the following optional fields can be requested:-
+      * properties
+      * aspectNames
+      * path
+      * isLink
+      * allowableOperations
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  nodeEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional info about the node, the following optional fields can be requested:-
+      * path
+      * isLink
+      * allowableOperations
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
   sharedIdParam:
     name: sharedId
     in: path
     description: The identifier of a shared id (quick share link).
     required: true
     type: string
+  sharedLinkEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional info about the shared link, the following optional fields can be requested:-
+      * allowableOperations
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
   renditionIdParam:
     name: renditionId
     in: path
@@ -110,12 +157,14 @@ parameters:
     description: The number of entities that exist in the collection before those included in this list.
     required: false
     type: integer
+    minimum: 0
   maxItemsParam:
     name: maxItems
     in: query
     description: The maximum number of items to return in the list.
     required: false
     type: integer
+    minimum: 1
   fieldsParam:
     name: fields
     in: query
@@ -160,7 +209,14 @@ parameters:
        If the content type is not in the white list then the false setting is ignored and 
        the attachment will be returned in the response.
     required: false
+    type: boolean
+  ifModifiedSinceHeader:
+    name: If-Modified-Since
+    in: header
+    description: Only return the content if it has been modified since the date provided using the format defined by HTTP e.g. Wed, 09 Mar 2016 16:56:34 GMT
+    required: false
     type: string
+    format: date-time
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -489,11 +545,7 @@ paths:
       operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - name: include
-          in: query
-          description: Return additional info, eg. path, allowableOperations, isLink
-          required: false
-          type: string
+        - $ref: '#/parameters/nodeEntryIncludeParam'
         - name: relativePath
           in: query
           description: Return info on node resolved by this path (relative to the specified nodeId as the starting parent folder)
@@ -543,13 +595,26 @@ paths:
       operationId: updateNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: nodeBody
           description: The node info to update.
           required: true
           schema:
-            $ref: '#/definitions/NodeUpdateEntry'
+            properties:
+              name:
+                type: string
+              nodeType:
+                type: string
+              aspectNames:
+                type: array
+                items:
+                  type: string
+              properties:
+                type: object
+                additionalProperties:
+                  type: string
       produces:
         - application/json
       responses:
@@ -585,7 +650,7 @@ paths:
           in: query
           description: If true then, the owner or an admin, can permanently delete the node without moving to trashcan (archive store). False by default.
           required: false
-          type: string
+          type: boolean
       produces:
         - application/json
       responses:
@@ -639,11 +704,7 @@ paths:
             
           required: false
           type: string
-        - name: include
-          in: query
-          description: Return additional info, eg. aspectNames, properties, path, allowableOperations, isLink
-          required: false
-          type: string
+        - $ref: '#/parameters/nodeMinimalEntryIncludeParam'
         - name: relativePath
           in: query
           description: Return info on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
@@ -653,7 +714,7 @@ paths:
           in: query
           description: Also include "source" (in addition to "entries") with folder info on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
           required: false
-          type: string
+          type: boolean
         - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
@@ -740,31 +801,27 @@ paths:
           in: formData
           description: If true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
           required: false
-          type: string
+          type: boolean
         - name: overwrite
           in: formData
           description: If true, then if file already exists (by matching name) and is versionable then will update the existing file content.
           required: false
-          type: string
+          type: boolean
         - name: majorVersion
           in: formData
           description: Used with overwrite. If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
           required: false
-          type: string
+          type: boolean
         - name: comment
           in: formData
           description: Used with overwrite. Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
           required: false
           type: string
-        - name: include
-          in: query
-          description: Return additional info, eg. isLink, path
-          required: false
-          type: string
+        - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       consumes:
+        - multipart/form-data
         - application/json
-        - multipart/formdata
       produces:
         - application/json
       responses:
@@ -801,11 +858,7 @@ paths:
       operationId: copyNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - name: include
-          in: query
-          description: Return additional info, eg. isLink, path
-          required: false
-          type: string
+        - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: copyBody
@@ -845,17 +898,13 @@ paths:
         - 5.2 changes       
       summary: Move a node
       description: |
-        Move a node with identifier **nodeId** to parent folder node with identifier **parentId** in request body.
+        Move a node with identifier **nodeId** to parent folder node with identifier **targetParentId** in request body.
         The node can be, optionally, renamed with **name** in request body.
         If the source **nodeId** is a folder then all of it's children will be cascade moved to the **targetParentId** destination.
       operationId: moveNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - name: include
-          in: query
-          description: Return additional info, eg. isLink, path
-          required: false
-          type: string
+        - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: moveBody
@@ -899,13 +948,20 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
       responses:
         '200':
           description: Successful response
+        '304':
+          description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: If the **nodeId** is not a valid format, or exists, but does not identify a file
         '404':
           description: If **nodeId** does not exist
+        '413':
+          description: If file content exceeds individual file size limit (configured for network/system)
+        '507':
+          description: If file content exceeds overall storage quota limit (configured for network/system)
         default:
           description: Error response
           schema:
@@ -923,20 +979,25 @@ paths:
           in: query
           description: If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
           required: false
-          type: string
+          type: boolean
         - name: comment
           in: query
           description: Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
           required: false
           type: string
-        - name: include
-          in: query
-          description: Return additional info, eg. isLink, path
-          required: false
-          type: string
+        - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: contentBody
+          description: The binary content
+          required: true
+          schema:
+            type: string
+            format: binary
       produces:
         - application/json
+      consumes:
+        - text/plain
       responses:
         '200':
           description: Successful response
@@ -1050,9 +1111,12 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/renditionIdParam'
         - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
       responses:
         '200':
           description: Successful response
+        '304':
+          description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
         '404':
@@ -2058,12 +2122,16 @@ paths:
       description: Create shared link to specfied file identified by **nodeId** in request body.
       operationId: addSharedLink
       parameters:
-        - name: include
-          in: query
-          description: If authenticated then can return additional info, eg. allowableOperations
-          required: false
-          type: string
+        - $ref: '#/parameters/sharedLinkEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: sharedLinkBody
+          description: The nodeId to create a shared link for.
+          required: true
+          schema:
+            properties:
+              nodeId:
+                type: string
       consumes:
         - application/json
         - multipart/formdata
@@ -2106,11 +2174,7 @@ paths:
             
           required: false
           type: string
-        - name: include
-          in: query
-          description: Return additional info, eg. allowableOperations
-          required: false
-          type: string
+        - $ref: '#/parameters/sharedLinkEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
@@ -2138,11 +2202,7 @@ paths:
       operationId: getSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
-        - name: include
-          in: query
-          description: If authenticated then can return additional info, eg. allowableOperations
-          required: false
-          type: string
+        - $ref: '#/parameters/sharedLinkEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
@@ -2201,9 +2261,12 @@ paths:
       parameters:
         - $ref: '#/parameters/sharedIdParam'
         - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
       responses:
         '200':
           description: Successful response
+        '304':
+          description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: If the **sharedId** is not a valid format
         '404':
@@ -2229,9 +2292,12 @@ paths:
         - $ref: '#/parameters/sharedIdParam'
         - $ref: '#/parameters/renditionIdParam'
         - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
       responses:
         '200':
           description: Successful response
+        '304':
+          description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: If the **sharedId** is not a valid format
         '404':
@@ -2927,24 +2993,6 @@ definitions:
         $ref: '#/definitions/UserInfo'
       content:
         $ref: '#/definitions/ContentInfo'
-  NodeSharedLinkEntry:
-    type: object
-    properties:
-      id:
-        type: string
-      nodeId:
-        type: string
-      name:
-        type: string
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser: 
-        $ref: '#/definitions/UserInfo'
-      sharedByUser: 
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
   NodeEntry:
     type: object
     properties:
@@ -2984,21 +3032,25 @@ definitions:
         type: array
         items:
           type: string
-  NodeUpdateEntry:
+  NodeSharedLinkEntry:
     type: object
     properties:
+      id:
+        type: string
+      nodeId:
+        type: string
       name:
         type: string
-      nodeType:
+      modifiedAt:
         type: string
+        format: date-time
+      modifiedByUser: 
+        $ref: '#/definitions/UserInfo'
+      sharedByUser: 
+        $ref: '#/definitions/UserInfo'
       content:
         $ref: '#/definitions/ContentInfo'
-      aspectNames:
+      allowableOperations:
         type: array
         items:
           type: string
-      properties:
-        type: object
-        additionalProperties:
-            type: string
-        
