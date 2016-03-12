@@ -738,7 +738,6 @@ paths:
       summary: Create a node
       description: |
         Creates a node as a child of the node with identifier **nodeId**.
-        The body can be JSON or multipart/formdata.
         
         The name and nodeType fields are mandatory. For example, to create a folder:
         ```JSON
@@ -747,6 +746,19 @@ paths:
           "nodeType":"cm:folder"
         }
         ```
+        
+        An empty file can be created using JSON as follows:
+        ```JSON
+        {
+          "name":"My text file.txt",
+          "nodeType":"cm:content",
+          "content": 
+           {
+             "mimeType":"text/plain"
+           }
+        }
+        ```
+        The binary content can then be updated using the PUT /nodes/{nodeId} endpoint.
         
         You can also optionally create a folder (or other node) under a folder hierarchy:
         ```JSON
@@ -775,71 +787,64 @@ paths:
         Any missing aspects will be auto-applied, eg. "cm:titled" in the example above. Aspects can
         also be explicitly set, if needed, via an "aspectNames" field.
         
-        A file can be uploaded using multi-part/form-data. 
+        This endpoint also supports a file being uploaded using multipart/form-data. 
         
-        The form data can optionally include an "autoRename" field. If true then on name clash 
-        the system will try to auto­rename the file with an integer counter.
+        A **filedata** field is required that represents the content to upload, a **filename** field can be
+        used to provide an alternative name for the new file.
         
-        Alternatively, an empty file can be created using JSON as follows:
-        ```JSON
-        {
-          "name":"My text file.txt",
-          "nodeType":"cm:content",
-          "content": 
-           {
-             "mimeType":"text/plain"
-           }
-        }
-        ```
-        The binary content can then be updated using separate PUT call.
+        An **overwrite** field can be used to overwrite an existing file (by matching name). If the file is versionable
+        the existing content will be replaced.
+        
+        When overwriting existing content the **majorVersion** boolean field can be used to indicate whether a major version 
+        (default is false) should be created. This will also enable versioning of this node, if not already versioned.
+        
+        When overwriting existing content the **comment** field can be used to add a version comment that will appear in 
+        version history. This will also enable versioning of this node, if not already versioned.
+        
+        The **autoRename** boolean field, if true and on a name clash, will try to auto rename by finding a unique name based 
+        on an integer suffix.
+        
+        Any field in the JSON body defined below (with the excpetion of name) can also be passed as a form-data field.
       operationId: addNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - name: filedata
-          in: formData
-          description: File data - required if uploading using multi-part/form-data
-          required: true
-          type: file
-        - name: filename
-          in: formData
-          description: File name - if the name should be different from file data
-          required: false
-          type: string
-        - name: nodeType
-          in: formData
-          description: Node type, must be subtype of "cm:content" (which is the default)
-          required: false
-          type: string
         - name: autoRename
-          in: formData
+          in: query
           description: If true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
           required: false
           type: boolean
-        - name: relativePath
-          in: formData
-          description: The value of the relativePath (e.g. "X/Y/Z") specifies the folder structure to be used beneath the node, referenced by the **nodeId**. Therefore, any folders in the relativePath that do not exist, are created before the content is created.
-          required: false
-          type: string
-        - name: overwrite
-          in: formData
-          description: If true, then if file already exists (by matching name) and is versionable then will update the existing file content.
-          required: false
-          type: boolean
-        - name: majorVersion
-          in: formData
-          description: Used with overwrite. If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
-          required: false
-          type: boolean
-        - name: comment
-          in: formData
-          description: Used with overwrite. Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
-          required: false
-          type: string
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: nodeBody
+          description: The node info to create.
+          required: true
+          schema:
+            properties:
+              name:
+                type: string
+              nodeType:
+                type: string
+              relativePath:
+                type: string
+              content:
+                type: object
+                properties:
+                  mimeType:
+                    type: string
+                  encoding:
+                    type: string
+              aspectNames:
+                type: array
+                items:
+                  type: string
+              properties:
+                type: object
+                additionalProperties:
+                  type: string
       consumes:
-        - multipart/form-data
         - application/json
+        - multipart/form-data
       produces:
         - application/json
       responses:
@@ -2152,7 +2157,6 @@ paths:
                 type: string
       consumes:
         - application/json
-        - multipart/formdata
       produces:
         - application/json
       responses:
