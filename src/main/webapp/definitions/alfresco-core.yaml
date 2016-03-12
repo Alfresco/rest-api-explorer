@@ -801,8 +801,8 @@ paths:
         When overwriting existing content the **comment** field can be used to add a version comment that will appear in 
         version history. This will also enable versioning of this node, if not already versioned.
         
-        The **autoRename** boolean field, if true and on a name clash, will try to auto rename by finding a unique name based 
-        on an integer suffix.
+        An **autoRename** boolean field can also be provided. If true, then on a name clash will try to auto rename by 
+        finding a unique name based on an integer suffix.
         
         Any field in the JSON body defined below (with the excpetion of name) can also be passed as a form-data field.
       operationId: addNode
