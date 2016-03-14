@@ -681,13 +681,23 @@ paths:
         - name: orderBy
           in: query
           description: |
-            If not specified then default sort is for folders to be sorted before files, and by ascending name. 
+            If not specified then default sort is for folders to be sorted before files, and by ascending name 
+            i.e. "orderBy=isFolder DESC,name ASC".
+            
             This default can be completely overridden by specifying a specific orderBy consisting of one, two or 
-            three comma-separated list of properties (with optional ASCending or DESCending). 
-            For example, specifying “orderBy=name DESC” would return a mixed folder/file list. 
-            It should be noted that the default sort order can be explicitly specified as “orderBy=isFolder DESC,name ASC” 
-            or reversed as “orderBy=isFolder ASC,name DESC”. 
-            Other orderBy properties include:- sizeInBytes, mimeType, nodeType, cm:title, modifiedAt, createdAt, modifiedByUser, createdByUser 
+            three comma-separated list of properties (with optional ASCending or DESCending), for example, 
+            specifying “orderBy=name DESC” would return a mixed folder/file list. 
+            
+            The following properties can be used to order the results:
+            * isFolder
+            * name
+            * mimeType
+            * nodeType
+            * sizeInBytes
+            * modifiedAt
+            * createdAt
+            * modifiedByUser
+            * createdByUser 
           required: false
           type: string
         - name: where
@@ -804,7 +814,7 @@ paths:
         An **autoRename** boolean field can also be provided. If true, then on a name clash will try to auto rename by 
         finding a unique name based on an integer suffix.
         
-        Any field in the JSON body defined below (with the excpetion of name) can also be passed as a form-data field.
+        Any field in the JSON body defined below can also be passed as a form-data field.
       operationId: addNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
