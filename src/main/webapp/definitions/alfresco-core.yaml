@@ -908,7 +908,7 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
             $ref: '#/definitions/NodeEntry'
@@ -954,7 +954,7 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
             $ref: '#/definitions/NodeEntry'
