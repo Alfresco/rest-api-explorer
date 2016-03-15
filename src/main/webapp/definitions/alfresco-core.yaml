@@ -1102,6 +1102,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:          
+            $ref: '#/definitions/RenditionPaging'          
         '400':
           description: If the **nodeId** is not a valid format, or exists, but does not identify a file
         '404':
@@ -1124,6 +1126,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/RenditionEntry'          
         '400':
           description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
         '404':
@@ -3086,3 +3090,24 @@ definitions:
         type: array
         items:
           type: string
+  RenditionEntry:
+    type: object
+    properties:
+      id:
+        type: string
+      content:
+        $ref: '#/definitions/ContentInfo'
+      status:
+        type: string
+  RenditionPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/RenditionEntry'        
