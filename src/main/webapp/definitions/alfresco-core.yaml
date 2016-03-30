@@ -1013,9 +1013,9 @@ paths:
         The majorVersion and comment parameters can be used to control versioning behaviour. If the content is versionable
         a new minor version will be created by default.
         
-        NOTE: Although the endpoint accepts any content type the OpenAPI Specification does not allow a wildcard to be provided
-        or the ability for tooling to accept an arbitary file. To allow for testing of this endpoint text based content can be provided
-        in the body.
+        NOTE: This endpoint accepts any content type, but for testing with this tool text based content can be provided.
+        This is because the OpenAPI Specification does not allow a wildcard to be provided or the ability for
+        tooling to accept an arbitary file.
       operationId: updateFileContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
