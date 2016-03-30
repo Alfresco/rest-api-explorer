@@ -541,14 +541,14 @@ paths:
         - nodes
         - 5.2 changes
       summary: Get a node
-      description: Returns information for the node with identifier **nodeId**.
+      description: Get information for the node with identifier **nodeId**.
       operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - name: relativePath
           in: query
-          description: Return info on node resolved by this path (relative to the specified nodeId as the starting parent folder)
+          description: If specified, return information on the node resolved by this path. The path is relative to the specified **nodeId**
           required: false
           type: string
         - $ref: '#/parameters/fieldsParam'
@@ -571,9 +571,9 @@ paths:
       tags:
         - nodes
         - 5.2 changes
-      summary: Updates a node
+      summary: Update a node
       description: |
-        Updates the node with identifier **nodeId**. For example, to rename a node (eg. file or folder):
+        Updates the node with identifier **nodeId**. For example, you can rename a file or folder:
         ```JSON
         {
           "name":"My new name",
@@ -588,10 +588,9 @@ paths:
             }
         }
         ```
-        Note, if aspects need to be added (or removed) then the complete set of "aspectNames"
-        should be passed back in (eg. use get node info first to get existing aspects).
-          
-        As of now, there is no optimistic locking for updates, hence they are effectively "last one wins".
+        **Note:** if you want to add or remove aspects, then you must use **GET /nodes/{nodeId}** first to get the complete set of *aspectNames*.
+
+        **Note:** Currently there is no optimistic locking for updates, so they are applied in "last one wins" order.
       operationId: updateNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -629,7 +628,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         '409':
-          description: If name is updated and clashes with an existing node in the current parent folder
+          description: If the updated name clashes with an existing node in the current parent folder
         default:
           description: Error response
           schema:
@@ -638,17 +637,21 @@ paths:
       tags:
         - nodes
         - 5.2 changes
-      summary: Deletes a node
+      summary: Delete a node
       description: |
-         Deletes the node with identifier **nodeId**. 
-         If the **nodeId** is a folder then all of it's children will also be cascade deleted.
-         Deleted nodes are moved to the trashcan (archive store) unless 'permanent' query parameter is true.
+         Deletes the node with identifier **nodeId**.
+         If the **nodeId** is a folder, then its children are also deleted.
+         Deleted nodes move to the trashcan unless the **permanent** query parameter is true, and the current user is the owner or an admin.
       operationId: deleteNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - name: permanent
           in: query
-          description: If true then, the owner or an admin, can permanently delete the node without moving to trashcan (archive store). False by default.
+          description: |
+            If **true** then the node is deleted permanently, without it moving to the trashcan.
+            You must be the owner or an admin to permanently delete the node.
+
+            This parameter is **false** by default.
           required: false
           type: boolean
       produces:
@@ -659,7 +662,7 @@ paths:
         '400':
           description: If **nodeId** is not a valid format
         '403':
-          description: If current user does not have permission to delete **nodeId**
+          description: If the current user does not have permission to delete **nodeId**
         '404':
           description: If **nodeId** does not exist
         default:
@@ -672,7 +675,10 @@ paths:
         - nodes
         - 5.2 changes
       summary: Get node children
-      description: Returns the children of the node with identifier **nodeId**. Returns minimal info for each child, although 'include' can be used to return addtional info.
+      description: |
+        Returns the children of the node with identifier **nodeId**.
+        Minimal information for each child is returned by default.
+        You can use the **include** parameter to return addtional information.
       operationId: getNodeChildren
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
