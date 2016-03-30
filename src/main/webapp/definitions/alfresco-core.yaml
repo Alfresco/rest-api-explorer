@@ -3,12 +3,12 @@ info:
   description: |
     Provides access to the core features of Alfresco.
     
-    The generic term used in the API for any object in an Alfresco repository is entity. 
-    An entity is of a specific entity type, and has a unique entity id.
+    This API uses the term **entity** to refer to an object in an Alfresco repository.
+    An **entity** is of a specific **type**, and has a unique **id**.
     
-    The unique entity id for a node is a NodeRef with the "workspace://SpacesStore" prefix removed, 
-    the unique entity id for a site is the site short name and the unique entity id for a person is 
-    the username.
+    * The **id** of an entity of type **node** is the **NodeRef** with the `workspace://SpacesStore` prefix removed.
+    * The **id** of an entity of type **site** is the site's short name.
+    * The **id** for an entity of type **person** is the person's username.
   version: '1'
   title: Alfresco Core REST API
 basePath: /alfresco/api/-default-/public/alfresco/versions/1
@@ -55,14 +55,18 @@ parameters:
   nodeIdWithAliasParam:
     name: nodeId
     in: path
-    description: The identifier of a node. Can also use well-known alias (-my-, -shared- or -root-).
+    description: |
+      The identifier of a node. You can also use one of these well-known aliases: 
+      * -my-
+      * -shared-
+      * -root-
     required: true
     type: string
   nodeMinimalEntryIncludeParam:
     name: include
     in: query
     description: |
-      Returns additional info about the node, the following optional fields can be requested:-
+      Returns additional information about the node. The following optional fields can be requested:
       * properties
       * aspectNames
       * path
@@ -77,7 +81,7 @@ parameters:
     name: include
     in: query
     description: |
-      Returns additional info about the node, the following optional fields can be requested:-
+      Returns additional information about the node, the following optional fields can be requested:
       * path
       * isLink
       * allowableOperations
@@ -96,7 +100,7 @@ parameters:
     name: include
     in: query
     description: |
-      Returns additional info about the shared link, the following optional fields can be requested:-
+      Returns additional information about the shared link, the following optional fields can be requested:
       * allowableOperations
     required: false
     type: array
@@ -106,7 +110,7 @@ parameters:
   renditionIdParam:
     name: renditionId
     in: path
-    description: The name of a thumbnail rendition (eg. doclib, pdf).
+    description: The name of a thumbnail rendition, for example *doclib*, or *pdf*.
     required: true
     type: string
   personIdParam:
@@ -548,7 +552,9 @@ paths:
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - name: relativePath
           in: query
-          description: If specified, return information on the node resolved by this path. The path is relative to the specified **nodeId**
+          description: |
+            If specified, returns information on the node resolved by this path. 
+            The path is relative to the specified **nodeId**
           required: false
           type: string
         - $ref: '#/parameters/fieldsParam'
@@ -566,7 +572,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
     put:
       tags:
         - nodes
@@ -598,7 +604,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: nodeBody
-          description: The node info to update.
+          description: The node information to update.
           required: true
           schema:
             properties:
@@ -632,7 +638,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - nodes
@@ -668,7 +674,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/children':
     get:
       tags:
@@ -708,7 +714,8 @@ paths:
           type: string
         - name: where
           in: query
-          description: Optionally filter the list. Examples include:-
+          description: |
+            Optionally filter the list. Here are some examples:
           
             *   where=(isFolder=true)
             
@@ -723,12 +730,12 @@ paths:
         - $ref: '#/parameters/nodeMinimalEntryIncludeParam'
         - name: relativePath
           in: query
-          description: Return info on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
+          description: Return information on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
           required: false
           type: string
         - name: includeSource
           in: query
-          description: Also include "source" (in addition to "entries") with folder info on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
+          description: Also include "source" (in addition to "entries") with folder information on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
           required: false
           type: boolean
         - $ref: '#/parameters/fieldsParam'
@@ -746,7 +753,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
     post:
       tags:
         - nodes
@@ -833,7 +840,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: nodeBody
-          description: The node info to create.
+          description: The node information to create.
           required: true
           schema:
             properties:
@@ -883,7 +890,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/copy':
     post:
       tags:
@@ -929,7 +936,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/move':
     post:
       tags:
@@ -975,7 +982,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/content':
     get:
       tags:
@@ -1004,7 +1011,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
     put:
       tags:
         - nodes
@@ -1019,7 +1026,7 @@ paths:
         The majorVersion and comment parameters can be used to control versioning behaviour. If the content is versionable
         a new minor version will be created by default.
         
-        NOTE: This endpoint accepts any content type, but for testing with this tool text based content can be provided.
+        **Note:** This endpoint accepts any content type, but for testing with this tool text based content can be provided.
         This is because the OpenAPI Specification does not allow a wildcard to be provided or the ability for
         tooling to accept an arbitary file.
       operationId: updateFileContent
@@ -1062,7 +1069,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions':
     post:
       tags:
@@ -1111,8 +1118,8 @@ paths:
       tags:
         - renditions
         - 5.2 changes       
-      summary: List info for renditions
-      description: Returns the rendition infos for file node with identifier **nodeId**.
+      summary: List information for renditions
+      description: Returns the rendition information for the file node with identifier **nodeId**.
       operationId: getRenditions
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1134,8 +1141,8 @@ paths:
       tags:
         - renditions
         - 5.2 changes       
-      summary: Get rendition info
-      description: Returns the rendition info for file node with identifier **nodeId**.
+      summary: Get rendition information
+      description: Returns the rendition information for file node with identifier **nodeId**.
       operationId: getRendition
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1247,7 +1254,7 @@ paths:
       description: |
         Get a person's favorite sites.
 
-        **Please note that this method is deprecated and will be removed in the future**.
+        **Note: This method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
       operationId: getFavoriteSites
       produces:
@@ -1276,7 +1283,7 @@ paths:
       description: |
         Add a favorite site for person **personId**. 
           
-        **Please note that this method is deprecated and will be removed in the future**.
+        **Note: that this method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
       operationId: favoriteSite
       produces:
@@ -1311,7 +1318,7 @@ paths:
       description: |
         Returns information on favorite site **siteId** of person **personId**. 
         
-        **Please note that this method is deprecated and will be removed in the future.**
+        **Note: This method is deprecated and will be removed in the future.**
         Use `/people/{personId}/favorites/{favoriteId}` instead.
       operationId: getFavoriteSite
       produces:
@@ -1339,7 +1346,7 @@ paths:
       description: |
         Removes site **siteId** from the favorite site list of person **personId**. 
         
-        **Please note that this method is deprecated and will be removed in the future.**
+        **Note This method is deprecated and will be removed in the future.**
         Use `/people/{personId}/favorites/{favoriteId}` instead.
       operationId: deleteFavoriteSite
       produces:
@@ -1371,7 +1378,7 @@ paths:
         to entries of a specific kind. The **where** parameter takes a value.
         The value is a single predicate that can include one or more **EXISTS** 
         conditions. The **EXISTS** condition uses a single operand to limit the
-        list to include entries that include that one property. The property values are:-
+        list to include entries that include that one property. The property values are:
         
         *   `target/file`
         *   `target/folder`
@@ -1554,7 +1561,7 @@ paths:
       description: |
         Returns a list of preferences for person **personId**.
         
-        Note that each preference consists of an **id** and a **value**. 
+        Each preference consists of an **id** and a **value**. 
         The **value** can be of any JSON type.
       operationId: getPreferences
       produces:
@@ -2251,7 +2258,7 @@ paths:
       description: |
         Returns minimal information for the file with shared link identifier **sharedId**.
         
-        NOTE: No authentication is required to call this endpoint.
+        **Note:** No authentication is required to call this endpoint.
       operationId: getSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -2273,7 +2280,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - shared-links
@@ -2299,7 +2306,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'           
+            $ref: '#/definitions/Error' 
   '/shared-links/{sharedId}/content':
     get:
       tags:
@@ -2309,7 +2316,7 @@ paths:
       description: |
         Returns the content of the file with shared link identifier **sharedId**.
         
-        NOTE: No authentication is required to call this endpoint.
+        **Note:** No authentication is required to call this endpoint.
       operationId: getSharedLinkContent
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -2339,7 +2346,7 @@ paths:
       description: |
         Returns the rendition content for file with shared link identifier **sharedId**.
         
-        NOTE: No authentication is required to call this endpoint.
+        **Note:** No authentication is required to call this endpoint.
       operationId: getSharedLinkRenditionContent
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -2360,7 +2367,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'           
+            $ref: '#/definitions/Error' 
   '/shared-links/{sharedId}/email':
     post:
       tags:
@@ -2929,7 +2936,7 @@ definitions:
         description: The unique id of the preference
       value:
         type: string        
-        description: The value of the preference. Note that this can be of any JSON type.
+        description: The value of the preference. The value can be of any JSON type.
   FavoriteSitePaging:
     type: object
     properties:
