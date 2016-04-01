@@ -93,7 +93,7 @@ parameters:
   sharedIdParam:
     name: sharedId
     in: path
-    description: The identifier of a shared id (quick share link).
+    description: The identifier of a shared link to a file.
     required: true
     type: string
   sharedLinkEntryIncludeParam:
@@ -173,10 +173,17 @@ parameters:
     name: fields
     in: query
     description: |
-      A list of field names. You can use the fields parameter to restrict the fields 
-      returned within a response, eg. to save on overall bandwidth. This applies to an individual 
-      returned entity or entries within a collection. If the api method also supports the include
-      parameter then those will be auto included in addition to the fields parameter.
+      A list of field names. 
+      
+      You can use this parameter to restrict the fields 
+      returned within a response if, for example, you want to save on overall bandwidth. 
+      
+      The list applies to a returned individual 
+      entity or entries within a collection. 
+      
+      If the api method also supports the **include**
+      parameter, then the fields specified in the **include**
+      parameter are returned in addition to those specified in the **fields** parameter.
     required: false
     type: array
     items:
@@ -207,17 +214,24 @@ parameters:
     name: attachment
     in: query
     description: |
-       True by default. This enables, for example, a web browser to download the file as an attachment. 
-       If false, a web browser may preview file (eg. in a new tab or window) instead of 
-       downloading. However, we restrict this to a specific white list of content types, eg. certain image types & pdf.
-       If the content type is not in the white list then the false setting is ignored and 
+       **true** enables a web browser to download the file as an attachment. 
+       **false** means a web browser may preview the file in a new tab or window, but not 
+       download the file. 
+       
+       You can only set this parameter to **false** if the content type of the file is in the supported list; 
+       for example, certain image files and PDF files.
+       
+       If the content type is not supported for preview, then a value of **false**  is ignored, and 
        the attachment will be returned in the response.
     required: false
+    default: true
     type: boolean
   ifModifiedSinceHeader:
     name: If-Modified-Since
     in: header
-    description: Only return the content if it has been modified since the date provided using the format defined by HTTP e.g. Wed, 09 Mar 2016 16:56:34 GMT
+    description: |
+      Only returns the content if it has been modified since the date provided.
+      Use the date format defined by HTTP. For example, `Wed, 09 Mar 2016 16:56:34 GMT`.
     required: false
     type: string
     format: date-time
@@ -227,7 +241,7 @@ paths:
       tags:
         - comments
       summary: Get comments
-      description: Returns a list of comments for the node identified by **nodeId**, sorted chronologically with the newest first.
+      description: Returns a list of comments for the node identified by **nodeId**, sorted chronologically with the newest comment first.
       operationId: getComments
       produces:
         - application/json
@@ -656,10 +670,9 @@ paths:
           description: |
             If **true** then the node is deleted permanently, without it moving to the trashcan.
             You must be the owner or an admin to permanently delete the node.
-
-            This parameter is **false** by default.
           required: false
           type: boolean
+          default: false
       produces:
         - application/json
       responses:
@@ -1020,13 +1033,13 @@ paths:
       description: |
         Updates the content of the node with identifier **nodeId**.
         
-        The request body for this endpoint can be any text or binary stream, however the Content-Type header should be set
-        appropriately for the content being set, this will be used to set the mimetype in the repository.
+        The request body for this endpoint can be any text or binary stream. The Content-Type header should be set
+        correctly for the type of content being updated. The Content-Type header is used to set the mimetype in the repository.
         
-        The majorVersion and comment parameters can be used to control versioning behaviour. If the content is versionable
-        a new minor version will be created by default.
+        The **majorVersion** and **comment** parameters can be used to control versioning behaviour. If the content is versionable,
+        a new minor version is created by default.
         
-        **Note:** This endpoint accepts any content type, but for testing with this tool text based content can be provided.
+        **Note:** This api method accepts any content type, but for testing with this tool text based content can be provided.
         This is because the OpenAPI Specification does not allow a wildcard to be provided or the ability for
         tooling to accept an arbitary file.
       operationId: updateFileContent
@@ -1034,12 +1047,17 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - name: majorVersion
           in: query
-          description: If true, create major version (default is false). Will also enable versioning of this node, if not already versioned.
+          description: |
+            If **true**, create a major version. 
+            Setting this parameter also enables versioning of this node, if it is not already versioned.
           required: false
           type: boolean
+          default: false
         - name: comment
           in: query
-          description: Add version comment (will appear in version history). Will also enable versioning of this node, if not already versioned.
+          description: | 
+            Add a version comment which will appear in version history. 
+            Setting this parameter also enables versioning of this node, if it is not already versioned.
           required: false
           type: string
         - $ref: '#/parameters/nodeEntryIncludeParam'
