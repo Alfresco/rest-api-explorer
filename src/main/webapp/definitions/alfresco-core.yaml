@@ -911,9 +911,11 @@ paths:
         - 5.2 changes       
       summary: Copy a node
       description: |
-        Copy a node with identifier **nodeId** to parent folder node with identifier **targetParentId** in request body.
-        The new node will have the same name as source unless, optionally, renamed with **name** in request body.
-        If the source **nodeId** is a folder then all of it's children will be cascade copied to the **targetParentId** destination.
+        Copy the node **nodeId** to the parent folder node **targetParentId**. The **targetParentId** is specified in the in request body.
+        
+        The new node has the same name as the source node unless you specify a new **name** in the request body.
+        
+        If the source **nodeId** is a folder, then all of its children are also copied.
       operationId: copyNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -921,7 +923,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: copyBody
-          description: The targetParentId and optionally a (new) name.
+          description: The targetParentId and, optionally, a new name.
           required: true
           schema:
             properties:
@@ -945,7 +947,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         '409':
-          description: If new name clashes with an existing node in the destination parent folder
+          description: If the new name clashes with an existing node in the destination parent folder
         default:
           description: Error response
           schema:
@@ -957,9 +959,12 @@ paths:
         - 5.2 changes       
       summary: Move a node
       description: |
-        Move a node with identifier **nodeId** to parent folder node with identifier **targetParentId** in request body.
-        The node can be, optionally, renamed with **name** in request body.
-        If the source **nodeId** is a folder then all of it's children will be cascade moved to the **targetParentId** destination.
+        Move the node **nodeId** to the parent folder node **targetParentId**.  in request body.
+        The **targetParentId** is specified in the in request body.
+        
+        The moved node retains its name unless you specify a new **name** in the request body.
+        
+        If the source **nodeId** is a folder, then all of its children are also moved.
       operationId: moveNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -967,7 +972,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: moveBody
-          description: The targetParentId and optionally a (new) name.
+          description: The targetParentId and, optionally, a new name.
           required: true
           schema:
             properties:
@@ -991,7 +996,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         '409':
-          description: If new name clashes with an existing node in the destination parent folder
+          description: If the new name clashes with an existing node in the destination parent folder
         default:
           description: Error response
           schema:
