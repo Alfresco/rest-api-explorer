@@ -1182,7 +1182,7 @@ paths:
     get:
       tags:
         - renditions
-        - 5.2 changes       
+        - 5.2 changes
       summary: Get rendition content
       description: Returns the rendition content for file node with identifier **nodeId**.
       operationId: getRenditionContent
@@ -1200,6 +1200,121 @@ paths:
           description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
         '404':
           description: If **nodeId** or **renditionId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/deleted-nodes':
+    get:
+      tags:
+        - nodes
+        - 5.2 changes        
+      summary: Get deleted nodes
+      description: |
+        Returns a list of deleted nodes for the current user.
+        If the current user is an administrator deleted nodes 
+        for all users will be returned.
+        The list of deleted nodes will be ordered with the most recently deleted node at the top of the list.
+      operationId: getDeletedNodes
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/nodeMinimalEntryIncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DeletedNodesPaging'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/deleted-nodes/{nodeId}':
+    get:
+      tags:
+        - nodes
+        - 5.2 changes        
+      summary: Get a deleted node
+      description: |
+        Returns a specific deleted node with **nodeId**.
+      operationId: getDeletedNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DeletedNodeEntry'
+        '403':
+          description: If the user does not have permission to view the deleted node
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: If **nodeId** does not exist
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - nodes
+        - 5.2 changes        
+      summary: Purge a deleted node
+      description: |
+        Permanently removes the deleted node with **nodeId**.
+      operationId: purgeDeletedNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '403':
+          description: If the user does not have permission to purge the deleted node
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: If **nodeId** does not exist
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'              
+  '/deleted-nodes/{nodeId}/restore':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes                
+      summary: Restore a deleted node
+      description: |
+        Attempts to restore the deleted node with **nodeId** to it's original location.
+      operationId: restoreNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '403':
+          description: If the user does not have permission to restore the deleted node
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: If **nodeId** does not exist
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Error response
           schema:
@@ -3152,4 +3267,53 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/RenditionEntry'        
+              $ref: '#/definitions/RenditionEntry'
+  DeletedNodesPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/DeletedNodeMinimalEntry'
+  DeletedNodeMinimalEntry:
+    type: object
+    properties:
+      entry:
+        $ref: '#/definitions/DeletedNodeMinimal'
+  DeletedNodeMinimal:
+    allOf: 
+      - $ref: '#/definitions/NodeMinimalEntry'
+      - type: object
+        required:
+          - archivedByUser
+          - archivedAt
+        properties:
+          archivedByUser:
+            $ref: '#/definitions/UserInfo'
+          archivedAt:
+            type: string
+            format: date-time
+  DeletedNodeEntry:
+    type: object
+    properties:
+      entry:
+        $ref: '#/definitions/DeletedNode'
+  DeletedNode:
+    allOf: 
+      - $ref: '#/definitions/NodeEntry'
+      - type: object
+        required:
+          - archivedByUser
+          - archivedAt
+        properties:
+          archivedByUser:
+            $ref: '#/definitions/UserInfo'
+          archivedAt:
+            type: string
+            format: date-time                               
