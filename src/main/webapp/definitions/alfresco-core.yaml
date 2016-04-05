@@ -1317,7 +1317,15 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         '404':
-          description: If **nodeId** does not exist
+          description: If **nodeId** does not exist or if the restore destination parent node no longer exists
+          schema:
+            $ref: '#/definitions/Error'
+        '409':
+          description: If the node name already exists in the restore destination
+          schema:
+            $ref: '#/definitions/Error'
+        '422':
+          description: There was an integrity failure after the node was restored
           schema:
             $ref: '#/definitions/Error'
         default:
