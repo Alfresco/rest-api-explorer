@@ -1,6 +1,14 @@
 swagger: '2.0'
 info:
-  description: Provides access to the core features of Alfresco
+  description: |
+    Provides access to the core features of Alfresco.
+    
+    This API uses the term **entity** to refer to an object in an Alfresco repository.
+    An **entity** is of a specific **type**, and has a unique **id**.
+    
+    * The **id** of an entity of type **node** is the **NodeRef** with the `workspace://SpacesStore` prefix removed.
+    * The **id** of an entity of type **site** is the site's short name.
+    * The **id** for an entity of type **person** is the person's username.
   version: '1'
   title: Alfresco Core REST API
 basePath: /alfresco/api/-default-/public/alfresco/versions/1
@@ -15,31 +23,96 @@ consumes:
 produces:
   - application/json
 tags:
+  - name: 5.2 changes
+    description: Endpoints added in the 5.2 release
+  - name: nodes
+    description: Retrieve and manage nodes - files & folders
+  - name: renditions
+    description: Retrieve and manage file renditions
+  - name: shared-links
+    description: Retrieve and manage public shared links
+  - name: search
+    description: Search for items in the repository
   - name: comments
-    description: Retrieve and manage Comments
-    externalDocs:
-      description: Find more information on comments here
-      url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-nodes-comments.html
-  - name: favorites
-    description: Retrieve and manage Favorites
-    externalDocs:
-      description: Find more information on favorites here
-      url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-favorites.html
-  - name: networks
-    description: Retrieve and manage Networks
-  - name: people
-    description: Retrieve and manage People
+    description: Retrieve and manage node comments
   - name: ratings
-    description: Retrieve and manage Ratings
-  - name: sites
-    description: Retrieve and manage Sites
+    description: Retrieve and manage node ratings
   - name: tags
-    description: Retrieve and manage Tags
+    description: Retrieve and manage node tags
+  - name: favorites
+    description: Retrieve and manage personal favorites
+  - name: networks
+    description: Retrieve and manage networks
+  - name: people
+    description: Retrieve and manage people
+  - name: sites
+    description: Retrieve and manage sites
 parameters:
   nodeIdParam:
     name: nodeId
     in: path
     description: The identifier of a node.
+    required: true
+    type: string
+  nodeIdWithAliasParam:
+    name: nodeId
+    in: path
+    description: |
+      The identifier of a node. You can also use one of these well-known aliases: 
+      * -my-
+      * -shared-
+      * -root-
+    required: true
+    type: string
+  nodeMinimalEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the node. The following optional fields can be requested:
+      * properties
+      * aspectNames
+      * path
+      * isLink
+      * allowableOperations
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  nodeEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the node, the following optional fields can be requested:
+      * path
+      * isLink
+      * allowableOperations
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  sharedIdParam:
+    name: sharedId
+    in: path
+    description: The identifier of a shared link to a file.
+    required: true
+    type: string
+  sharedLinkEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the shared link, the following optional fields can be requested:
+      * allowableOperations
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  renditionIdParam:
+    name: renditionId
+    in: path
+    description: The name of a thumbnail rendition, for example *doclib*, or *pdf*.
     required: true
     type: string
   personIdParam:
@@ -90,49 +163,87 @@ parameters:
     description: The number of entities that exist in the collection before those included in this list.
     required: false
     type: integer
+    minimum: 0
   maxItemsParam:
     name: maxItems
     in: query
     description: The maximum number of items to return in the list.
     required: false
     type: integer
-  propertiesParam:
-    name: properties
+    minimum: 1
+  fieldsParam:
+    name: fields
     in: query
-    description: A list of property names. You can use the properties parameter to restrict the number of returned properties.
+    description: |
+      A list of field names. 
+      
+      You can use this parameter to restrict the fields 
+      returned within a response if, for example, you want to save on overall bandwidth. 
+      
+      The list applies to a returned individual 
+      entity or entries within a collection. 
+      
+      If the api method also supports the **include**
+      parameter, then the fields specified in the **include**
+      parameter are returned in addition to those specified in the **fields** parameter.
     required: false
     type: array
     items:
       type: string
     collectionFormat: csv
   orderByParam:
-    name: "orderBy"
-    in: "query"
+    name: orderBy
+    in: query
     description: A string to control the order of the entities returned.
     required: false
-    type: "string"
+    type: string
   whereParam:
-    name: "where"
-    in: "query"
+    name: where
+    in: query
     description: A string to restrict the returned objects by using a predicate.
     required: false
-    type: "string"
+    type: string
   relationsParam:
-    name: "relations"
-    in: "query"
+    name: relations
+    in: query
     description: Use the relations parameter to include one or more related entities in a single response.
     required: false
     type: array
     items:
       type: string
     collectionFormat: csv
+  attachmentParam:
+    name: attachment
+    in: query
+    description: |
+       **true** enables a web browser to download the file as an attachment. 
+       **false** means a web browser may preview the file in a new tab or window, but not 
+       download the file. 
+       
+       You can only set this parameter to **false** if the content type of the file is in the supported list; 
+       for example, certain image files and PDF files.
+       
+       If the content type is not supported for preview, then a value of **false**  is ignored, and 
+       the attachment will be returned in the response.
+    required: false
+    default: true
+    type: boolean
+  ifModifiedSinceHeader:
+    name: If-Modified-Since
+    in: header
+    description: |
+      Only returns the content if it has been modified since the date provided.
+      Use the date format defined by HTTP. For example, `Wed, 09 Mar 2016 16:56:34 GMT`.
+    required: false
+    type: string
+    format: date-time
 paths:
   '/nodes/{nodeId}/comments':
     get:
       tags:
         - comments
       summary: Get comments
-      description: Returns a list of comments for the node identified by **nodeId**, sorted chronologically with the newest first.
+      description: Returns a list of comments for the node identified by **nodeId**, sorted chronologically with the newest comment first.
       operationId: getComments
       produces:
         - application/json
@@ -140,7 +251,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -207,8 +318,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/commentIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: commentBody
           description: The JSON representing the comment to be updated.
@@ -261,7 +372,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -322,7 +433,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/ratingIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -369,7 +480,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -444,6 +555,785 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}':
+    get:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Get a node
+      description: Get information for the node with identifier **nodeId**.
+      operationId: getNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - name: relativePath
+          in: query
+          description: |
+            If specified, returns information on the node resolved by this path. 
+            The path is relative to the specified **nodeId**
+          required: false
+          type: string
+        - $ref: '#/parameters/fieldsParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Update a node
+      description: |
+        Updates the node with identifier **nodeId**. For example, you can rename a file or folder:
+        ```JSON
+        {
+          "name":"My new name",
+        }
+        ```
+        You can also set or update one or more properties:
+        ```JSON
+        {
+          "properties":
+            {
+              "cm:title":"Folder title"
+            }
+        }
+        ```
+        **Note:** if you want to add or remove aspects, then you must use **GET /nodes/{nodeId}** first to get the complete set of *aspectNames*.
+
+        **Note:** Currently there is no optimistic locking for updates, so they are applied in "last one wins" order.
+      operationId: updateNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: nodeBody
+          description: The node information to update.
+          required: true
+          schema:
+            properties:
+              name:
+                type: string
+              nodeType:
+                type: string
+              aspectNames:
+                type: array
+                items:
+                  type: string
+              properties:
+                type: object
+                additionalProperties:
+                  type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the update request is invalid or if the **nodeId** is not a valid format
+        '403':
+          description: If current user does not have permission to update **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If the updated name clashes with an existing node in the current parent folder
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Delete a node
+      description: |
+         Deletes the node with identifier **nodeId**.
+         If the **nodeId** is a folder, then its children are also deleted.
+         Deleted nodes move to the trashcan unless the **permanent** query parameter is true, and the current user is the owner or an admin.
+      operationId: deleteNode
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - name: permanent
+          in: query
+          description: |
+            If **true** then the node is deleted permanently, without it moving to the trashcan.
+            You must be the owner or an admin to permanently delete the node.
+          required: false
+          type: boolean
+          default: false
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: If **nodeId** is not a valid format
+        '403':
+          description: If the current user does not have permission to delete **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/children':
+    get:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Get node children
+      description: |
+        Returns the children of the node with identifier **nodeId**.
+        Minimal information for each child is returned by default.
+        You can use the **include** parameter to return addtional information.
+      operationId: getNodeChildren
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - name: orderBy
+          in: query
+          description: |
+            If not specified then default sort is for folders to be sorted before files, and by ascending name 
+            i.e. "orderBy=isFolder DESC,name ASC".
+            
+            This default can be completely overridden by specifying a specific orderBy consisting of one, two or 
+            three comma-separated list of properties (with optional ASCending or DESCending), for example, 
+            specifying “orderBy=name DESC” would return a mixed folder/file list. 
+            
+            The following properties can be used to order the results:
+            * isFolder
+            * name
+            * mimeType
+            * nodeType
+            * sizeInBytes
+            * modifiedAt
+            * createdAt
+            * modifiedByUser
+            * createdByUser 
+          required: false
+          type: string
+        - name: where
+          in: query
+          description: |
+            Optionally filter the list. Here are some examples:
+          
+            *   where=(isFolder=true)
+            
+            *   where=(isFile=true)
+            
+            *   where=(nodeType='my:specialtype')
+            
+            *   where=(nodeType='my:specialtype' INCLUDESUBTYPES)
+            
+          required: false
+          type: string
+        - $ref: '#/parameters/nodeMinimalEntryIncludeParam'
+        - name: relativePath
+          in: query
+          description: Return information on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
+          required: false
+          type: string
+        - name: includeSource
+          in: query
+          description: Also include "source" (in addition to "entries") with folder information on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
+          required: false
+          type: boolean
+        - $ref: '#/parameters/fieldsParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodePaging'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Create a node
+      description: |
+        Creates a node as a child of the node with identifier **nodeId**.
+        
+        The name and nodeType fields are mandatory. For example, to create a folder:
+        ```JSON
+        {
+          "name":"My Folder",
+          "nodeType":"cm:folder"
+        }
+        ```
+        
+        An empty file can be created using JSON as follows:
+        ```JSON
+        {
+          "name":"My text file.txt",
+          "nodeType":"cm:content",
+          "content": 
+           {
+             "mimeType":"text/plain"
+           }
+        }
+        ```
+        The binary content can then be updated using the PUT /nodes/{nodeId} endpoint.
+        
+        You can also optionally create a folder (or other node) under a folder hierarchy:
+        ```JSON
+        {
+          "name":"My Special Folder",
+          "nodeType":"cm:folder",
+          "relativePath":"X/Y/Z"
+        }
+        ```
+        The value of the relativePath (e.g. "X/Y/Z") specifies the folder structure to be 
+        used beneath the node, referenced by the **nodeId**. Therefore, any folders in the 
+        relativePath that do not exist, are created before the node is created.
+        
+        You can also set properties when creating a new node:
+        ```JSON
+        {
+          "name":"My Other Folder",
+          "nodeType":"cm:folder",
+          "properties":
+            {
+              "cm:title":"Folder title",
+              "cm:description":"This is an important folder"
+            }
+        }
+        ```
+        Any missing aspects will be auto-applied, eg. "cm:titled" in the example above. Aspects can
+        also be explicitly set, if needed, via an "aspectNames" field.
+        
+        This endpoint also supports a file being uploaded using multipart/form-data. 
+        
+        A **filedata** field is required that represents the content to upload, a **filename** field can be
+        used to provide an alternative name for the new file.
+        
+        An **overwrite** field can be used to overwrite an existing file (by matching name). If the file is versionable
+        the existing content will be replaced.
+        
+        When overwriting existing content the **majorVersion** boolean field can be used to indicate whether a major version 
+        (default is false) should be created. This will also enable versioning of this node, if not already versioned.
+        
+        When overwriting existing content the **comment** field can be used to add a version comment that will appear in 
+        version history. This will also enable versioning of this node, if not already versioned.
+        
+        An **autoRename** boolean field can also be provided. If true, then on a name clash will try to auto rename by 
+        finding a unique name based on an integer suffix.
+        
+        Any field in the JSON body defined below can also be passed as a form-data field.
+      operationId: addNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - name: autoRename
+          in: query
+          description: If true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
+          required: false
+          type: boolean
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: nodeBody
+          description: The node information to create.
+          required: true
+          schema:
+            properties:
+              name:
+                type: string
+              nodeType:
+                type: string
+              relativePath:
+                type: string
+              content:
+                type: object
+                properties:
+                  mimeType:
+                    type: string
+                  encoding:
+                    type: string
+              aspectNames:
+                type: array
+                items:
+                  type: string
+              properties:
+                type: object
+                additionalProperties:
+                  type: string
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to add children to **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If new name clashes with an existing node in the current parent folder
+        '413':
+          description: If file content exceeds individual file size limit (configured for network/system)
+        '507':
+          description: If file content exceeds overall storage quota limit (configured for network/system)
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/copy':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes       
+      summary: Copy a node
+      description: |
+        Copy the node **nodeId** to the parent folder node **targetParentId**. The **targetParentId** is specified in the in request body.
+        
+        The new node has the same name as the source node unless you specify a new **name** in the request body.
+        
+        If the source **nodeId** is a folder, then all of its children are also copied.
+      operationId: copyNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: copyBody
+          description: The targetParentId and, optionally, a new name.
+          required: true
+          schema:
+            properties:
+              targetParentId:
+                type: string
+              name:
+                type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to add children to **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If the new name clashes with an existing node in the destination parent folder
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/move':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes       
+      summary: Move a node
+      description: |
+        Move the node **nodeId** to the parent folder node **targetParentId**.  in request body.
+        The **targetParentId** is specified in the in request body.
+        
+        The moved node retains its name unless you specify a new **name** in the request body.
+        
+        If the source **nodeId** is a folder, then all of its children are also moved.
+      operationId: moveNode
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: moveBody
+          description: The targetParentId and, optionally, a new name.
+          required: true
+          schema:
+            properties:
+              targetParentId:
+                type: string
+              name:
+                type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to add children to **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If the new name clashes with an existing node in the destination parent folder
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/content':
+    get:
+      tags:
+        - nodes
+        - 5.2 changes       
+      summary: Get file content
+      description: Returns the file content of the node with identifier **nodeId**.
+      operationId: getFileContent
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
+      responses:
+        '200':
+          description: Successful response
+        '304':
+          description: If the content has not been modified since the date provided in the If-Modified-Since header
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+        '404':
+          description: If **nodeId** does not exist
+        '413':
+          description: If file content exceeds individual file size limit (configured for network/system)
+        '507':
+          description: If file content exceeds overall storage quota limit (configured for network/system)
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - nodes
+        - 5.2 changes        
+      summary: Update file content
+      description: |
+        Updates the content of the node with identifier **nodeId**.
+        
+        The request body for this endpoint can be any text or binary stream. The Content-Type header should be set
+        correctly for the type of content being updated. The Content-Type header is used to set the mimetype in the repository.
+        
+        The **majorVersion** and **comment** parameters can be used to control versioning behaviour. If the content is versionable,
+        a new minor version is created by default.
+        
+        **Note:** This api method accepts any content type, but for testing with this tool text based content can be provided.
+        This is because the OpenAPI Specification does not allow a wildcard to be provided or the ability for
+        tooling to accept an arbitary file.
+      operationId: updateFileContent
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - name: majorVersion
+          in: query
+          description: |
+            If **true**, create a major version. 
+            Setting this parameter also enables versioning of this node, if it is not already versioned.
+          required: false
+          type: boolean
+          default: false
+        - name: comment
+          in: query
+          description: | 
+            Add a version comment which will appear in version history. 
+            Setting this parameter also enables versioning of this node, if it is not already versioned.
+          required: false
+          type: string
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: contentBody
+          description: The binary content
+          required: true
+          schema:
+            type: string
+            format: binary
+      produces:
+        - application/json
+      consumes:
+        - application/octet-stream
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+        '403':
+          description: If current user does not have permission to update **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/renditions':
+    post:
+      tags:
+        - renditions
+        - 5.2 changes       
+      summary: Create rendition
+      description: |
+        Async request to create a rendition for file with identifier
+        **nodeId**. The rendition is specified by name "id" in the request body:
+        ```JSON
+        {
+          "id":"doclib"
+        }
+        ```
+      operationId: createRendition
+      parameters:
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - in: body
+          name: renditionBody
+          description: The rendition "id".
+          required: true
+          schema:
+            properties:
+              id:
+                type: string
+      consumes:
+        - application/json
+      responses:
+        '202':
+          description: Successful accepted
+        '400':
+          description: If the **nodeId** is not a valid format or does not identify a file
+        '403':
+          description: If current user does not have permission for **nodeId**
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If rendition already exists
+        '501':
+          description: If rendition/thumbnails are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - renditions
+        - 5.2 changes       
+      summary: List information for renditions
+      description: Returns the rendition information for the file node with identifier **nodeId**.
+      operationId: getRenditions
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:          
+            $ref: '#/definitions/RenditionPaging'          
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+        '404':
+          description: If **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'         
+  '/nodes/{nodeId}/renditions/{renditionId}':
+    get:
+      tags:
+        - renditions
+        - 5.2 changes       
+      summary: Get rendition information
+      description: Returns the rendition information for file node with identifier **nodeId**.
+      operationId: getRendition
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RenditionEntry'          
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
+        '404':
+          description: If **nodeId** or **renditionId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'         
+  '/nodes/{nodeId}/renditions/{renditionId}/content':
+    get:
+      tags:
+        - renditions
+        - 5.2 changes
+      summary: Get rendition content
+      description: Returns the rendition content for file node with identifier **nodeId**.
+      operationId: getRenditionContent
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
+      responses:
+        '200':
+          description: Successful response
+        '304':
+          description: If the content has not been modified since the date provided in the If-Modified-Since header
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
+        '404':
+          description: If **nodeId** or **renditionId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/deleted-nodes':
+    get:
+      tags:
+        - nodes
+        - 5.2 changes        
+      summary: Get deleted nodes
+      description: |
+        Returns a list of deleted nodes for the current user.
+        If the current user is an administrator deleted nodes 
+        for all users will be returned.
+        The list of deleted nodes will be ordered with the most recently deleted node at the top of the list.
+      operationId: getDeletedNodes
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/nodeMinimalEntryIncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DeletedNodesPaging'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/deleted-nodes/{nodeId}':
+    get:
+      tags:
+        - nodes
+        - 5.2 changes        
+      summary: Get a deleted node
+      description: |
+        Returns a specific deleted node with **nodeId**.
+      operationId: getDeletedNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DeletedNodeEntry'
+        '403':
+          description: If the user does not have permission to view the deleted node
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: If **nodeId** does not exist
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - nodes
+        - 5.2 changes        
+      summary: Purge a deleted node
+      description: |
+        Permanently removes the deleted node with **nodeId**.
+      operationId: purgeDeletedNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '403':
+          description: If the user does not have permission to purge the deleted node
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: If **nodeId** does not exist
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'              
+  '/deleted-nodes/{nodeId}/restore':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes                
+      summary: Restore a deleted node
+      description: |
+        Attempts to restore the deleted node with **nodeId** to it's original location.
+      operationId: restoreNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '403':
+          description: If the user does not have permission to restore the deleted node
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: If **nodeId** does not exist or if the restore destination parent node no longer exists
+          schema:
+            $ref: '#/definitions/Error'
+        '409':
+          description: If the node name already exists in the restore destination
+          schema:
+            $ref: '#/definitions/Error'
+        '422':
+          description: There was an integrity failure after the node was restored
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}':
     get:
       tags:
@@ -455,7 +1345,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -480,7 +1370,6 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
         - name: who
           in: query
           description: |
@@ -492,6 +1381,7 @@ paths:
           description: Include only activity feed entries relating to this site.
           required: false
           type: string
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -512,7 +1402,7 @@ paths:
       description: |
         Get a person's favorite sites.
 
-        **Please note that this method is deprecated and will be removed in the future**.
+        **Note: This method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
       operationId: getFavoriteSites
       produces:
@@ -521,7 +1411,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -541,7 +1431,7 @@ paths:
       description: |
         Add a favorite site for person **personId**. 
           
-        **Please note that this method is deprecated and will be removed in the future**.
+        **Note: that this method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
       operationId: favoriteSite
       produces:
@@ -576,7 +1466,7 @@ paths:
       description: |
         Returns information on favorite site **siteId** of person **personId**. 
         
-        **Please note that this method is deprecated and will be removed in the future.**
+        **Note: This method is deprecated and will be removed in the future.**
         Use `/people/{personId}/favorites/{favoriteId}` instead.
       operationId: getFavoriteSite
       produces:
@@ -584,7 +1474,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -604,7 +1494,7 @@ paths:
       description: |
         Removes site **siteId** from the favorite site list of person **personId**. 
         
-        **Please note that this method is deprecated and will be removed in the future.**
+        **Note This method is deprecated and will be removed in the future.**
         Use `/people/{personId}/favorites/{favoriteId}` instead.
       operationId: deleteFavoriteSite
       produces:
@@ -636,7 +1526,7 @@ paths:
         to entries of a specific kind. The **where** parameter takes a value.
         The value is a single predicate that can include one or more **EXISTS** 
         conditions. The **EXISTS** condition uses a single operand to limit the
-        list to include entries that include that one property. The property values are:-
+        list to include entries that include that one property. The property values are:
         
         *   `target/file`
         *   `target/folder`
@@ -662,8 +1552,8 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/whereParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -727,7 +1617,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/favoriteIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -766,7 +1656,6 @@ paths:
     get:
       tags:
         - people
-        - networks
       summary: Get network membership for a person
       description: Gets a list of network memberships for person **personId**.
       operationId: getPersonNetworks
@@ -776,7 +1665,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -792,7 +1681,6 @@ paths:
     get:
       tags:
         - people
-        - networks
       summary: Get network information
       description: Returns network information on a single network specified by **networkId** for **personId**.
       operationId: getPersonNetwork
@@ -801,7 +1689,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/networkIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -821,7 +1709,7 @@ paths:
       description: |
         Returns a list of preferences for person **personId**.
         
-        Note that each preference consists of an **id** and a **value**. 
+        Each preference consists of an **id** and a **value**. 
         The **value** can be of any JSON type.
       operationId: getPreferences
       produces:
@@ -830,7 +1718,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -858,7 +1746,7 @@ paths:
           description: The name of the preference.
           required: true
           type: string
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -874,7 +1762,6 @@ paths:
     get:
       tags:
         - people
-        - sites
       summary: Get site membership requests
       description: Returns the current site membership requests for person **personId**.
       operationId: getSiteMembershipRequests
@@ -884,7 +1771,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -899,7 +1786,6 @@ paths:
     post:
       tags:
         - people
-        - sites
       summary: Create a site membership request
       description: Create a site membership request for **personId** and **siteId**. The **personId** will be invited to the site as a SiteConsumer.
       operationId: addSiteMembershipRequest
@@ -933,8 +1819,7 @@ paths:
   '/people/{personId}/site-membership-requests/{siteId}':
     get:
       tags:
-        - people
-        - sites      
+        - people     
       summary: Get a site membership request
       description: Returns the site membership request for site **siteId** for person **personId**, if one exists.
       operationId: getSiteMembershipRequest
@@ -943,7 +1828,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -958,7 +1843,6 @@ paths:
     put:
       tags:
         - people
-        - sites
       summary: Update a site membership request
       description: Updates the message for the site membership request to site **siteId** for person **personId**.
       operationId: updateSiteMembershipRequest
@@ -987,7 +1871,6 @@ paths:
     delete:
       tags:
         - people
-        - sites
       summary: Cancel a site membership
       description: Cancels the site membership request to site **siteId** for person **personId**.
       operationId: removeSiteMembershipRequest
@@ -1009,7 +1892,6 @@ paths:
     get:
       tags:
         - people
-        - sites
       summary: Get site membership information
       description: |
         Returns a list of site membership information for person **personId**.
@@ -1031,9 +1913,9 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/relationsParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1077,9 +1959,9 @@ paths:
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/relationsParam'
+        - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
       responses:
@@ -1115,8 +1997,8 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/siteIdParam'
-        - $ref: '#/parameters/propertiesParam'
         - $ref: '#/parameters/relationsParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1141,7 +2023,7 @@ paths:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1169,7 +2051,7 @@ paths:
           description: The unique identifier of a site container.
           required: true
           type: string
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1194,7 +2076,7 @@ paths:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1254,7 +2136,6 @@ paths:
     get:
       tags:
         - sites
-        - people
       summary: Get a site member
       description: Returns site membership information for person **personId** on site **siteId**.
       operationId: getSiteMember
@@ -1263,7 +2144,7 @@ paths:
       parameters:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/personIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1350,7 +2231,7 @@ paths:
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
       responses:
@@ -1373,7 +2254,7 @@ paths:
       operationId: getTag
       parameters:
         - $ref: '#/parameters/tagIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1427,7 +2308,7 @@ paths:
       operationId: getNetwork
       parameters:
         - $ref: '#/parameters/networkIdParam'
-        - $ref: '#/parameters/propertiesParam'
+        - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
       responses:
@@ -1440,7 +2321,298 @@ paths:
         default:
           description: Error response
           schema:
+            $ref: '#/definitions/Error'    
+  '/shared-links':
+    post:
+      tags:
+        - shared-links
+        - 5.2 changes      
+      summary: Create a shared link to a file
+      description: Create shared link to specfied file identified by **nodeId** in request body.
+      operationId: addSharedLink
+      parameters:
+        - $ref: '#/parameters/sharedLinkEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: sharedLinkBody
+          description: The nodeId to create a shared link for.
+          required: true
+          schema:
+            properties:
+              nodeId:
+                type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeSharedLinkEntry'
+        '400':
+          description: If the **nodeId** is not a valid format or does not identify a file
+        '403':
+          description: If current user does not have permission to create **sharedId** (eg. no read permission)
+        '404':
+          description: If **nodeId** does not exist
+        '409':
+          description: If shared link already exists for **nodeId**          
+        '501':
+          description: If shared links are disabled for the system
+        default:
+          description: Error response
+          schema:
             $ref: '#/definitions/Error'
+    get:
+      tags:
+        - shared-links
+        - 5.2 changes        
+      summary: Find shared links
+      description: Find (search for) links that current user has read permission on source node.
+      operationId: findSharedLinks
+      parameters:
+        - name: where
+          in: query
+          description: Optionally filter the list by "sharedByUser" userid of person who shared the link (can also use -me-)
+          
+            *   where=(sharedByUser='jbloggs')
+            
+            *   where=(sharedByUser='-me-')
+            
+          required: false
+          type: string
+        - $ref: '#/parameters/sharedLinkEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeSharedLinkEntry'
+        '501':
+          description: If shared links are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'      
+  '/shared-links/{sharedId}':
+    get:
+      tags:
+        - shared-links
+        - 5.2 changes        
+      summary: Get a shared link
+      description: |
+        Returns minimal information for the file with shared link identifier **sharedId**.
+        
+        **Note:** No authentication is required to call this endpoint.
+      operationId: getSharedLink
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+        - $ref: '#/parameters/sharedLinkEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeSharedLinkEntry'
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - shared-links
+        - 5.2 changes       
+      summary: Deletes a shared link
+      description: Deletes the shared link with identifier **sharedId**.
+      operationId: deleteSharedLink
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: If **sharedId** is not a valid format
+        '403':
+          description: If current user does not have permission to delete **sharedId**
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error' 
+  '/shared-links/{sharedId}/content':
+    get:
+      tags:
+        - shared-links
+        - 5.2 changes      
+      summary: Get file content
+      description: |
+        Returns the content of the file with shared link identifier **sharedId**.
+        
+        **Note:** No authentication is required to call this endpoint.
+      operationId: getSharedLinkContent
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+        - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
+      responses:
+        '200':
+          description: Successful response
+        '304':
+          description: If the content has not been modified since the date provided in the If-Modified-Since header
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error' 
+  '/shared-links/{sharedId}/renditions/{renditionId}/content':
+    get:
+      tags:
+        - renditions
+        - 5.2 changes       
+      summary: Get shared link rendition content
+      description: |
+        Returns the rendition content for file with shared link identifier **sharedId**.
+        
+        **Note:** No authentication is required to call this endpoint.
+      operationId: getSharedLinkRenditionContent
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
+      responses:
+        '200':
+          description: Successful response
+        '304':
+          description: If the content has not been modified since the date provided in the If-Modified-Since header
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system          
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error' 
+  '/shared-links/{sharedId}/email':
+    post:
+      tags:
+        - shared-links
+        - 5.2 changes       
+      summary: Email shared link
+      description: |
+        Sends email with app-specific url including identifier **sharedId**. 
+        
+        **TODO** add more here ... !!
+      operationId: emailSharedLink
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/queries/live-search-nodes':
+    get:
+      tags:
+        - search
+        - 5.2 changes
+      summary: Live search for nodes
+      description: |
+        Returns a list of nodes that match the given search criteria.
+
+        The search term is used to look for nodes that match against name, title, description, full text content and tags.
+
+        The search term
+        - must contain a minimum of 3 alphanumeric characters
+        - allows "quoted term"
+        - can optionally use '*' for wildcard matching
+        
+        By default, file and folder types will be searched unless a specific type is provided as a query parameter.
+
+        By default, the search will be across the repository unless a specific root node id is provided to start the search from.
+      operationId: liveSearchNodes
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - name: term
+          in: query
+          description: The term to search for.
+          type: string
+          required: true
+        - name: rootNodeId
+          in: query
+          description: |
+            The id of the node to start the search from.
+            
+            Supports the aliases -my-, -root- and -shared-.
+          type: string
+          required: false
+        - name: nodeType
+          in: query
+          description: Restrict the returned results to only those of the given node type and it's sub-types
+          type: string
+          required: false 
+        - name: include
+          in: query
+          description: Return additional info, eg. aspectNames, properties, path, isLink
+          type: string
+          required: false
+        - name: orderBy
+          in: query
+          description: |
+            The list of results can be ordered by the following:
+            * name
+            * modifiedAt
+            * createdAt
+          type: string
+          required: false
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodePaging'
+        '400':
+          description: Invalid parameter, eg. search term is too short, unknown nodeType, unknown orderBy field
+        '404':
+          description: If **rootNodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'            
 definitions:
   Error:
     type: object
@@ -1501,15 +2673,12 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
-            type: array
             items:
-              type: object
               $ref: '#/definitions/SiteEntry'
   SiteEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Site'
   Site:
     type: object
@@ -1539,15 +2708,12 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
-            type: array
             items:
-              type: object
               $ref: '#/definitions/SiteContainerEntry'
   SiteContainerEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/SiteContainer'
   SiteContainer:
     type: object
@@ -1565,15 +2731,12 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
-            type: array
             items:
-              type: object
               $ref: '#/definitions/SiteMemberEntry'
   SiteMemberEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/SiteMember'
   SiteMember:
     type: object
@@ -1584,7 +2747,6 @@ definitions:
       id:
         type: string
       person:
-        type: object
         $ref: '#/definitions/Person'
       role:
         type: string
@@ -1597,7 +2759,6 @@ definitions:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Person'
   Person:
     type: object
@@ -1627,7 +2788,6 @@ definitions:
       location:
         type: string
       company:
-        type: object
         $ref: '#/definitions/Company'
       mobile:
         type: string
@@ -1673,13 +2833,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/CommentEntry'
   CommentEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Comment'
   Comment:
     type: object
@@ -1689,7 +2847,6 @@ definitions:
       content:
         type: string
       createdBy:
-        type: object
         $ref: '#/definitions/Person'
       createdAt:
         type: string
@@ -1697,7 +2854,6 @@ definitions:
       edited:
         type: boolean
       modifiedBy:
-        type: object
         $ref: '#/definitions/Person'
       modifiedAt:
         type: string
@@ -1717,13 +2873,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/TagEntry'
   TagEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Tag'
   Tag:
     type: object
@@ -1746,13 +2900,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/PersonNetworkEntry'
   PersonNetworkEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/PersonNetwork'
   PersonNetwork:
     type: object
@@ -1785,7 +2937,6 @@ definitions:
       quotas:
         type: array
         items:
-          type: object
           $ref: '#/definitions/NetworkQuota'
   NetworkQuota:
     type: object
@@ -1815,13 +2966,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/RatingEntry'
   RatingEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Rating'
   Rating:
     type: object
@@ -1857,13 +3006,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/FavoriteEntry'
   FavoriteEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Favorite'
   Favorite:
     type: object
@@ -1887,13 +3034,11 @@ definitions:
     type: object
     properties:
       target:
-        type: object
         $ref: '#/definitions/FavoriteTarget'
   FavoriteTarget:
     type: object
     properties:
       site:
-        type: object
         $ref: '#/definitions/FavoriteTargetSite'
   FavoriteTargetSite:
     type: object
@@ -1911,13 +3056,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/ActivityEntry'
   ActivityEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Activity'
   Activity:
     type: object
@@ -1994,13 +3137,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/PreferenceEntry'
   PreferenceEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Preference'
   Preference:
     type: object
@@ -2014,7 +3155,7 @@ definitions:
         description: The unique id of the preference
       value:
         type: string        
-        description: The value of the preference. Note that this can be of any JSON type.
+        description: The value of the preference. The value can be of any JSON type.
   FavoriteSitePaging:
     type: object
     properties:
@@ -2026,13 +3167,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/FavoriteSiteEntry'
   FavoriteSiteEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/FavoriteSite'
   FavoriteSite:
     type: object
@@ -2060,13 +3199,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/SiteMembershipRequestEntry'
   SiteMembershipRequestEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/SiteMembershipRequest'
   SiteMembershipRequest:
     type: object
@@ -2077,5 +3214,190 @@ definitions:
         type: string
         format: date-time
       entry:
-        type: object
         $ref: '#/definitions/Site'
+  UserInfo:
+    type: object
+    properties:
+      displayName:
+        type: string
+      id:
+        type: string
+  ContentInfo:
+    type: object
+    properties:
+      mimeType:
+        type: string
+      mimeTypeName:
+        type: string
+      sizeInBytes:
+        type: integer
+      encoding:
+        type: string
+  NodePaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/NodeMinimalEntry'
+  NodeMinimalEntry:
+    type: object
+    properties:
+      id:
+        type: string
+      parentId:
+        type: string
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser: 
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+        format: date-time
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
+  NodeEntry:
+    type: object
+    properties:
+      id:
+        type: string
+      parentId:
+        type: string
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser: 
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+        format: date-time
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        additionalProperties:
+            type: string
+      allowableOperations:
+        type: array
+        items:
+          type: string
+  NodeSharedLinkEntry:
+    type: object
+    properties:
+      id:
+        type: string
+      nodeId:
+        type: string
+      name:
+        type: string
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser: 
+        $ref: '#/definitions/UserInfo'
+      sharedByUser: 
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
+      allowableOperations:
+        type: array
+        items:
+          type: string
+  RenditionEntry:
+    type: object
+    properties:
+      id:
+        type: string
+      content:
+        $ref: '#/definitions/ContentInfo'
+      status:
+        type: string
+  RenditionPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/RenditionEntry'
+  DeletedNodesPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            items:
+              $ref: '#/definitions/DeletedNodeMinimalEntry'
+  DeletedNodeMinimalEntry:
+    type: object
+    properties:
+      entry:
+        $ref: '#/definitions/DeletedNodeMinimal'
+  DeletedNodeMinimal:
+    allOf: 
+      - $ref: '#/definitions/NodeMinimalEntry'
+      - type: object
+        required:
+          - archivedByUser
+          - archivedAt
+        properties:
+          archivedByUser:
+            $ref: '#/definitions/UserInfo'
+          archivedAt:
+            type: string
+            format: date-time
+  DeletedNodeEntry:
+    type: object
+    properties:
+      entry:
+        $ref: '#/definitions/DeletedNode'
+  DeletedNode:
+    allOf: 
+      - $ref: '#/definitions/NodeEntry'
+      - type: object
+        required:
+          - archivedByUser
+          - archivedAt
+        properties:
+          archivedByUser:
+            $ref: '#/definitions/UserInfo'
+          archivedAt:
+            type: string
+            format: date-time                               
