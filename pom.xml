@@ -8,6 +8,8 @@
     <description>Alfresco swagger-ui for the Rest Api</description>
     <properties>
       <swagger-ui.version>2.1.4</swagger-ui.version>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     <scm>
       <connection>scm:git:https://github.com/Alfresco/rest-api-explorer.git</connection>
@@ -28,10 +30,37 @@
             <version>${swagger-ui.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>api-explorer</finalName>
         <plugins>
+            <!-- skip unit tests as the project only contains integration tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -101,9 +130,42 @@
             <groupId>org.apache.tomcat.maven</groupId>
             <artifactId>tomcat7-maven-plugin</artifactId>
             <version>2.2</version>
+            <executions>
+               <execution>
+                  <id>run-war</id>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+                  <phase>pre-integration-test</phase>
+                  <configuration>
+                     <fork>true</fork>
+                  </configuration>
+               </execution>
+            </executions>
+            
+            
             <configuration>
                 <port>8085</port>
             </configuration>
+          </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-failsafe-plugin</artifactId>
+              <version>2.18.1</version>
+              <executions>
+                  <execution>
+                      <id>integration-tests</id>
+                      <goals>
+                          <goal>integration-test</goal>
+                          <goal>verify</goal>
+                      </goals>
+                      <configuration>
+                          <includes>
+                              <include>**/*IntegrationTest.java</include>
+                          </includes>
+                      </configuration>
+                  </execution>
+              </executions>
           </plugin>
         </plugins>
     </build>
