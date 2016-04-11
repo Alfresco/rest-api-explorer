@@ -2520,17 +2520,62 @@ paths:
     post:
       tags:
         - shared-links
-        - 5.2 changes       
+        - 5.2 changes
       summary: Email shared link
       description: |
         Sends email with app-specific url including identifier **sharedId**. 
         
-        **TODO** add more here ... !!
+        The client and recipientEmails properties are mandatory in the request body. For example, to email a shared link with minimum info:
+        ```JSON
+        {
+            "client": "myClient",
+            "recipientEmails": ["john.doe@acme.com", joe.bloggs@acme.com]
+        }
+        ```
+        A plain text message property can be optionally provided in the request body to customise the sent email.
+        Also, a locale property can be optionally provided in the request body to send the emails in a particular language.
+        For example, to email a shared link with a messages and a locale:
+        ```JSON
+        {
+            "client": "myClient",
+            "recipientEmails": ["john.doe@acme.com", joe.bloggs@acme.com],
+            "message": "myMessage",
+            "locale":"en-GB"
+        }
+        ```
+        **Note:** The client must be registered before you can send a shared link email.
+        The client registry uses properties files and a naming convention to isolate the client's name and the related values.
+        For example, to register **myClient**, then the following needs to be put into a properties file:
+        ```CODE
+            quickshare.client.myClient.sharedLinkBaseUrl=<myClient shared link base URL>
+            quickshare.client.myClient.templateAssetsUrl=<email template assets URL>
+        ```
+        New clients can be added in the default property file **alfresco/quickshare/quickshare-clients.properties**
+        or **alfresco-global.properties** file. Also, note that any value in the default property file
+        can be overridden by alfresco-global property file.
       operationId: emailSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
+        - in: body
+          name: emailSharedLinkBody
+          description: The shared link email to send.
+          required: true
+          schema:
+            properties:
+              client:
+                type: string
+              message:
+                type: string
+              locale:
+                type: string
+              recipientEmails:
+                type: array
+                items:
+                  type: string
+      consumes:
+        - application/json
       responses:
-        '200':
+        '202':
           description: Successful response
         '400':
           description: If the **sharedId** is not a valid format
