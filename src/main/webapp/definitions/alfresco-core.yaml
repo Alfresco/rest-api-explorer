@@ -692,11 +692,26 @@ paths:
           name: favoriteBody
           description: |      
             An object identifying the entity to be favorited. 
+            
             The object consists of a single property which is an object with the name `site`, `file`, or `folder`. 
             The content of that object is the `guid` of the target entity.
+            
+            For example, to favorite a file the following body would be used:
+            
+            ```JSON
+            {
+               "target": {
+                  "file": {
+                     "guid": "abcde-01234"
+                  }
+               }
+            }
+            ```
           required: true
           schema:
-            $ref: '#/definitions/FavoriteBody'
+            properties:
+               target:
+                  type: object
       responses:
         '201':
           description: Successful response
@@ -732,7 +747,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/Favorite'
+            $ref: '#/definitions/FavoriteEntry'
         '404':
           description: |
             If **personId** does not exist, or the target entity does not exist
@@ -1450,7 +1465,6 @@ definitions:
       error:
         type: object
         required:
-          - errorKey
           - statusCode
           - briefSummary
           - stackTrace
@@ -1938,7 +1952,8 @@ definitions:
         type: string
         format: date-time
       myRating:
-        type: boolean
+        type: string
+        description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar.
   FavoritePaging:
     type: object
     required:
@@ -1982,30 +1997,7 @@ definitions:
         format: date
         description: The time the object was made a favorite.
       target:
-        $ref: '#/definitions/Site'
-  FavoriteBody:
-    type: object
-    required:
-      - target
-    properties:
-      target:
         type: object
-        $ref: '#/definitions/FavoriteTarget'
-  FavoriteTarget:
-    type: object
-    required:
-      - site
-    properties:
-      site:
-        type: object
-        $ref: '#/definitions/FavoriteTargetSite'
-  FavoriteTargetSite:
-    type: object
-    required:
-      - guid
-    properties:
-      guid:
-        type: string
   ActivityPaging:
     type: object
     required:
