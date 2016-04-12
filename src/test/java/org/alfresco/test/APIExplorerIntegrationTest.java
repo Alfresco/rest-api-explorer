@@ -18,12 +18,15 @@
  */
 package org.alfresco.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import io.swagger.models.Path;
+import io.swagger.models.Swagger;
+import io.swagger.parser.SwaggerParser;
 
 import java.io.StringWriter;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -46,7 +49,6 @@ public class APIExplorerIntegrationTest
     {
         // get index page content
         String indexPageContent = this.retrievePageContent("http://localhost:8085/api-explorer", 200);
-//        System.out.println(indexPageContent);
         
         // make sure the content is correct
         int titleIndex = indexPageContent.indexOf("<title>Alfresco API Explorer</title>");
@@ -60,31 +62,53 @@ public class APIExplorerIntegrationTest
     }
     
     @Test
-    public void testGetCommentsAPI() throws Exception
-    {
-        System.out.println("testGetCommentsAPI");
-        
-        // http://localhost:8085/api-explorer/#!/comments/getComments
-    }
-    
-    @Test
     public void testCoreAPIDefinition() throws Exception
     {
-        System.out.println("testCoreAPIDefinition");
+        String coreDefinitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-core.yaml";
         
-        // http://localhost:8085/api-explorer/definitions/alfresco-core.yaml
+        // get core definition content
+        String coreDefinitionContent = this.retrievePageContent(coreDefinitionUrl, 200);
         
-        // TODO: consider testing the validity of the API definition
+        // make sure the content is correct
+        int swaggerIndex = coreDefinitionContent.indexOf("swagger:");
+        assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
+        
+        int commentsEndpointIndex = coreDefinitionContent.indexOf("'/nodes/{nodeId}/comments':");
+        assertTrue("Expected to find '/nodes/{nodeId}/comments':", commentsEndpointIndex != -1);
+        
+        // ensure the core API definition can be read and parsed
+        Swagger swagger = new SwaggerParser().read(coreDefinitionUrl);
+        assertNotNull("Expected the core API definition to parse successfully", swagger);
+        assertEquals("Incorrect title", "Alfresco Core REST API", swagger.getInfo().getTitle());
+        assertEquals("Incorrect version", "1", swagger.getInfo().getVersion());
+        Map<String, Path> paths = swagger.getPaths();
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /nodes/{nodeId}/comments path", paths.containsKey("/nodes/{nodeId}/comments"));     
     }
     
     @Test
     public void testWorkflowAPIDefinition() throws Exception
     {
-        System.out.println("testWorkflowAPIDefinition");
+        String workflowDefinitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-workflow.yaml";
         
-        // http://localhost:8085/api-explorer/definitions/alfresco-workflow.yaml
+        // get workflow definition content
+        String workflowDefinitionContent = this.retrievePageContent(workflowDefinitionUrl, 200);
         
-        // TODO: consider testing the validity of the API definition
+        // make sure the content is correct
+        int swaggerIndex = workflowDefinitionContent.indexOf("swagger:");
+        assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
+        
+        int deploymentEndpointIndex = workflowDefinitionContent.indexOf("'/deployments/{deploymentId}':");
+        assertTrue("Expected to find ''/deployments/{deploymentId}':", deploymentEndpointIndex != -1);
+        
+        // ensure the workflow API definition can be read and parsed
+        Swagger swagger = new SwaggerParser().read(workflowDefinitionUrl);
+        assertNotNull("Expected the workflow API definition to parse successfully", swagger);
+        assertEquals("Incorrect title", "Alfresco Workflow REST API", swagger.getInfo().getTitle());
+        assertEquals("Incorrect version", "1", swagger.getInfo().getVersion());
+        Map<String, Path> paths = swagger.getPaths();
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /deployments/{deploymentId} path", paths.containsKey("/deployments/{deploymentId}"));
     }
     
     public String retrievePageContent(String url, int expectedStatus) throws Exception
@@ -94,8 +118,6 @@ public class APIExplorerIntegrationTest
         CloseableHttpClient httpclient = HttpClients.createDefault();
         try 
         {
-            System.out.println("Retrieving content for URL: " + url);
-            
             HttpGet httpGet = new HttpGet(url);
             CloseableHttpResponse response = httpclient.execute(httpGet);
             try 

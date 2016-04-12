@@ -48,6 +48,24 @@
             <version>2.4</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>1.0.19</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.6.4</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>api-explorer</finalName>
@@ -142,8 +160,6 @@
                   </configuration>
                </execution>
             </executions>
-            
-            
             <configuration>
                 <port>8085</port>
             </configuration>
