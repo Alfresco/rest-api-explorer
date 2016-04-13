@@ -83,7 +83,7 @@ parameters:
     name: include
     in: query
     description: |
-      Returns additional information about the node, the following optional fields can be requested:
+      Returns additional information about the node. The following optional fields can be requested:
       * path
       * isLink
       * allowableOperations
@@ -183,7 +183,7 @@ parameters:
       The list applies to a returned individual 
       entity or entries within a collection. 
       
-      If the api method also supports the **include**
+      If the API method also supports the **include**
       parameter, then the fields specified in the **include**
       parameter are returned in addition to those specified in the **fields** parameter.
     required: false
@@ -777,7 +777,7 @@ paths:
       description: |
         Creates a node as a child of the node with identifier **nodeId**.
         
-        The name and nodeType fields are mandatory. For example, to create a folder:
+        You must specify at least a **name** and **nodeType**. For example, to create a folder:
         ```JSON
         {
           "name":"My Folder",
@@ -785,7 +785,7 @@ paths:
         }
         ```
         
-        An empty file can be created using JSON as follows:
+        You can create an empty file like this:
         ```JSON
         {
           "name":"My text file.txt",
@@ -796,9 +796,9 @@ paths:
            }
         }
         ```
-        The binary content can then be updated using the PUT /nodes/{nodeId} endpoint.
+        You can update binary content using the ```PUT /nodes/{nodeId}``` API method.
         
-        You can also optionally create a folder (or other node) under a folder hierarchy:
+        You can create a folder, or other node, inside a folder hierarchy:
         ```JSON
         {
           "name":"My Special Folder",
@@ -806,11 +806,10 @@ paths:
           "relativePath":"X/Y/Z"
         }
         ```
-        The value of the relativePath (e.g. "X/Y/Z") specifies the folder structure to be 
-        used beneath the node, referenced by the **nodeId**. Therefore, any folders in the 
-        relativePath that do not exist, are created before the node is created.
+        The **relativePath** specifies the folder structure to create relative to the node identified by  **nodeId**. Folders in the 
+        **relativePath** that do not exist are created before the node is created.
         
-        You can also set properties when creating a new node:
+        You can set properties when you create a new node:
         ```JSON
         {
           "name":"My Other Folder",
@@ -822,25 +821,27 @@ paths:
             }
         }
         ```
-        Any missing aspects will be auto-applied, eg. "cm:titled" in the example above. Aspects can
-        also be explicitly set, if needed, via an "aspectNames" field.
+        Any missing aspects are auto-applied. For example, **cm:titled** in the JSON shown above. You can set aspects 
+        explicitly set, if needed, using an **aspectNames** field.
         
-        This endpoint also supports a file being uploaded using multipart/form-data. 
+        This API method also supports file upload using multipart/form-data. 
         
-        A **filedata** field is required that represents the content to upload, a **filename** field can be
-        used to provide an alternative name for the new file.
+        Use the **filedata** field to represent the content to upload.
+        You can use a **filename** field to give an alternative name for the new file.
         
-        An **overwrite** field can be used to overwrite an existing file (by matching name). If the file is versionable
-        the existing content will be replaced.
+        Use **overwrite** to overwrite an existing file, matched by name. If the file is versionable,
+        the existing content is replaced.
         
-        When overwriting existing content the **majorVersion** boolean field can be used to indicate whether a major version 
-        (default is false) should be created. This will also enable versioning of this node, if not already versioned.
+        When you overwrite overwrite existing content, you can set the **majorVersion** boolean field to **true** to indicate a major version 
+        should be created. The default for **majorVersion** is **false**.
+        Setting  **majorVersion** enables versioning of the node, if it is not already versioned.
         
-        When overwriting existing content the **comment** field can be used to add a version comment that will appear in 
-        version history. This will also enable versioning of this node, if not already versioned.
+        When you overwrite overwrite existing content, you can use the **comment** field to add a version comment that appears in the
+        version history. This also enables versioning of this node, if it is not already versioned.
         
-        An **autoRename** boolean field can also be provided. If true, then on a name clash will try to auto rename by 
-        finding a unique name based on an integer suffix.
+        You can set the **autoRename** boolean field to automatically resolve name clashes. If there is a name clash, then
+        the API method tries to create  
+        a unique name using an integer suffix.
         
         Any field in the JSON body defined below can also be passed as a form-data field.
       operationId: addNode
@@ -848,7 +849,7 @@ paths:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - name: autoRename
           in: query
-          description: If true, then on a name clash will try to auto rename by finding a unique name based on an integer suffix.
+          description: If true, then  a name clash will cause an attempt to auto rename by finding a unique name using an integer suffix.
           required: false
           type: boolean
         - $ref: '#/parameters/nodeEntryIncludeParam'
@@ -913,7 +914,7 @@ paths:
         - 5.2 changes       
       summary: Copy a node
       description: |
-        Copy the node **nodeId** to the parent folder node **targetParentId**. The **targetParentId** is specified in the in request body.
+        Copy the node **nodeId** to the parent folder node **targetParentId**. The **targetParentId** is specified in the request body.
         
         The new node has the same name as the source node unless you specify a new **name** in the request body.
         
@@ -1046,7 +1047,7 @@ paths:
         The **majorVersion** and **comment** parameters can be used to control versioning behaviour. If the content is versionable,
         a new minor version is created by default.
         
-        **Note:** This api method accepts any content type, but for testing with this tool text based content can be provided.
+        **Note:** This API method accepts any content type, but for testing with this tool text based content can be provided.
         This is because the OpenAPI Specification does not allow a wildcard to be provided or the ability for
         tooling to accept an arbitary file.
       operationId: updateFileContent
@@ -1245,7 +1246,7 @@ paths:
         - 5.2 changes        
       summary: Get a deleted node
       description: |
-        Returns a specific deleted node with **nodeId**.
+        Returns a specific deleted node identified by **nodeId**.
       operationId: getDeletedNode
       produces:
         - application/json
@@ -1275,7 +1276,7 @@ paths:
         - 5.2 changes        
       summary: Purge a deleted node
       description: |
-        Permanently removes the deleted node with **nodeId**.
+        Permanently removes the deleted node identified by **nodeId**.
       operationId: purgeDeletedNode
       produces:
         - application/json
@@ -1303,7 +1304,7 @@ paths:
         - 5.2 changes                
       summary: Restore a deleted node
       description: |
-        Attempts to restore the deleted node with **nodeId** to it's original location.
+        Attempts to restore the deleted node identified by **nodeId** to its original location.
       operationId: restoreNode
       produces:
         - application/json
