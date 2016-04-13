@@ -2543,16 +2543,7 @@ paths:
             "locale":"en-GB"
         }
         ```
-        **Note:** The client must be registered before you can send a shared link email.
-        The client registry uses properties files and a naming convention to isolate the client's name and the related values.
-        For example, to register **myClient**, then the following needs to be put into a properties file:
-        ```CODE
-            quickshare.client.myClient.sharedLinkBaseUrl=<myClient shared link base URL>
-            quickshare.client.myClient.templateAssetsUrl=<email template assets URL>
-        ```
-        New clients can be added in the default property file **alfresco/quickshare/quickshare-clients.properties**
-        or **alfresco-global.properties** file. Also, note that any value in the default property file
-        can be overridden by alfresco-global property file.
+        **Note:** The client must be registered before you can send a shared link email. See [server documentation]
       operationId: emailSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
