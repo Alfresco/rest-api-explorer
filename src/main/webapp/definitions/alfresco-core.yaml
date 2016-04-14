@@ -277,7 +277,7 @@ paths:
       tags:
         - ratings
       summary: Rate
-      description: Rate the node **nodeId**.
+      description: Rate the node with identifier **nodeId**
       operationId: rate
       produces:
         - application/json
@@ -285,7 +285,17 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
           name: ratingBody
-          description: Rating details
+          description: |
+            For "myRating" the type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar.
+
+            For example, to "like" a file the following body would be used:
+
+              ```JSON
+                {
+                  "id": "likes",
+                  "myRating": true
+                }
+              ```
           required: true
           schema:
             properties:
