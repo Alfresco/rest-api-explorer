@@ -18,6 +18,7 @@ body {
 
 .swagger-section #api_selector .input {
      margin: 10px 10px 0 0;
+     padding-top: 3px;
 }
 
 .swagger-section #api_selector .input input {
