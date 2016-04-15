@@ -2,10 +2,10 @@ swagger: '2.0'
 info:
   description: |
     Provides access to the core features of Alfresco.
-    
+
     This API uses the term **entity** to refer to an object in an Alfresco repository.
     An **entity** is of a specific **type**, and has a unique **id**.
-    
+
     * The **id** of an entity of type **node** is the **NodeRef** with the `workspace://SpacesStore` prefix removed.
     * The **id** of an entity of type **site** is the site's short name.
     * The **id** for an entity of type **person** is the person's username.
@@ -58,7 +58,7 @@ parameters:
     name: nodeId
     in: path
     description: |
-      The identifier of a node. You can also use one of these well-known aliases: 
+      The identifier of a node. You can also use one of these well-known aliases:
       * -my-
       * -shared-
       * -root-
@@ -175,14 +175,14 @@ parameters:
     name: fields
     in: query
     description: |
-      A list of field names. 
-      
-      You can use this parameter to restrict the fields 
-      returned within a response if, for example, you want to save on overall bandwidth. 
-      
-      The list applies to a returned individual 
-      entity or entries within a collection. 
-      
+      A list of field names.
+
+      You can use this parameter to restrict the fields
+      returned within a response if, for example, you want to save on overall bandwidth.
+
+      The list applies to a returned individual
+      entity or entries within a collection.
+
       If the API method also supports the **include**
       parameter, then the fields specified in the **include**
       parameter are returned in addition to those specified in the **fields** parameter.
@@ -216,14 +216,14 @@ parameters:
     name: attachment
     in: query
     description: |
-       **true** enables a web browser to download the file as an attachment. 
-       **false** means a web browser may preview the file in a new tab or window, but not 
-       download the file. 
-       
-       You can only set this parameter to **false** if the content type of the file is in the supported list; 
+       **true** enables a web browser to download the file as an attachment.
+       **false** means a web browser may preview the file in a new tab or window, but not
+       download the file.
+
+       You can only set this parameter to **false** if the content type of the file is in the supported list;
        for example, certain image files and PDF files.
-       
-       If the content type is not supported for preview, then a value of **false**  is ignored, and 
+
+       If the content type is not supported for preview, then a value of **false**  is ignored, and
        the attachment will be returned in the response.
     required: false
     default: true
@@ -270,9 +270,9 @@ paths:
         - comments
       summary: Add a comment
       description: |
-        Creates one or more comments on node **nodeId**. You can create more than one comment by 
-        specifying a list of comments in the JSON body like this:      
-        
+        Creates one or more comments on node **nodeId**. You can create more than one comment by
+        specifying a list of comments in the JSON body like this:
+
         ```JSON
         [
           {
@@ -497,9 +497,9 @@ paths:
         - tags
       summary: Add a tag
       description: |
-        Adds one or more tags to the node **nodeId**. You can create more than one tag by 
-        specifying a list of tags in the JSON body like this:      
-        
+        Adds one or more tags to the node **nodeId**. You can create more than one tag by
+        specifying a list of tags in the JSON body like this:
+
         ```JSON
         [
           {
@@ -569,7 +569,7 @@ paths:
         - name: relativePath
           in: query
           description: |
-            If specified, returns information on the node resolved by this path. 
+            If specified, returns information on the node resolved by this path.
             The path is relative to the specified **nodeId**
           required: false
           type: string
@@ -708,13 +708,13 @@ paths:
         - name: orderBy
           in: query
           description: |
-            If not specified then default sort is for folders to be sorted before files, and by ascending name 
+            If not specified then default sort is for folders to be sorted before files, and by ascending name
             i.e. "orderBy=isFolder DESC,name ASC".
-            
-            This default can be completely overridden by specifying a specific orderBy consisting of one, two or 
-            three comma-separated list of properties (with optional ASCending or DESCending), for example, 
-            specifying “orderBy=name DESC” would return a mixed folder/file list. 
-            
+
+            This default can be completely overridden by specifying a specific orderBy consisting of one, two or
+            three comma-separated list of properties (with optional ASCending or DESCending), for example,
+            specifying “orderBy=name DESC” would return a mixed folder/file list.
+
             The following properties can be used to order the results:
             * isFolder
             * name
@@ -724,22 +724,22 @@ paths:
             * modifiedAt
             * createdAt
             * modifiedByUser
-            * createdByUser 
+            * createdByUser
           required: false
           type: string
         - name: where
           in: query
           description: |
             Optionally filter the list. Here are some examples:
-          
+
             *   where=(isFolder=true)
-            
+
             *   where=(isFile=true)
-            
+
             *   where=(nodeType='my:specialtype')
-            
+
             *   where=(nodeType='my:specialtype' INCLUDESUBTYPES)
-            
+
           required: false
           type: string
         - $ref: '#/parameters/nodeMinimalEntryIncludeParam'
@@ -776,7 +776,7 @@ paths:
       summary: Create a node
       description: |
         Creates a node as a child of the node with identifier **nodeId**.
-        
+
         You must specify at least a **name** and **nodeType**. For example, to create a folder:
         ```JSON
         {
@@ -784,20 +784,20 @@ paths:
           "nodeType":"cm:folder"
         }
         ```
-        
+
         You can create an empty file like this:
         ```JSON
         {
           "name":"My text file.txt",
           "nodeType":"cm:content",
-          "content": 
+          "content":
            {
              "mimeType":"text/plain"
            }
         }
         ```
         You can update binary content using the ```PUT /nodes/{nodeId}``` API method.
-        
+
         You can create a folder, or other node, inside a folder hierarchy:
         ```JSON
         {
@@ -806,9 +806,9 @@ paths:
           "relativePath":"X/Y/Z"
         }
         ```
-        The **relativePath** specifies the folder structure to create relative to the node identified by  **nodeId**. Folders in the 
+        The **relativePath** specifies the folder structure to create relative to the node identified by  **nodeId**. Folders in the
         **relativePath** that do not exist are created before the node is created.
-        
+
         You can set properties when you create a new node:
         ```JSON
         {
@@ -821,28 +821,28 @@ paths:
             }
         }
         ```
-        Any missing aspects are auto-applied. For example, **cm:titled** in the JSON shown above. You can set aspects 
+        Any missing aspects are auto-applied. For example, **cm:titled** in the JSON shown above. You can set aspects
         explicitly set, if needed, using an **aspectNames** field.
-        
-        This API method also supports file upload using multipart/form-data. 
-        
+
+        This API method also supports file upload using multipart/form-data.
+
         Use the **filedata** field to represent the content to upload.
         You can use a **filename** field to give an alternative name for the new file.
-        
+
         Use **overwrite** to overwrite an existing file, matched by name. If the file is versionable,
         the existing content is replaced.
-        
-        When you overwrite overwrite existing content, you can set the **majorVersion** boolean field to **true** to indicate a major version 
+
+        When you overwrite overwrite existing content, you can set the **majorVersion** boolean field to **true** to indicate a major version
         should be created. The default for **majorVersion** is **false**.
         Setting  **majorVersion** enables versioning of the node, if it is not already versioned.
-        
+
         When you overwrite overwrite existing content, you can use the **comment** field to add a version comment that appears in the
         version history. This also enables versioning of this node, if it is not already versioned.
-        
+
         You can set the **autoRename** boolean field to automatically resolve name clashes. If there is a name clash, then
-        the API method tries to create  
+        the API method tries to create
         a unique name using an integer suffix.
-        
+
         Any field in the JSON body defined below can also be passed as a form-data field.
       operationId: addNode
       parameters:
@@ -911,13 +911,13 @@ paths:
     post:
       tags:
         - nodes
-        - 5.2 changes       
+        - 5.2 changes
       summary: Copy a node
       description: |
         Copy the node **nodeId** to the parent folder node **targetParentId**. The **targetParentId** is specified in the request body.
-        
+
         The new node has the same name as the source node unless you specify a new **name** in the request body.
-        
+
         If the source **nodeId** is a folder, then all of its children are also copied.
       operationId: copyNode
       parameters:
@@ -959,14 +959,14 @@ paths:
     post:
       tags:
         - nodes
-        - 5.2 changes       
+        - 5.2 changes
       summary: Move a node
       description: |
         Move the node **nodeId** to the parent folder node **targetParentId**.  in request body.
         The **targetParentId** is specified in the in request body.
-        
+
         The moved node retains its name unless you specify a new **name** in the request body.
-        
+
         If the source **nodeId** is a folder, then all of its children are also moved.
       operationId: moveNode
       parameters:
@@ -1008,7 +1008,7 @@ paths:
     get:
       tags:
         - nodes
-        - 5.2 changes       
+        - 5.2 changes
       summary: Get file content
       description: Returns the file content of the node with identifier **nodeId**.
       operationId: getFileContent
@@ -1036,17 +1036,17 @@ paths:
     put:
       tags:
         - nodes
-        - 5.2 changes        
+        - 5.2 changes
       summary: Update file content
       description: |
         Updates the content of the node with identifier **nodeId**.
-        
+
         The request body for this endpoint can be any text or binary stream. The Content-Type header should be set
         correctly for the type of content being updated. The Content-Type header is used to set the mimetype in the repository.
-        
+
         The **majorVersion** and **comment** parameters can be used to control versioning behaviour. If the content is versionable,
         a new minor version is created by default.
-        
+
         **Note:** This API method accepts any content type, but for testing with this tool text based content can be provided.
         This is because the OpenAPI Specification does not allow a wildcard to be provided or the ability for
         tooling to accept an arbitary file.
@@ -1056,15 +1056,15 @@ paths:
         - name: majorVersion
           in: query
           description: |
-            If **true**, create a major version. 
+            If **true**, create a major version.
             Setting this parameter also enables versioning of this node, if it is not already versioned.
           required: false
           type: boolean
           default: false
         - name: comment
           in: query
-          description: | 
-            Add a version comment which will appear in version history. 
+          description: |
+            Add a version comment which will appear in version history.
             Setting this parameter also enables versioning of this node, if it is not already versioned.
           required: false
           type: string
@@ -1100,7 +1100,7 @@ paths:
     post:
       tags:
         - renditions
-        - 5.2 changes       
+        - 5.2 changes
       summary: Create rendition
       description: |
         Async request to create a rendition for file with identifier
@@ -1143,7 +1143,7 @@ paths:
     get:
       tags:
         - renditions
-        - 5.2 changes       
+        - 5.2 changes
       summary: List information for renditions
       description: Returns the rendition information for the file node with identifier **nodeId**.
       operationId: getRenditions
@@ -1152,8 +1152,8 @@ paths:
       responses:
         '200':
           description: Successful response
-          schema:          
-            $ref: '#/definitions/RenditionPaging'          
+          schema:
+            $ref: '#/definitions/RenditionPaging'
         '400':
           description: If the **nodeId** is not a valid format, or exists, but does not identify a file
         '404':
@@ -1161,12 +1161,12 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'         
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}':
     get:
       tags:
         - renditions
-        - 5.2 changes       
+        - 5.2 changes
       summary: Get rendition information
       description: Returns the rendition information for file node with identifier **nodeId**.
       operationId: getRendition
@@ -1177,7 +1177,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/RenditionEntry'          
+            $ref: '#/definitions/RenditionEntry'
         '400':
           description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
         '404':
@@ -1185,7 +1185,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'         
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}/content':
     get:
       tags:
@@ -1216,11 +1216,11 @@ paths:
     get:
       tags:
         - nodes
-        - 5.2 changes        
+        - 5.2 changes
       summary: Get deleted nodes
       description: |
         Returns a list of deleted nodes for the current user.
-        If the current user is an administrator deleted nodes 
+        If the current user is an administrator deleted nodes
         for all users will be returned.
         The list of deleted nodes will be ordered with the most recently deleted node at the top of the list.
       operationId: getDeletedNodes
@@ -1243,7 +1243,7 @@ paths:
     get:
       tags:
         - nodes
-        - 5.2 changes        
+        - 5.2 changes
       summary: Get a deleted node
       description: |
         Returns a specific deleted node identified by **nodeId**.
@@ -1273,7 +1273,7 @@ paths:
     delete:
       tags:
         - nodes
-        - 5.2 changes        
+        - 5.2 changes
       summary: Purge a deleted node
       description: |
         Permanently removes the deleted node identified by **nodeId**.
@@ -1296,12 +1296,12 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'              
+            $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}/restore':
     post:
       tags:
         - nodes
-        - 5.2 changes                
+        - 5.2 changes
       summary: Restore a deleted node
       description: |
         Attempts to restore the deleted node identified by **nodeId** to its original location.
@@ -1311,7 +1311,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
       responses:
-        '201':
+        '200':
           description: Successful response
           schema:
             $ref: '#/definitions/NodeEntry'
@@ -1430,8 +1430,8 @@ paths:
         - people
       summary: Favorite a site
       description: |
-        Add a favorite site for person **personId**. 
-          
+        Add a favorite site for person **personId**.
+
         **Note: that this method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
       operationId: favoriteSite
@@ -1443,7 +1443,7 @@ paths:
           name: favoriteSiteBody
           description: The id of the site to favorite.
           required: true
-          schema: 
+          schema:
             properties:
               id:
                 type: string
@@ -1465,8 +1465,8 @@ paths:
         - people
       summary: Get a favorite site
       description: |
-        Returns information on favorite site **siteId** of person **personId**. 
-        
+        Returns information on favorite site **siteId** of person **personId**.
+
         **Note: This method is deprecated and will be removed in the future.**
         Use `/people/{personId}/favorites/{favoriteId}` instead.
       operationId: getFavoriteSite
@@ -1493,8 +1493,8 @@ paths:
         - people
       summary: Delete favorite site
       description: |
-        Removes site **siteId** from the favorite site list of person **personId**. 
-        
+        Removes site **siteId** from the favorite site list of person **personId**.
+
         **Note This method is deprecated and will be removed in the future.**
         Use `/people/{personId}/favorites/{favoriteId}` instead.
       operationId: deleteFavoriteSite
@@ -1520,27 +1520,27 @@ paths:
       summary: Get favorites
       description: |
         Returns a list of favorites for person **personId**.
-        
-        You can us the `-me-` string in place of `<personId>` to get the favorites of the currently authenticated user.        
-        
+
+        You can us the `-me-` string in place of `<personId>` to get the favorites of the currently authenticated user.
+
         You can use the **where** parameter to restrict the list in the response
         to entries of a specific kind. The **where** parameter takes a value.
-        The value is a single predicate that can include one or more **EXISTS** 
+        The value is a single predicate that can include one or more **EXISTS**
         conditions. The **EXISTS** condition uses a single operand to limit the
         list to include entries that include that one property. The property values are:
-        
+
         *   `target/file`
         *   `target/folder`
         *   `target/site`
-        
+
         For example, the following **where** parameter restricts the returned list to the file favorites for a person:
 
         ```SQL
         (EXISTS(target/file))
         ```
         You can specify more than one condition using **OR**. The predicate must be enclosed in parentheses.
-        
-        
+
+
         For example, the following **where** parameter restricts the returned list to the file and folder favorites for a person:
 
         ```SQL
@@ -1581,9 +1581,9 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - in: body
           name: favoriteBody
-          description: |      
-            An object identifying the entity to be favorited. 
-            The object consists of a single property which is an object with the name `site`, `file`, or `folder`. 
+          description: |
+            An object identifying the entity to be favorited.
+            The object consists of a single property which is an object with the name `site`, `file`, or `folder`.
             The content of that object is the `guid` of the target entity.
           required: true
           schema:
@@ -1594,12 +1594,12 @@ paths:
           schema:
             $ref: '#/definitions/FavoriteEntry'
         '400':
-          description: The target **guid** does not describe a site, file, or folder 
+          description: The target **guid** does not describe a site, file, or folder
         '404':
           description: |
-            If **personId** does not exist, or the target entity does not exist, 
-            or a favorite already exists with the specified id, or an 
-            entity does exist with the id of the posted object, 
+            If **personId** does not exist, or the target entity does not exist,
+            or a favorite already exists with the specified id, or an
+            entity does exist with the id of the posted object,
             but is not of the same type of the posted object
         default:
           description: Error response
@@ -1709,8 +1709,8 @@ paths:
       summary: Get preferences
       description: |
         Returns a list of preferences for person **personId**.
-        
-        Each preference consists of an **id** and a **value**. 
+
+        Each preference consists of an **id** and a **value**.
         The **value** can be of any JSON type.
       operationId: getPreferences
       produces:
@@ -1820,7 +1820,7 @@ paths:
   '/people/{personId}/site-membership-requests/{siteId}':
     get:
       tags:
-        - people     
+        - people
       summary: Get a site membership request
       description: Returns the site membership request for site **siteId** for person **personId**, if one exists.
       operationId: getSiteMembershipRequest
@@ -1897,12 +1897,12 @@ paths:
       description: |
         Returns a list of site membership information for person **personId**.
         You can sort the list of sites using the **orderBy** parameter.
-        
-        **orderBy** specifies the name of one or more 
-        comma separated properties. 
-        For each property you can optionally specify the order direction. 
+
+        **orderBy** specifies the name of one or more
+        comma separated properties.
+        For each property you can optionally specify the order direction.
         Both of the these **orderBy** examples retrieve sites ordered by ascending name:
-        
+
         ```
         name
         name ASC
@@ -1935,24 +1935,24 @@ paths:
       summary: Get sites
       description: |
         Returns a list of sites in this repository. You can sort the list if sites using the **orderBy** parameter.
-        **orderBy** specifies the name of one or more 
-        comma separated properties. 
-        For each property you can optionally specify the order direction. 
+        **orderBy** specifies the name of one or more
+        comma separated properties.
+        For each property you can optionally specify the order direction.
         Both of the these **orderBy** examples retrieve sites ordered by ascending name:
-        
+
         ```
         name
         name ASC
         ```
-        
+
         You can use the **relations** parameter to include one or more related
         entities in a single response and so reduce network traffic.
-        
+
         The entity types in Alfresco are organized in a tree structure.
-        The **sites** entity has two children, **containers** and **members**. 
-        The following relations parameter returns all the container and member 
+        The **sites** entity has two children, **containers** and **members**.
+        The following relations parameter returns all the container and member
         objects related to each site:
-        
+
         ```
         containers,members
         ```
@@ -1981,15 +1981,15 @@ paths:
       summary: Get a site
       description: |
         Returns information for site **siteId**.
-        
+
         You can use the **relations** parameter to include one or more related
         entities in a single response and so reduce network traffic.
-        
+
         The entity types in Alfresco are organized in a tree structure.
-        The **sites** entity has two children, **containers** and **members**. 
-        The following relations parameter returns all the container and member 
+        The **sites** entity has two children, **containers** and **members**.
+        The following relations parameter returns all the container and member
         objects related to the site **siteId**:
-        
+
         ```
         containers,members
         ```
@@ -2095,9 +2095,9 @@ paths:
       summary: Add a person
       description: |
         Adds person **personId** as a member of site **siteId**.
-        
+
         You can set the **role** to one of four types:
-        
+
         * SiteConsumer
         * SiteCollaborator
         * SiteContributor
@@ -2163,9 +2163,9 @@ paths:
       summary: Update a site member
       description: |
         Update the membership of person **personId** in site **siteId**.
-        
+
         You can set the **role** to one of four types:
-        
+
         * SiteConsumer
         * SiteCollaborator
         * SiteContributor
@@ -2322,12 +2322,12 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'    
+            $ref: '#/definitions/Error'
   '/shared-links':
     post:
       tags:
         - shared-links
-        - 5.2 changes      
+        - 5.2 changes
       summary: Create a shared link to a file
       description: Create shared link to specfied file identified by **nodeId** in request body.
       operationId: addSharedLink
@@ -2358,7 +2358,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         '409':
-          description: If shared link already exists for **nodeId**          
+          description: If shared link already exists for **nodeId**
         '501':
           description: If shared links are disabled for the system
         default:
@@ -2368,7 +2368,7 @@ paths:
     get:
       tags:
         - shared-links
-        - 5.2 changes        
+        - 5.2 changes
       summary: Find shared links
       description: Find (search for) links that current user has read permission on source node.
       operationId: findSharedLinks
@@ -2376,11 +2376,11 @@ paths:
         - name: where
           in: query
           description: Optionally filter the list by "sharedByUser" userid of person who shared the link (can also use -me-)
-          
+
             *   where=(sharedByUser='jbloggs')
-            
+
             *   where=(sharedByUser='-me-')
-            
+
           required: false
           type: string
         - $ref: '#/parameters/sharedLinkEntryIncludeParam'
@@ -2397,16 +2397,16 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'      
+            $ref: '#/definitions/Error'
   '/shared-links/{sharedId}':
     get:
       tags:
         - shared-links
-        - 5.2 changes        
+        - 5.2 changes
       summary: Get a shared link
       description: |
         Returns minimal information for the file with shared link identifier **sharedId**.
-        
+
         **Note:** No authentication is required to call this endpoint.
       operationId: getSharedLink
       parameters:
@@ -2433,7 +2433,7 @@ paths:
     delete:
       tags:
         - shared-links
-        - 5.2 changes       
+        - 5.2 changes
       summary: Deletes a shared link
       description: Deletes the shared link with identifier **sharedId**.
       operationId: deleteSharedLink
@@ -2455,16 +2455,16 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error' 
+            $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/content':
     get:
       tags:
         - shared-links
-        - 5.2 changes      
+        - 5.2 changes
       summary: Get file content
       description: |
         Returns the content of the file with shared link identifier **sharedId**.
-        
+
         **Note:** No authentication is required to call this endpoint.
       operationId: getSharedLinkContent
       parameters:
@@ -2485,16 +2485,16 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error' 
+            $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/renditions/{renditionId}/content':
     get:
       tags:
         - renditions
-        - 5.2 changes       
+        - 5.2 changes
       summary: Get shared link rendition content
       description: |
         Returns the rendition content for file with shared link identifier **sharedId**.
-        
+
         **Note:** No authentication is required to call this endpoint.
       operationId: getSharedLinkRenditionContent
       parameters:
@@ -2512,11 +2512,11 @@ paths:
         '404':
           description: If **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system          
+          description: If shared links are disabled for the system
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error' 
+            $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/email':
     post:
       tags:
@@ -2524,8 +2524,8 @@ paths:
         - 5.2 changes
       summary: Email shared link
       description: |
-        Sends email with app-specific url including identifier **sharedId**. 
-        
+        Sends email with app-specific url including identifier **sharedId**.
+
         The client and recipientEmails properties are mandatory in the request body. For example, to email a shared link with minimum info:
         ```JSON
         {
@@ -2594,7 +2594,7 @@ paths:
         - must contain a minimum of 3 alphanumeric characters
         - allows "quoted term"
         - can optionally use '*' for wildcard matching
-        
+
         By default, file and folder types will be searched unless a specific type is provided as a query parameter.
 
         By default, the search will be across the repository unless a specific root node id is provided to start the search from.
@@ -2613,7 +2613,7 @@ paths:
           in: query
           description: |
             The id of the node to start the search from.
-            
+
             Supports the aliases -my-, -root- and -shared-.
           type: string
           required: false
@@ -2621,7 +2621,7 @@ paths:
           in: query
           description: Restrict the returned results to only those of the given node type and it's sub-types
           type: string
-          required: false 
+          required: false
         - name: include
           in: query
           description: Return additional info, eg. aspectNames, properties, path, isLink
@@ -2649,7 +2649,7 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -2679,21 +2679,21 @@ definitions:
       hasMoreItems:
         type: boolean
         description: |
-          A boolean value which is **true** if there are more entities in the collection 
-          beyond those in this response. A true value means a request with a larger value 
+          A boolean value which is **true** if there are more entities in the collection
+          beyond those in this response. A true value means a request with a larger value
           for the **skipCount** or the **maxItems** parameter will return more entities.
       totalItems:
         type: integer
         format: int64
         description: |
-          An integer describing the total number of entities in the collection. 
-          The API might not be able to determine this value, 
+          An integer describing the total number of entities in the collection.
+          The API might not be able to determine this value,
           in which case this property will not be present.
       skipCount:
         type: integer
         format: int64
         description: |
-          An integer describing how many entities exist in the collection before 
+          An integer describing how many entities exist in the collection before
           those included in this list.
       maxItems:
         type: integer
@@ -3191,7 +3191,7 @@ definitions:
         type: string
         description: The unique id of the preference
       value:
-        type: string        
+        type: string
         description: The value of the preference. The value can be of any JSON type.
   FavoriteSitePaging:
     type: object
@@ -3300,7 +3300,7 @@ definitions:
       modifiedAt:
         type: string
         format: date-time
-      modifiedByUser: 
+      modifiedByUser:
         $ref: '#/definitions/UserInfo'
       createdAt:
         type: string
@@ -3327,7 +3327,7 @@ definitions:
       modifiedAt:
         type: string
         format: date-time
-      modifiedByUser: 
+      modifiedByUser:
         $ref: '#/definitions/UserInfo'
       createdAt:
         type: string
@@ -3360,9 +3360,9 @@ definitions:
       modifiedAt:
         type: string
         format: date-time
-      modifiedByUser: 
+      modifiedByUser:
         $ref: '#/definitions/UserInfo'
-      sharedByUser: 
+      sharedByUser:
         $ref: '#/definitions/UserInfo'
       content:
         $ref: '#/definitions/ContentInfo'
@@ -3408,7 +3408,7 @@ definitions:
       entry:
         $ref: '#/definitions/DeletedNodeMinimal'
   DeletedNodeMinimal:
-    allOf: 
+    allOf:
       - $ref: '#/definitions/NodeMinimalEntry'
       - type: object
         required:
@@ -3426,7 +3426,7 @@ definitions:
       entry:
         $ref: '#/definitions/DeletedNode'
   DeletedNode:
-    allOf: 
+    allOf:
       - $ref: '#/definitions/NodeEntry'
       - type: object
         required:
@@ -3437,4 +3437,4 @@ definitions:
             $ref: '#/definitions/UserInfo'
           archivedAt:
             type: string
-            format: date-time                               
+            format: date-time
