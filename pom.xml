@@ -4,8 +4,8 @@
     <artifactId>api-explorer</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>Alfresco Rest Api UI</name>
-    <description>Alfresco swagger-ui for the Rest Api</description>
+    <name>Alfresco REST API Explorer</name>
+    <description>Produces the API Explorer for the Core and Workflow API definitions</description>
     <properties>
       <swagger-ui.version>2.1.4</swagger-ui.version>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
