@@ -388,7 +388,7 @@ paths:
       tags:
         - ratings
       summary: Rate
-      description: Rate the node **nodeId**.
+      description: Rate the node with identifier **nodeId**
       operationId: rate
       produces:
         - application/json
@@ -396,7 +396,17 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
           name: ratingBody
-          description: Rating details
+          description: |
+            For "myRating" the type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar.
+
+            For example, to "like" a file the following body would be used:
+
+              ```JSON
+                {
+                  "id": "likes",
+                  "myRating": true
+                }
+              ```
           required: true
           schema:
             properties:
@@ -1581,13 +1591,28 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - in: body
           name: favoriteBody
-          description: |
-            An object identifying the entity to be favorited.
-            The object consists of a single property which is an object with the name `site`, `file`, or `folder`.
+          description: |      
+            An object identifying the entity to be favorited. 
+            
+            The object consists of a single property which is an object with the name `site`, `file`, or `folder`. 
             The content of that object is the `guid` of the target entity.
+            
+            For example, to favorite a file the following body would be used:
+            
+            ```JSON
+            {
+               "target": {
+                  "file": {
+                     "guid": "abcde-01234"
+                  }
+               }
+            }
+            ```
           required: true
           schema:
-            $ref: '#/definitions/FavoriteBody'
+            properties:
+               target:
+                  type: object
       responses:
         '201':
           description: Successful response
@@ -1623,7 +1648,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/Favorite'
+            $ref: '#/definitions/FavoriteEntry'
         '404':
           description: |
             If **personId** does not exist, or the target entity does not exist
@@ -2113,14 +2138,14 @@ paths:
           required: true
           schema:
             properties:
-              Role:
+              role:
                 type: string
                 enum:
                 - SiteConsumer
                 - SiteCollaborator
                 - SiteContributor
                 - SiteManager
-              PersonId:
+              id:
                 type: string
       responses:
         '200':
@@ -2653,9 +2678,16 @@ paths:
 definitions:
   Error:
     type: object
+    required:
+      - error
     properties:
       error:
         type: object
+        required:
+          - statusCode
+          - briefSummary
+          - stackTrace
+          - descriptionURL
         properties:
           errorKey:
             type: string
@@ -2670,6 +2702,11 @@ definitions:
             type: string
   Pagination:
     type: object
+    required:
+      - count
+      - hasMoreItems
+      - skipCount
+      - maxItems
     properties:
       count:
         type: integer
@@ -2703,9 +2740,14 @@ definitions:
           or if there was no **maxItems** parameter the default value, 10
   SitePaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -2714,11 +2756,18 @@ definitions:
               $ref: '#/definitions/SiteEntry'
   SiteEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/Site'
   Site:
     type: object
+    required:
+      - id
+      - guid
+      - title
+      - visibility
     properties:
       id:
         type: string
@@ -2738,9 +2787,14 @@ definitions:
         type: string
   SiteContainerPaging:
     type: object
+    required:
+     - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -2749,11 +2803,16 @@ definitions:
               $ref: '#/definitions/SiteContainerEntry'
   SiteContainerEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/SiteContainer'
   SiteContainer:
     type: object
+    required:
+      - id
+      - folderId
     properties:
       id:
         type: string
@@ -2761,9 +2820,14 @@ definitions:
         type: string
   SiteMemberPaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -2772,6 +2836,8 @@ definitions:
               $ref: '#/definitions/SiteMemberEntry'
   SiteMemberEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/SiteMember'
@@ -2779,6 +2845,7 @@ definitions:
     type: object
     required:
       - id
+      - person
       - role
     properties:
       id:
@@ -2794,6 +2861,8 @@ definitions:
           - SiteManager
   PersonEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/Person'
@@ -2801,6 +2870,10 @@ definitions:
     type: object
     required:
       - id
+      - firstName
+      - lastName
+      - email
+      - enabled
     properties:
       id:
         type: string
@@ -2861,9 +2934,14 @@ definitions:
         type: string
   CommentPaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+         - pagination
+         - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -2873,11 +2951,23 @@ definitions:
               $ref: '#/definitions/CommentEntry'
   CommentEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/Comment'
   Comment:
     type: object
+    required:
+      - id
+      - content
+      - createdBy
+      - createdAt
+      - edited
+      - modifiedBy
+      - modifiedAt
+      - canEdit
+      - canDelete
     properties:
       id:
         type: string
@@ -2901,9 +2991,14 @@ definitions:
         type: boolean
   TagPaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -2913,6 +3008,8 @@ definitions:
               $ref: '#/definitions/TagEntry'
   TagEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/Tag'
@@ -2928,9 +3025,14 @@ definitions:
         type: string
   PersonNetworkPaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -2940,6 +3042,8 @@ definitions:
               $ref: '#/definitions/PersonNetworkEntry'
   PersonNetworkEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/PersonNetwork'
@@ -2951,6 +3055,7 @@ definitions:
       Alfresco account , their email domain becomes their Home Network.
     required:
       - id
+      - isEnabled
     properties:
       id:
         type: string
@@ -2983,6 +3088,8 @@ definitions:
       and the number of network administrators
     required:
       - id
+      - limit
+      - usage
     properties:
       id:
         type: string
@@ -2994,9 +3101,14 @@ definitions:
         format: int6
   RatingPaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -3006,6 +3118,8 @@ definitions:
               $ref: '#/definitions/RatingEntry'
   RatingEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/Rating'
@@ -3017,11 +3131,14 @@ definitions:
       ratings and to add a new rating.
     required:
       - id
+      - aggregate
     properties:
       id:
         type: string
       aggregate:
         type: object
+        required:
+          - numberOfRatings
         properties:
           numberOfRatings:
             type: integer
@@ -3031,12 +3148,18 @@ definitions:
         type: string
         format: date-time
       myRating:
-        type: boolean
+        type: string
+        description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar.
   FavoritePaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -3046,6 +3169,8 @@ definitions:
               $ref: '#/definitions/FavoriteEntry'
   FavoriteEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/Favorite'
@@ -3066,27 +3191,17 @@ definitions:
         format: date
         description: The time the object was made a favorite.
       target:
-        $ref: '#/definitions/Site'
-  FavoriteBody:
-    type: object
-    properties:
-      target:
-        $ref: '#/definitions/FavoriteTarget'
-  FavoriteTarget:
-    type: object
-    properties:
-      site:
-        $ref: '#/definitions/FavoriteTargetSite'
-  FavoriteTargetSite:
-    type: object
-    properties:
-      guid:
-        type: string
+        type: object
   ActivityPaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -3096,6 +3211,8 @@ definitions:
               $ref: '#/definitions/ActivityEntry'
   ActivityEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/Activity'
@@ -3106,7 +3223,10 @@ definitions:
       for example creating an item of content, commenting on a node,
       liking an item of content.
     required:
+      - postPersonId
       - id
+      - feedPersonId
+      - activityType
     properties:
       postPersonId:
         type: string
@@ -3165,9 +3285,14 @@ definitions:
           - org.alfresco.subscriptions.subscribed
   PreferencePaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -3177,6 +3302,8 @@ definitions:
               $ref: '#/definitions/PreferenceEntry'
   PreferenceEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/Preference'
@@ -3186,6 +3313,7 @@ definitions:
       A specific preference.
     required:
       - id
+      - value
     properties:
       id:
         type: string
@@ -3195,9 +3323,14 @@ definitions:
         description: The value of the preference. The value can be of any JSON type.
   FavoriteSitePaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -3207,11 +3340,17 @@ definitions:
               $ref: '#/definitions/FavoriteSiteEntry'
   FavoriteSiteEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/FavoriteSite'
   FavoriteSite:
     type: object
+    required:
+      - id
+      - title
+      - visibility
     properties:
       id:
         type: string
@@ -3227,9 +3366,14 @@ definitions:
           - PUBLIC
   SiteMembershipRequestPaging:
     type: object
+    required:
+      - list
     properties:
       list:
         type: object
+        required:
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -3239,11 +3383,17 @@ definitions:
               $ref: '#/definitions/SiteMembershipRequestEntry'
   SiteMembershipRequestEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
         $ref: '#/definitions/SiteMembershipRequest'
   SiteMembershipRequest:
     type: object
+    required:
+      - id
+      - createdAt
+      - entry
     properties:
       id:
         type: string
