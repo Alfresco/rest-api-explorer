@@ -73,8 +73,14 @@ public class APIExplorerIntegrationTest
         int swaggerIndex = coreDefinitionContent.indexOf("swagger:");
         assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
         
+        int nodeInfoEndpointIndex = coreDefinitionContent.indexOf("'/nodes/{nodeId}':");
+        assertTrue("Expected to find '/nodes/{nodeId}':", nodeInfoEndpointIndex != -1);
+        
         int commentsEndpointIndex = coreDefinitionContent.indexOf("'/nodes/{nodeId}/comments':");
         assertTrue("Expected to find '/nodes/{nodeId}/comments':", commentsEndpointIndex != -1);
+        
+        int sharedLinksEndpointIndex = coreDefinitionContent.indexOf("'/shared-links':");
+        assertTrue("Expected to find '/shared-links':", sharedLinksEndpointIndex != -1);
         
         // ensure the core API definition can be read and parsed
         Swagger swagger = new SwaggerParser().read(coreDefinitionUrl);
@@ -83,7 +89,9 @@ public class APIExplorerIntegrationTest
         assertEquals("Incorrect version", "1", swagger.getInfo().getVersion());
         Map<String, Path> paths = swagger.getPaths();
         assertNotNull("Expected to retrieve a map of paths", paths);
-        assertTrue("Expected to find /nodes/{nodeId}/comments path", paths.containsKey("/nodes/{nodeId}/comments"));     
+        assertTrue("Expected to find /nodes/{nodeId} path", paths.containsKey("/nodes/{nodeId}"));
+        assertTrue("Expected to find /nodes/{nodeId}/comments path", paths.containsKey("/nodes/{nodeId}/comments"));
+        assertTrue("Expected to find /shared-links path", paths.containsKey("/shared-links"));
     }
     
     @Test
