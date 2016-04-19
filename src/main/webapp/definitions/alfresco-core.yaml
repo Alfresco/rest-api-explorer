@@ -1960,7 +1960,7 @@ paths:
         - 5.2 changes
       summary: Create a site
       description: |
-        Creates a default site with the given details. 
+        Creates a default site with the given details. The creator will be added as a member with Site Manager role.
         Unless explicitly specified, the site id will be generated from the site title. The site id must be unique and only contain alphanumeric and/or dash
         characters.
         The creation of the (surf) configuration files required by Share can be skipped via the **skipConfiguration** query parameter. Please note: if skipped then such a site will *not* work within Share.
@@ -2002,14 +2002,6 @@ paths:
                   - PUBLIC
                   - PRIVATE
                   - MODERATED
-              role:
-                type: string
-                default: SiteConsumer
-                enum:
-                  - SiteConsumer
-                  - SiteCollaborator
-                  - SiteContributor
-                  - SiteManager
       responses:
         '201':
           description: Successful response
