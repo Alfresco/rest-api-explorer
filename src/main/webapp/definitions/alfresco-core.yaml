@@ -2050,7 +2050,7 @@ definitions:
         type: string
         description: The id of the person who performed the activity
       id:
-        type: string
+        type: long
         description: The unique id of the activity
       siteId:
         type: string
