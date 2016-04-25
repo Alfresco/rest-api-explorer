@@ -8,6 +8,8 @@
     <description>Produces the API Explorer for the Core and Workflow API definitions</description>
     <properties>
       <swagger-ui.version>2.1.4</swagger-ui.version>
+      <maven.compiler.source>1.7</maven.compiler.source>
+      <maven.compiler.target>1.7</maven.compiler.target>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -98,6 +100,27 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-json</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.alfresco.api.YamlToJson</mainClass>
+                    <arguments>
+                        <argument>${basedir}</argument>
+                    </arguments>
+                    <classpathScope>test</classpathScope>
+                </configuration>
+            </plugin>
           <plugin>
             <artifactId>maven-clean-plugin</artifactId>
             <version>3.0.0</version>
@@ -136,7 +159,6 @@
                         </manifestEntries>
                     </manifestSection>
                   </manifestSections>
-
                   <manifest>
                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                     <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
@@ -150,9 +172,9 @@
             <version>2.2</version>
             <executions>
                <execution>
-                  <id>run-war</id>
+                  <id>run-war-only</id>
                   <goals>
-                     <goal>run</goal>
+                     <goal>run-war-only</goal>
                   </goals>
                   <phase>pre-integration-test</phase>
                   <configuration>

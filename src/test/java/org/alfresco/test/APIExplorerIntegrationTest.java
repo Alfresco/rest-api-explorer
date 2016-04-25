@@ -21,13 +21,17 @@ package org.alfresco.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
 
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Map;
 
+import io.swagger.util.Json;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -118,7 +122,16 @@ public class APIExplorerIntegrationTest
         assertNotNull("Expected to retrieve a map of paths", paths);
         assertTrue("Expected to find /deployments/{deploymentId} path", paths.containsKey("/deployments/{deploymentId}"));
     }
-    
+
+    @Test
+    public void testAllDefinitions() throws Exception
+    {
+        String defs = this.retrievePageContent("http://localhost:8085/api-explorer/definitions/index.jsp", 200);
+        List<String> definitions = Json.mapper().readValue(defs, new TypeReference<List<String>>(){});
+        assertNotNull(definitions);
+        assertEquals("2 definitions in 2 formats should be 4.", 4, definitions.size());
+    }
+
     public String retrievePageContent(String url, int expectedStatus) throws Exception
     {
         String pageContent = null;
