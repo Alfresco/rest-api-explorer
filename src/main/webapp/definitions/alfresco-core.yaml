@@ -1960,11 +1960,25 @@ paths:
         - 5.2 changes
       summary: Create a site
       description: |
-        Creates a default site with the given details. The creator will be added as a member with Site Manager role.
-        Unless explicitly specified, the site id will be generated from the site title. The site id must be unique and only contain alphanumeric and/or dash
+        Creates a default site with the given details.  Unless explicitly specified, the site id will be generated from the site title. The site id must be unique and only contain alphanumeric and/or dash
         characters.
-        The creation of the (surf) configuration files required by Share can be skipped via the **skipConfiguration** query parameter. Please note: if skipped then such a site will *not* work within Share.
+
+        For example, to create a public site called "Marketing" the following body could be used:
+        ```JSON
+        {
+          "title": "Marketing",
+          "visibility": "PUBLIC"
+        }
+        ```
+
+        The creation of the (surf) configuration files required by Share can be skipped via the **skipConfiguration** query parameter.
+
+        **Please note: if skipped then such a site will *not* work within Share.**
+
         The addition of the site to the user's site favorites can be skipped via the **skipAddToFavorites** query parameter.
+
+        The creator will be added as a member with Site Manager role.
+
       operationId: createSite
       produces:
         - application/json
