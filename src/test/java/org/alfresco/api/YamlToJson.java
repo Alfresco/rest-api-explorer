@@ -18,12 +18,15 @@
  */
 package org.alfresco.api;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
 import io.swagger.util.Json;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
@@ -47,18 +50,20 @@ public class YamlToJson {
         String rootPath = args[0];
 
         try {
-            if (new File(rootPath+JSON_DESTINATION ).mkdirs()) {
 
-                //Core
-                Swagger swagger = parseSwaggerDef(new File(rootPath+CORE_DEFINITION), CORE_DEFINITION_TITLE);
-                new PrintWriter(rootPath+CORE_JSON_DEFINITION ).println(Json.pretty(swagger));
+            //Create destination dir
+            new File(rootPath + JSON_DESTINATION).mkdirs();
 
-                //Workflow
-                swagger = parseSwaggerDef(new File(rootPath+WORKFLOW_DEFINITION), WORKFLOW_DEFINITION_TITLE);
-                new PrintWriter(rootPath+WORKFLOW_JSON_DEFINITION ).println(Json.pretty(swagger));
-            }
-        } catch (FileNotFoundException e) {
-            System.err.println("Failed to create a json definitions: "+e.getLocalizedMessage());
+            //Core
+            Swagger swagger = parseSwaggerDef(new File(rootPath + CORE_DEFINITION), CORE_DEFINITION_TITLE);
+            Json.mapper().writeValue(new File(rootPath + CORE_JSON_DEFINITION), swagger);
+
+            //Workflow
+            swagger = parseSwaggerDef(new File(rootPath + WORKFLOW_DEFINITION), WORKFLOW_DEFINITION_TITLE);
+            Json.mapper().writeValue(new File(rootPath + WORKFLOW_JSON_DEFINITION), swagger);
+
+        } catch (IOException e) {
+            System.err.println("Failed to create a json definitions: " + e.getLocalizedMessage());
             System.exit(1);
         }
 
