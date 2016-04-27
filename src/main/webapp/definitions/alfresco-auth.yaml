@@ -58,6 +58,47 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
+  '/tickets/-me-':
+    get:
+      tags:
+        - authentication
+      summary: Validate ticket
+      description: |
+        Validates the specified ticket (derived from Authorization header) is still valid.
+      operationId: validateTicket
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ValidateTicketEntry'
+        '400':
+          description: If the URL path does not include **-me-** or the ticket is not provided by the Authorization header
+        '404':
+          description: If the status of the user has changed (e.g. The user is locked or the account is disabled) or the ticket has expired
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - authentication
+      summary: Delete ticket (logout)
+      description: |
+        Deletes logged in ticket (logout).
+      operationId: deleteTicket
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: If the URL path does not include **-me-** or the ticket is not provided by the Authorization header
+        '404':
+          description: If the status of the user has changed (e.g. The user is locked or the account is disabled) or the ticket has expired
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -94,4 +135,12 @@ definitions:
           id:
             type: string
           userId:
+            type: string
+  ValidateTicketEntry:
+    type: object
+    properties:
+      entry:
+        type: object
+        properties:
+          id:
             type: string
