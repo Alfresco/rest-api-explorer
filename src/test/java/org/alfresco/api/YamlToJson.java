@@ -37,6 +37,10 @@ public class YamlToJson {
     public static final String CORE_JSON_DEFINITION = JSON_DESTINATION + "alfresco-core.json";
     public static final String CORE_DEFINITION_TITLE = "Alfresco Core REST API";
 
+    public static final String AUTH_DEFINITION = "/src/main/webapp/definitions/alfresco-auth.yaml";
+    public static final String AUTH_JSON_DEFINITION = JSON_DESTINATION + "alfresco-auth.json";
+    public static final String AUTH_DEFINITION_TITLE = "Alfresco Authentication REST API";
+
     public static final String WORKFLOW_DEFINITION = "/src/main/webapp/definitions/alfresco-workflow.yaml";
     public static final String WORKFLOW_JSON_DEFINITION = JSON_DESTINATION + "alfresco-workflow.json";
     public static final String WORKFLOW_DEFINITION_TITLE = "Alfresco Workflow REST API";
@@ -53,6 +57,10 @@ public class YamlToJson {
             //Core
             Swagger swagger = parseSwaggerDef(new File(rootPath + CORE_DEFINITION), CORE_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + CORE_JSON_DEFINITION), swagger);
+
+            //Authentication
+            swagger = parseSwaggerDef(new File(rootPath + AUTH_DEFINITION), AUTH_DEFINITION_TITLE);
+            Json.mapper().writeValue(new File(rootPath + AUTH_JSON_DEFINITION), swagger);
 
             //Workflow
             swagger = parseSwaggerDef(new File(rootPath + WORKFLOW_DEFINITION), WORKFLOW_DEFINITION_TITLE);
