@@ -114,8 +114,15 @@ public class APIExplorerIntegrationTest
         int swaggerIndex = definitionContent.indexOf("swagger:");
         assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
 
-        Swagger swagger = validateSwaggerDef(definitionUrl + YAML, "Alfresco Authentication REST API", "1");
-        swagger = validateSwaggerDef(definitionUrl + JSON, "Alfresco Authentication REST API", "1");
+        validateAuthDefn(definitionUrl + YAML);
+        validateAuthDefn(definitionUrl + JSON);
+    }
+
+    private void validateAuthDefn(String definitionUrl) {
+        Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Authentication REST API", "1");
+        Map<String, Path> paths = swagger.getPaths();
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /tickets path", paths.containsKey("/tickets"));
     }
 
     @Test
