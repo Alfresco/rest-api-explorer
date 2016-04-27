@@ -1,0 +1,16 @@
+swagger: '2.0'
+info:
+  description: Provides access to the Authentication features of Alfresco
+  version: '1'
+  title: Alfresco Authentication REST API
+basePath: /alfresco/api/-default-/public/authentication/versions/1
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication
+security:
+  - basicAuth: []
+consumes:
+  - application/json
+produces:
+  - application/json
