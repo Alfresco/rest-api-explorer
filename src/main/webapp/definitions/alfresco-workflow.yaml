@@ -1182,9 +1182,16 @@ paths:
 definitions:
   Error:
     type: object
+    required:
+      - error
     properties:
       error:
         type: object
+        required:
+          - statusCode
+          - briefSummary
+          - stackTrace
+          - descriptionURL
         properties:
           errorKey:
             type: string
@@ -1196,6 +1203,8 @@ definitions:
           stackTrace:
             type: string
           descriptionURL:
+            type: string
+          logId:
             type: string
   Pagination:
     type: object

@@ -2802,6 +2802,8 @@ definitions:
             type: string
           descriptionURL:
             type: string
+          logId:
+            type: string
   Pagination:
     type: object
     required:
