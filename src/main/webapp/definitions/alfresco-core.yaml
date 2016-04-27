@@ -3536,6 +3536,13 @@ definitions:
               $ref: '#/definitions/NodeMinimalEntry'
   NodeMinimalEntry:
     type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/MinimalNode'
+  MinimalNode:
+    type: object
     properties:
       id:
         type: string
