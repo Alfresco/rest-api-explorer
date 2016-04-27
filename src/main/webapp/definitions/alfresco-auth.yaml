@@ -14,3 +14,82 @@ consumes:
   - application/json
 produces:
   - application/json
+paths:
+  '/tickets':
+    post:
+      tags:
+        - authentication
+      summary: Create ticket (login)
+      description: |
+        Logs in and returns the new authentication ticket.
+        The userId and password properties are mandatory in the request body. For example:
+        ```JSON
+        {
+            "userId": "jbloggs",
+            "password": "password"
+        }
+        ```
+      operationId: createTicket
+      parameters:
+        - in: body
+          name: loginRequest
+          description: The user credential.
+          required: true
+          schema:
+            properties:
+              userId:
+                type: string
+              password:
+                type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/LoginTicketEntry'
+        '400':
+          description: If the **userId** and/or **password** are/is not provided
+        '403':
+          description: If the login fails
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Error:
+    type: object
+    required:
+      - error
+    properties:
+      error:
+        type: object
+        required:
+          - statusCode
+          - briefSummary
+          - stackTrace
+          - descriptionURL
+        properties:
+          errorKey:
+            type: string
+          statusCode:
+            type: integer
+            format: int32
+          briefSummary:
+            type: string
+          stackTrace:
+            type: string
+          descriptionURL:
+            type: string
+  LoginTicketEntry:
+    type: object
+    properties:
+      entry:
+        type: object
+        properties:
+          id:
+            type: string
+          userId:
+            type: string
