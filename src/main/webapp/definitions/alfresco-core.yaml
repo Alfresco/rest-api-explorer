@@ -410,6 +410,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagPaging'
+        '403':
+          description: If the user does not have permission to read tags on the node            
         '404':
           description: If **nodeId** does not exist
         default:
@@ -454,8 +456,14 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagEntry'
+        '400':
+          description: If an empty tag is provided
+        '403':
+          description: If the user does not have permission to add tags on the node                      
         '404':
           description: If **nodeId** does not exist
+        '409':
+          description: The **nodeId** has already been tagged          
         default:
           description: Error response
           schema:
@@ -475,6 +483,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '403':
+          description: If the user does not have permission to delete the tag
         '404':
           description: If **nodeId** or **tagId** does not exist
         default:
@@ -1474,6 +1484,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagEntry'
+        '400':
+          description: If an empty tag is provided            
         '404':
           description: If **tagId** does not exist
         default:
