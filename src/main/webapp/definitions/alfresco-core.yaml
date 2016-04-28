@@ -2077,6 +2077,8 @@ definitions:
         properties:
           firstName:
             type: string
+          lastName:
+            type: string
           parentObjectId:
             type: string
           title:
