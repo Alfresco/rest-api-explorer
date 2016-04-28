@@ -579,7 +579,7 @@ paths:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/FavoriteSite'
+            $ref: '#/definitions/FavoriteSiteEntry'
         '404':
           description: If **personId** does not exist
         default:
@@ -608,7 +608,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/FavoriteSite'
+            $ref: '#/definitions/FavoriteSiteEntry'
         '404':
           description: If **personId** or **siteId** does not exist
         default:
