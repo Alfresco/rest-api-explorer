@@ -764,6 +764,8 @@ paths:
             or a favorite already exists with the specified id, or an 
             entity does exist with the id of the posted object, 
             but is not of the same type of the posted object
+        '409':
+          description: The target **guid** has already been favorited            
         default:
           description: Error response
           schema:
