@@ -333,8 +333,14 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/RatingEntry'
+        '400':
+          description: If an unknown rating scheme is supplied
         '404':
           description: If **nodeId** does not exist
+        '405':
+          description: If is not possible to rate a node of this type
+        '409':
+          description: If **nodeId** has already been rated
         default:
           description: Error response
           schema:
