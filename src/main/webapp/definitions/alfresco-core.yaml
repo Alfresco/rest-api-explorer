@@ -216,6 +216,8 @@ paths:
           description: The JSON representing the comment to be updated.
           required: true
           schema:
+            required:
+              - content          
             properties:
               content:
                 type: string
@@ -1438,6 +1440,8 @@ paths:
           description: The updated tag
           required: true
           schema:
+            required:
+              - tag          
             properties:
               tag:
                 type: string
