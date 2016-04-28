@@ -182,6 +182,8 @@ paths:
           description: The comment text. Note that you can provide an array of comments.
           required: true
           schema:
+            required:
+              - content          
             properties:
               content:
                 type: string
@@ -298,6 +300,9 @@ paths:
               ```
           required: true
           schema:
+            required:
+              - id
+              - myRating
             properties:
               id:
                 type: string
@@ -419,6 +424,8 @@ paths:
           description: The new tag
           required: true
           schema:
+            required:
+              - tag          
             properties:
               tag:
                 type: string
@@ -719,6 +726,8 @@ paths:
             ```
           required: true
           schema:
+            required:
+              - target
             properties:
                target:
                   type: object
