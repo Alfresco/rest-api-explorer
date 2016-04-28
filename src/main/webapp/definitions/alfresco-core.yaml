@@ -148,6 +148,8 @@ paths:
             $ref: '#/definitions/CommentPaging'
         '400':
           description: If the **nodeId** exists, but does not identify a file or a folder
+        '403':
+          description: If the user does not have permission read comments on the node
         '404':
           description: If **nodeId** does not exist
         default:
@@ -192,6 +194,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/CommentEntry'
+        '400':
+          description: If an empty comment is provided
+        '403':
+          description: If the user does not have permission to add a comment           
         '404':
           description: If **nodeId** does not exist
         default:
@@ -226,6 +232,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/CommentEntry'
+        '400':
+          description: If an empty comment is provided
+        '403':
+          description: If the user does not have permission to update a comment
         '404':
           description: If **nodeId** or **commentId** does not exist
         default:
@@ -246,6 +256,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '403':
+          description: If the user does not have permission to delete a comment
         '404':
           description: If **nodeId** or **commentId** does not exist
         default:
