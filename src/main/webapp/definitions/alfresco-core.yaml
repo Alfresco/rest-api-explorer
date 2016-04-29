@@ -463,9 +463,9 @@ paths:
         '403':
           description: If the user does not have permission to add tags on the node                      
         '404':
-          description: If **nodeId** does not exist
-        '409':
-          description: The **nodeId** has already been tagged          
+          description: If **nodeId** does not exist       
+        '405':
+          description: If not possible to tag a node of this type 
         default:
           description: Error response
           schema:
