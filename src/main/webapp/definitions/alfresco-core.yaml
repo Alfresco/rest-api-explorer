@@ -607,11 +607,17 @@ paths:
         '201':
           description: Successful response
           schema:
+            type: object
             required:
-            - id
+              - entry
             properties:
-              id:
-                type: string
+              entry:
+                type: object
+                required:
+                - id
+                properties:
+                  id:
+                    type: string
         '404':
           description: If **personId** does not exist
         default:
