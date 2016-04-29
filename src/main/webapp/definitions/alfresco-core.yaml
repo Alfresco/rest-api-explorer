@@ -573,7 +573,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/FavoriteSitePaging'
+            $ref: '#/definitions/SitePaging'
         '404':
           description: If **personId** does not exist
         default:
@@ -646,7 +646,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/FavoriteSiteEntry'
+            $ref: '#/definitions/SiteEntry'
         '404':
           description: If **personId** or **siteId** does not exist
         default:
@@ -2198,51 +2198,6 @@ definitions:
       value:
         type: string        
         description: The value of the preference. Note that this can be of any JSON type.
-  FavoriteSitePaging:
-    type: object
-    required:
-      - list
-    properties:
-      list:
-        type: object
-        required:
-          - pagination
-          - entries
-        properties:
-          pagination:
-            $ref: '#/definitions/Pagination'
-          entries:
-            type: array
-            items:
-              type: object
-              $ref: '#/definitions/FavoriteSiteEntry'
-  FavoriteSiteEntry:
-    type: object
-    required:
-      - entry
-    properties:
-      entry:
-        type: object
-        $ref: '#/definitions/FavoriteSite'
-  FavoriteSite:
-    type: object
-    required:
-      - id
-      - title
-      - visibility
-    properties:
-      id:
-        type: string
-      title:
-        type: string
-      description:
-        type: string
-      visibility:
-        type: string
-        enum:
-          - PRIVATE
-          - MODERATED
-          - PUBLIC
   SiteMembershipRequestPaging:
     type: object
     required:
