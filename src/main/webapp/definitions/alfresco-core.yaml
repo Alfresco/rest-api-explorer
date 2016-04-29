@@ -16,8 +16,14 @@ securityDefinitions:
   basicAuth:
     type: basic
     description: HTTP Basic Authentication
+  ticketAuth:
+    type: apiKey
+    name: alf_ticket
+    in: query
+    description: Querystring-based Alfresco Token Authentication
 security:
   - basicAuth: []
+  - ticketAuth: []
 consumes:
   - application/json
 produces:
