@@ -3699,6 +3699,7 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
+            type: array
             items:
               $ref: '#/definitions/DeletedNodeMinimalEntry'
   DeletedNodeMinimalEntry:
@@ -3708,7 +3709,7 @@ definitions:
         $ref: '#/definitions/DeletedNodeMinimal'
   DeletedNodeMinimal:
     allOf:
-      - $ref: '#/definitions/NodeMinimalEntry'
+      - $ref: '#/definitions/NodeMinimal'
       - type: object
         required:
           - archivedByUser
@@ -3726,7 +3727,7 @@ definitions:
         $ref: '#/definitions/DeletedNode'
   DeletedNode:
     allOf:
-      - $ref: '#/definitions/NodeEntry'
+      - $ref: '#/definitions/NodeFull'
       - type: object
         required:
           - archivedByUser
