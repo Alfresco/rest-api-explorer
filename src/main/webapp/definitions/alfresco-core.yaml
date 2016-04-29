@@ -200,6 +200,8 @@ paths:
           description: If the user does not have permission to add a comment           
         '404':
           description: If **nodeId** does not exist
+        '405':
+          description: If it is not possible to comment on a node of this type
         default:
           description: Error response
           schema:
