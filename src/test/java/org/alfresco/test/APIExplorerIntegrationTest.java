@@ -21,13 +21,17 @@ package org.alfresco.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
 
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Map;
 
+import io.swagger.util.Json;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -44,6 +48,9 @@ import org.junit.Test;
  */
 public class APIExplorerIntegrationTest
 {
+    static final String YAML = ".yaml";
+    static final String JSON = ".json";
+
     @Test
     public void testIndexPage() throws Exception
     {
@@ -64,10 +71,10 @@ public class APIExplorerIntegrationTest
     @Test
     public void testCoreAPIDefinition() throws Exception
     {
-        String coreDefinitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-core.yaml";
+        String coreDefinitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-core";
         
         // get core definition content
-        String coreDefinitionContent = this.retrievePageContent(coreDefinitionUrl, 200);
+        String coreDefinitionContent = this.retrievePageContent(coreDefinitionUrl+YAML, 200);
         
         // make sure the content is correct
         int swaggerIndex = coreDefinitionContent.indexOf("swagger:");
@@ -77,22 +84,27 @@ public class APIExplorerIntegrationTest
         assertTrue("Expected to find '/nodes/{nodeId}/comments':", commentsEndpointIndex != -1);
         
         // ensure the core API definition can be read and parsed
+        validateCoreDefn(coreDefinitionUrl+YAML);
+        validateCoreDefn(coreDefinitionUrl+JSON);
+    }
+
+    private void validateCoreDefn(String coreDefinitionUrl) {
         Swagger swagger = new SwaggerParser().read(coreDefinitionUrl);
-        assertNotNull("Expected the core API definition to parse successfully", swagger);
+        assertNotNull("Expected the core API definition to parse successfully: "+coreDefinitionUrl, swagger);
         assertEquals("Incorrect title", "Alfresco Core REST API", swagger.getInfo().getTitle());
         assertEquals("Incorrect version", "1", swagger.getInfo().getVersion());
         Map<String, Path> paths = swagger.getPaths();
         assertNotNull("Expected to retrieve a map of paths", paths);
         assertTrue("Expected to find /nodes/{nodeId}/comments path", paths.containsKey("/nodes/{nodeId}/comments"));     
     }
-    
+
     @Test
     public void testWorkflowAPIDefinition() throws Exception
     {
-        String workflowDefinitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-workflow.yaml";
+        String workflowDefinitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-workflow";
         
         // get workflow definition content
-        String workflowDefinitionContent = this.retrievePageContent(workflowDefinitionUrl, 200);
+        String workflowDefinitionContent = this.retrievePageContent(workflowDefinitionUrl+YAML, 200);
         
         // make sure the content is correct
         int swaggerIndex = workflowDefinitionContent.indexOf("swagger:");
@@ -102,15 +114,29 @@ public class APIExplorerIntegrationTest
         assertTrue("Expected to find ''/deployments/{deploymentId}':", deploymentEndpointIndex != -1);
         
         // ensure the workflow API definition can be read and parsed
+        validateWorkflow(workflowDefinitionUrl+YAML);
+        validateWorkflow(workflowDefinitionUrl+JSON);
+    }
+
+    private void validateWorkflow(String workflowDefinitionUrl) {
         Swagger swagger = new SwaggerParser().read(workflowDefinitionUrl);
-        assertNotNull("Expected the workflow API definition to parse successfully", swagger);
+        assertNotNull("Expected the workflow API definition to parse successfully: "+workflowDefinitionUrl, swagger);
         assertEquals("Incorrect title", "Alfresco Workflow REST API", swagger.getInfo().getTitle());
         assertEquals("Incorrect version", "1", swagger.getInfo().getVersion());
         Map<String, Path> paths = swagger.getPaths();
         assertNotNull("Expected to retrieve a map of paths", paths);
         assertTrue("Expected to find /deployments/{deploymentId} path", paths.containsKey("/deployments/{deploymentId}"));
     }
-    
+
+    @Test
+    public void testAllDefinitions() throws Exception
+    {
+        String defs = this.retrievePageContent("http://localhost:8085/api-explorer/definitions/index.jsp", 200);
+        List<String> definitions = Json.mapper().readValue(defs, new TypeReference<List<String>>(){});
+        assertNotNull(definitions);
+        assertEquals("2 definitions in 2 formats should be 4.", 4, definitions.size());
+    }
+
     public String retrievePageContent(String url, int expectedStatus) throws Exception
     {
         String pageContent = null;

@@ -7,7 +7,7 @@ String requestPath = request.getRequestURL().substring(0,request.getRequestURL()
 File[] list = dir.listFiles(new FilenameFilter() {
     @Override
     public boolean accept(File dir, String name) {
-        return name.endsWith(".yaml");
+        return name.endsWith(".yaml") || name.endsWith(".json");
     }
 });
 %>[<%

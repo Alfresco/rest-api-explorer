@@ -148,6 +148,8 @@ paths:
             $ref: '#/definitions/CommentPaging'
         '400':
           description: If the **nodeId** exists, but does not identify a file or a folder
+        '403':
+          description: If the user does not have permission read comments on the node
         '404':
           description: If **nodeId** does not exist
         default:
@@ -182,6 +184,8 @@ paths:
           description: The comment text. Note that you can provide an array of comments.
           required: true
           schema:
+            required:
+              - content          
             properties:
               content:
                 type: string
@@ -190,8 +194,14 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/CommentEntry'
+        '400':
+          description: If an empty comment is provided
+        '403':
+          description: If the user does not have permission to add a comment           
         '404':
           description: If **nodeId** does not exist
+        '405':
+          description: If it is not possible to comment on a node of this type
         default:
           description: Error response
           schema:
@@ -214,6 +224,8 @@ paths:
           description: The JSON representing the comment to be updated.
           required: true
           schema:
+            required:
+              - content          
             properties:
               content:
                 type: string
@@ -222,6 +234,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/CommentEntry'
+        '400':
+          description: If an empty comment is provided
+        '403':
+          description: If the user does not have permission to update a comment
         '404':
           description: If **nodeId** or **commentId** does not exist
         default:
@@ -242,6 +258,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '403':
+          description: If the user does not have permission to delete a comment
         '404':
           description: If **nodeId** or **commentId** does not exist
         default:
@@ -298,6 +316,9 @@ paths:
               ```
           required: true
           schema:
+            required:
+              - id
+              - myRating
             properties:
               id:
                 type: string
@@ -314,8 +335,12 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/RatingEntry'
+        '400':
+          description: If an unknown rating scheme is supplied
         '404':
           description: If **nodeId** does not exist
+        '405':
+          description: If is not possible to rate a node of this type
         default:
           description: Error response
           schema:
@@ -360,6 +385,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '400':
+          description: If an unknown rating scheme is supplied          
         '404':
           description: If **nodeId** or **ratingId** does not exist
         default:
@@ -385,6 +412,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagPaging'
+        '403':
+          description: If the user does not have permission to read tags on the node            
         '404':
           description: If **nodeId** does not exist
         default:
@@ -419,6 +448,8 @@ paths:
           description: The new tag
           required: true
           schema:
+            required:
+              - tag          
             properties:
               tag:
                 type: string
@@ -427,8 +458,14 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagEntry'
+        '400':
+          description: If an empty tag is provided
+        '403':
+          description: If the user does not have permission to add tags on the node                      
         '404':
-          description: If **nodeId** does not exist
+          description: If **nodeId** does not exist       
+        '405':
+          description: If not possible to tag a node of this type 
         default:
           description: Error response
           schema:
@@ -448,6 +485,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '403':
+          description: If the user does not have permission to delete the tag
         '404':
           description: If **nodeId** or **tagId** does not exist
         default:
@@ -536,7 +575,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/FavoriteSitePaging'
+            $ref: '#/definitions/SitePaging'
         '404':
           description: If **personId** does not exist
         default:
@@ -567,10 +606,20 @@ paths:
               id:
                 type: string
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/FavoriteSite'
+            type: object
+            required:
+              - entry
+            properties:
+              entry:
+                type: object
+                required:
+                - id
+                properties:
+                  id:
+                    type: string
         '404':
           description: If **personId** does not exist
         default:
@@ -599,7 +648,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/FavoriteSite'
+            $ref: '#/definitions/SiteEntry'
         '404':
           description: If **personId** or **siteId** does not exist
         default:
@@ -623,7 +672,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
       responses:
-        '200':
+        '204':
           description: Successful response
         '404':
           description: If **personId** or **siteId** does not exist
@@ -719,6 +768,8 @@ paths:
             ```
           required: true
           schema:
+            required:
+              - target
             properties:
                target:
                   type: object
@@ -735,6 +786,8 @@ paths:
             or a favorite already exists with the specified id, or an 
             entity does exist with the id of the posted object, 
             but is not of the same type of the posted object
+        '409':
+          description: The target **guid** has already been favorited            
         default:
           description: Error response
           schema:
@@ -1429,6 +1482,8 @@ paths:
           description: The updated tag
           required: true
           schema:
+            required:
+              - tag          
             properties:
               tag:
                 type: string
@@ -1437,6 +1492,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagEntry'
+        '400':
+          description: If an empty tag is provided            
         '404':
           description: If **tagId** does not exist
         default:
@@ -2050,12 +2107,12 @@ definitions:
         type: string
         description: The id of the person who performed the activity
       id:
-        type: string
+        type: long
         description: The unique id of the activity
       siteId:
         type: string
         description: The unique id of the site on which the activity was performed
-      ratedAt:
+      postedAt:
         type: string
         format: date-time
         description: The date time at which the activity was performed
@@ -2067,6 +2124,8 @@ definitions:
         description: An object summarizing the activity
         properties:
           firstName:
+            type: string
+          lastName:
             type: string
           parentObjectId:
             type: string
@@ -2141,51 +2200,6 @@ definitions:
       value:
         type: string        
         description: The value of the preference. Note that this can be of any JSON type.
-  FavoriteSitePaging:
-    type: object
-    required:
-      - list
-    properties:
-      list:
-        type: object
-        required:
-          - pagination
-          - entries
-        properties:
-          pagination:
-            $ref: '#/definitions/Pagination'
-          entries:
-            type: array
-            items:
-              type: object
-              $ref: '#/definitions/FavoriteSiteEntry'
-  FavoriteSiteEntry:
-    type: object
-    required:
-      - entry
-    properties:
-      entry:
-        type: object
-        $ref: '#/definitions/FavoriteSite'
-  FavoriteSite:
-    type: object
-    required:
-      - id
-      - title
-      - visibility
-    properties:
-      id:
-        type: string
-      title:
-        type: string
-      description:
-        type: string
-      visibility:
-        type: string
-        enum:
-          - PRIVATE
-          - MODERATED
-          - PUBLIC
   SiteMembershipRequestPaging:
     type: object
     required:
