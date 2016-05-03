@@ -2588,7 +2588,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeSharedLinkEntry'
+            $ref: '#/definitions/NodeSharedLinkPaging'
         '501':
           description: If shared links are disabled for the system
         default:
@@ -3602,8 +3602,8 @@ definitions:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/MinimalNode'
-  MinimalNode:
+        $ref: '#/definitions/NodeMinimal'
+  NodeMinimal:
     type: object
     properties:
       id:
@@ -3631,6 +3631,13 @@ definitions:
       content:
         $ref: '#/definitions/ContentInfo'
   NodeEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeFull'
+  NodeFull:
     type: object
     properties:
       id:
@@ -3669,7 +3676,31 @@ definitions:
         type: array
         items:
           type: string
+  NodeSharedLinkPaging:
+    type: object
+    required:
+      - list
+    properties:
+      list:
+        type: object
+        required:
+          - pagination
+          - entries
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/NodeSharedLinkEntry'
   NodeSharedLinkEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeSharedLink'
+  NodeSharedLink:
     type: object
     properties:
       id:
@@ -3692,6 +3723,13 @@ definitions:
         items:
           type: string
   RenditionEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Rendition'
+  Rendition:
     type: object
     properties:
       id:
@@ -3721,6 +3759,7 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
+            type: array
             items:
               $ref: '#/definitions/DeletedNodeMinimalEntry'
   DeletedNodeMinimalEntry:
@@ -3730,7 +3769,7 @@ definitions:
         $ref: '#/definitions/DeletedNodeMinimal'
   DeletedNodeMinimal:
     allOf:
-      - $ref: '#/definitions/NodeMinimalEntry'
+      - $ref: '#/definitions/NodeMinimal'
       - type: object
         required:
           - archivedByUser
@@ -3748,7 +3787,7 @@ definitions:
         $ref: '#/definitions/DeletedNode'
   DeletedNode:
     allOf:
-      - $ref: '#/definitions/NodeEntry'
+      - $ref: '#/definitions/NodeFull'
       - type: object
         required:
           - archivedByUser
