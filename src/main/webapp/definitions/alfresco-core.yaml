@@ -34,19 +34,25 @@ tags:
   - name: search
     description: Search for items in the repository
   - name: comments
-    description: Retrieve and manage node comments
-  - name: ratings
-    description: Retrieve and manage node ratings
-  - name: tags
-    description: Retrieve and manage node tags
+    description: Retrieve and manage Comments
+    externalDocs:
+      description: Find more information on comments here
+      url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-nodes-comments.html
   - name: favorites
-    description: Retrieve and manage personal favorites
+    description: Retrieve and manage Favorites
+    externalDocs:
+      description: Find more information on favorites here
+      url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-favorites.html
   - name: networks
-    description: Retrieve and manage networks
+    description: Retrieve and manage Networks
   - name: people
-    description: Retrieve and manage people
+    description: Retrieve and manage People
+  - name: ratings
+    description: Retrieve and manage Ratings
   - name: sites
-    description: Retrieve and manage sites
+    description: Retrieve and manage Sites
+  - name: tags
+    description: Retrieve and manage Tags
 parameters:
   nodeIdParam:
     name: nodeId
@@ -270,9 +276,9 @@ paths:
         - comments
       summary: Add a comment
       description: |
-        Creates one or more comments on node **nodeId**. You can create more than one comment by
-        specifying a list of comments in the JSON body like this:
-
+        Creates one or more comments on node **nodeId**. You can create more than one comment by 
+        specifying a list of comments in the JSON body like this:      
+        
         ```JSON
         [
           {
@@ -293,6 +299,8 @@ paths:
           description: The comment text. Note that you can provide an array of comments.
           required: true
           schema:
+            required:
+              - content          
             properties:
               content:
                 type: string
@@ -301,8 +309,14 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/CommentEntry'
+        '400':
+          description: If an empty comment is provided
+        '403':
+          description: If the user does not have permission to add a comment           
         '404':
           description: If **nodeId** does not exist
+        '405':
+          description: If it is not possible to comment on a node of this type
         default:
           description: Error response
           schema:
@@ -325,6 +339,8 @@ paths:
           description: The JSON representing the comment to be updated.
           required: true
           schema:
+            required:
+              - content          
             properties:
               content:
                 type: string
@@ -333,6 +349,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/CommentEntry'
+        '400':
+          description: If an empty comment is provided
+        '403':
+          description: If the user does not have permission to update a comment
         '404':
           description: If **nodeId** or **commentId** does not exist
         default:
@@ -353,6 +373,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '403':
+          description: If the user does not have permission to delete a comment
         '404':
           description: If **nodeId** or **commentId** does not exist
         default:
@@ -409,6 +431,9 @@ paths:
               ```
           required: true
           schema:
+            required:
+              - id
+              - myRating
             properties:
               id:
                 type: string
@@ -425,8 +450,12 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/RatingEntry'
+        '400':
+          description: If an unknown rating scheme is supplied
         '404':
           description: If **nodeId** does not exist
+        '405':
+          description: If is not possible to rate a node of this type
         default:
           description: Error response
           schema:
@@ -471,6 +500,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '400':
+          description: If an unknown rating scheme is supplied          
         '404':
           description: If **nodeId** or **ratingId** does not exist
         default:
@@ -496,6 +527,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagPaging'
+        '403':
+          description: If the user does not have permission to read tags on the node            
         '404':
           description: If **nodeId** does not exist
         default:
@@ -530,6 +563,8 @@ paths:
           description: The new tag
           required: true
           schema:
+            required:
+              - tag          
             properties:
               tag:
                 type: string
@@ -538,8 +573,14 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagEntry'
+        '400':
+          description: If an empty tag is provided
+        '403':
+          description: If the user does not have permission to add tags on the node                      
         '404':
-          description: If **nodeId** does not exist
+          description: If **nodeId** does not exist       
+        '405':
+          description: If not possible to tag a node of this type 
         default:
           description: Error response
           schema:
@@ -559,6 +600,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '403':
+          description: If the user does not have permission to delete the tag
         '404':
           description: If **nodeId** or **tagId** does not exist
         default:
@@ -1381,6 +1424,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
         - name: who
           in: query
           description: |
@@ -1392,7 +1436,6 @@ paths:
           description: Include only activity feed entries relating to this site.
           required: false
           type: string
-        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -1427,7 +1470,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/FavoriteSitePaging'
+            $ref: '#/definitions/SitePaging'
         '404':
           description: If **personId** does not exist
         default:
@@ -1458,10 +1501,20 @@ paths:
               id:
                 type: string
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/FavoriteSite'
+            type: object
+            required:
+              - entry
+            properties:
+              entry:
+                type: object
+                required:
+                - id
+                properties:
+                  id:
+                    type: string
         '404':
           description: If **personId** does not exist
         default:
@@ -1490,7 +1543,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/FavoriteSite'
+            $ref: '#/definitions/SiteEntry'
         '404':
           description: If **personId** or **siteId** does not exist
         default:
@@ -1514,7 +1567,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
       responses:
-        '200':
+        '204':
           description: Successful response
         '404':
           description: If **personId** or **siteId** does not exist
@@ -1610,6 +1663,8 @@ paths:
             ```
           required: true
           schema:
+            required:
+              - target
             properties:
                target:
                   type: object
@@ -1626,6 +1681,8 @@ paths:
             or a favorite already exists with the specified id, or an
             entity does exist with the id of the posted object,
             but is not of the same type of the posted object
+        '409':
+          description: The target **guid** has already been favorited            
         default:
           description: Error response
           schema:
@@ -1682,6 +1739,7 @@ paths:
     get:
       tags:
         - people
+        - networks
       summary: Get network membership for a person
       description: Gets a list of network memberships for person **personId**.
       operationId: getPersonNetworks
@@ -1707,6 +1765,7 @@ paths:
     get:
       tags:
         - people
+        - networks
       summary: Get network information
       description: Returns network information on a single network specified by **networkId** for **personId**.
       operationId: getPersonNetwork
@@ -1788,6 +1847,7 @@ paths:
     get:
       tags:
         - people
+        - sites
       summary: Get site membership requests
       description: Returns the current site membership requests for person **personId**.
       operationId: getSiteMembershipRequests
@@ -1812,6 +1872,7 @@ paths:
     post:
       tags:
         - people
+        - sites
       summary: Create a site membership request
       description: Create a site membership request for **personId** and **siteId**. The **personId** will be invited to the site as a SiteConsumer.
       operationId: addSiteMembershipRequest
@@ -1846,6 +1907,7 @@ paths:
     get:
       tags:
         - people
+        - sites      
       summary: Get a site membership request
       description: Returns the site membership request for site **siteId** for person **personId**, if one exists.
       operationId: getSiteMembershipRequest
@@ -1869,6 +1931,7 @@ paths:
     put:
       tags:
         - people
+        - sites
       summary: Update a site membership request
       description: Updates the message for the site membership request to site **siteId** for person **personId**.
       operationId: updateSiteMembershipRequest
@@ -1897,6 +1960,7 @@ paths:
     delete:
       tags:
         - people
+        - sites
       summary: Cancel a site membership
       description: Cancels the site membership request to site **siteId** for person **personId**.
       operationId: removeSiteMembershipRequest
@@ -1918,6 +1982,7 @@ paths:
     get:
       tags:
         - people
+        - sites
       summary: Get site membership information
       description: |
         Returns a list of site membership information for person **personId**.
@@ -2264,6 +2329,7 @@ paths:
     get:
       tags:
         - sites
+        - people
       summary: Get a site member
       description: Returns site membership information for person **personId** on site **siteId**.
       operationId: getSiteMember
@@ -2413,6 +2479,8 @@ paths:
           description: The updated tag
           required: true
           schema:
+            required:
+              - tag          
             properties:
               tag:
                 type: string
@@ -2421,6 +2489,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagEntry'
+        '400':
+          description: If an empty tag is provided            
         '404':
           description: If **tagId** does not exist
         default:
@@ -2856,7 +2926,9 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
+            type: array
             items:
+              type: object
               $ref: '#/definitions/SiteEntry'
   SiteEntry:
     type: object
@@ -2864,6 +2936,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/Site'
   Site:
     type: object
@@ -2903,7 +2976,9 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
+            type: array
             items:
+              type: object
               $ref: '#/definitions/SiteContainerEntry'
   SiteContainerEntry:
     type: object
@@ -2911,6 +2986,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/SiteContainer'
   SiteContainer:
     type: object
@@ -2936,7 +3012,9 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
+            type: array
             items:
+              type: object
               $ref: '#/definitions/SiteMemberEntry'
   SiteMemberEntry:
     type: object
@@ -2944,6 +3022,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/SiteMember'
   SiteMember:
     type: object
@@ -2955,6 +3034,7 @@ definitions:
       id:
         type: string
       person:
+        type: object
         $ref: '#/definitions/Person'
       role:
         type: string
@@ -2969,6 +3049,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/Person'
   Person:
     type: object
@@ -3002,6 +3083,7 @@ definitions:
       location:
         type: string
       company:
+        type: object
         $ref: '#/definitions/Company'
       mobile:
         type: string
@@ -3052,6 +3134,7 @@ definitions:
           entries:
             type: array
             items:
+              type: object
               $ref: '#/definitions/CommentEntry'
   CommentEntry:
     type: object
@@ -3059,6 +3142,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/Comment'
   Comment:
     type: object
@@ -3078,6 +3162,7 @@ definitions:
       content:
         type: string
       createdBy:
+        type: object
         $ref: '#/definitions/Person'
       createdAt:
         type: string
@@ -3085,6 +3170,7 @@ definitions:
       edited:
         type: boolean
       modifiedBy:
+        type: object
         $ref: '#/definitions/Person'
       modifiedAt:
         type: string
@@ -3109,6 +3195,7 @@ definitions:
           entries:
             type: array
             items:
+              type: object
               $ref: '#/definitions/TagEntry'
   TagEntry:
     type: object
@@ -3116,6 +3203,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/Tag'
   Tag:
     type: object
@@ -3143,6 +3231,7 @@ definitions:
           entries:
             type: array
             items:
+              type: object
               $ref: '#/definitions/PersonNetworkEntry'
   PersonNetworkEntry:
     type: object
@@ -3150,6 +3239,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/PersonNetwork'
   PersonNetwork:
     type: object
@@ -3183,6 +3273,7 @@ definitions:
       quotas:
         type: array
         items:
+          type: object
           $ref: '#/definitions/NetworkQuota'
   NetworkQuota:
     type: object
@@ -3219,6 +3310,7 @@ definitions:
           entries:
             type: array
             items:
+              type: object
               $ref: '#/definitions/RatingEntry'
   RatingEntry:
     type: object
@@ -3226,6 +3318,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/Rating'
   Rating:
     type: object
@@ -3270,6 +3363,7 @@ definitions:
           entries:
             type: array
             items:
+              type: object
               $ref: '#/definitions/FavoriteEntry'
   FavoriteEntry:
     type: object
@@ -3277,6 +3371,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/Favorite'
   Favorite:
     type: object
@@ -3312,6 +3407,7 @@ definitions:
           entries:
             type: array
             items:
+              type: object
               $ref: '#/definitions/ActivityEntry'
   ActivityEntry:
     type: object
@@ -3319,6 +3415,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/Activity'
   Activity:
     type: object
@@ -3336,12 +3433,12 @@ definitions:
         type: string
         description: The id of the person who performed the activity
       id:
-        type: string
+        type: long
         description: The unique id of the activity
       siteId:
         type: string
         description: The unique id of the site on which the activity was performed
-      ratedAt:
+      postedAt:
         type: string
         format: date-time
         description: The date time at which the activity was performed
@@ -3353,6 +3450,8 @@ definitions:
         description: An object summarizing the activity
         properties:
           firstName:
+            type: string
+          lastName:
             type: string
           parentObjectId:
             type: string
@@ -3403,6 +3502,7 @@ definitions:
           entries:
             type: array
             items:
+              type: object
               $ref: '#/definitions/PreferenceEntry'
   PreferenceEntry:
     type: object
@@ -3410,6 +3510,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/Preference'
   Preference:
     type: object
@@ -3423,51 +3524,8 @@ definitions:
         type: string
         description: The unique id of the preference
       value:
-        type: string
-        description: The value of the preference. The value can be of any JSON type.
-  FavoriteSitePaging:
-    type: object
-    required:
-      - list
-    properties:
-      list:
-        type: object
-        required:
-          - pagination
-          - entries
-        properties:
-          pagination:
-            $ref: '#/definitions/Pagination'
-          entries:
-            type: array
-            items:
-              $ref: '#/definitions/FavoriteSiteEntry'
-  FavoriteSiteEntry:
-    type: object
-    required:
-      - entry
-    properties:
-      entry:
-        $ref: '#/definitions/FavoriteSite'
-  FavoriteSite:
-    type: object
-    required:
-      - id
-      - title
-      - visibility
-    properties:
-      id:
-        type: string
-      title:
-        type: string
-      description:
-        type: string
-      visibility:
-        type: string
-        enum:
-          - PRIVATE
-          - MODERATED
-          - PUBLIC
+        type: string        
+        description: The value of the preference. Note that this can be of any JSON type.
   SiteMembershipRequestPaging:
     type: object
     required:
@@ -3484,6 +3542,7 @@ definitions:
           entries:
             type: array
             items:
+              type: object
               $ref: '#/definitions/SiteMembershipRequestEntry'
   SiteMembershipRequestEntry:
     type: object
@@ -3491,6 +3550,7 @@ definitions:
       - entry
     properties:
       entry:
+        type: object
         $ref: '#/definitions/SiteMembershipRequest'
   SiteMembershipRequest:
     type: object
