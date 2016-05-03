@@ -2107,7 +2107,8 @@ definitions:
         type: string
         description: The id of the person who performed the activity
       id:
-        type: long
+        type: integer
+        format: int64
         description: The unique id of the activity
       siteId:
         type: string
