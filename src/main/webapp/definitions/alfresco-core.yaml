@@ -2739,8 +2739,6 @@ paths:
           description: The shared link email to send.
           required: true
           schema:
-            required:
-              - tag          
             properties:
               client:
                 type: string
@@ -2757,8 +2755,7 @@ paths:
       responses:
         '202':
           description: Successful response
-          schema:
-            $ref: '#/definitions/TagEntry'        '400':
+        '400':
           description: If the **sharedId** is not a valid format
         '404':
           description: If **sharedId** does not exist
