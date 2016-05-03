@@ -72,6 +72,13 @@
     <build>
         <finalName>api-explorer</finalName>
         <plugins>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                </configuration>
+            </plugin>
             <!-- skip unit tests as the project only contains integration tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
