@@ -29,6 +29,8 @@ tags:
     description: Retrieve and manage nodes - files & folders
   - name: renditions
     description: Retrieve and manage file renditions
+  - name: associations
+    description: Retrieve and manage node associations
   - name: shared-links
     description: Retrieve and manage public shared links
   - name: search
@@ -1267,6 +1269,168 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{sourceId}/targets/':
+    post:
+      tags:
+        - associations
+        - 5.2 changes
+      summary: Add node association
+      description: |
+        Add association between source and target node for given association type.
+      operationId: addAssoc
+      produces:
+        - application/json
+      parameters:
+        - name: sourceId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - in: body
+          name: assocTargetBody
+          description: The target node id and assoc type.
+          required: true
+          schema:
+            properties:
+              targetId:
+                type: string
+              assocType:
+                type: string
+      responses:
+        '201':
+          description: Successful response
+        '400':
+          description: Invalid parameter, eg. unknown assocType
+        '404':
+          description: If **sourceId** or **targetId** does not exist
+        '409':
+          description: Association already exists
+        '422':
+          description: Model integrity exception
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{sourceId}/targets/{targetId}':
+    delete:
+      tags:
+        - associations
+        - 5.2 changes
+      summary: Remove node association(s)
+      description: |
+        Remove association(s) between source and target node for given association type. If association type is not specified then all associations between source and target are removed.
+      operationId: removeAssoc
+      produces:
+        - application/json
+      parameters:
+        - name: sourceId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - name: targetId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - name: assocType
+          in: query
+          description: Restrict the delete to only those of the given association type
+          type: string
+          required: false 
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: Invalid parameter, eg. unknown assocType
+        '404':
+          description: If **sourceId** or **targetId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'            
+  '/nodes/{sourceId}/targets':
+    get:
+      tags:
+        - associations
+        - 5.2 changes
+      summary: List node associations
+      description: |
+        Returns a list of target nodes that are pointed to (ie. are associated with) the current source node.
+      operationId: listTargetAssociations
+      produces:
+        - application/json
+      parameters:
+        - name: sourceId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - name: assocType
+          in: query
+          description: Restrict the returned results to only those of the given association type
+          type: string
+          required: false 
+        - name: include
+          in: query
+          description: Return additional info, eg. aspect, properties, path, isLink
+          type: string
+          required: false
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeAssocPaging'
+        '400':
+          description: Invalid parameter, eg. unknown assocType
+        '404':
+          description: If **sourceId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{targetId}/sources':
+    get:
+      tags:
+        - associations
+        - 5.2 changes
+      summary: List node associations
+      description: |
+        Returns a list of source nodes that point to (ie. are associated with) the current target node.
+      operationId: listSourceNodeAssociations
+      produces:
+        - application/json
+      parameters:
+        - name: targetId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - name: assocType
+          in: query
+          description: Restrict the returned results to only those of the given association type
+          type: string
+          required: false 
+        - name: include
+          in: query
+          description: Return additional info, eg. aspect, properties, path, isLink
+          type: string
+          required: false
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeAssocPaging'
+        '400':
+          description: Invalid parameter, eg. unknown assocType
+        '404':
+          description: If **targetId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'            
   '/deleted-nodes':
     get:
       tags:
@@ -3543,6 +3707,11 @@ definitions:
         type: integer
       encoding:
         type: string
+  AssocInfo:
+    type: object
+    properties:
+      assocType:
+        type: string
   NodePaging:
     type: object
     properties:
@@ -3555,6 +3724,18 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/NodeMinimalEntry'
+  NodeAssocPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/NodeAssocMinimalEntry'              
   NodeMinimalEntry:
     type: object
     required:
@@ -3589,6 +3770,42 @@ definitions:
         $ref: '#/definitions/UserInfo'
       content:
         $ref: '#/definitions/ContentInfo'
+  NodeAssocMinimalEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeAssocMinimal'        
+  NodeAssocMinimal:
+    type: object
+    properties:
+      id:
+        type: string
+      parentId:
+        type: string
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser:
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+        format: date-time
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
+      association:
+        $ref: '#/definitions/AssocInfo'       
   NodeEntry:
     type: object
     required:
