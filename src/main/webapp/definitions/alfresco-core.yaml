@@ -1203,6 +1203,10 @@ paths:
         - 5.2 changes
       summary: List information for renditions
       description: Returns the rendition information for the file node with identifier **nodeId**.
+      
+        This will return rendition information, including the rendition id, for each rendition.
+        The rendition status is CREATED (ie. available to view/download) or NOT_CREATED (ie. rendition can be requested).
+        
       operationId: getRenditions
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -2836,6 +2840,37 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
+  '/shared-links/{sharedId}/renditions':
+    get:
+      tags:
+        - renditions
+        - 5.2 changes
+      summary: List information for created renditions
+      description: |
+        Returns the rendition information for the file with shared link identifier **sharedId**.
+        
+        This will only return rendition information, including the rendition id, for each rendition
+        where the rendition status is CREATED (ie. available to view/download).
+        
+        **Note:** No authentication is required to call this endpoint.      
+      operationId: getSharedLinkRenditions
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RenditionPaging'
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system          
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'        
   '/shared-links/{sharedId}/renditions/{renditionId}/content':
     get:
       tags:
