@@ -161,8 +161,16 @@ paths:
         - comments
       summary: Add a comment
       description: |
-        Creates one or more comments on node **nodeId**. You can create more than one comment by 
-        specifying a list of comments in the JSON body like this:      
+        Creates a comment on node **nodeId**. You specify the comment in a JSON body like this:
+        
+        ```JSON
+        {
+          "content": "This is a comment"
+        }
+        ```
+        
+        **Note:** You can create more than one comment by 
+        specifying a list of comments in the JSON body like this:
         
         ```JSON
         [
@@ -174,6 +182,33 @@ paths:
           }
         ]
         ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                 ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addComment
       produces:
         - application/json
@@ -181,7 +216,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
           name: commentBody
-          description: The comment text. Note that you can provide an array of comments.
+          description: The comment text. Note that you can also provide a list of comments.
           required: true
           schema:
             required:
@@ -425,8 +460,16 @@ paths:
         - tags
       summary: Add a tag
       description: |
-        Adds one or more tags to the node **nodeId**. You can create more than one tag by 
-        specifying a list of tags in the JSON body like this:      
+        Adds a tag to the node **nodeId**. You specify the tag in a JSON body like this:
+        
+        ```JSON
+        {
+          "tag":"test-tag-1"
+        }
+        ```
+        
+        **Note:** You can create more than one tag by 
+        specifying a list of tags in the JSON body like this:
         
         ```JSON
         [
@@ -437,6 +480,33 @@ paths:
             "tag":"test-tag-2"
           }
         ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                 ...
+                }
+              }
+            ]
+          }
+        }
         ```
       operationId: addTag
       produces:
