@@ -805,6 +805,8 @@ paths:
             *   where=(nodeType='my:specialtype')
 
             *   where=(nodeType='my:specialtype' INCLUDESUBTYPES)
+            
+            *   where=(isPrimary=true)
 
           required: false
           type: string
@@ -1438,9 +1440,13 @@ paths:
         - name: where
           in: query
           description: |
-            Optionally filter the list by assocType. Here's an example:
+            Optionally filter the list by assocType and/or isPrimary. Here are some examples:
 
             *   where=(assocType='my:assoctype')
+            
+            *   where=(isPrimary=true)
+            
+            *   where=(isPrimary=false and assocType='my:assoctype')
           required: false
           type: string 
         - name: include
