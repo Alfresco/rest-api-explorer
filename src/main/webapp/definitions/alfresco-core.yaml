@@ -2301,13 +2301,15 @@ definitions:
     required:
       - id
       - createdAt
-      - entry
+      - site
     properties:
       id:
         type: string
       createdAt:
         type: string
         format: date-time
-      entry:
+      site:
         type: object
         $ref: '#/definitions/Site'
+      message:
+        type: string
