@@ -2263,7 +2263,6 @@ definitions:
       A specific preference.
     required:
       - id
-      - value
     properties:
       id:
         type: string
