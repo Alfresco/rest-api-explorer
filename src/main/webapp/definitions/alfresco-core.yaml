@@ -603,7 +603,7 @@ paths:
         - name: who
           in: query
           description: |
-            A filter to include the user's activities only `-me-`, other user's activities only `-others-`'
+            A filter to include the user's activities only `me`, other user's activities only `others`'
           required: false
           type: string
         - name: siteId
