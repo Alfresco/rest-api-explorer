@@ -568,7 +568,10 @@ paths:
       tags:
         - people
       summary: Get a person
-      description: Gets information for the person **personId**.
+      description: |
+        Gets information for the person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getPerson
       produces:
         - application/json
@@ -591,7 +594,10 @@ paths:
       tags:
         - people
       summary: Get activities
-      description: Returns a list of activities for person **personId**.
+      description: |
+        Returns a list of activities for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getActivities
       produces:
         - application/json
@@ -603,7 +609,7 @@ paths:
         - name: who
           in: query
           description: |
-            A filter to include the user's activities only `me`, other user's activities only `others`'
+            A filter to include the user's activities only `me`, other users' activities only `others`'
           required: false
           type: string
         - name: siteId
@@ -633,6 +639,8 @@ paths:
 
         **Please note that this method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getFavoriteSites
       produces:
         - application/json
@@ -662,6 +670,8 @@ paths:
           
         **Please note that this method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: favoriteSite
       produces:
         - application/json
@@ -709,6 +719,8 @@ paths:
         
         **Please note that this method is deprecated and will be removed in the future.**
         Use `/people/{personId}/favorites/{favoriteId}` instead.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getFavoriteSite
       produces:
         - application/json
@@ -733,10 +745,12 @@ paths:
         - people
       summary: Delete favorite site
       description: |
-        Removes site **siteId** from the favorite site list of person **personId**. 
+        Removes site **siteId** from the favorite site list of person **personId**.
         
         **Please note that this method is deprecated and will be removed in the future.**
         Use `/people/{personId}/favorites/{favoriteId}` instead.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: deleteFavoriteSite
       produces:
         - application/json
@@ -761,7 +775,7 @@ paths:
       description: |
         Returns a list of favorites for person **personId**.
         
-        You can us the `-me-` string in place of `<personId>` to get the favorites of the currently authenticated user.        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
         You can use the **where** parameter to restrict the list in the response
         to entries of a specific kind. The **where** parameter takes a value.
@@ -813,7 +827,10 @@ paths:
         - favorites
         - people
       summary: Add a favorite
-      description: Favorite a **site**, **file**, or **folder** in the repository.
+      description: |
+        Favorite a **site**, **file**, or **folder** in the repository.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: addFavorite
       produces:
         - application/json
@@ -870,7 +887,10 @@ paths:
         - favorites
         - people
       summary: Get a favorite
-      description: Returns favorite **favoriteId** for person **personId**.
+      description: |
+        Returns favorite **favoriteId** for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getFavorite
       produces:
         - application/json
@@ -895,7 +915,10 @@ paths:
         - favorites
         - people
       summary: Delete a favorite
-      description: Removes **favoriteId** as a favorite of person **personId**.
+      description: |
+        Removes **favoriteId** as a favorite of person **personId**.
+
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: removeFavoriteSite
       produces:
         - application/json
@@ -918,7 +941,10 @@ paths:
         - people
         - networks
       summary: Get network membership for a person
-      description: Gets a list of network memberships for person **personId**.
+      description: |
+        Gets a list of network memberships for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getPersonNetworks
       produces:
         - application/json
@@ -944,7 +970,10 @@ paths:
         - people
         - networks
       summary: Get network information
-      description: Returns network information on a single network specified by **networkId** for **personId**.
+      description: |
+        Returns network information on a single network specified by **networkId** for **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getPersonNetwork
       produces:
         - application/json
@@ -970,6 +999,8 @@ paths:
       summary: Get preferences
       description: |
         Returns a list of preferences for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
         Note that each preference consists of an **id** and a **value**. 
         The **value** can be of any JSON type.
@@ -997,7 +1028,10 @@ paths:
       tags:
         - people
       summary: Get a preference
-      description: Returns a specific preference for person **personId**.
+      description: |
+        Returns a specific preference for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getPreference
       produces:
         - application/json
@@ -1026,7 +1060,10 @@ paths:
         - people
         - sites
       summary: Get site membership requests
-      description: Returns the current site membership requests for person **personId**.
+      description: |
+        Returns the current site membership requests for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getSiteMembershipRequests
       produces:
         - application/json
@@ -1051,7 +1088,10 @@ paths:
         - people
         - sites
       summary: Create a site membership request
-      description: Create a site membership request for **personId** and **siteId**. The **personId** will be invited to the site as a SiteConsumer.
+      description: |
+        Create a site membership request for **personId** and **siteId**. The **personId** will be invited to the site as a SiteConsumer.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: addSiteMembershipRequest
       produces:
         - application/json
@@ -1088,7 +1128,10 @@ paths:
         - people
         - sites      
       summary: Get a site membership request
-      description: Returns the site membership request for site **siteId** for person **personId**, if one exists.
+      description: |
+        Returns the site membership request for site **siteId** for person **personId**, if one exists.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getSiteMembershipRequest
       produces:
         - application/json
@@ -1112,7 +1155,10 @@ paths:
         - people
         - sites
       summary: Update a site membership request
-      description: Updates the message for the site membership request to site **siteId** for person **personId**.
+      description: |
+        Updates the message for the site membership request to site **siteId** for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: updateSiteMembershipRequest
       consumes:
         - application/json
@@ -1141,7 +1187,10 @@ paths:
         - people
         - sites
       summary: Cancel a site membership
-      description: Cancels the site membership request to site **siteId** for person **personId**.
+      description: |
+        Cancels the site membership request to site **siteId** for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: removeSiteMembershipRequest
       produces:
         - application/json
@@ -1165,6 +1214,9 @@ paths:
       summary: Get site membership information
       description: |
         Returns a list of site membership information for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+        
         You can sort the list of sites using the **orderBy** parameter.
         
         **orderBy** specifies the name of one or more 
@@ -1411,7 +1463,10 @@ paths:
         - sites
         - people
       summary: Get a site member
-      description: Returns site membership information for person **personId** on site **siteId**.
+      description: |
+        Returns site membership information for person **personId** on site **siteId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getSiteMember
       produces:
         - application/json
@@ -1436,6 +1491,8 @@ paths:
       summary: Update a site member
       description: |
         Update the membership of person **personId** in site **siteId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
         You can set the **role** to one of four types:
         
@@ -1481,7 +1538,10 @@ paths:
       tags:
         - sites
       summary: Delete a site member
-      description: Removes person **personId** as a member of site **siteId**.
+      description: |
+        Removes person **personId** as a member of site **siteId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: removeSiteMember
       produces:
         - application/json
