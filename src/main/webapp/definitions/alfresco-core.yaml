@@ -3913,7 +3913,7 @@ definitions:
       content:
         $ref: '#/definitions/ContentInfo'
       status:
-        type: long
+        type: string
   RenditionPaging:
     type: object
     properties:
