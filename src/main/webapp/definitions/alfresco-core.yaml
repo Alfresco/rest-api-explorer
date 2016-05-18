@@ -2216,6 +2216,7 @@ definitions:
         description: The feed on which this activity was posted
         type: string
         enum:
+          - org.alfresco.calendar.event-created
           - org.alfresco.comments.comment-created
           - org.alfresco.comments.comment-updated
           - org.alfresco.comments.comment-deleted
@@ -2229,6 +2230,7 @@ definitions:
           - org.alfresco.documentlibrary.file-liked
           - org.alfresco.documentlibrary.file-previewed
           - org.alfresco.documentlibrary.inline-edit
+          - org.alfresco.documentlibrary.folder-added
           - org.alfresco.documentlibrary.folder-liked
           - org.alfresco.site.user-joined
           - org.alfresco.site.user-left
