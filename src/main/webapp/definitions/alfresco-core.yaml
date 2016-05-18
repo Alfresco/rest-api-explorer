@@ -1068,7 +1068,7 @@ paths:
               title:
                 type: string
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMembershipRequestEntry'
