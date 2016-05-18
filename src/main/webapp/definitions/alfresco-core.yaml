@@ -672,6 +672,8 @@ paths:
           description: The id of the site to favorite.
           required: true
           schema: 
+            required:
+            - id
             properties:
               id:
                 type: string
@@ -1060,6 +1062,8 @@ paths:
           description: Site membership request details
           required: true
           schema:
+            required:
+              - id
             properties:
               message:
                 type: string
@@ -1377,6 +1381,9 @@ paths:
           description: The person to add and their role
           required: true
           schema:
+            required:
+              - role
+              - id
             properties:
               role:
                 type: string
@@ -1447,6 +1454,8 @@ paths:
           description: The persons new role
           required: true
           schema:
+            required:
+              - role
             properties:
               role:
                 type: string
@@ -1800,7 +1809,6 @@ definitions:
     required:
       - id
       - firstName
-      - lastName
       - email
       - enabled
     properties:
