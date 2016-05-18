@@ -363,7 +363,7 @@ paths:
                   - likes
                   - fiveStar
               myRating:
-                type: string
+                type: [string, integer, number, boolean]
                 description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar
       responses:
         '201':
@@ -2092,12 +2092,12 @@ definitions:
           numberOfRatings:
             type: integer
           average:
-            type: integer
+            type: [string, integer, number, boolean]
       ratedAt:
         type: string
         format: date-time
       myRating:
-        type: string
+        type: [string, integer, number, boolean]
         description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar.
   FavoritePaging:
     type: object
