@@ -1178,6 +1178,10 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMembershipRequestEntry'
+        '404':
+          description: If **personId** or **siteId** does not exist
         default:
           description: Error response
           schema:
