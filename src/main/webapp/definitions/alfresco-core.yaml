@@ -940,7 +940,7 @@ paths:
       tags:
         - people
         - networks
-      summary: Get network membership for a person
+      summary: Get network membership
       description: |
         Gets a list of network memberships for person **personId**.
         
