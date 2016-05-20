@@ -1451,8 +1451,12 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMemberEntry'
+        '403':
+          description: If the user does not have permission to invite a person
         '404':
           description: If **siteId** or **personId** does not exist
+        '409':
+          description: If the person with this **id** is already a member
         default:
           description: Error response
           schema:
