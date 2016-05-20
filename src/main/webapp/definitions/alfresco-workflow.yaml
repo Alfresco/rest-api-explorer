@@ -1276,7 +1276,7 @@ definitions:
         type: string
       deployedAt:
         type: string
-        format: date
+        format: date-time
   ProcessDefinitionPaging:
     type: object
     properties:
@@ -1376,11 +1376,11 @@ definitions:
         description: The business key
       startedAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this process started
       endedAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this process started
       durationInMs:
         type: integer
@@ -1441,15 +1441,15 @@ definitions:
         description: The description of this task
       dueAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this task is due
       startedAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this task started
       endedAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this task started
       durationInMs:
         type: integer
@@ -1578,14 +1578,14 @@ definitions:
         $ref: '#/definitions/Person'
       createdAt:
         type: string
-        format: date
+        format: date-time
       edited:
         type: boolean
       modifiedBy:
         $ref: '#/definitions/Person'
       modifiedAt:
         type: string
-        format: date
+        format: date-time
       size:
         type: integer
   TaskFormModelPaging:
@@ -1662,7 +1662,7 @@ definitions:
         type: string
       statusUpdatedAt:
         type: string
-        format: date
+        format: date-time
       userStatus:
         type: string
       enabled:
@@ -1702,7 +1702,7 @@ definitions:
         description: The description of this task
       dueAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this task is due
       priority:
         type: integer

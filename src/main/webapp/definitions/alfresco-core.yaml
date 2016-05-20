@@ -1901,7 +1901,7 @@ definitions:
         type: string
       statusUpdatedAt:
         type: string
-        format: date
+        format: date-time
       userStatus:
         type: string
       enabled:
@@ -1973,14 +1973,14 @@ definitions:
         $ref: '#/definitions/Person'
       createdAt:
         type: string
-        format: date
+        format: date-time
       edited:
         type: boolean
       modifiedBy:
         $ref: '#/definitions/Person'
       modifiedAt:
         type: string
-        format: date
+        format: date-time
       canEdit:
         type: boolean
       canDelete:
@@ -2184,7 +2184,7 @@ definitions:
         description: The guid of the object that is a favorite.
       createdAt:
         type: string
-        format: date
+        format: date-time
         description: The time the object was made a favorite.
       target:
         type: object
