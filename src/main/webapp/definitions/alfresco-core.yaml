@@ -1704,7 +1704,7 @@ definitions:
     properties:
       count:
         type: integer
-        format: int32
+        format: int64
         description: |
           The number of objects in the entries array.
       hasMoreItems:
@@ -2112,7 +2112,7 @@ definitions:
         format: int64
       usage:
         type: integer
-        format: int6
+        format: int64
   RatingPaging:
     type: object
     required:
