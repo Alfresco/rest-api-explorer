@@ -153,7 +153,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -238,7 +238,7 @@ paths:
         '405':
           description: If it is not possible to comment on a node of this type
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/comments/{commentId}':
@@ -276,7 +276,7 @@ paths:
         '404':
           description: If **nodeId** or **commentId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -298,7 +298,7 @@ paths:
         '404':
           description: If **nodeId** or **commentId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/ratings':
@@ -323,7 +323,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -377,7 +377,7 @@ paths:
         '405':
           description: If is not possible to rate a node of this type
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/ratings/{ratingId}':
@@ -403,7 +403,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -425,7 +425,7 @@ paths:
         '404':
           description: If **nodeId** or **ratingId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/tags':
@@ -452,7 +452,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -537,7 +537,7 @@ paths:
         '405':
           description: If not possible to tag a node of this type 
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/tags/{tagId}':
@@ -560,7 +560,7 @@ paths:
         '404':
           description: If **nodeId** or **tagId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}':
@@ -586,7 +586,7 @@ paths:
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/activities':
@@ -625,7 +625,7 @@ paths:
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/favorite-sites':
@@ -657,7 +657,7 @@ paths:
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -705,7 +705,7 @@ paths:
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/favorite-sites/{siteId}':
@@ -736,7 +736,7 @@ paths:
         '404':
           description: If **personId** or **siteId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -763,7 +763,7 @@ paths:
         '404':
           description: If **personId** or **siteId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/favorites':
@@ -819,7 +819,7 @@ paths:
         '404':
           description: If **personId** does not exist, or the current user does not have permission to access the favorites of **personId**
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -878,7 +878,7 @@ paths:
         '409':
           description: The target **guid** has already been favorited            
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/favorites/{favoriteId}':
@@ -907,7 +907,7 @@ paths:
           description: |
             If **personId** does not exist, or the target entity does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -932,7 +932,7 @@ paths:
           description: |
             If **personId** does not exist, or the target entity does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/networks':
@@ -961,7 +961,7 @@ paths:
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/networks/{networkId}':
@@ -989,7 +989,7 @@ paths:
         '404':
           description: If **personId** or **networkId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/preferences':
@@ -1020,7 +1020,7 @@ paths:
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/preferences/{preferenceName}':
@@ -1051,7 +1051,7 @@ paths:
         '404':
           description: If **personId** or **preferenceName** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/site-membership-requests':
@@ -1080,7 +1080,7 @@ paths:
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -1119,7 +1119,7 @@ paths:
         '404':
           description: If **personId** or **siteId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/site-membership-requests/{siteId}':
@@ -1147,7 +1147,7 @@ paths:
         '404':
           description: If **personId** or **siteId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
@@ -1183,7 +1183,7 @@ paths:
         '404':
           description: If **personId** or **siteId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -1207,7 +1207,7 @@ paths:
         '404':
           description: If **personId** or **siteId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/sites':
@@ -1250,7 +1250,7 @@ paths:
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   /sites:
@@ -1296,7 +1296,7 @@ paths:
           schema:
             $ref: '#/definitions/SitePaging'
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/sites/{siteId}':
@@ -1333,7 +1333,7 @@ paths:
         '404':
           description: If **siteId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/sites/{siteId}/containers':
@@ -1358,7 +1358,7 @@ paths:
         '404':
           description: If **siteId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/sites/{siteId}/containers/{containerId}':
@@ -1386,7 +1386,7 @@ paths:
         '404':
           description: If **siteId** or **containerId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/sites/{siteId}/members':
@@ -1411,7 +1411,7 @@ paths:
         '404':
           description: If **siteId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -1462,7 +1462,7 @@ paths:
         '409':
           description: If the person with this **id** is already a member
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/sites/{siteId}/members/{personId}':
@@ -1489,7 +1489,7 @@ paths:
         '404':
           description: If **siteId** or **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
@@ -1538,7 +1538,7 @@ paths:
         '404':
           description: If **siteId** or **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -1561,7 +1561,7 @@ paths:
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   /tags:
@@ -1583,7 +1583,7 @@ paths:
           schema:
             $ref: '#/definitions/TagPaging'
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/tags/{tagId}':
@@ -1610,7 +1610,7 @@ paths:
         '404':
           description: Tag Not Found
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
@@ -1643,7 +1643,7 @@ paths:
         '404':
           description: If **tagId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/networks/{networkId}':
@@ -1666,7 +1666,7 @@ paths:
         '404':
           description: If **networkId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
 definitions:
