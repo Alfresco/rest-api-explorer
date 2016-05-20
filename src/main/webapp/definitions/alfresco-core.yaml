@@ -1469,7 +1469,6 @@ paths:
     get:
       tags:
         - sites
-        - people
       summary: Get a site member
       description: |
         Returns site membership information for person **personId** on site **siteId**.
