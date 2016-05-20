@@ -90,6 +90,21 @@ parameters:
     items:
       type: string
     collectionFormat: csv
+  nodeAssocMinimalEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the node. The following optional fields can be requested:
+      * properties
+      * aspectNames
+      * path
+      * isLink
+      * allowableOperations
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
   nodeEntryIncludeParam:
     name: include
     in: query
@@ -1310,6 +1325,9 @@ paths:
           description: The child node id and assoc type.
           required: true
           schema:
+            required:
+              - childId
+              - assocType
             properties:
               childId:
                 type: string
@@ -1318,6 +1336,8 @@ paths:
       responses:
         '201':
           description: Successful response
+          schema:
+            $ref: '#/definitions/NodeChildAssocEntry'
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
@@ -1359,11 +1379,7 @@ paths:
             *   where=(assocType='my:assoctype')
           required: false
           type: string          
-        - name: include
-          in: query
-          description: Return additional info, eg. aspect, properties, path, isLink
-          type: string
-          required: false
+        - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -1449,11 +1465,7 @@ paths:
             *   where=(isPrimary=false and assocType='my:assoctype')
           required: false
           type: string 
-        - name: include
-          in: query
-          description: Return additional info, eg. aspect, properties, path, isLink
-          type: string
-          required: false
+        - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -1490,6 +1502,9 @@ paths:
           description: The target node id and assoc type.
           required: true
           schema:
+            required:
+              - targetId
+              - assocType
             properties:
               targetId:
                 type: string
@@ -1498,6 +1513,8 @@ paths:
       responses:
         '201':
           description: Successful response
+          schema:
+            $ref: '#/definitions/NodeAssocEntry'
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
@@ -1534,11 +1551,7 @@ paths:
             *   where=(assocType='my:assoctype')
           required: false
           type: string 
-        - name: include
-          in: query
-          description: Return additional info, eg. aspect, properties, path, isLink
-          type: string
-          required: false
+        - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -1618,11 +1631,7 @@ paths:
             *   where=(assocType='my:assoctype')
           required: false
           type: string
-        - name: include
-          in: query
-          description: Return additional info, eg. aspect, properties, path, isLink
-          type: string
-          required: false
+        - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -3209,11 +3218,7 @@ paths:
           description: Restrict the returned results to only those of the given node type and it's sub-types
           type: string
           required: false
-        - name: include
-          in: query
-          description: Return additional info, eg. aspectNames, properties, path, isLink
-          type: string
-          required: false
+        - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - name: orderBy
           in: query
           description: |
@@ -4098,6 +4103,40 @@ definitions:
         $ref: '#/definitions/ContentInfo'
       association:
         $ref: '#/definitions/ChildAssocInfo'                         
+  NodeAssocEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeAssoc'
+  NodeAssoc:
+    type: object
+    required:
+      - targetId
+      - assocType
+    properties:
+      targetId:
+        type: string
+      assocType:
+        type: string
+  NodeChildAssocEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeChildAssoc'
+  NodeChildAssoc:
+    type: object
+    required:
+      - childId
+      - assocType
+    properties:
+      childId:
+        type: string
+      assocType:
+        type: string
   NodeEntry:
     type: object
     required:
