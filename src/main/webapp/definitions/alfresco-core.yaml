@@ -147,7 +147,7 @@ paths:
           schema:
             $ref: '#/definitions/CommentPaging'
         '400':
-          description: If the **nodeId** exists, but does not identify a file or a folder
+          description: If an invalid value was provided for the **nodeId**, **maxItems** or **skipCount** parameter
         '403':
           description: If the user does not have permission read comments on the node
         '404':
@@ -230,7 +230,7 @@ paths:
           schema:
             $ref: '#/definitions/CommentEntry'
         '400':
-          description: If an empty comment is provided
+          description: If an empty **content** is provided
         '403':
           description: If the user does not have permission to add a comment           
         '404':
@@ -270,7 +270,7 @@ paths:
           schema:
             $ref: '#/definitions/CommentEntry'
         '400':
-          description: If an empty comment is provided
+          description: If an empty **content** is provided
         '403':
           description: If the user does not have permission to update a comment
         '404':
@@ -320,6 +320,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/RatingPaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems** or **skipCount** parameter
         '404':
           description: If **nodeId** does not exist
         default:
@@ -421,9 +423,9 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: If an unknown rating scheme is supplied          
+          description: If **ratingId** does not exist         
         '404':
-          description: If **nodeId** or **ratingId** does not exist
+          description: If **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -447,6 +449,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagPaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems** or **skipCount** parameter
         '403':
           description: If the user does not have permission to read tags on the node            
         '404':
@@ -529,7 +533,7 @@ paths:
           schema:
             $ref: '#/definitions/TagEntry'
         '400':
-          description: If an empty tag is provided
+          description: If an empty **tag** is provided
         '403':
           description: If the user does not have permission to add tags on the node                      
         '404':
@@ -622,8 +626,12 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ActivityPaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems**, **skipCount** or **who** parameter
+        '403':
+          description: If **personId** is from an other user
         '404':
-          description: If **personId** does not exist
+          description: If **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -654,6 +662,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SitePaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems** or **skipCount** parameter
+        '403':
+          description: If **personId** is from an other user
         '404':
           description: If **personId** does not exist
         default:
@@ -702,8 +714,14 @@ paths:
                 properties:
                   id:
                     type: string
+        '400':
+          description: An empty **id** was specified
+        '403':
+          description: If **personId** is from an other user
         '404':
           description: If **personId** does not exist
+        '409':
+          description: If **id** is already a site favorite
         default:
           description: Unexpected error
           schema:
@@ -733,6 +751,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteEntry'
+        '403':
+          description: If **personId** is from an other user
         '404':
           description: If **personId** or **siteId** does not exist
         default:
@@ -760,6 +780,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '403':
+          description: If **personId** is from an other user
         '404':
           description: If **personId** or **siteId** does not exist
         default:
@@ -815,7 +837,7 @@ paths:
           schema:
             $ref: '#/definitions/FavoritePaging'
         '400':
-          description: An invalid **where** parameter was specified
+          description: If an invalid value was provided for the **maxItems**, **skipCount** or **where** parameter
         '404':
           description: If **personId** does not exist, or the current user does not have permission to access the favorites of **personId**
         default:
@@ -905,7 +927,7 @@ paths:
             $ref: '#/definitions/FavoriteEntry'
         '404':
           description: |
-            If **personId** does not exist, or the target entity does not exist
+            If **personId** or **favoriteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -930,7 +952,7 @@ paths:
           description: Successful response
         '404':
           description: |
-            If **personId** does not exist, or the target entity does not exist
+            If **personId** or **favoriteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -958,6 +980,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/PersonNetworkPaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems** or **skipCount** parameter
         '404':
           description: If **personId** does not exist
         default:
@@ -1017,6 +1041,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/PreferencePaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems** or **skipCount** parameter
+        '403':
+          description: If **personId** is from an other user
         '404':
           description: If **personId** does not exist
         default:
@@ -1048,6 +1076,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/PreferenceEntry'
+        '403':
+          description: If **personId** is from an other user
         '404':
           description: If **personId** or **preferenceName** does not exist
         default:
@@ -1077,6 +1107,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMembershipRequestPaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems** or **skipCount** parameter
         '404':
           description: If **personId** does not exist
         default:
@@ -1116,8 +1148,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMembershipRequestEntry'
+        '400':
+          description: If an invalid **id** or the user is already invited
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: If **personId** or **id** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1295,6 +1329,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SitePaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems** or **skipCount** parameter
         default:
           description: Unexpected error
           schema:
@@ -1355,6 +1391,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteContainerPaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems** or **skipCount** parameter
         '404':
           description: If **siteId** does not exist
         default:
@@ -1408,6 +1446,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMemberPaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems** or **skipCount** parameter
         '404':
           description: If **siteId** does not exist
         default:
@@ -1455,6 +1495,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMemberEntry'
+        '400':
+          description: If an invalid **role** or **id** was provided
         '403':
           description: If the user does not have permission to invite a person
         '404':
@@ -1559,7 +1601,7 @@ paths:
         '204':
           description: Successful response
         '404':
-          description: If **personId** does not exist
+          description: If **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1582,6 +1624,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagPaging'
+        '400':
+          description: If an invalid value was provided for the **maxItems** or **skipCount** parameter
         default:
           description: Unexpected error
           schema:
@@ -1608,7 +1652,7 @@ paths:
               id: ed2444b5-d0c1-440b-b5b8-34a53e578091
               tag: test tag 1
         '404':
-          description: Tag Not Found
+          description: If **tagId** does not exist
         default:
           description: Unexpected error
           schema:
