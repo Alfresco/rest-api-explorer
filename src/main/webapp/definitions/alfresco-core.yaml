@@ -422,6 +422,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/RatingPaging'
+        '400':
+          description: An invalid parameter was specified
         '404':
           description: If **nodeId** does not exist
         default:
@@ -549,6 +551,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagPaging'
+        '400':
+          description: An invalid parameter was specified
         '403':
           description: If the user does not have permission to read tags on the node            
         '404':
@@ -1822,6 +1826,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ActivityPaging'
+        '400':
+          description: An invalid parameter was specified
         '404':
           description: If **personId** does not exist
         default:
@@ -1852,6 +1858,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SitePaging'
+        '400':
+          description: An invalid parameter was specified
         '404':
           description: If **personId** does not exist
         default:
@@ -1896,6 +1904,8 @@ paths:
                 properties:
                   id:
                     type: string
+        '400':
+          description: An empty **id** was specified
         '404':
           description: If **personId** does not exist
         default:
@@ -2005,7 +2015,7 @@ paths:
           schema:
             $ref: '#/definitions/FavoritePaging'
         '400':
-          description: An invalid **where** parameter was specified
+          description: An invalid parameter was specified
         '404':
           description: If **personId** does not exist, or the current user does not have permission to access the favorites of **personId**
         default:
@@ -2135,6 +2145,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/PersonNetworkPaging'
+        '400':
+          description: An invalid parameter was specified
         '404':
           description: If **personId** does not exist
         default:
@@ -2188,6 +2200,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/PreferencePaging'
+        '400':
+          description: An invalid parameter was specified
         '404':
           description: If **personId** does not exist
         default:
@@ -2241,6 +2255,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMembershipRequestPaging'
+        '400':
+          description: An invalid parameter was specified
         '404':
           description: If **personId** does not exist
         default:
@@ -2262,6 +2278,8 @@ paths:
           description: Site membership request details
           required: true
           schema:
+            required:
+              - id
             properties:
               message:
                 type: string
@@ -2274,6 +2292,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMembershipRequestEntry'
+        '400':
+          description: An invalid **id** was specified
         '404':
           description: If **personId** or **siteId** does not exist
         default:
@@ -2508,6 +2528,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SitePaging'
+        '400':
+          description: An invalid parameter was specified
         default:
           description: Error response
           schema:
@@ -2595,6 +2617,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteContainerPaging'
+        '400':
+          description: An invalid parameter was specified
         '404':
           description: If **siteId** does not exist
         default:
@@ -2648,6 +2672,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMemberPaging'
+        '400':
+          description: An invalid parameter was specified
         '404':
           description: If **siteId** does not exist
         default:
@@ -2692,6 +2718,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMemberEntry'
+        '400':
+          description: An invalid **role** or **id** was specified
         '404':
           description: If **siteId** or **personId** does not exist
         default:
@@ -2805,6 +2833,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagPaging'
+        '400':
+          description: An invalid parameter was specified
         default:
           description: Error response
           schema:
@@ -2859,6 +2889,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TagEntry'
+        '400':
+          description: If an empty tag is provided
         '404':
           description: If **tagId** does not exist
         default:
