@@ -1828,8 +1828,6 @@ paths:
             $ref: '#/definitions/ActivityPaging'
         '400':
           description: An invalid parameter was specified
-        '403':
-          description: If **personId** is from an other user
         '404':
           description: If **personId** does not exist
         default:
@@ -1862,8 +1860,6 @@ paths:
             $ref: '#/definitions/SitePaging'
         '400':
           description: An invalid parameter was specified
-        '403':
-          description: If **personId** is from an other user
         '404':
           description: If **personId** does not exist
         default:
@@ -1910,12 +1906,8 @@ paths:
                     type: string
         '400':
           description: An empty **id** was specified
-        '403':
-          description: If **personId** is from an other user
         '404':
           description: If **personId** does not exist
-        '409':
-          description: If **id** is already a site favorite
         default:
           description: Error response
           schema:
@@ -1943,8 +1935,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteEntry'
-        '403':
-          description: If **personId** is from an other user
         '404':
           description: If **personId** or **siteId** does not exist
         default:
@@ -1970,8 +1960,6 @@ paths:
       responses:
         '204':
           description: Successful response
-        '403':
-          description: If **personId** is from an other user
         '404':
           description: If **personId** or **siteId** does not exist
         default:
@@ -2214,8 +2202,6 @@ paths:
             $ref: '#/definitions/PreferencePaging'
         '400':
           description: An invalid parameter was specified
-        '403':
-          description: If **personId** is from an other user
         '404':
           description: If **personId** does not exist
         default:
@@ -2244,8 +2230,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/PreferenceEntry'
-        '403':
-          description: If **personId** is from an other user
         '404':
           description: If **personId** or **preferenceName** does not exist
         default:
