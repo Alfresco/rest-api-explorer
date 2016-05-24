@@ -30,7 +30,9 @@ tags:
   - name: renditions
     description: Retrieve and manage file renditions
   - name: associations
-    description: Retrieve and manage node associations
+    description: Retrieve and manage peer associations - between source & target nodes
+  - name: child associations
+    description: Retrieve and manage node child associations - between parent & child nodes
   - name: shared-links
     description: Retrieve and manage public shared links
   - name: search
@@ -73,6 +75,22 @@ parameters:
     required: true
     type: string
   nodeMinimalEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the node. The following optional fields can be requested:
+      * properties
+      * aspectNames
+      * path
+      * isLink
+      * allowableOperations
+      * association
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  nodeAssocMinimalEntryIncludeParam:
     name: include
     in: query
     description: |
@@ -715,12 +733,15 @@ paths:
     delete:
       tags:
         - nodes
+        - child associations
         - 5.2 changes
       summary: Delete a node
       description: |
          Deletes the node with identifier **nodeId**.
          If the **nodeId** is a folder, then its children are also deleted.
          Deleted nodes move to the trashcan unless the **permanent** query parameter is true, and the current user is the owner or an admin.
+         
+         Deleting a node removes the child associations, ie. both primary and also secondary, if any.
       operationId: deleteNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -751,12 +772,15 @@ paths:
     get:
       tags:
         - nodes
+        - child associations
         - 5.2 changes
       summary: Get node children
       description: |
         Returns the children of the node with identifier **nodeId**.
         Minimal information for each child is returned by default.
         You can use the **include** parameter to return addtional information.
+        
+        The list of child nodes includes primary children and also secondary children, if any.
       operationId: getNodeChildren
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -796,6 +820,8 @@ paths:
             *   where=(nodeType='my:specialtype')
 
             *   where=(nodeType='my:specialtype' INCLUDESUBTYPES)
+            
+            *   where=(isPrimary=true)
 
           required: false
           type: string
@@ -829,10 +855,11 @@ paths:
     post:
       tags:
         - nodes
+        - child associations
         - 5.2 changes
       summary: Create a node
       description: |
-        Creates a node as a child of the node with identifier **nodeId**.
+        Creates a node as a (primary) child of the node with identifier **nodeId**.
 
         You must specify at least a **name** and **nodeType**. For example, to create a folder:
         ```JSON
@@ -1016,6 +1043,7 @@ paths:
     post:
       tags:
         - nodes
+        - child associations
         - 5.2 changes
       summary: Move a node
       description: |
@@ -1025,6 +1053,8 @@ paths:
         The moved node retains its name unless you specify a new **name** in the request body.
 
         If the source **nodeId** is a folder, then all of its children are also moved.
+        
+        The move will effectively change the primary parent
       operationId: moveNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -1203,6 +1233,10 @@ paths:
         - 5.2 changes
       summary: List information for renditions
       description: Returns the rendition information for the file node with identifier **nodeId**.
+      
+        This will return rendition information, including the rendition id, for each rendition.
+        The rendition status is CREATED (ie. available to view/download) or NOT_CREATED (ie. rendition can be requested).
+        
       operationId: getRenditions
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1269,14 +1303,195 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{sourceId}/targets/':
+  '/nodes/{parentId}/secondary-children':
+    post:
+      tags:
+        - child associations
+        - 5.2 changes
+      summary: Add secondary child
+      description: |
+        Add secondary child association, with given association type, between parent and child node.
+      operationId: addSecondaryChildAssoc
+      produces:
+        - application/json
+      parameters:
+        - name: parentId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - in: body
+          name: assocChildBody
+          description: The child node id and assoc type.
+          required: true
+          schema:
+            required:
+              - childId
+              - assocType
+            properties:
+              childId:
+                type: string
+              assocType:
+                type: string
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeChildAssocEntry'
+        '400':
+          description: Invalid parameter, eg. unknown assocType
+        '404':
+          description: If **parentId** or **childId** does not exist
+        '409':
+          description: Association already exists (eg. same assoc type between same two nodes)
+        '422':
+          description: Model integrity exception
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - child associations
+        - 5.2 changes
+      summary: List secondary children
+      description: |
+        Returns a list of secondary child nodes that are associated with the current parent node, via a secondary child association.
+      operationId: listSecondaryChildAssociations
+      produces:
+        - application/json
+      parameters:
+        - name: parentId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - name: assocType
+          in: query
+          description: Restrict the returned results to only those of the given association type
+          type: string
+          required: false 
+        - name: where
+          in: query
+          description: |
+            Optionally filter the list by assocType. Here's an example:
+
+            *   where=(assocType='my:assoctype')
+          required: false
+          type: string          
+        - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeChildAssocPaging'
+        '400':
+          description: Invalid parameter, eg. unknown assocType
+        '404':
+          description: If **parentId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{parentId}/secondary-children/{childId}':
+    delete:
+      tags:
+        - child associations
+        - 5.2 changes
+      summary: Remove secondary child (or children)
+      description: |
+        Remove secondary child association(s) between parent and child node for given association type. 
+        
+        If association type is not specified then all secondary child associations between parent and child are removed.
+      operationId: removeSecondaryChildAssoc
+      produces:
+        - application/json
+      parameters:
+        - name: parentId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - name: childId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - name: assocType
+          in: query
+          description: Restrict the delete to only those of the given association type
+          type: string
+          required: false 
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: Invalid parameter, eg. unknown assocType or trying to delete a primary assocType (use delete node instead)
+        '404':
+          description: If **parentId** or **childId** does not exist (with given assocType, if specified)
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'              
+  '/nodes/{childId}/parents':
+    get:
+      tags:
+        - child associations
+        - 5.2 changes
+      summary: List parents
+      description: |
+        Returns a list of parent nodes that point to (ie. are associated with) the current child node. 
+        
+        This inclues both the primary parent and also secondary parents, if any.
+      operationId: listParents
+      produces:
+        - application/json
+      parameters:
+        - name: childId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - name: where
+          in: query
+          description: |
+            Optionally filter the list by assocType and/or isPrimary. Here are some examples:
+
+            *   where=(assocType='my:assoctype')
+            
+            *   where=(isPrimary=true)
+            
+            *   where=(isPrimary=false and assocType='my:assoctype')
+          required: false
+          type: string 
+        - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'  
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeAssocPaging'
+        '400':
+          description: Invalid parameter, eg. unknown assocType
+        '404':
+          description: If **childId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'     
+  '/nodes/{sourceId}/targets':
     post:
       tags:
         - associations
         - 5.2 changes
       summary: Add node association
       description: |
-        Add association between source and target node for given association type.
+        Add association, with given association type, between source and target node.
       operationId: addAssoc
       produces:
         - application/json
@@ -1291,6 +1506,9 @@ paths:
           description: The target node id and assoc type.
           required: true
           schema:
+            required:
+              - targetId
+              - assocType
             properties:
               targetId:
                 type: string
@@ -1299,18 +1517,59 @@ paths:
       responses:
         '201':
           description: Successful response
+          schema:
+            $ref: '#/definitions/NodeAssocEntry'
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
           description: If **sourceId** or **targetId** does not exist
         '409':
-          description: Association already exists
+          description: Association already exists (eg. same assoc type between same two nodes)
         '422':
           description: Model integrity exception
         default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
+    get:
+      tags:
+        - associations
+        - 5.2 changes
+      summary: List node associations
+      description: |
+        Returns a list of target nodes that are pointed to (ie. are associated with) the current source node.
+      operationId: listTargetAssociations
+      produces:
+        - application/json
+      parameters:
+        - name: sourceId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - name: where
+          in: query
+          description: |
+            Optionally filter the list by assocType. Here's an example:
+
+            *   where=(assocType='my:assoctype')
+          required: false
+          type: string 
+        - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeAssocPaging'
+        '400':
+          description: Invalid parameter, eg. unknown assocType
+        '404':
+          description: If **sourceId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'            
   '/nodes/{sourceId}/targets/{targetId}':
     delete:
       tags:
@@ -1318,7 +1577,9 @@ paths:
         - 5.2 changes
       summary: Remove node association(s)
       description: |
-        Remove association(s) between source and target node for given association type. If association type is not specified then all associations between source and target are removed.
+        Remove association(s) between source and target node for given association type. 
+        
+        If association type is not specified then all associations between source and target are removed.
       operationId: removeAssoc
       produces:
         - application/json
@@ -1344,48 +1605,7 @@ paths:
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
-          description: If **sourceId** or **targetId** does not exist
-        default:
-          description: Error response
-          schema:
-            $ref: '#/definitions/Error'            
-  '/nodes/{sourceId}/targets':
-    get:
-      tags:
-        - associations
-        - 5.2 changes
-      summary: List node associations
-      description: |
-        Returns a list of target nodes that are pointed to (ie. are associated with) the current source node.
-      operationId: listTargetAssociations
-      produces:
-        - application/json
-      parameters:
-        - name: sourceId
-          in: path
-          description: The identifier of a node.
-          required: true
-          type: string
-        - name: assocType
-          in: query
-          description: Restrict the returned results to only those of the given association type
-          type: string
-          required: false 
-        - name: include
-          in: query
-          description: Return additional info, eg. aspect, properties, path, isLink
-          type: string
-          required: false
-        - $ref: '#/parameters/fieldsParam'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/NodeAssocPaging'
-        '400':
-          description: Invalid parameter, eg. unknown assocType
-        '404':
-          description: If **sourceId** does not exist
+          description: If **sourceId** or **targetId** does not exist (with given assocType, if specified)
         default:
           description: Error response
           schema:
@@ -1407,16 +1627,15 @@ paths:
           description: The identifier of a node.
           required: true
           type: string
-        - name: assocType
+        - name: where
           in: query
-          description: Restrict the returned results to only those of the given association type
-          type: string
-          required: false 
-        - name: include
-          in: query
-          description: Return additional info, eg. aspect, properties, path, isLink
-          type: string
+          description: |
+            Optionally filter the list by assocType. Here's an example:
+
+            *   where=(assocType='my:assoctype')
           required: false
+          type: string
+        - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -2836,6 +3055,37 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
+  '/shared-links/{sharedId}/renditions':
+    get:
+      tags:
+        - renditions
+        - 5.2 changes
+      summary: List information for created renditions
+      description: |
+        Returns the rendition information for the file with shared link identifier **sharedId**.
+        
+        This will only return rendition information, including the rendition id, for each rendition
+        where the rendition status is CREATED (ie. available to view/download).
+        
+        **Note:** No authentication is required to call this endpoint.      
+      operationId: getSharedLinkRenditions
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RenditionPaging'
+        '400':
+          description: If the **sharedId** is not a valid format
+        '404':
+          description: If **sharedId** does not exist
+        '501':
+          description: If shared links are disabled for the system          
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'        
   '/shared-links/{sharedId}/renditions/{renditionId}/content':
     get:
       tags:
@@ -2972,11 +3222,7 @@ paths:
           description: Restrict the returned results to only those of the given node type and it's sub-types
           type: string
           required: false
-        - name: include
-          in: query
-          description: Return additional info, eg. aspectNames, properties, path, isLink
-          type: string
-          required: false
+        - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - name: orderBy
           in: query
           description: |
@@ -3712,6 +3958,13 @@ definitions:
     properties:
       assocType:
         type: string
+  ChildAssocInfo:
+    type: object
+    properties:
+      assocType:
+        type: string 
+      isPrimary:
+        type: boolean           
   NodePaging:
     type: object
     properties:
@@ -3735,7 +3988,19 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeAssocMinimalEntry'              
+              $ref: '#/definitions/NodeAssocMinimalEntry'
+  NodeChildAssocPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/NodeChildAssocMinimalEntry'                              
   NodeMinimalEntry:
     type: object
     required:
@@ -3805,7 +4070,77 @@ definitions:
       content:
         $ref: '#/definitions/ContentInfo'
       association:
-        $ref: '#/definitions/AssocInfo'       
+        $ref: '#/definitions/AssocInfo' 
+  NodeChildAssocMinimalEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeChildAssocMinimal'
+  NodeChildAssocMinimal:
+    type: object
+    properties:
+      id:
+        type: string
+      parentId:
+        type: string
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser:
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+        format: date-time
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
+      association:
+        $ref: '#/definitions/ChildAssocInfo'                         
+  NodeAssocEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeAssoc'
+  NodeAssoc:
+    type: object
+    required:
+      - targetId
+      - assocType
+    properties:
+      targetId:
+        type: string
+      assocType:
+        type: string
+  NodeChildAssocEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeChildAssoc'
+  NodeChildAssoc:
+    type: object
+    required:
+      - childId
+      - assocType
+    properties:
+      childId:
+        type: string
+      assocType:
+        type: string
   NodeEntry:
     type: object
     required:
