@@ -1280,7 +1280,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/SitePaging'
+            $ref: '#/definitions/SiteRolePaging'
         '404':
           description: If **personId** does not exist
         default:
@@ -1824,6 +1824,11 @@ definitions:
           - PUBLIC
       role:
         type: string
+        enum:
+          - SiteConsumer
+          - SiteCollaborator
+          - SiteContributor
+          - SiteManager
   SiteContainerPaging:
     type: object
     required:
@@ -1893,6 +1898,51 @@ definitions:
         type: string
       person:
         $ref: '#/definitions/Person'
+      role:
+        type: string
+        enum:
+          - SiteConsumer
+          - SiteCollaborator
+          - SiteContributor
+          - SiteManager
+  SiteRolePaging:
+    type: object
+    required:
+      - list
+    properties:
+      list:
+        type: object
+        required:
+          - pagination
+          - entries
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/SiteRoleEntry'
+  SiteRoleEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/SiteRole'
+  SiteRole:
+    type: object
+    required:
+      - site
+      - id
+      - guid
+      - role
+    properties:
+      site:
+        $ref: '#/definitions/Site'
+      id:
+        type: string
+      guid:
+        type: string
       role:
         type: string
         enum:
