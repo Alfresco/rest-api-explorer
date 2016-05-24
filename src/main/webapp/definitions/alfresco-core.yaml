@@ -1175,10 +1175,14 @@ paths:
         - sites
       summary: Create a site membership request
       description: |
-        Create a site membership request for **personId** and the site with identifier of **id**. 
-        The **personId** will be invited to the site as a SiteConsumer.
+        Create a site membership request for yourself on the site with the identifier of **id**, specified in the JSON body. 
+        The result of the request differs depending on the type of site.
         
-        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+        * For a **public** site, you join the site immediately as a SiteConsumer
+        * For a **moderated** site, your request is added to the site membership request list. The request waits for approval from the Site Manager.
+        * You cannot request membership of a **private** site. Members are invited by the site administrator.
+        
+        You can use the `-me-` string in place of `<personId>`.
       operationId: addSiteMembershipRequest
       produces:
         - application/json
