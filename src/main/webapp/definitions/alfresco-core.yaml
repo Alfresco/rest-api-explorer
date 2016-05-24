@@ -1352,6 +1352,60 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/people/{personId}/sites/{siteId}':
+    get:
+      tags:
+        - people
+      summary: Get site membership for a site
+      description: |
+        Returns site membership information for person **personId** on site **siteId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+      operationId: getSiteForMember
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/propertiesParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SiteRoleEntry'
+        '401':
+          description: If authentication fails
+        '404':
+          description: If **personId** or **siteId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - people
+      summary: Delete a site member
+      description: |
+        Removes person **personId** as a member of site **siteId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+      operationId: removeMemberFromSite
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/siteIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: If authentication fails
+        '404':
+          description: If **personId** or **siteId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /sites:
     get:
       tags:
