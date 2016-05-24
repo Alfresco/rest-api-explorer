@@ -1,0 +1,8 @@
+platform:
+  build: .
+  command: [ "swagger", "validate", "/app/src/main/webapp/definitions/alfresco-core.yaml" ]
+  #command: [ "swagger", "bundle", "-o", "/app/target/api-explorer/definitions/alfresco-core.json", "/app/src/main/webapp/definitions/alfresco-core.yaml" ]
+  volumes:
+  - ./../../../:/app:rw
+  environment:
+   - MYSQL_DATABASE=alfresco
