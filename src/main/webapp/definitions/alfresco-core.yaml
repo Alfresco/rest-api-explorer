@@ -206,7 +206,7 @@ paths:
               },
               {
                 "entry": {
-                 ...
+                  ...
                 }
               }
             ]
@@ -377,7 +377,7 @@ paths:
                   - likes
                   - fiveStar
               myRating:
-                type: string
+                type: boolean
                 description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar
       responses:
         '201':
@@ -415,7 +415,7 @@ paths:
           schema:
             $ref: '#/definitions/RatingEntry'
         '400':
-          description: If an unknown rating scheme is supplied
+          description: If an unknown rating scheme  **ratingId** is supplied
         '401':
           description: If authentication fails
         '404':
@@ -439,7 +439,7 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: If an unknown rating scheme is supplied
+          description: If an unknown rating scheme **ratingId** is supplied
         '401':
           description: If authentication fails
         '404':
@@ -1178,11 +1178,11 @@ paths:
         Create a site membership request for yourself on the site with the identifier of **id**, specified in the JSON body. 
         The result of the request differs depending on the type of site.
         
-        * For a **public** site, you join the site immediately as a SiteConsumer
+        * For a **public** site, you join the site immediately as a SiteConsumer.
         * For a **moderated** site, your request is added to the site membership request list. The request waits for approval from the Site Manager.
         * You cannot request membership of a **private** site. Members are invited by the site administrator.
         
-        You can use the `-me-` string in place of `<personId>`.
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: addSiteMembershipRequest
       produces:
         - application/json
@@ -1301,7 +1301,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
       responses:
-        '200':
+        '204':
           description: Successful response
         '401':
           description: If authentication fails
@@ -1348,6 +1348,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteRolePaging'
+        '400':
+          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
         '401':
           description: If authentication fails
         '404':
@@ -1624,7 +1626,7 @@ paths:
               id:
                 type: string
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMemberEntry'
@@ -1713,7 +1715,7 @@ paths:
           schema:
             $ref: '#/definitions/SiteMemberEntry'
         '400':
-          description: If the role does not exist
+          description: If the **role** does not exist
         '401':
           description: If authentication fails
         '404':
@@ -1828,7 +1830,7 @@ paths:
           schema:
             $ref: '#/definitions/TagEntry'
         '400':
-          description: If an empty tag is provided   
+          description: If an empty **tag** is provided   
         '401':
           description: If authentication fails         
         '404':
