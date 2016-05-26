@@ -860,6 +860,29 @@ paths:
       summary: Create a node
       description: |
         Creates a node as a (primary) child of the node with identifier **nodeId**.
+        
+        This API method supports file upload using multipart/form-data.
+
+        Use the **filedata** field to represent the content to upload.
+        You can use a **filename** field to give an alternative name for the new file.
+
+        Use **overwrite** to overwrite an existing file, matched by name. If the file is versionable,
+        the existing content is replaced.
+
+        When you overwrite overwrite existing content, you can set the **majorVersion** boolean field to **true** to indicate a major version
+        should be created. The default for **majorVersion** is **false**.
+        Setting  **majorVersion** enables versioning of the node, if it is not already versioned.
+
+        When you overwrite overwrite existing content, you can use the **comment** field to add a version comment that appears in the
+        version history. This also enables versioning of this node, if it is not already versioned.
+
+        You can set the **autoRename** boolean field to automatically resolve name clashes. If there is a name clash, then
+        the API method tries to create
+        a unique name using an integer suffix.
+           
+        Any field in the JSON body defined below can also be passed as a form-data field.
+        
+        This API method also supports node creation using application/json.
 
         You must specify at least a **name** and **nodeType**. For example, to create a folder:
         ```JSON
@@ -907,27 +930,12 @@ paths:
         ```
         Any missing aspects are auto-applied. For example, **cm:titled** in the JSON shown above. You can set aspects
         explicitly set, if needed, using an **aspectNames** field.
-
-        This API method also supports file upload using multipart/form-data.
-
-        Use the **filedata** field to represent the content to upload.
-        You can use a **filename** field to give an alternative name for the new file.
-
-        Use **overwrite** to overwrite an existing file, matched by name. If the file is versionable,
-        the existing content is replaced.
-
-        When you overwrite overwrite existing content, you can set the **majorVersion** boolean field to **true** to indicate a major version
-        should be created. The default for **majorVersion** is **false**.
-        Setting  **majorVersion** enables versioning of the node, if it is not already versioned.
-
-        When you overwrite overwrite existing content, you can use the **comment** field to add a version comment that appears in the
-        version history. This also enables versioning of this node, if it is not already versioned.
-
-        You can set the **autoRename** boolean field to automatically resolve name clashes. If there is a name clash, then
-        the API method tries to create
-        a unique name using an integer suffix.
-
-        Any field in the JSON body defined below can also be passed as a form-data field.
+        
+        Associations can (typically) be added after creating a node. However, it is also possible to add association at time of create.
+        This is required, for example, if the content model specifies that a node has mandatory associations to one or more other existing nodes. You can
+        optionally specify an array of **secondaryChildren** to create one or more secondary child associations such that the newly created node
+        acts as a parent node. You can optionally specify an array of **targets** to create one or more peer associations such that the newly created node
+        acts as a source node.
       operationId: addNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -943,6 +951,9 @@ paths:
           description: The node information to create.
           required: true
           schema:
+            required:
+              - name
+              - nodeType  
             properties:
               name:
                 type: string
@@ -965,6 +976,14 @@ paths:
                 type: object
                 additionalProperties:
                   type: string
+              secondaryChildren:
+                type: array
+                items:
+                  $ref: '#/definitions/AssocChild'
+              targets:
+                type: array
+                items:
+                  $ref: '#/definitions/AssocTarget'     
       consumes:
         - application/json
         - multipart/form-data
@@ -1325,14 +1344,7 @@ paths:
           description: The child node id and assoc type.
           required: true
           schema:
-            required:
-              - childId
-              - assocType
-            properties:
-              childId:
-                type: string
-              assocType:
-                type: string
+            $ref: '#/definitions/AssocChild'
       responses:
         '201':
           description: Successful response
@@ -1506,14 +1518,8 @@ paths:
           description: The target node id and assoc type.
           required: true
           schema:
-            required:
-              - targetId
-              - assocType
-            properties:
-              targetId:
-                type: string
-              assocType:
-                type: string
+          schema:
+            $ref: '#/definitions/AssocTarget'
       responses:
         '201':
           description: Successful response
@@ -3958,13 +3964,33 @@ definitions:
     properties:
       assocType:
         type: string
+  AssocTarget:
+    type: object
+    required:
+    - targetId
+    - assocType
+    properties:
+      targetId:
+        type: string
+      assocType:
+        type: string        
   ChildAssocInfo:
     type: object
     properties:
       assocType:
         type: string 
       isPrimary:
-        type: boolean           
+        type: boolean  
+  AssocChild:
+    type: object
+    required:
+    - childId
+    - assocType
+    properties:
+      childId:
+        type: string
+      assocType:
+        type: string                  
   NodePaging:
     type: object
     properties:
