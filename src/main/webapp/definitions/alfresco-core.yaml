@@ -1303,21 +1303,21 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{parentId}/secondary-children':
+  '/nodes/{nodeId}/secondary-children':
     post:
       tags:
         - child associations
         - 5.2 changes
       summary: Add secondary child
       description: |
-        Add secondary child association, with given association type, between parent and child node.
+        Add secondary child association, with given association type, between parent **nodeId** and child node.
       operationId: addSecondaryChildAssoc
       produces:
         - application/json
       parameters:
-        - name: parentId
+        - name: nodeId
           in: path
-          description: The identifier of a node.
+          description: The identifier of a parent node.
           required: true
           type: string
         - in: body
@@ -1341,7 +1341,7 @@ paths:
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
-          description: If **parentId** or **childId** does not exist
+          description: If parent **nodeId** or **childId** does not exist
         '409':
           description: Association already exists (eg. same assoc type between same two nodes)
         '422':
@@ -1356,14 +1356,14 @@ paths:
         - 5.2 changes
       summary: List secondary children
       description: |
-        Returns a list of secondary child nodes that are associated with the current parent node, via a secondary child association.
+        Returns a list of secondary child nodes that are associated with the current parent **nodeId**, via a secondary child association.
       operationId: listSecondaryChildAssociations
       produces:
         - application/json
       parameters:
-        - name: parentId
+        - name: nodeId
           in: path
-          description: The identifier of a node.
+          description: The identifier of a parent node.
           required: true
           type: string
         - name: assocType
@@ -1391,33 +1391,33 @@ paths:
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
-          description: If **parentId** does not exist
+          description: If parent **nodeId** does not exist
         default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{parentId}/secondary-children/{childId}':
+  '/nodes/{nodeId}/secondary-children/{childId}':
     delete:
       tags:
         - child associations
         - 5.2 changes
       summary: Remove secondary child (or children)
       description: |
-        Remove secondary child association(s) between parent and child node for given association type. 
+        Remove secondary child association(s) between parent **nodeId** and child node for given association type. 
         
         If association type is not specified then all secondary child associations between parent and child are removed.
       operationId: removeSecondaryChildAssoc
       produces:
         - application/json
       parameters:
-        - name: parentId
+        - name: nodeId
           in: path
-          description: The identifier of a node.
+          description: The identifier of a parent node.
           required: true
           type: string
         - name: childId
           in: path
-          description: The identifier of a node.
+          description: The identifier of a child node.
           required: true
           type: string
         - name: assocType
@@ -1431,26 +1431,26 @@ paths:
         '400':
           description: Invalid parameter, eg. unknown assocType or trying to delete a primary assocType (use delete node instead)
         '404':
-          description: If **parentId** or **childId** does not exist (with given assocType, if specified)
+          description: If parent **nodeId** or **childId** does not exist (with given assocType, if specified)
         default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'              
-  '/nodes/{childId}/parents':
+  '/nodes/{nodeId}/parents':
     get:
       tags:
         - child associations
         - 5.2 changes
       summary: List parents
       description: |
-        Returns a list of parent nodes that point to (ie. are associated with) the current child node. 
+        Returns a list of parent nodes that point to (ie. are associated with) the current child **nodeId**. 
         
         This inclues both the primary parent and also secondary parents, if any.
       operationId: listParents
       produces:
         - application/json
       parameters:
-        - name: childId
+        - name: nodeId
           in: path
           description: The identifier of a node.
           required: true
@@ -1479,26 +1479,26 @@ paths:
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
-          description: If **childId** does not exist
+          description: If child **nodeId** does not exist
         default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'     
-  '/nodes/{sourceId}/targets':
+  '/nodes/{nodeId}/targets':
     post:
       tags:
         - associations
         - 5.2 changes
       summary: Add node association
       description: |
-        Add association, with given association type, between source and target node.
+        Add association, with given association type, between source **nodeId** and target node.
       operationId: addAssoc
       produces:
         - application/json
       parameters:
-        - name: sourceId
+        - name: nodeId
           in: path
-          description: The identifier of a node.
+          description: The identifier of a source node.
           required: true
           type: string
         - in: body
@@ -1522,7 +1522,7 @@ paths:
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
-          description: If **sourceId** or **targetId** does not exist
+          description: If source **nodeId** or **targetId** does not exist
         '409':
           description: Association already exists (eg. same assoc type between same two nodes)
         '422':
@@ -1537,14 +1537,14 @@ paths:
         - 5.2 changes
       summary: List node associations
       description: |
-        Returns a list of target nodes that are pointed to (ie. are associated with) the current source node.
+        Returns a list of target nodes that are pointed to (ie. are associated with) the current source **nodeId**.
       operationId: listTargetAssociations
       produces:
         - application/json
       parameters:
-        - name: sourceId
+        - name: nodeId
           in: path
-          description: The identifier of a node.
+          description: The identifier of a source node.
           required: true
           type: string
         - name: where
@@ -1565,33 +1565,33 @@ paths:
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
-          description: If **sourceId** does not exist
+          description: If source **nodeId** does not exist
         default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'            
-  '/nodes/{sourceId}/targets/{targetId}':
+  '/nodes/{nodeId}/targets/{targetId}':
     delete:
       tags:
         - associations
         - 5.2 changes
       summary: Remove node association(s)
       description: |
-        Remove association(s) between source and target node for given association type. 
+        Remove association(s) between source **nodeId* and target node for given association type. 
         
         If association type is not specified then all associations between source and target are removed.
       operationId: removeAssoc
       produces:
         - application/json
       parameters:
-        - name: sourceId
+        - name: nodeId
           in: path
-          description: The identifier of a node.
+          description: The identifier of a source node.
           required: true
           type: string
         - name: targetId
           in: path
-          description: The identifier of a node.
+          description: The identifier of a target node.
           required: true
           type: string
         - name: assocType
@@ -1605,26 +1605,26 @@ paths:
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
-          description: If **sourceId** or **targetId** does not exist (with given assocType, if specified)
+          description: If source **nodeId** or **targetId** does not exist (with given assocType, if specified)
         default:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{targetId}/sources':
+  '/nodes/{nodeId}/sources':
     get:
       tags:
         - associations
         - 5.2 changes
       summary: List node associations
       description: |
-        Returns a list of source nodes that point to (ie. are associated with) the current target node.
+        Returns a list of source nodes that point to (ie. are associated with) the current target **nodeId**.
       operationId: listSourceNodeAssociations
       produces:
         - application/json
       parameters:
-        - name: targetId
+        - name: nodeId
           in: path
-          description: The identifier of a node.
+          description: The identifier of a target node.
           required: true
           type: string
         - name: where
@@ -1645,7 +1645,7 @@ paths:
         '400':
           description: Invalid parameter, eg. unknown assocType
         '404':
-          description: If **targetId** does not exist
+          description: If target **nodeId** does not exist
         default:
           description: Error response
           schema:
