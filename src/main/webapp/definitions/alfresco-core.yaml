@@ -377,7 +377,7 @@ paths:
                   - likes
                   - fiveStar
               myRating:
-                type: boolean
+                type: string
                 description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar
       responses:
         '201':
