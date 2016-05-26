@@ -1518,7 +1518,6 @@ paths:
           description: The target node id and assoc type.
           required: true
           schema:
-          schema:
             $ref: '#/definitions/AssocTarget'
       responses:
         '201':
