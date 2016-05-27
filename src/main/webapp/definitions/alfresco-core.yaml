@@ -741,7 +741,13 @@ paths:
          If the **nodeId** is a folder, then its children are also deleted.
          Deleted nodes move to the trashcan unless the **permanent** query parameter is true, and the current user is the owner or an admin.
          
-         Deleting a node removes the child associations, ie. both primary and also secondary, if any.
+         Deleting a node removes it from it's primary parent and also from any other secondary parents. Also, peer associations are removed, where the deleted 
+         node is either a source or target. The same also applies recursively to any hierarchy of primary children of the deleted node. 
+         
+         It should be noted that if the node is not permanently deleted and later successfully restored to it's former primary parent, then only the primary 
+         child associations will be restored, including recursively for any primary children.  It should be noted that no other secondary child associations or 
+         peer associations will be restored, for any of the nodes within the primary parent-child hierarchy of restored nodes, irrespective of whether these 
+         associations were to nodes within or outside of the restored hierarchy.
       operationId: deleteNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1417,7 +1423,8 @@ paths:
       description: |
         Remove secondary child association(s) between parent **nodeId** and child node for given association type. 
         
-        If association type is not specified then all secondary child associations between parent and child are removed.
+        If association type is not specified then multiple secondary child associations, of any type, will be removed specifically in the direction 
+        from parent to secondary child. The child will still have a primary parent and may still be associated as a secondary child with other secondary parents.
       operationId: removeSecondaryChildAssoc
       produces:
         - application/json
@@ -1582,9 +1589,13 @@ paths:
         - 5.2 changes
       summary: Remove node association(s)
       description: |
-        Remove association(s) between source **nodeId* and target node for given association type. 
+        Remove association(s) from source **nodeId* to target node for given association type. 
         
-        If association type is not specified then all associations between source and target are removed.
+        If association type is not specified then multiple peer associations, of any type, will be removed specifically in the direction 
+        from source to target. 
+        
+        It should be noted that after removal of the peer association(s) from source to target, the two nodes may still have peer associations
+        in the other direction.
       operationId: removeAssoc
       produces:
         - application/json
