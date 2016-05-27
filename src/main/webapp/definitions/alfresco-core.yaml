@@ -782,11 +782,13 @@ paths:
         - 5.2 changes
       summary: Get node children
       description: |
-        Returns the children of the node with identifier **nodeId**.
+        Returns the children of the parent node with identifier **nodeId**.
         Minimal information for each child is returned by default.
         You can use the **include** parameter to return addtional information.
         
         The list of child nodes includes primary children and also secondary children, if any.
+        You can use the **include** parameter (include=association) to return child association details 
+        for each child, including the assocType and the isPrimary flag.
       operationId: getNodeChildren
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -823,11 +825,13 @@ paths:
 
             *   where=(isFile=true)
 
-            *   where=(nodeType='my:specialtype')
+            *   where=(nodeType='my:specialNodeType')
 
-            *   where=(nodeType='my:specialtype' INCLUDESUBTYPES)
+            *   where=(nodeType='my:specialNodeType' INCLUDESUBTYPES)
             
             *   where=(isPrimary=true)
+            
+            *   where=(assocType='my:specialAssocType')
 
           required: false
           type: string
@@ -937,11 +941,41 @@ paths:
         Any missing aspects are auto-applied. For example, **cm:titled** in the JSON shown above. You can set aspects
         explicitly set, if needed, using an **aspectNames** field.
         
-        Associations can (typically) be added after creating a node. However, it is also possible to add association at time of create.
-        This is required, for example, if the content model specifies that a node has mandatory associations to one or more other existing nodes. You can
-        optionally specify an array of **secondaryChildren** to create one or more secondary child associations such that the newly created node
-        acts as a parent node. You can optionally specify an array of **targets** to create one or more peer associations such that the newly created node
-        acts as a source node.
+        Typically, for files and folders, the primary children are created within the parent folder using the default "cm:contains" assocType. 
+        If the content model allows then it is also possible to create primary children with a different assoc type. For example:
+        ```JSON
+        {
+          "name":"My Node",
+          "nodeType":"my:specialNodeType",
+          "association":
+            {
+              "assocType":"my:specialAssocType"
+            }
+        }
+        ``` 
+        
+        Additional associations can usually be added after creating a node. However, it is also possible to add association at time of create. This is 
+        required, for example, if the content model specifies that a node has mandatory associations to one or more other existing nodes. You can optionally 
+        specify an array of **secondaryChildren** to create one or more secondary child associations, such that the newly created node acts as a parent node. 
+        You can optionally specify an array of **targets** to create one or more peer associations such that the newly created node acts as a source node. 
+        For example, to associate one or more secondary children at time of creation:
+        ```JSON
+        {
+          "name":"My Folder",
+          "nodeType":"cm:folder",
+          "secondaryChildren":
+            [ {"childId":"abcde-01234-...", "assocType":"my:specialChildAssocType"} ]
+        }
+        ``` 
+        For example, to associate one or more targets at time of creation:
+        ```JSON
+        {
+          "name":"My Folder",
+          "nodeType":"cm:folder",
+          "targets":
+            [ {"targetId":"abcde-01234-...", "assocType":"my:specialPeerAssocType"} ]
+        }
+        ```
       operationId: addNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -1394,7 +1428,7 @@ paths:
           description: |
             Optionally filter the list by assocType. Here's an example:
 
-            *   where=(assocType='my:assoctype')
+            *   where=(assocType='my:specialAssocType')
           required: false
           type: string          
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
@@ -1479,11 +1513,11 @@ paths:
           description: |
             Optionally filter the list by assocType and/or isPrimary. Here are some examples:
 
-            *   where=(assocType='my:assoctype')
+            *   where=(assocType='my:specialAssocType')
             
             *   where=(isPrimary=true)
             
-            *   where=(isPrimary=false and assocType='my:assoctype')
+            *   where=(isPrimary=false and assocType='my:specialAssocType')
           required: false
           type: string 
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
@@ -1564,7 +1598,7 @@ paths:
           description: |
             Optionally filter the list by assocType. Here's an example:
 
-            *   where=(assocType='my:assoctype')
+            *   where=(assocType='my:specialAssocType')
           required: false
           type: string 
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
@@ -1648,7 +1682,7 @@ paths:
           description: |
             Optionally filter the list by assocType. Here's an example:
 
-            *   where=(assocType='my:assoctype')
+            *   where=(assocType='my:specialAssocType')
           required: false
           type: string
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
@@ -2057,7 +2091,7 @@ paths:
             {
                "target": {
                   "file": {
-                     "guid": "abcde-01234"
+                     "guid": "abcde-01234-...."
                   }
                }
             }
