@@ -472,7 +472,6 @@ paths:
           schema:
             type: array
             items:
-              type: object
               $ref: '#/definitions/VariableBody'
       responses:
         '201':
@@ -503,7 +502,6 @@ paths:
           description: A variable
           required: true
           schema:
-            type: object
             $ref: '#/definitions/VariableBody'
       responses:
         '201':
@@ -998,7 +996,6 @@ paths:
           schema:
             type: array
             items:
-              type: object
               $ref: '#/definitions/VariableBody'
       responses:
         '201':
@@ -1029,7 +1026,6 @@ paths:
           description: A variable
           required: true
           schema:
-            type: object
             $ref: '#/definitions/VariableBody'
       responses:
         '201':
@@ -1241,13 +1237,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/DeploymentEntry'
   DeploymentEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Deployment'
   Deployment:
     type: object
@@ -1282,7 +1276,7 @@ definitions:
         type: string
       deployedAt:
         type: string
-        format: date
+        format: date-time
   ProcessDefinitionPaging:
     type: object
     properties:
@@ -1294,13 +1288,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/ProcessDefinitionEntry'
   ProcessDefinitionEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/ProcessDefinition'
   ProcessDefinition:
     type: object
@@ -1348,13 +1340,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/ProcessEntry'
   ProcessEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Process'
   Process:
     type: object
@@ -1386,11 +1376,11 @@ definitions:
         description: The business key
       startedAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this process started
       endedAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this process started
       durationInMs:
         type: integer
@@ -1418,13 +1408,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/TaskEntry'
   TaskEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Task'
   Task:
     type: object
@@ -1453,15 +1441,15 @@ definitions:
         description: The description of this task
       dueAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this task is due
       startedAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this task started
       endedAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this task started
       durationInMs:
         type: integer
@@ -1490,7 +1478,6 @@ definitions:
         type: array
         description: An array of variables for this task
         items:
-          type: object
           $ref: '#/definitions/Variable'
   VariablePaging:
     type: object
@@ -1503,13 +1490,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/VariableEntry'
   VariableEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Variable'
   Variable:
     type: object
@@ -1543,7 +1528,6 @@ definitions:
       processDefinitionKey:
         type: string
       variables:
-        type: object
         $ref: '#/definitions/ProcessBodyVariable'
   ProcessBodyVariable:
     type: object
@@ -1567,13 +1551,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/ItemEntry'
   ItemEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Item'
   Item:
     type: object
@@ -1593,19 +1575,17 @@ definitions:
       mimeType:
         type: string
       createdBy:
-        type: object
         $ref: '#/definitions/Person'
       createdAt:
         type: string
-        format: date
+        format: date-time
       edited:
         type: boolean
       modifiedBy:
-        type: object
         $ref: '#/definitions/Person'
       modifiedAt:
         type: string
-        format: date
+        format: date-time
       size:
         type: integer
   TaskFormModelPaging:
@@ -1619,13 +1599,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/TaskFormModelEntry'
   TaskFormModelEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/TaskFormModel'
   TaskFormModel:
     type: object
@@ -1677,7 +1655,6 @@ definitions:
       location:
         type: string
       company:
-        type: object
         $ref: '#/definitions/Company'
       mobile:
         type: string
@@ -1685,7 +1662,7 @@ definitions:
         type: string
       statusUpdatedAt:
         type: string
-        format: date
+        format: date-time
       userStatus:
         type: string
       enabled:
@@ -1725,7 +1702,7 @@ definitions:
         description: The description of this task
       dueAt:
         type: string
-        format: date
+        format: date-time
         description: The date time this task is due
       priority:
         type: integer
@@ -1745,7 +1722,6 @@ definitions:
         type: array
         description: An array of variables for this task
         items:
-          type: object
           $ref: '#/definitions/Variable'
   CandidatePaging:
     type: object
@@ -1758,13 +1734,11 @@ definitions:
           entries:
             type: array
             items:
-              type: object
               $ref: '#/definitions/CandidateEntry'
   CandidateEntry:
     type: object
     properties:
       entry:
-        type: object
         $ref: '#/definitions/Candidate'
   Candidate:
     type: object
