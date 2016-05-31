@@ -999,8 +999,6 @@ paths:
                 type: string
               nodeType:
                 type: string
-              relativePath:
-                type: string
               content:
                 type: object
                 properties:
@@ -1016,6 +1014,13 @@ paths:
                 type: object
                 additionalProperties:
                   type: string
+              relativePath:
+                type: string
+              association:
+                type: object
+                properties:
+                  assocType:
+                    type: string
               secondaryChildren:
                 type: array
                 items:
@@ -1035,7 +1040,7 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+          description: If the **nodeId** is not a valid format
         '403':
           description: If current user does not have permission to add children to **nodeId**
         '404':
@@ -1044,6 +1049,8 @@ paths:
           description: If new name clashes with an existing node in the current parent folder
         '413':
           description: If file content exceeds individual file size limit (configured for network/system)
+        '422':
+          description: Model integrity exception
         '507':
           description: If file content exceeds overall storage quota limit (configured for network/system)
         default:
@@ -1748,12 +1755,8 @@ paths:
             $ref: '#/definitions/DeletedNodeEntry'
         '403':
           description: If the user does not have permission to view the deleted node
-          schema:
-            $ref: '#/definitions/Error'
         '404':
           description: If **nodeId** does not exist
-          schema:
-            $ref: '#/definitions/Error'
         default:
           description: Error response
           schema:
@@ -1775,12 +1778,8 @@ paths:
           description: Successful response
         '403':
           description: If the user does not have permission to purge the deleted node
-          schema:
-            $ref: '#/definitions/Error'
         '404':
           description: If **nodeId** does not exist
-          schema:
-            $ref: '#/definitions/Error'
         default:
           description: Error response
           schema:
@@ -1805,20 +1804,12 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '403':
           description: If the user does not have permission to restore the deleted node
-          schema:
-            $ref: '#/definitions/Error'
         '404':
           description: If **nodeId** does not exist or if the restore destination parent node no longer exists
-          schema:
-            $ref: '#/definitions/Error'
         '409':
           description: If the node name already exists in the restore destination
-          schema:
-            $ref: '#/definitions/Error'
         '422':
-          description: There was an integrity failure after the node was restored
-          schema:
-            $ref: '#/definitions/Error'
+          description: Model integrity exception trying to restore the node
         default:
           description: Error response
           schema:
