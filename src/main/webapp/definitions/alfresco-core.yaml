@@ -26,37 +26,29 @@ tags:
   - name: 5.2 changes
     description: Endpoints added in the 5.2 release
   - name: nodes
-    description: Retrieve and manage nodes - files & folders
+    description: Retrieve and manage nodes
   - name: renditions
     description: Retrieve and manage file renditions
-  - name: associations
-    description: Retrieve and manage peer associations - between source & target nodes
-  - name: child associations
-    description: Retrieve and manage node child associations - between parent & child nodes
   - name: shared-links
     description: Retrieve and manage public shared links
-  - name: search
-    description: Search for items in the repository
   - name: comments
-    description: Retrieve and manage Comments
-    externalDocs:
-      description: Find more information on comments here
-      url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-nodes-comments.html
+    description: Retrieve and manage comments
   - name: favorites
-    description: Retrieve and manage Favorites
-    externalDocs:
-      description: Find more information on favorites here
-      url: http://docs.alfresco.com/5.1/pra/1/concepts/pra-favorites.html
+    description: Retrieve and manage favorites
   - name: networks
-    description: Retrieve and manage Networks
+    description: Retrieve and manage networks
   - name: people
-    description: Retrieve and manage People
+    description: Retrieve and manage people
   - name: ratings
-    description: Retrieve and manage Ratings
+    description: Retrieve and manage ratings
   - name: sites
-    description: Retrieve and manage Sites
+    description: Retrieve and manage sites
   - name: tags
-    description: Retrieve and manage Tags
+    description: Retrieve and manage tags
+  - name: trashcan
+    description: Retrieve and manage deleted nodes
+  - name: queries
+    description: Live search for items in the repository
 parameters:
   nodeIdParam:
     name: nodeId
@@ -833,7 +825,6 @@ paths:
     delete:
       tags:
         - nodes
-        - child associations
         - 5.2 changes
       summary: Delete a node
       description: |
@@ -880,7 +871,6 @@ paths:
     get:
       tags:
         - nodes
-        - child associations
         - 5.2 changes
       summary: Get node children
       description: |
@@ -969,7 +959,6 @@ paths:
     post:
       tags:
         - nodes
-        - child associations
         - 5.2 changes
       summary: Create a node
       description: |
@@ -1215,7 +1204,6 @@ paths:
     post:
       tags:
         - nodes
-        - child associations
         - 5.2 changes
       summary: Move a node
       description: |
@@ -1478,8 +1466,8 @@ paths:
   '/nodes/{nodeId}/secondary-children':
     post:
       tags:
-        - child associations
         - 5.2 changes
+        - nodes
       summary: Add secondary child
       description: |
         Add secondary child association, with given association type, between parent **nodeId** and child node.
@@ -1517,8 +1505,8 @@ paths:
             $ref: '#/definitions/Error'
     get:
       tags:
-        - child associations
         - 5.2 changes
+        - nodes
       summary: List secondary children
       description: |
         Returns a list of secondary child nodes that are associated with the current parent **nodeId**, via a secondary child association.
@@ -1564,8 +1552,8 @@ paths:
   '/nodes/{nodeId}/secondary-children/{childId}':
     delete:
       tags:
-        - child associations
         - 5.2 changes
+        - nodes
       summary: Remove secondary child (or children)
       description: |
         Remove secondary child association(s) between parent **nodeId** and child node for given association type. 
@@ -1605,8 +1593,8 @@ paths:
   '/nodes/{nodeId}/parents':
     get:
       tags:
-        - child associations
         - 5.2 changes
+        - nodes
       summary: List parents
       description: |
         Returns a list of parent nodes that point to (ie. are associated with) the current child **nodeId**. 
@@ -1653,8 +1641,8 @@ paths:
   '/nodes/{nodeId}/targets':
     post:
       tags:
-        - associations
         - 5.2 changes
+        - nodes
       summary: Add node association
       description: |
         Add association, with given association type, between source **nodeId** and target node.
@@ -1692,8 +1680,8 @@ paths:
             $ref: '#/definitions/Error'
     get:
       tags:
-        - associations
         - 5.2 changes
+        - nodes
       summary: List node associations
       description: |
         Returns a list of target nodes that are pointed to (ie. are associated with) the current source **nodeId**.
@@ -1732,8 +1720,8 @@ paths:
   '/nodes/{nodeId}/targets/{targetId}':
     delete:
       tags:
-        - associations
         - 5.2 changes
+        - nodes
       summary: Remove node association(s)
       description: |
         Remove association(s) from source **nodeId* to target node for given association type. 
@@ -1776,8 +1764,8 @@ paths:
   '/nodes/{nodeId}/sources':
     get:
       tags:
-        - associations
         - 5.2 changes
+        - nodes
       summary: List node associations
       description: |
         Returns a list of source nodes that point to (ie. are associated with) the current target **nodeId**.
@@ -1816,7 +1804,7 @@ paths:
   '/deleted-nodes':
     get:
       tags:
-        - nodes
+        - trashcan
         - 5.2 changes
       summary: Get deleted nodes
       description: |
@@ -1843,7 +1831,7 @@ paths:
   '/deleted-nodes/{nodeId}':
     get:
       tags:
-        - nodes
+        - trashcan
         - 5.2 changes
       summary: Get a deleted node
       description: |
@@ -1869,7 +1857,7 @@ paths:
             $ref: '#/definitions/Error'
     delete:
       tags:
-        - nodes
+        - trashcan
         - 5.2 changes
       summary: Purge a deleted node
       description: |
@@ -1893,7 +1881,7 @@ paths:
   '/deleted-nodes/{nodeId}/restore':
     post:
       tags:
-        - nodes
+        - trashcan
         - 5.2 changes
       summary: Restore a deleted node
       description: |
@@ -1925,7 +1913,10 @@ paths:
       tags:
         - people
       summary: Get a person
-      description: Gets information for the person **personId**.
+      description: |
+        Gets information for the person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getPerson
       produces:
         - application/json
@@ -1937,10 +1928,12 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/PersonEntry'
+        '401':
+          description: If authentication fails
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/activities':
@@ -1948,7 +1941,10 @@ paths:
       tags:
         - people
       summary: Get activities
-      description: Returns a list of activities for person **personId**.
+      description: |
+        Returns a list of activities for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getActivities
       produces:
         - application/json
@@ -1959,7 +1955,7 @@ paths:
         - name: who
           in: query
           description: |
-            A filter to include the user's activities only `-me-`, other user's activities only `-others-`'
+            A filter to include the user's activities only `me`, other user's activities only `others`'
           required: false
           type: string
         - name: siteId
@@ -1973,10 +1969,16 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ActivityPaging'
+        '400':
+          description: If an invalid value is provided for the **maxItems**, **skipCount** or **who** parameter
+        '401':
+          description: If authentication fails
+        '403':
+          description: If the currently authenticated user does not have access to the activities for **personId**
         '404':
-          description: If **personId** does not exist
+          description: If **personId** or **siteId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}/favorite-sites':
@@ -1990,6 +1992,8 @@ paths:
 
         **Note: This method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getFavoriteSites
       produces:
         - application/json
@@ -2003,10 +2007,16 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SitePaging'
+        '400':
+          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+        '401':
+          description: If authentication fails
+        '403':
+          description: If the currently authenticated user does not have access to the favorite sites for **personId**
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -2019,6 +2029,8 @@ paths:
 
         **Note: that this method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: favoriteSite
       produces:
         - application/json
@@ -2029,6 +2041,8 @@ paths:
           description: The id of the site to favorite.
           required: true
           schema:
+            required:
+              - id
             properties:
               id:
                 type: string
@@ -2105,7 +2119,6 @@ paths:
         Removes site **siteId** from the favorite site list of person **personId**.
         
         **Please note that this method is deprecated and will be removed in the future.**
-
         Use `/people/{personId}/favorites/{favoriteId}` instead.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
@@ -2342,6 +2355,7 @@ paths:
     get:
       tags:
         - people
+        - networks
       summary: Get network information
       description: |
         Returns network information on a single network specified by **networkId** for **personId**.
@@ -2376,7 +2390,6 @@ paths:
         Returns a list of preferences for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-        
         Note that each preference consists of an **id** and a **value**. 
 
         The **value** can be of any JSON type.
@@ -2645,14 +2658,120 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/SitePaging'
+            $ref: '#/definitions/SiteRolePaging'
+        '400':
+          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+        '401':
+          description: If authentication fails
         '404':
           description: If **personId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/people/{personId}/sites/{siteId}':
+    get:
+      tags:
+        - people
+      summary: Get site membership for a site
+      description: |
+        Returns site membership information for person **personId** on site **siteId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+      operationId: getSiteForMember
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/siteIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SiteRoleEntry'
+        '401':
+          description: If authentication fails
+        '404':
+          description: If **personId** or **siteId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - people
+      summary: Delete a site member
+      description: |
+        Removes person **personId** as a member of site **siteId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+      operationId: removeMemberFromSite
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/siteIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: If authentication fails
+        '404':
+          description: If **personId** or **siteId** does not exist
+        default:
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   /sites:
+    get:
+      tags:
+        - sites
+      summary: Get sites
+      description: |
+        Returns a list of sites in this repository. You can sort the list if sites using the **orderBy** parameter.
+        **orderBy** specifies the name of one or more
+        comma separated properties.
+        For each property you can optionally specify the order direction.
+        Both of the these **orderBy** examples retrieve sites ordered by ascending name:
+
+        ```
+        name
+        name ASC
+        ```
+
+        You can use the **relations** parameter to include one or more related
+        entities in a single response and so reduce network traffic.
+
+        The entity types in Alfresco are organized in a tree structure.
+        The **sites** entity has two children, **containers** and **members**.
+        The following relations parameter returns all the container and member
+        objects related to each site:
+
+        ```
+        containers,members
+        ```
+      operationId: getSites
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - $ref: '#/parameters/relationsParam'
+        - $ref: '#/parameters/fieldsParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SitePaging'
+        '400':
+          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+        '401':
+          description: If authentication fails
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - sites
@@ -2730,109 +2849,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/people/{personId}/sites/{siteId}':
-    get:
-      tags:
-        - people
-      summary: Get site membership for a site
-      description: |
-        Returns site membership information for person **personId** on site **siteId**.
-        
-        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getSiteForMember
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/personIdParam'
-        - $ref: '#/parameters/siteIdParam'
-        - $ref: '#/parameters/propertiesParam'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/SiteRoleEntry'
-        '401':
-          description: If authentication fails
-        '404':
-          description: If **personId** or **siteId** does not exist
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    delete:
-      tags:
-        - people
-      summary: Delete a site member
-      description: |
-        Removes person **personId** as a member of site **siteId**.
-        
-        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: removeMemberFromSite
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/personIdParam'
-        - $ref: '#/parameters/siteIdParam'
-      responses:
-        '204':
-          description: Successful response
-        '401':
-          description: If authentication fails
-        '404':
-          description: If **personId** or **siteId** does not exist
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    get:
-      tags:
-        - sites
-      summary: Get sites
-      description: |
-        Returns a list of sites in this repository. You can sort the list if sites using the **orderBy** parameter.
-        **orderBy** specifies the name of one or more
-        comma separated properties.
-        For each property you can optionally specify the order direction.
-        Both of the these **orderBy** examples retrieve sites ordered by ascending name:
-
-        ```
-        name
-        name ASC
-        ```
-
-        You can use the **relations** parameter to include one or more related
-        entities in a single response and so reduce network traffic.
-
-        The entity types in Alfresco are organized in a tree structure.
-        The **sites** entity has two children, **containers** and **members**.
-        The following relations parameter returns all the container and member
-        objects related to each site:
-
-        ```
-        containers,members
-        ```
-      operationId: getSites
-      parameters:
-        - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/orderByParam'
-        - $ref: '#/parameters/relationsParam'
-        - $ref: '#/parameters/fieldsParam'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/SitePaging'
-        '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-        '401':
-          description: If authentication fails
   '/sites/{siteId}':
     get:
       tags:
@@ -3217,6 +3233,8 @@ paths:
           description: The updated tag
           required: true
           schema:
+            required:
+              - tag
             properties:
               tag:
                 type: string
@@ -3550,7 +3568,7 @@ paths:
   '/queries/live-search-nodes':
     get:
       tags:
-        - search
+        - queries
         - 5.2 changes
       summary: Live search for nodes
       description: |
@@ -3693,6 +3711,7 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
+            type: array
             items:
               $ref: '#/definitions/SiteEntry'
   SiteEntry:
@@ -3745,6 +3764,7 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
+            type: array
             items:
               $ref: '#/definitions/SiteContainerEntry'
   SiteContainerEntry:
@@ -3778,6 +3798,7 @@ definitions:
           pagination:
             $ref: '#/definitions/Pagination'
           entries:
+            type: array
             items:
               $ref: '#/definitions/SiteMemberEntry'
   SiteMemberEntry:
