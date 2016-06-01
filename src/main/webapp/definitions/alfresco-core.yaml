@@ -3696,7 +3696,7 @@ definitions:
         format: int64
         description: |
           The value of the **maxItems** parameter used to generate this list,
-          or if there was no **maxItems** parameter the default value, 10
+          or if there was no **maxItems** parameter the default value is 100
   SitePaging:
     type: object
     required:
