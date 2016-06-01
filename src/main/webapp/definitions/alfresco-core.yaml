@@ -967,16 +967,20 @@ paths:
         This API method supports file upload using multipart/form-data.
 
         Use the **filedata** field to represent the content to upload.
-        You can use a **filename** field to give an alternative name for the new file.
+        You can use a **name** field to give an alternative name for the new file.
+
+        For multipart/form-data upload you can use the **renditions** field to create renditions (e.g. doclib) asynchronously upon upload.
+        Note that currently only one rendition can be requested. Also, as requesting rendition is a background process,
+        any rendition failure (e.g. No transformer is currently available) will not fail the whole upload and has the potential to silently fail.
 
         Use **overwrite** to overwrite an existing file, matched by name. If the file is versionable,
         the existing content is replaced.
 
-        When you overwrite overwrite existing content, you can set the **majorVersion** boolean field to **true** to indicate a major version
+        When you overwrite existing content, you can set the **majorVersion** boolean field to **true** to indicate a major version
         should be created. The default for **majorVersion** is **false**.
         Setting  **majorVersion** enables versioning of the node, if it is not already versioned.
 
-        When you overwrite overwrite existing content, you can use the **comment** field to add a version comment that appears in the
+        When you overwrite existing content, you can use the **comment** field to add a version comment that appears in the
         version history. This also enables versioning of this node, if it is not already versioned.
 
         You can set the **autoRename** boolean field to automatically resolve name clashes. If there is a name clash, then
