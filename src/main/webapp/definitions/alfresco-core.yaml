@@ -836,7 +836,7 @@ paths:
          node is either a source or target. The same also applies recursively to any hierarchy of primary children of the deleted node. 
          
          It should be noted that if the node is not permanently deleted and later successfully restored to it's former primary parent, then only the primary 
-         child associations will be restored, including recursively for any primary children.  It should be noted that no other secondary child associations or 
+         child association will be restored, including recursively for any primary children. It should be noted that no other secondary child associations or 
          peer associations will be restored, for any of the nodes within the primary parent-child hierarchy of restored nodes, irrespective of whether these 
          associations were to nodes within or outside of the restored hierarchy.
       operationId: deleteNode
@@ -1890,6 +1890,15 @@ paths:
       summary: Restore a deleted node
       description: |
         Attempts to restore the deleted node identified by **nodeId** to its original location.
+        
+        If the node is successfully restored to it's former primary parent, then only the 
+        primary child association will be restored, including recursively for any primary children.  
+        It should be noted that no other secondary child associations or peer associations 
+        will be restored, for any of the nodes within the primary parent-child hierarchy of 
+        restored nodes, irrespective of whether these associations were to nodes within or 
+        outside of the restored hierarchy. 
+        
+        Also any Shared Links are deleted when the node(s) are deleted hence will not be restored.
       operationId: restoreNode
       produces:
         - application/json
