@@ -1892,13 +1892,14 @@ paths:
         Attempts to restore the deleted node identified by **nodeId** to its original location.
         
         If the node is successfully restored to it's former primary parent, then only the 
-        primary child association will be restored, including recursively for any primary children.  
-        It should be noted that no other secondary child associations or peer associations 
-        will be restored, for any of the nodes within the primary parent-child hierarchy of 
-        restored nodes, irrespective of whether these associations were to nodes within or 
-        outside of the restored hierarchy. 
+        primary child association will be restored, including recursively for any primary 
+        children. It should be noted that no other secondary child associations or peer 
+        associations will be restored, for any of the nodes within the primary parent-child 
+        hierarchy of restored nodes, irrespective of whether these associations were to 
+        nodes within or outside of the restored hierarchy. 
         
-        Also any Shared Links are deleted when the node(s) are deleted hence will not be restored.
+        Also, any previously shared link will not be restored since it is removed at the time 
+        of delete of each node.
       operationId: restoreNode
       produces:
         - application/json
