@@ -3,11 +3,11 @@ Public REST API Definition Explorer
 
 #### Definitions
 
-Please note, as of now:
+Please note, as of now, the:
 
-- the [https://github.com/Alfresco/rest-api-explorer/tree/master/src/main/webapp/definitions](definitions) on the 'master' branch represent Alfresco 4.2 to 5.1.
+- [API definitions](https://github.com/Alfresco/rest-api-explorer/tree/master/src/main/webapp/definitions) on the 'master' branch represent Alfresco 4.2 to 5.1.
 
-- the [https://github.com/Alfresco/rest-api-explorer/tree/community-head/src/main/webapp/definitions](definitions) on the 'community-head' branch represent Alfresco Community HEAD (aka nightly builds).
+- [API definitions](https://github.com/Alfresco/rest-api-explorer/tree/community-head/src/main/webapp/definitions) on the 'community-head' branch represent Alfresco Community HEAD (aka nightly builds).
 
 #### Building and deploying the war
 - `mvn install`
