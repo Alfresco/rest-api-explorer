@@ -1003,11 +1003,7 @@ paths:
         ```JSON
         {
           "name":"My text file.txt",
-          "nodeType":"cm:content",
-          "content":
-           {
-             "mimeType":"text/plain"
-           }
+          "nodeType":"cm:content"
         }
         ```
         You can update binary content using the ```PUT /nodes/{nodeId}``` API method.
@@ -1096,13 +1092,6 @@ paths:
                 type: string
               nodeType:
                 type: string
-              content:
-                type: object
-                properties:
-                  mimeType:
-                    type: string
-                  encoding:
-                    type: string
               aspectNames:
                 type: array
                 items:
@@ -1292,8 +1281,7 @@ paths:
       description: |
         Updates the content of the node with identifier **nodeId**.
 
-        The request body for this endpoint can be any text or binary stream. The Content-Type header should be set
-        correctly for the type of content being updated. The Content-Type header is used to set the mimetype in the repository.
+        The request body for this endpoint can be any text or binary stream.
 
         The **majorVersion** and **comment** parameters can be used to control versioning behaviour. If the content is versionable,
         a new minor version is created by default.
