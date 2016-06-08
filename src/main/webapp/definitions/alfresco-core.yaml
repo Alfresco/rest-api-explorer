@@ -763,7 +763,7 @@ paths:
         Updates the node with identifier **nodeId**. For example, you can rename a file or folder:
         ```JSON
         {
-          "name":"My new name",
+          "name":"My new name"
         }
         ```
         You can also set or update one or more properties:
