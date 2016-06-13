@@ -133,6 +133,24 @@ parameters:
     description: The name of a thumbnail rendition, for example *doclib*, or *pdf*.
     required: true
     type: string
+  versionIdParam:
+    name: versionId
+    in: path
+    description: The identifier of a version, ie. version label, within the version history of a node.
+    required: true
+    type: string
+  versionMinimalEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the version node. The following optional fields can be requested:
+      * properties
+      * aspectNames
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
   personIdParam:
     name: personId
     in: path
@@ -1413,7 +1431,7 @@ paths:
         - renditions
         - 5.2 changes
       summary: Get rendition information
-      description: Returns the rendition information for file node with identifier **nodeId**.
+      description: Returns the rendition information for **renditionId** of file node with identifier **nodeId**.
       operationId: getRendition
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1437,7 +1455,7 @@ paths:
         - renditions
         - 5.2 changes
       summary: Get rendition content
-      description: Returns the rendition content for file node with identifier **nodeId**.
+      description: Returns the rendition content for **renditionId** of file node with identifier **nodeId**.
       operationId: getRenditionContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1794,7 +1812,90 @@ paths:
         default:
           description: Error response
           schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions':
+    get:
+      tags:
+        - 5.2 changes
+        - nodes
+      summary: List node version history
+      description: |
+        Returns the version history as an ordered list of version nodes for the specified **nodeId**.
+        
+        The list is ordered in descending modified order, such that most recent version appears first and 
+        the original version appearing last. 
+      operationId: listVersionHistory
+      produces:
+        - application/json
+      parameters:
+        - name: nodeId
+          in: path
+          description: The identifier of a node.
+          required: true
+          type: string
+        - $ref: '#/parameters/versionMinimalEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/VersionNodesPaging'
+        '404':
+          description: If target **nodeId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'  
+  '/nodes/{nodeId}/versions/{versionId}':
+    get:
+      tags:
+        - 5.2 changes
+        - nodes
+      summary: Get version information
+      description: Returns the version information for **versionId** of file node with identifier **nodeId**.
+      operationId: getVersion
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/VersionNodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid
+        '404':
+          description: If **nodeId** or **versionId** does not exist
+        default:
+          description: Error response
+          schema:
             $ref: '#/definitions/Error'            
+  '/nodes/{nodeId}/versions/{versionId}/content':
+    get:
+      tags:
+        - 5.2 changes
+        - nodes
+      summary: Get version content
+      description: Returns the version content for **versionId** of file node with identifier **nodeId**.
+      operationId: getVersionContent
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
+      responses:
+        '200':
+          description: Successful response
+        '304':
+          description: If the content has not been modified since the date provided in the If-Modified-Since header
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid
+        '404':
+          description: If **nodeId** or **versionId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'                               
   '/deleted-nodes':
     get:
       tags:
@@ -4621,7 +4722,7 @@ definitions:
       properties:
         type: object
         additionalProperties:
-            type: string
+          type: string
       allowableOperations:
         type: array
         items:
@@ -4718,33 +4819,153 @@ definitions:
       entry:
         $ref: '#/definitions/DeletedNodeMinimal'
   DeletedNodeMinimal:
-    allOf:
-      - $ref: '#/definitions/NodeMinimal'
-      - type: object
-        required:
-          - archivedByUser
-          - archivedAt
-        properties:
-          archivedByUser:
-            $ref: '#/definitions/UserInfo'
-          archivedAt:
-            type: string
-            format: date-time
+    type: object
+    properties:
+      id:
+        type: string
+      archivedByUser:
+        $ref: '#/definitions/UserInfo'
+      archivedAt:
+        type: string
+        format: date-time
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser:
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+        format: date-time
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
   DeletedNodeEntry:
     type: object
     properties:
       entry:
         $ref: '#/definitions/DeletedNode'
   DeletedNode:
-    allOf:
-      - $ref: '#/definitions/NodeFull'
-      - type: object
-        required:
-          - archivedByUser
-          - archivedAt
+    type: object
+    properties:
+      id:
+        type: string
+      archivedByUser:
+        $ref: '#/definitions/UserInfo'
+      archivedAt:
+        type: string
+        format: date-time
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser:
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+        format: date-time
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        additionalProperties:
+          type: string
+      allowableOperations:
+        type: array
+        items:
+          type: string
+  VersionNodesPaging:
+    type: object
+    properties:
+      list:
+        type: object
         properties:
-          archivedByUser:
-            $ref: '#/definitions/UserInfo'
-          archivedAt:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/VersionNodeMinimalEntry'
+  VersionNodeMinimalEntry:
+    type: object
+    properties:
+      entry:
+        $ref: '#/definitions/VersionNodeMinimal'
+  VersionNodeMinimal:
+    type: object
+    properties:
+      id:
+        type: string
+      versionComment:
+        type: string        
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser:
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
+  VersionNodeEntry:
+    type: object
+    properties:
+      entry:
+        $ref: '#/definitions/VersionNode'
+  VersionNode:
+    type: object
+    properties:
+      id:
+        type: string
+      versionComment:
+        type: string
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser:
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        additionalProperties:
             type: string
-            format: date-time
