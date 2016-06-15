@@ -4460,6 +4460,9 @@ definitions:
         type: string
   UserInfo:
     type: object
+    required:
+      - displayName
+      - id
     properties:
       displayName:
         type: string
@@ -4467,6 +4470,11 @@ definitions:
         type: string
   ContentInfo:
     type: object
+    required:
+      - mimeType
+      - mimeTypeName
+      - sizeInBytes
+      - encoding
     properties:
       mimeType:
         type: string
@@ -4478,6 +4486,8 @@ definitions:
         type: string
   AssocInfo:
     type: object
+    required:
+      - assocType
     properties:
       assocType:
         type: string
@@ -4493,6 +4503,9 @@ definitions:
         type: string        
   ChildAssocInfo:
     type: object
+    required:
+      - assocType
+      - isPrimary
     properties:
       assocType:
         type: string 
@@ -4587,6 +4600,18 @@ definitions:
         $ref: '#/definitions/NodeAssocMinimal'        
   NodeAssocMinimal:
     type: object
+    required:
+      - id
+      - parentId
+      - name
+      - nodeType
+      - isFolder
+      - isFile
+      - modifiedAt
+      - modifiedByUser
+      - createdAt
+      - createdByUser
+      - association
     properties:
       id:
         type: string
