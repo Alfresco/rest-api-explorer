@@ -1238,6 +1238,8 @@ paths:
           description: The targetParentId and, optionally, a new name.
           required: true
           schema:
+            required:
+              - targetParentId
             properties:
               targetParentId:
                 type: string
