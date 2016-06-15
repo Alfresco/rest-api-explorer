@@ -1087,6 +1087,51 @@ paths:
             [ {"targetId":"abcde-01234-...", "assocType":"my:specialPeerAssocType"} ]
         }
         ```
+        
+        **Note:** You can create more than one child by 
+        specifying a list of nodes in the JSON body. For example, the following JSON
+        body creates two folders inside the specified **nodeId**, if the **nodeId** identifies
+        a folder:
+        
+        ```JSON
+        [
+          {
+            "name":"My Folder 1",
+            "nodeType":"cm:folder"
+          },
+          {
+            "name":"My Folder 2",
+            "nodeType":"cm:folder"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -2139,6 +2184,47 @@ paths:
         Use `/people/{personId}/favorites` instead.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+        
+         **Note:** You can favorite more than one site by 
+        specifying a list of sites in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+            "id": "test-site-1"
+          },
+          {
+            "id": "test-site-2"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: favoriteSite
       produces:
         - application/json
@@ -2316,6 +2402,55 @@ paths:
         Favorite a **site**, **file**, or **folder** in the repository.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+        
+        **Note:** You can fovorite more than one entity by 
+        specifying a list of objects in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+               "target": {
+                  "file": {
+                     "guid": "abcde-01234-...."
+                  }
+               }
+           },
+           {
+               "target": {
+                  "file": {
+                     "guid": "abcde-09863-...."
+                  }
+               }
+           },
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addFavorite
       produces:
         - application/json
@@ -2606,6 +2741,51 @@ paths:
         * You cannot request membership of a **private** site. Members are invited by the site administrator.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+        
+         **Note:** You can create site membership requests for more than one site by 
+        specifying a list of sites in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+            "message": "Please can you add me",
+            "id": "test-site-1",
+            "title": "Request for test site 1",
+          },
+          {
+            "message": "Please can you add me",
+            "id": "test-site-2",
+            "title": "Request for test site 2",
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addSiteMembershipRequest
       produces:
         - application/json
@@ -3124,6 +3304,49 @@ paths:
         * SiteCollaborator
         * SiteContributor
         * SiteManager
+        
+        **Note:** You can add more than one site member by 
+        specifying a list of people in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+            "role": "SiteConsumer",
+            "id": "joe"
+          },
+          {
+            "role": "SiteConsumer",
+            "id": "fred"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addSiteMember
       produces:
         - application/json
@@ -3392,7 +3615,49 @@ paths:
         - shared-links
         - 5.2 changes
       summary: Create a shared link to a file
-      description: Create shared link to specfied file identified by **nodeId** in request body.
+      description: |
+        Create a shared link to the file identified by **nodeId** in the request body.
+        
+        **Note:** You can create shared links to more than one file 
+        specifying a list of **nodeId**s in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+            "nodeId": "1ff9da1a-ee2f-4b9c-8c34-4444444444"
+          },
+          {            
+            "nodeId": "1ff9da1a-ee2f-4b9c-8c34-5555555555"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addSharedLink
       parameters:
         - $ref: '#/parameters/sharedLinkEntryIncludeParam'

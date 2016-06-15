@@ -345,6 +345,52 @@ paths:
 
         If networks are enabled, the authenticated user can start a new process for a
         process definition in the user's network.
+        
+        **Note:** You can start more than one process by 
+        specifying a list of process entries in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+             "processDefinitionKey": "activitiAdhoc",
+             "variables": {
+                "bpm_assignee": "fred"
+            }
+          },
+          {
+             "processDefinitionKey": "activitiAdhoc",
+             "variables": {
+                "bpm_assignee": "joe"
+            }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addProcess
       produces:
         - application/json
@@ -578,6 +624,47 @@ paths:
         Creates an item for process **processId**".
         
         If the item  already is part of that process the request will have no effect.
+        
+        **Note:** You can add more than one item by 
+        specifying a list of items in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+             "id": "1ff9da1a-ee2f-4b9c-8c34-44665e844444"
+          },
+          {
+             "id": "1ff9da1a-ee2f-4b9c-8c34-44665e855555"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addProcessItem
       produces:
         - application/json
@@ -980,7 +1067,7 @@ paths:
     post:
       tags:
         - tasks
-      summary: Add variables"
+      summary: Add variables
       description: |
         Creates or updates variables for the task **taskId**. 
         If one of the variables does not exist yet, it will be created.
@@ -1103,6 +1190,47 @@ paths:
         Creates an item for a given task **taskId**.
         
         If the item  already is part of that task the request will have no effect.
+        
+        **Note:** You can add more than one item by 
+        specifying a list of items in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+             "id": "1ff9da1a-ee2f-4b9c-8c34-44665e844444"
+          },
+          {
+             "id": "1ff9da1a-ee2f-4b9c-8c34-44665e855555"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addTaskItem
       produces:
         - application/json
