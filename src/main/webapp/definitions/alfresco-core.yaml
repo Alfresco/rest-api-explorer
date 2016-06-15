@@ -1618,11 +1618,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: nodeId
-          in: path
-          description: The identifier of a node.
-          required: true
-          type: string
+        - $ref: '#/parameters/nodeIdWithAliasParam'
         - name: where
           in: query
           description: |
@@ -1637,7 +1633,12 @@ paths:
           type: string 
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/maxItemsParam'  
+        - $ref: '#/parameters/maxItemsParam'
+        - name: includeSource
+          in: query
+          description: Also include **source** (in addition to **entries**) with folder information on **nodeId**
+          required: false
+          type: boolean
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
