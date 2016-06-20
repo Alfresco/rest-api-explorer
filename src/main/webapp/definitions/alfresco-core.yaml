@@ -277,6 +277,12 @@ parameters:
     description: A string to restrict the returned objects by using a predicate.
     required: false
     type: string
+  includeSourceParam:
+    name: includeSource
+    in: query
+    description: Also include **source** (in addition to **entries**) with folder information on **nodeId**
+    required: false
+    type: boolean
   relationsParam:
     name: relations
     in: query
@@ -991,7 +997,7 @@ paths:
           type: string
         - name: includeSource
           in: query
-          description: Also include "source" (in addition to "entries") with folder information on parent node (either the specified parent "nodeId" or as resolved by "relativePath")
+          description: Also include **source** (in addition to **entries**) with folder information on **nodeId** (either the specified parent **nodeId** or as resolved by **relativePath**)
           required: false
           type: boolean
         - $ref: '#/parameters/fieldsParam'
@@ -1624,6 +1630,7 @@ paths:
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/includeSourceParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -1705,11 +1712,7 @@ paths:
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - name: includeSource
-          in: query
-          description: Also include **source** (in addition to **entries**) with folder information on **nodeId**
-          required: false
-          type: boolean
+        - $ref: '#/parameters/includeSourceParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
