@@ -66,6 +66,44 @@ parameters:
       * -root-
     required: true
     type: string
+  nodeParentIdParam:
+    name: nodeId
+    in: path
+    description: The identifier of a parent node.
+    required: true
+    type: string
+  nodeParentIdWithAliasParam:
+    name: nodeId
+    in: path
+    description: |
+      The identifier of a parent node. You can also use one of these well-known aliases:
+      * -my-
+      * -shared-
+      * -root-
+    required: true
+    type: string
+  nodeChildIdWithAliasParam:
+    name: nodeId
+    in: path
+    description: |
+      The identifier of a child node. You can also use one of these well-known aliases:
+      * -my-
+      * -shared-
+      * -root-
+    required: true
+    type: string
+  nodeSourceIdParam:
+    name: nodeId
+    in: path
+    description: The identifier of a source node.
+    required: true
+    type: string
+  nodeTargetIdParam:
+    name: nodeId
+    in: path
+    description: The identifier of a target node.
+    required: true
+    type: string
   nodeMinimalEntryIncludeParam:
     name: include
     in: query
@@ -1534,11 +1572,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: nodeId
-          in: path
-          description: The identifier of a parent node.
-          required: true
-          type: string
+        - $ref: '#/parameters/nodeParentIdParam'
         - in: body
           name: assocChildBody
           description: The child node id and assoc type.
@@ -1573,11 +1607,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: nodeId
-          in: path
-          description: The identifier of a parent node.
-          required: true
-          type: string
+        - $ref: '#/parameters/nodeParentIdWithAliasParam'
         - name: assocType
           in: query
           description: Restrict the returned results to only those of the given association type
@@ -1623,11 +1653,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: nodeId
-          in: path
-          description: The identifier of a parent node.
-          required: true
-          type: string
+        - $ref: '#/parameters/nodeParentIdParam'
         - name: childId
           in: path
           description: The identifier of a child node.
@@ -1663,7 +1689,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeChildIdWithAliasParam'
         - name: where
           in: query
           description: |
@@ -1710,11 +1736,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: nodeId
-          in: path
-          description: The identifier of a source node.
-          required: true
-          type: string
+        - $ref: '#/parameters/nodeSourceIdParam'
         - in: body
           name: assocTargetBody
           description: The target node id and assoc type.
@@ -1749,11 +1771,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: nodeId
-          in: path
-          description: The identifier of a source node.
-          required: true
-          type: string
+        - $ref: '#/parameters/nodeSourceIdParam'
         - name: where
           in: query
           description: |
@@ -1795,11 +1813,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: nodeId
-          in: path
-          description: The identifier of a source node.
-          required: true
-          type: string
+        - $ref: '#/parameters/nodeSourceIdParam'
         - name: targetId
           in: path
           description: The identifier of a target node.
@@ -1833,11 +1847,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: nodeId
-          in: path
-          description: The identifier of a target node.
-          required: true
-          type: string
+        - $ref: '#/parameters/nodeTargetIdParam'
         - name: where
           in: query
           description: |
@@ -1876,11 +1886,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: nodeId
-          in: path
-          description: The identifier of a node.
-          required: true
-          type: string
+        - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/versionMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
