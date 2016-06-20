@@ -1399,7 +1399,7 @@ paths:
 
         **Note:** This API method accepts any content type, but for testing with this tool text based content can be provided.
         This is because the OpenAPI Specification does not allow a wildcard to be provided or the ability for
-        tooling to accept an arbitary file.
+        tooling to accept an arbitrary file.
       operationId: updateFileContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1437,7 +1437,7 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
         '403':
           description: If current user does not have permission to update **nodeId**
         '404':
@@ -1947,7 +1947,49 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'                               
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/revert':
+    post:
+      tags:
+        - 5.2 changes
+        - nodes
+      summary: Revert (ie. promote) a version node
+      description: |
+        Attempts to revert the versioned node identified by **versionId** and **nodeId** to the live node.
+        
+        If the node is successfully reverted then the content and metadata for that versioned node
+        will be promoted to the live node and a new version will appear in the version history.
+      operationId: revertVersionNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - in: body
+          name: revertBody
+          description: Optionally, specify a version comment and whether this should be a major version (or not)
+          required: true
+          schema:
+            properties:
+              majorVersion:
+                type: boolean
+              comment:
+                type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/VersionNodeEntry'
+        '403':
+          description: If the user does not have permission to revert the versioned node
+        '404':
+          description: If **nodeId** or **versionId** does not exist
+        '422':
+          description: Model integrity exception trying to revert the node
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'                                           
   '/deleted-nodes':
     get:
       tags:
