@@ -1614,11 +1614,6 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeParentIdWithAliasParam'
-        - name: assocType
-          in: query
-          description: Restrict the returned results to only those of the given association type
-          type: string
-          required: false 
         - name: where
           in: query
           description: |
