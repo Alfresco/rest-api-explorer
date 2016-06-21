@@ -1921,7 +1921,39 @@ paths:
         default:
           description: Error response
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Error'     
+    delete:
+      tags:
+        - 5.2 changes
+        - nodes
+      summary: Delete a version node
+      description: |
+        Delete the versioned node identified by **versionId** and **nodeId*.
+        
+        If the version is successfully deleted then the content and metadata for that versioned node
+        will be deleted and will no longer appear in the version history. This operation cannot be undone.
+        
+        If the most recent version is deleted the live node will revert to the next most recent version.
+        
+        If the last version is deleted then the node will have no version history. A new version history will
+        be created on a subsequent node upload/update.
+      operationId: deleteVersionNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '403':
+          description: If the user does not have permission to delete the versioned node
+        '404':
+          description: If **nodeId** or **versionId** does not exist
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'        
   '/nodes/{nodeId}/versions/{versionId}/content':
     get:
       tags:
