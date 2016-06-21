@@ -323,7 +323,7 @@ paths:
       tags:
         - comments
       summary: Get comments
-      description: Returns a list of comments for the node identified by **nodeId**, sorted chronologically with the newest comment first.
+      description: Returns a list of comments for the node **nodeId**, sorted chronologically with the newest comment first.
       operationId: getComments
       produces:
         - application/json
@@ -788,7 +788,7 @@ paths:
         - nodes
         - 5.2 changes
       summary: Get a node
-      description: Get information for the node with identifier **nodeId**.
+      description: Get information for node **nodeId**.
       operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -796,8 +796,8 @@ paths:
         - name: relativePath
           in: query
           description: |
-            If specified, returns information on the node resolved by this path.
-            The path is relative to the specified **nodeId**
+            A path relative to the **nodeId**. If you set this, 
+            information is returned on the node resolved by this path.
           required: false
           type: string
         - $ref: '#/parameters/fieldsParam'
@@ -822,7 +822,7 @@ paths:
         - 5.2 changes
       summary: Update a node
       description: |
-        Updates the node with identifier **nodeId**. For example, you can rename a file or folder:
+        Updates the node **nodeId**. For example, you can rename a file or folder:
         ```JSON
         {
           "name":"My new name"
@@ -890,25 +890,25 @@ paths:
         - 5.2 changes
       summary: Delete a node
       description: |
-         Deletes the node with identifier **nodeId**.
-         If the **nodeId** is a folder, then its children are also deleted.
-         Deleted nodes move to the trashcan unless the **permanent** query parameter is true, and the current user is the owner or an admin.
+         Deletes the node **nodeId**.
+         If **nodeId** is a folder, then its children are also deleted.
+         Deleted nodes move to the trashcan unless the **permanent** query parameter is **true** and the current user is the owner of the node or an admin.
          
-         Deleting a node removes it from it's primary parent and also from any other secondary parents. Also, peer associations are removed, where the deleted 
-         node is either a source or target. The same also applies recursively to any hierarchy of primary children of the deleted node. 
+         Deleting a node removes it from its primary parent and also from any secondary parents. Peer associations are also removed, where the deleted 
+         node is either a source or target of an association. This applies recursively to any hierarchy of primary children of the deleted node. 
          
-         It should be noted that if the node is not permanently deleted and later successfully restored to it's former primary parent, then only the primary 
-         child association will be restored, including recursively for any primary children. It should be noted that no other secondary child associations or 
-         peer associations will be restored, for any of the nodes within the primary parent-child hierarchy of restored nodes, irrespective of whether these 
-         associations were to nodes within or outside of the restored hierarchy.
+         **Note:** If the node is not permanently deleted, and is later successfully restored to its former primary parent, then the primary 
+         child association is restored. This applies recursively for any primary children. No other secondary child associations or 
+         peer associations are restored for any of the nodes in the primary parent-child hierarchy of restored nodes, regardless of whether the original 
+         associations were to nodes inside or outside the restored hierarchy.
       operationId: deleteNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - name: permanent
           in: query
           description: |
-            If **true** then the node is deleted permanently, without it moving to the trashcan.
-            You must be the owner or an admin to permanently delete the node.
+            If **true** then the node is deleted permanently, without moving to the trashcan.
+            Only the owner of the node or an admin can permanently delete the node.
           required: false
           type: boolean
           default: false
@@ -936,13 +936,13 @@ paths:
         - 5.2 changes
       summary: Get node children
       description: |
-        Returns the children of the parent node with identifier **nodeId**.
+        Returns the children of the parent node **nodeId**.
         Minimal information for each child is returned by default.
         You can use the **include** parameter to return addtional information.
         
-        The list of child nodes includes primary children and also secondary children, if any.
+        The list of child nodes includes primary children and secondary children, if there are any.
         You can use the **include** parameter (include=association) to return child association details 
-        for each child, including the assocType and the isPrimary flag.
+        for each child, including the **assocTyp**e and the **isPrimary** flag.
       operationId: getNodeChildren
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -951,14 +951,14 @@ paths:
         - name: orderBy
           in: query
           description: |
-            If not specified then default sort is for folders to be sorted before files, and by ascending name
+            The default sort order is for folders to be sorted before files, and by ascending name
             i.e. "orderBy=isFolder DESC,name ASC".
 
-            This default can be completely overridden by specifying a specific orderBy consisting of one, two or
-            three comma-separated list of properties (with optional ASCending or DESCending), for example,
-            specifying “orderBy=name DESC” would return a mixed folder/file list.
+            You can override the default by setting **orderBy**. You specify one, two or
+            three comma-separated lists of properties, with an optional **ASC**ending or **DESC**ending term. For example,
+            specifying ```orderBy=name DESC``` would return a mixed folder/file list.
 
-            The following properties can be used to order the results:
+            You can use and of the following properties to order the results:
             * isFolder
             * name
             * mimeType
@@ -975,29 +975,29 @@ paths:
           description: |
             Optionally filter the list. Here are some examples:
 
-            *   where=(isFolder=true)
+            *   ```where=(isFolder=true)```
 
-            *   where=(isFile=true)
+            *   ```where=(isFile=true)```
 
-            *   where=(nodeType='my:specialNodeType')
+            *   ```where=(nodeType='my:specialNodeType')```
 
-            *   where=(nodeType='my:specialNodeType' INCLUDESUBTYPES)
+            *   ```where=(nodeType='my:specialNodeType' INCLUDESUBTYPES)```
             
-            *   where=(isPrimary=true)
+            *   ```where=(isPrimary=true)```
             
-            *   where=(assocType='my:specialAssocType')
+            *   ```where=(assocType='my:specialAssocType')```
 
           required: false
           type: string
         - $ref: '#/parameters/nodeMinimalEntryIncludeParam'
         - name: relativePath
           in: query
-          description: Return information on children within the folder resolved by this path (relative to specified nodeId as the starting parent folder)
+          description: Return information on children in the folder resolved by this path. The path is relative to **nodeId**.
           required: false
           type: string
         - name: includeSource
           in: query
-          description: Also include **source** (in addition to **entries**) with folder information on **nodeId** (either the specified parent **nodeId** or as resolved by **relativePath**)
+          description: Also include **source** in addition to **entries** with folder information on the parent node – either the specified parent **nodeId**, or as resolved by **relativePath**.
           required: false
           type: boolean
         - $ref: '#/parameters/fieldsParam'
@@ -1009,7 +1009,7 @@ paths:
           schema:
             $ref: '#/definitions/NodePaging'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+          description: If the **nodeId** is not a valid format, or is not a folder
         '401':
           description: If authentication fails
         '404':
@@ -1022,9 +1022,9 @@ paths:
       tags:
         - nodes
         - 5.2 changes
-      summary: Create a node
+      summary: Add a node
       description: |
-        Creates a node as a (primary) child of the node with identifier **nodeId**.
+        Add a node as a primary child of node **nodeId**.
         
         This API method supports file upload using multipart/form-data.
 
@@ -1078,7 +1078,7 @@ paths:
           "relativePath":"X/Y/Z"
         }
         ```
-        The **relativePath** specifies the folder structure to create relative to the node identified by  **nodeId**. Folders in the
+        The **relativePath** specifies the folder structure to create relative to the node **nodeId**. Folders in the
         **relativePath** that do not exist are created before the node is created.
 
         You can set properties when you create a new node:
@@ -1093,8 +1093,8 @@ paths:
             }
         }
         ```
-        Any missing aspects are auto-applied. For example, **cm:titled** in the JSON shown above. You can set aspects
-        explicitly set, if needed, using an **aspectNames** field.
+        Any missing aspects are applied automatically. For example, **cm:titled** in the JSON shown above. You can set aspects
+        explicitly, if needed, using an **aspectNames** field.
         
         Typically, for files and folders, the primary children are created within the parent folder using the default "cm:contains" assocType. 
         If the content model allows then it is also possible to create primary children with a different assoc type. For example:
@@ -1109,8 +1109,8 @@ paths:
         }
         ``` 
         
-        Additional associations can usually be added after creating a node. However, it is also possible to add association at time of create. This is 
-        required, for example, if the content model specifies that a node has mandatory associations to one or more other existing nodes. You can optionally 
+        Additional associations can be added after creating a node. You can also add associations at the time the node is created. This is 
+        required, for example, if the content model specifies that a node has mandatory associations to one or more existing nodes. You can optionally 
         specify an array of **secondaryChildren** to create one or more secondary child associations, such that the newly created node acts as a parent node. 
         You can optionally specify an array of **targets** to create one or more peer associations such that the newly created node acts as a source node. 
         For example, to associate one or more secondary children at time of creation:
@@ -1243,11 +1243,11 @@ paths:
         '409':
           description: If new name clashes with an existing node in the current parent folder
         '413':
-          description: If file content exceeds individual file size limit (configured for network/system)
+          description: If file content exceeds individual file size limit configured for the network or system
         '422':
           description: Model integrity exception
         '507':
-          description: If file content exceeds overall storage quota limit (configured for network/system)
+          description: If file content exceeds overall storage quota limit configured for the network or system
         default:
           description: Unexpected error
           schema:
@@ -1259,7 +1259,7 @@ paths:
         - 5.2 changes
       summary: Copy a node
       description: |
-        Copy the node **nodeId** to the parent folder node **targetParentId**. The **targetParentId** is specified in the request body.
+        Copies the node **nodeId** to the parent folder node **targetParentId**. You specify the **targetParentId** in the request body.
 
         The new node has the same name as the source node unless you specify a new **name** in the request body.
 
@@ -1291,7 +1291,7 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+          description: If the **nodeId** is not a valid format, or is not a folder
         '403':
           description: If current user does not have permission to add children to **nodeId**
         '404':
@@ -1314,7 +1314,7 @@ paths:
 
         The moved node retains its name unless you specify a new **name** in the request body.
 
-        If the source **nodeId** is a folder, then all of its children are also moved.
+        If the source **nodeId** is a folder, then its children are also moved.
         
         The move will effectively change the primary parent
       operationId: moveNode
@@ -1344,7 +1344,7 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a folder
+          description: If the **nodeId** is not a valid format, or is not a folder
         '403':
           description: If current user does not have permission to add children to **nodeId**
         '404':
@@ -1373,7 +1373,7 @@ paths:
         '304':
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+          description: If the **nodeId** is not a valid format, or is not a file
         '404':
           description: If **nodeId** does not exist
         '413':
@@ -1437,7 +1437,7 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+          description: If the **nodeId** is not a valid format, or is not a file
         '403':
           description: If current user does not have permission to update **nodeId**
         '404':
@@ -1453,8 +1453,8 @@ paths:
         - 5.2 changes
       summary: Create rendition
       description: |
-        Async request to create a rendition for file with identifier
-        **nodeId**. The rendition is specified by name "id" in the request body:
+        An asynchronous request to create a rendition for file **nodeId**. 
+        The rendition is specified by name **id** in the request body:
         ```JSON
         {
           "id":"doclib"
@@ -1475,15 +1475,15 @@ paths:
         - application/json
       responses:
         '202':
-          description: Successful accepted
+          description: Request accepted
         '400':
-          description: If the **nodeId** is not a valid format or does not identify a file
+          description: If the **nodeId** is not a valid format or is not a file
         '403':
           description: If current user does not have permission for **nodeId**
         '404':
           description: If **nodeId** does not exist
         '409':
-          description: If rendition already exists
+          description: If the rendition already exists
         '501':
           description: If rendition/thumbnails are disabled for the system
         default:
@@ -1495,10 +1495,10 @@ paths:
         - renditions
         - 5.2 changes
       summary: List information for renditions
-      description: Returns the rendition information for the file node with identifier **nodeId**.
+      description: Returns the rendition information for the file **nodeId**.
       
         This will return rendition information, including the rendition id, for each rendition.
-        The rendition status is CREATED (ie. available to view/download) or NOT_CREATED (ie. rendition can be requested).
+        The rendition status is CREATED, which means it is available to view or download; or NOT_CREATED, which means the rendition can be requested.
         
       operationId: getRenditions
       parameters:
@@ -1509,7 +1509,7 @@ paths:
           schema:
             $ref: '#/definitions/RenditionPaging'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file
+          description: If the **nodeId** is not a valid format, or is not a file
         '404':
           description: If **nodeId** does not exist
         default:
@@ -1522,7 +1522,7 @@ paths:
         - renditions
         - 5.2 changes
       summary: Get rendition information
-      description: Returns the rendition information for **renditionId** of file node with identifier **nodeId**.
+      description: Returns the rendition information for **renditionId** of file **nodeId**.
       operationId: getRendition
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1533,7 +1533,7 @@ paths:
           schema:
             $ref: '#/definitions/RenditionEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
+          description: If the **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
         '404':
           description: If **nodeId** or **renditionId** does not exist
         default:
@@ -1546,7 +1546,7 @@ paths:
         - renditions
         - 5.2 changes
       summary: Get rendition content
-      description: Returns the rendition content for **renditionId** of file node with identifier **nodeId**.
+      description: Returns the rendition content for **renditionId** of file **nodeId**.
       operationId: getRenditionContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1559,7 +1559,7 @@ paths:
         '304':
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **renditionId** is invalid
+          description: If the **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
         '404':
           description: If **nodeId** or **renditionId** does not exist
         default:
@@ -1573,7 +1573,7 @@ paths:
         - nodes
       summary: Add secondary child
       description: |
-        Add secondary child association, with given association type, between parent **nodeId** and child node.
+        Add a secondary child association, with the given association type, between the parent **nodeId** and a child node.
       operationId: addSecondaryChildAssoc
       produces:
         - application/json
@@ -1595,7 +1595,7 @@ paths:
         '404':
           description: If parent **nodeId** or **childId** does not exist
         '409':
-          description: Association already exists (eg. same assoc type between same two nodes)
+          description: An association of this assoc type already exists between these two nodes
         '422':
           description: Model integrity exception
         default:
@@ -1606,7 +1606,7 @@ paths:
       tags:
         - 5.2 changes
         - nodes
-      summary: List secondary children
+      summary: Get secondary children
       description: |
         Returns a list of secondary child nodes that are associated with the current parent **nodeId**, via a secondary child association.
       operationId: listSecondaryChildAssociations
@@ -1633,7 +1633,7 @@ paths:
           schema:
             $ref: '#/definitions/NodeChildAssocPaging'
         '400':
-          description: Invalid parameter, eg. unknown assocType
+          description: Invalid parameter. For example, unknown **assocType**
         '404':
           description: If parent **nodeId** does not exist
         default:
@@ -1645,12 +1645,12 @@ paths:
       tags:
         - 5.2 changes
         - nodes
-      summary: Remove secondary child (or children)
+      summary: Remove secondary child or children
       description: |
-        Remove secondary child association(s) between parent **nodeId** and child node for given association type. 
+        Remove secondary child associations between the parent **nodeId** and child nodes for the given association type. 
         
-        If association type is not specified then multiple secondary child associations, of any type, will be removed specifically in the direction 
-        from parent to secondary child. The child will still have a primary parent and may still be associated as a secondary child with other secondary parents.
+        If the association type is **not** specified, then all secondary child associations, of any type in the direction 
+        from parent to secondary child, will be removed. The child will still have a primary parent and may still be associated as a secondary child with other secondary parents.
       operationId: removeSecondaryChildAssoc
       produces:
         - application/json
@@ -1663,14 +1663,14 @@ paths:
           type: string
         - name: assocType
           in: query
-          description: Restrict the delete to only those of the given association type
+          description: Only delete associations of this type.
           type: string
           required: false 
       responses:
         '204':
           description: Successful response
         '400':
-          description: Invalid parameter, eg. unknown assocType or trying to delete a primary assocType (use delete node instead)
+          description: Invalid parameter. For example, unknown **assocType** or trying to delete a primary **assocType** – use delete node instead
         '404':
           description: If parent **nodeId** or **childId** does not exist (with given assocType, if specified)
         default:
@@ -1684,9 +1684,9 @@ paths:
         - nodes
       summary: List parents
       description: |
-        Returns a list of parent nodes that point to (ie. are associated with) the current child **nodeId**. 
+        Returns a list of parent nodes that are associated with the current child **nodeId**. 
         
-        This inclues both the primary parent and also secondary parents, if any.
+        The list includes both the primary parent and any secondary parents.
       operationId: listParents
       produces:
         - application/json
@@ -1695,13 +1695,13 @@ paths:
         - name: where
           in: query
           description: |
-            Optionally filter the list by assocType and/or isPrimary. Here are some examples:
+            Optionally filter the list by **assocType** and/or **isPrimary**. Here are some example filters:
 
-            *   where=(assocType='my:specialAssocType')
+            *   ```where=(assocType='my:specialAssocType')```
             
-            *   where=(isPrimary=true)
+            *   ```where=(isPrimary=true)```
             
-            *   where=(isPrimary=false and assocType='my:specialAssocType')
+            *   ```where=(isPrimary=false and assocType='my:specialAssocType')```
           required: false
           type: string 
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
@@ -1715,7 +1715,7 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
-          description: Invalid parameter, eg. unknown assocType
+          description: Invalid parameter. For example, unknown **assocType**
         '404':
           description: If child **nodeId** does not exist
         default:
@@ -1729,7 +1729,7 @@ paths:
         - nodes
       summary: Add node association
       description: |
-        Add association, with given association type, between source **nodeId** and target node.
+        Add an association, with the given association type, between the source **nodeId** and a target node.
       operationId: addAssoc
       produces:
         - application/json
@@ -1747,11 +1747,11 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocEntry'
         '400':
-          description: Invalid parameter, eg. unknown assocType
+          description: Invalid parameter. For example, unknown **assocType**
         '404':
           description: If source **nodeId** or **targetId** does not exist
         '409':
-          description: Association already exists (eg. same assoc type between same two nodes)
+          description: An association of this assoc type already exists between these two nodes
         '422':
           description: Model integrity exception
         default:
@@ -1764,7 +1764,7 @@ paths:
         - nodes
       summary: List node associations
       description: |
-        Returns a list of target nodes that are pointed to (ie. are associated with) the current source **nodeId**.
+        Returns a list of target nodes that are associated with the current source **nodeId**.
       operationId: listTargetAssociations
       produces:
         - application/json
@@ -1773,9 +1773,9 @@ paths:
         - name: where
           in: query
           description: |
-            Optionally filter the list by assocType. Here's an example:
+            Optionally filter the list by **assocType**. Here's an example:
 
-            *   where=(assocType='my:specialAssocType')
+            *   ```where=(assocType='my:specialAssocType')```
           required: false
           type: string 
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
@@ -1786,7 +1786,7 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
-          description: Invalid parameter, eg. unknown assocType
+          description: Invalid parameter. For example,. unknown **assocType**
         '404':
           description: If source **nodeId** does not exist
         default:
@@ -1800,12 +1800,12 @@ paths:
         - nodes
       summary: Remove node association(s)
       description: |
-        Remove association(s) from source **nodeId* to target node for given association type. 
+        Remove an association, or associations, from the source **nodeId* to a target node for the given association type. 
         
-        If association type is not specified then multiple peer associations, of any type, will be removed specifically in the direction 
-        from source to target. 
+        If the association type is **not** specified, then all peer associations, of any type, in the direction 
+        from source to target, are removed.
         
-        It should be noted that after removal of the peer association(s) from source to target, the two nodes may still have peer associations
+        **Note:** After removal of the peer association, or associations, from source to target, the two nodes may still have peer associations
         in the other direction.
       operationId: removeAssoc
       produces:
@@ -1819,7 +1819,7 @@ paths:
           type: string
         - name: assocType
           in: query
-          description: Restrict the delete to only those of the given association type
+          description: Only delete associations of this type.
           type: string
           required: false 
       responses:
@@ -1840,7 +1840,7 @@ paths:
         - nodes
       summary: List node associations
       description: |
-        Returns a list of source nodes that point to (ie. are associated with) the current target **nodeId**.
+        Returns a list of source nodes that are associated with the current target **nodeId**.
       operationId: listSourceNodeAssociations
       produces:
         - application/json
@@ -1849,9 +1849,9 @@ paths:
         - name: where
           in: query
           description: |
-            Optionally filter the list by assocType. Here's an example:
+            Optionally filter the list by **assocType**. Here's an example:
 
-            *   where=(assocType='my:specialAssocType')
+            *   ```where=(assocType='my:specialAssocType')```
           required: false
           type: string
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
@@ -1862,7 +1862,7 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
-          description: Invalid parameter, eg. unknown assocType
+          description: Invalid parameter. For example, unknown **assocType**
         '404':
           description: If target **nodeId** does not exist
         default:
@@ -1874,12 +1874,12 @@ paths:
       tags:
         - 5.2 changes
         - nodes
-      summary: List node version history
+      summary: Get node version history
       description: |
         Returns the version history as an ordered list of version nodes for the specified **nodeId**.
         
-        The list is ordered in descending modified order, such that most recent version appears first and 
-        the original version appearing last. 
+        The list is ordered in descending modified order. So the most recent version is first and 
+        the original version is last in the list. 
       operationId: listVersionHistory
       produces:
         - application/json
@@ -1904,7 +1904,7 @@ paths:
         - 5.2 changes
         - nodes
       summary: Get version information
-      description: Returns the version information for **versionId** of file node with identifier **nodeId**.
+      description: Returns the version information for **versionId** of file node **nodeId**.
       operationId: getVersion
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1960,7 +1960,7 @@ paths:
         - 5.2 changes
         - nodes
       summary: Get version content
-      description: Returns the version content for **versionId** of file node with identifier **nodeId**.
+      description: Returns the version content for **versionId** of file node **nodeId**.
       operationId: getVersionContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1973,7 +1973,7 @@ paths:
         '304':
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid
+          description: If the **nodeId** is not a valid format, or is not a file, or **versionId** is invalid
         '404':
           description: If **nodeId** or **versionId** does not exist
         default:
@@ -1985,7 +1985,7 @@ paths:
       tags:
         - 5.2 changes
         - nodes
-      summary: Revert (ie. promote) a version node
+      summary: Revert a version node
       description: |
         Attempts to revert the versioned node identified by **versionId** and **nodeId** to the live node.
         
@@ -1999,7 +1999,7 @@ paths:
         - $ref: '#/parameters/versionIdParam'
         - in: body
           name: revertBody
-          description: Optionally, specify a version comment and whether this should be a major version (or not)
+          description: Optionally, specify a version comment and whether this should be a major version, or not.
           required: true
           schema:
             properties:
@@ -2056,7 +2056,7 @@ paths:
         - 5.2 changes
       summary: Get a deleted node
       description: |
-        Returns a specific deleted node identified by **nodeId**.
+        Returns the specific deleted node **nodeId**.
       operationId: getDeletedNode
       produces:
         - application/json
@@ -2082,7 +2082,7 @@ paths:
         - 5.2 changes
       summary: Purge a deleted node
       description: |
-        Permanently removes the deleted node identified by **nodeId**.
+        Permanently removes the deleted node **nodeId**.
       operationId: purgeDeletedNode
       produces:
         - application/json
@@ -2106,7 +2106,7 @@ paths:
         - 5.2 changes
       summary: Restore a deleted node
       description: |
-        Attempts to restore the deleted node identified by **nodeId** to its original location.
+        Attempts to restore the deleted node **nodeId** to its original location.
         
         If the node is successfully restored to it's former primary parent, then only the 
         primary child association will be restored, including recursively for any primary 
@@ -3286,7 +3286,7 @@ paths:
       tags:
         - sites
       summary: Get containers
-      description: Returns a list of containers information for site identified by **siteId**.
+      description: Returns a list of containers information for the site **siteId**.
       operationId: getSiteContainers
       produces:
         - application/json
@@ -3694,7 +3694,7 @@ paths:
         - 5.2 changes
       summary: Create a shared link to a file
       description: |
-        Create a shared link to the file identified by **nodeId** in the request body.
+        Create a shared link to the file **nodeId** in the request body.
         
         **Note:** You can create shared links to more than one file 
         specifying a list of **nodeId**s in the JSON body like this:
