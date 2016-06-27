@@ -4876,6 +4876,8 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/NodeMinimalEntry'
+          source:
+            $ref: '#/definitions/NodeMinimal'
   NodeAssocPaging:
     type: object
     properties:
@@ -4888,6 +4890,8 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/NodeAssocMinimalEntry'
+          source:
+            $ref: '#/definitions/NodeMinimal'
   NodeChildAssocPaging:
     type: object
     properties:
@@ -4899,7 +4903,9 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeChildAssocMinimalEntry'                              
+              $ref: '#/definitions/NodeChildAssocMinimalEntry'
+          source:
+            $ref: '#/definitions/NodeMinimal'                         
   NodeMinimalEntry:
     type: object
     required:
