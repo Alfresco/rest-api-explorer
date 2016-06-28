@@ -9,7 +9,7 @@ Please note, as of now, the:
 
 - [API definitions](https://github.com/Alfresco/rest-api-explorer/tree/community-head/src/main/webapp/definitions) on the 'community-head' branch represent Alfresco Community HEAD (aka nightly builds).
 
-- [API definitions](https://github.com/Alfresco/rest-api-explorer/tree/develop/src/main/webapp/definitions) on this branch 'develop' represent the latest feature development branch, currently RETURN-OF-THE-API.
+- [API definitions](https://github.com/Alfresco/rest-api-explorer/tree/develop/src/main/webapp/definitions) on this branch ('develop') represent the latest feature development branch.
 
 #### Building and deploying the war
 - `mvn install`
