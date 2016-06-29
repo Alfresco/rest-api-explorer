@@ -810,6 +810,8 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: If the **nodeId** is not a valid format
+        '401':
+          description: If authentication fails          
         '404':
           description: If **nodeId** does not exist
         default:
@@ -880,6 +882,8 @@ paths:
           description: If **nodeId** does not exist
         '409':
           description: If the updated name clashes with an existing node in the current parent folder
+        '422':
+          description: Model integrity exception, including file name with invalid characters
         default:
           description: Unexpected error
           schema:
@@ -1245,7 +1249,7 @@ paths:
         '413':
           description: If file content exceeds individual file size limit configured for the network or system
         '422':
-          description: Model integrity exception
+          description: Model integrity exception, including file name with invalid characters
         '507':
           description: If file content exceeds overall storage quota limit configured for the network or system
         default:
@@ -1271,7 +1275,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: copyBody
-          description: The targetParentId and, optionally, a new name.
+          description: The targetParentId and, optionally, a new name which should include the file extension.
           required: true
           schema:
             required:
@@ -1291,13 +1295,17 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or is not a folder
+          description: If the **nodeId** is not a valid format
+        '401':
+          description: If authentication fails          
         '403':
           description: If current user does not have permission to add children to **nodeId**
         '404':
           description: If **nodeId** does not exist
         '409':
           description: If the new name clashes with an existing node in the destination parent folder
+        '422':
+          description: Model integrity exception, including file name with invalid characters
         default:
           description: Error response
           schema:
@@ -1324,7 +1332,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: moveBody
-          description: The targetParentId and, optionally, a new name.
+          description: The targetParentId and, optionally, a new name which should include the file extension.
           required: true
           schema:
             required:
@@ -1344,13 +1352,17 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or is not a folder
+          description: If the **nodeId** is not a valid format or **targetParentId** is not a folder
+        '401':
+          description: If authentication fails          
         '403':
           description: If current user does not have permission to add children to **nodeId**
         '404':
           description: If **nodeId** does not exist
         '409':
           description: If the new name clashes with an existing node in the destination parent folder
+        '422':
+          description: Model integrity exception, including file name with invalid characters
         default:
           description: Error response
           schema:
@@ -1374,12 +1386,10 @@ paths:
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: If the **nodeId** is not a valid format, or is not a file
+        '401':
+          description: If authentication fails          
         '404':
           description: If **nodeId** does not exist
-        '413':
-          description: If file content exceeds individual file size limit (configured for network/system)
-        '507':
-          description: If file content exceeds overall storage quota limit (configured for network/system)
         default:
           description: Error response
           schema:
@@ -1396,6 +1406,9 @@ paths:
 
         The **majorVersion** and **comment** parameters can be used to control versioning behaviour. If the content is versionable,
         a new minor version is created by default.
+        
+        Optionally a new **name** parameter can also be specified that must be unique within the parent folder. If specified and valid then this 
+        will rename the node. If invalid then an error is returned and the content is not updated.
 
         **Note:** This API method accepts any content type, but for testing with this tool text based content can be provided.
         This is because the OpenAPI Specification does not allow a wildcard to be provided or the ability for
@@ -1418,6 +1431,12 @@ paths:
             Setting this parameter also enables versioning of this node, if it is not already versioned.
           required: false
           type: string
+        - name: name
+          in: query
+          description: |
+            Optional new name. This should include the file extension.
+          required: false
+          type: string          
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
@@ -1438,10 +1457,20 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: If the **nodeId** is not a valid format, or is not a file
+        '401':
+          description: If authentication fails          
         '403':
           description: If current user does not have permission to update **nodeId**
         '404':
           description: If **nodeId** does not exist
+        '409':
+          description: If optional new name clashes with an existing node in the current parent folder
+        '413':
+          description: If file content exceeds individual file size limit (configured for network/system)          
+        '422':
+          description: Model integrity exception, including file name with invalid characters
+        '507':
+          description: If file content exceeds overall storage quota limit (configured for network/system)
         default:
           description: Error response
           schema:
@@ -1478,6 +1507,8 @@ paths:
           description: Request accepted
         '400':
           description: If the **nodeId** is not a valid format or is not a file
+        '401':
+          description: If authentication fails          
         '403':
           description: If current user does not have permission for **nodeId**
         '404':
@@ -1510,6 +1541,8 @@ paths:
             $ref: '#/definitions/RenditionPaging'
         '400':
           description: If the **nodeId** is not a valid format, or is not a file
+        '401':
+          description: If authentication fails          
         '404':
           description: If **nodeId** does not exist
         default:
@@ -1534,6 +1567,8 @@ paths:
             $ref: '#/definitions/RenditionEntry'
         '400':
           description: If the **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
+        '401':
+          description: If authentication fails          
         '404':
           description: If **nodeId** or **renditionId** does not exist
         default:
@@ -1560,6 +1595,8 @@ paths:
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: If the **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
+        '401':
+          description: If authentication fails          
         '404':
           description: If **nodeId** or **renditionId** does not exist
         default:
@@ -1591,7 +1628,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeChildAssocEntry'
         '400':
-          description: Invalid parameter, eg. unknown assocType
+          description: Invalid parameter. For example, unknown **assocType**, or the **nodeId** is not a valid format
+        '401':
+          description: If authentication fails          
         '404':
           description: If parent **nodeId** or **childId** does not exist
         '409':
@@ -1633,7 +1672,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeChildAssocPaging'
         '400':
-          description: Invalid parameter. For example, unknown **assocType**
+          description: Invalid parameter.For example, unknown **assocType**, or the **nodeId** is not a valid format
+        '401':
+          description: If authentication fails          
         '404':
           description: If parent **nodeId** does not exist
         default:
@@ -1670,7 +1711,9 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: Invalid parameter. For example, unknown **assocType** or trying to delete a primary **assocType** – use delete node instead
+          description: Invalid parameter. For example, unknown **assocType**, or trying to delete a primary **assocType** – use delete node instead
+        '401':
+          description: If authentication fails          
         '404':
           description: If parent **nodeId** or **childId** does not exist (with given assocType, if specified)
         default:
@@ -1715,7 +1758,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
-          description: Invalid parameter. For example, unknown **assocType**
+          description: Invalid parameter. For example, unknown **assocType**, or the **nodeId** is not a valid format
+        '401':
+          description: If authentication fails          
         '404':
           description: If child **nodeId** does not exist
         default:
@@ -1747,7 +1792,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocEntry'
         '400':
-          description: Invalid parameter. For example, unknown **assocType**
+          description: Invalid parameter. For example, unknown **assocType**, or the **nodeId** is not a valid format
+        '401':
+          description: If authentication fails          
         '404':
           description: If source **nodeId** or **targetId** does not exist
         '409':
@@ -1786,7 +1833,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
-          description: Invalid parameter. For example,. unknown **assocType**
+          description: Invalid parameter. For example, unknown **assocType**, or the **nodeId** is not a valid format
+        '401':
+          description: If authentication fails          
         '404':
           description: If source **nodeId** does not exist
         default:
@@ -1826,7 +1875,9 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: Invalid parameter, eg. unknown assocType
+          description: Invalid parameter. For example, unknown **assocType**, or the **nodeId** is not a valid format, or **targetId** is invalid
+        '401':
+          description: If authentication fails
         '404':
           description: If source **nodeId** or **targetId** does not exist (with given assocType, if specified)
         default:
@@ -1863,6 +1914,8 @@ paths:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
           description: Invalid parameter. For example, unknown **assocType**
+        '401':
+          description: If authentication fails
         '404':
           description: If target **nodeId** does not exist
         default:
@@ -1892,6 +1945,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VersionNodesPaging'
+        '400':
+          description: Invalid parameter. For example, the **nodeId** is not a valid format            
+        '401':
+          description: If authentication fails
         '404':
           description: If target **nodeId** does not exist
         default:
@@ -1916,6 +1973,8 @@ paths:
             $ref: '#/definitions/VersionNodeEntry'
         '400':
           description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid
+        '401':
+          description: If authentication fails
         '404':
           description: If **nodeId** or **versionId** does not exist
         default:
@@ -1936,7 +1995,7 @@ paths:
         If the most recent version is deleted the live node will revert to the next most recent version.
         
         If the last version is deleted then the node will have no version history. A new version history will
-        be created on a subsequent node upload/update.
+        be created on a subsequent file node upload (content update).
       operationId: deleteVersionNode
       produces:
         - application/json
@@ -1946,6 +2005,10 @@ paths:
       responses:
         '204':
           description: Successful response
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid     
+        '401':
+          description: If authentication fails
         '403':
           description: If the user does not have permission to delete the versioned node
         '404':
@@ -1974,6 +2037,8 @@ paths:
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: If the **nodeId** is not a valid format, or is not a file, or **versionId** is invalid
+        '401':
+          description: If authentication fails
         '404':
           description: If **nodeId** or **versionId** does not exist
         default:
@@ -2012,6 +2077,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VersionNodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid             
+        '401':
+          description: If authentication fails
         '403':
           description: If the user does not have permission to revert the versioned node
         '404':
@@ -2045,6 +2114,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DeletedNodesPaging'
+        '401':
+          description: If authentication fails            
         default:
           description: Error response
           schema:
@@ -2068,6 +2139,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DeletedNodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format
+        '401':
+          description: If authentication fails
         '403':
           description: If the user does not have permission to view the deleted node
         '404':
@@ -2091,6 +2166,10 @@ paths:
       responses:
         '204':
           description: Successful response
+        '400':
+          description: If the **nodeId** is not a valid format          
+        '401':
+          description: If authentication fails
         '403':
           description: If the user does not have permission to purge the deleted node
         '404':
@@ -2127,6 +2206,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/NodeEntry'
+        '400':
+          description: If the **nodeId** is not a valid format             
+        '401':
+          description: If authentication fails
         '403':
           description: If the user does not have permission to restore the deleted node
         '404':
@@ -3273,6 +3356,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '401':
+          description: If authentication fails          
         '403':
           description: If user does not have permission to delete the site (that is visible to them).
         '404':
@@ -3759,6 +3844,8 @@ paths:
             $ref: '#/definitions/NodeSharedLinkEntry'
         '400':
           description: If the **nodeId** is not a valid format or does not identify a file
+        '401':
+          description: If authentication fails          
         '403':
           description: If current user does not have permission to create **sharedId** (eg. no read permission)
         '404':
@@ -3798,6 +3885,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/NodeSharedLinkPaging'
+        '401':
+          description: If authentication fails            
         '501':
           description: If shared links are disabled for the system
         default:
@@ -3852,6 +3941,8 @@ paths:
           description: Successful response
         '400':
           description: If **sharedId** is not a valid format
+        '401':
+          description: If authentication fails          
         '403':
           description: If current user does not have permission to delete **sharedId**
         '404':
@@ -3945,7 +4036,7 @@ paths:
         '304':
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
-          description: If the **sharedId** is not a valid format
+          description: If the **sharedId** is not a valid format, or **renditionId** is invalid
         '404':
           description: If **sharedId** does not exist
         '501':
@@ -4008,6 +4099,8 @@ paths:
           description: Successful response
         '400':
           description: If the **sharedId** is not a valid format
+        '401':
+          description: If authentication fails          
         '404':
           description: If **sharedId** does not exist
         '501':
@@ -4077,6 +4170,8 @@ paths:
             $ref: '#/definitions/NodePaging'
         '400':
           description: Invalid parameter, eg. search term is too short, unknown nodeType, unknown orderBy field
+        '401':
+          description: If authentication fails          
         '404':
           description: If **rootNodeId** does not exist
         default:
