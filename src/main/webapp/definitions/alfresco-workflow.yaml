@@ -27,7 +27,7 @@ parameters:
   processIdParam:
     name: "processId"
     in: "path"
-    description:  The identifier of a process. 
+    description:  The identifier of a process.
     required: true
     type: "string"
   processDefinitionIdParam:
@@ -119,6 +119,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DeploymentPaging'
+        '401':
+            description: If authentication fails
         default:
           description: Error response
           schema:
@@ -130,7 +132,7 @@ paths:
       summary: Get a deployment
       description: |
         Returns a specified deployment defined by **deploymentId**.
-        
+
         The authenticated user must have role admin (non-network deployments) or
         network admin (networks enabled).
 
@@ -151,6 +153,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DeploymentEntry'
+        '401':
+            description: If authentication fails
         '404':
           description: If **deploymentId** does not exist
         default:
@@ -162,8 +166,8 @@ paths:
         - deployments
       summary: Delete a deployment
       description: |
-        This request will delete the deployment including the tasks, process definitions contained in the deployment. 
-        
+        This request will delete the deployment including the tasks, process definitions contained in the deployment.
+
         The request will also delete processes and history information associated with the deployment.
       operationId: removeDeployment
       produces:
@@ -177,6 +181,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '401':
+          description: If authentication fails
         default:
           description: Error response
           schema:
@@ -188,7 +194,7 @@ paths:
       summary: Get process definitions
       description: |
         Returns a list of process definitions.
-        
+
         In non-network deployments, any authenticated user will see all the
         process definitions.
 
@@ -208,6 +214,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessDefinitionPaging'
+        '401':
+            description: If authentication fails
         default:
           description: Error response
           schema:
@@ -219,7 +227,7 @@ paths:
       summary: Get a process definition
       description: |
         Returns a process definition identified by **processDefinitionId**.
-        
+
         In non-network deployments, any authenticated user will see all the
         process definitions. If networks are enabled, the network admin can only
         see the deployments in the given network.
@@ -234,6 +242,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessDefinitionEntry'
+        '401':
+            description: If authentication fails
         '404':
           description: If **processDefinitionId** does not exist
         default:
@@ -247,7 +257,7 @@ paths:
       summary: Get a process definition image
       description: |
         Returns an image that represents a single process definition identified by **processDefinitionId**.
-        
+
         In non-network deployments, any authenticated user will see all the
         process definitions.
 
@@ -264,6 +274,8 @@ paths:
           description: Successful response
           schema:
             type: file
+        '401':
+            description: If authentication fails
         '404':
           description: If **processDefinitionId** does not exist
         default:
@@ -277,8 +289,8 @@ paths:
       summary: Get a start form model
       description: |
         Returns a model of the start form type definition.
-        
-        An authenticated user will have access to all start form models. 
+
+        An authenticated user will have access to all start form models.
         In a network, only start form models that are inside the given network are returned.
       operationId: getProcessDefinitionStartFormModel
       produces:
@@ -291,6 +303,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessDefinitionEntry'
+        '401':
+            description: If authentication fails
         '404':
           description: If **processDefinitionId** does not exist
         default:
@@ -304,7 +318,7 @@ paths:
       summary: Get processes
       description: |
         Returns a  list of processes.
-        
+
         An authenticated user will have access to a processes if the user has
         started the process or if the user is involved in any of the process’s
         tasks. In a network, only processes that are inside the given network are
@@ -329,6 +343,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessPaging'
+        '401':
+            description: If authentication fails
         default:
           description: Error response
           schema:
@@ -339,16 +355,16 @@ paths:
       summary: Start a process
       description: |
         Starts a new process.
-        
+
         In non-network deployments, any authenticated user can start a new process for
         any process definition.
 
         If networks are enabled, the authenticated user can start a new process for a
         process definition in the user's network.
-        
-        **Note:** You can start more than one process by 
+
+        **Note:** You can start more than one process by
         specifying a list of process entries in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -365,7 +381,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -406,6 +422,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessEntry'
+        '401':
+            description: If authentication fails
         default:
           description: Error response
           schema:
@@ -417,7 +435,7 @@ paths:
       summary: Get a process
       description: |
         Returns the process identified by **processId**.
-        
+
         An authenticated user will have access to a process if the user has
         started the process or if the user is involved in any of the process’s
         tasks. In a network, only processes that are inside the given network are
@@ -438,6 +456,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessEntry'
+        '401':
+            description: If authentication fails
         '404':
           description: If **processId** does not exist
         default:
@@ -457,6 +477,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '401':
+          description: If authentication fails
         '404':
           description: The processId does not exist
         default:
@@ -470,7 +492,7 @@ paths:
       summary: Get variables
       description: |
         Returns a paged list of variables for the process **processId**.
-        
+
         An authenticated user will have access to a processes variables if the
         user has started  the process or if the user is involved in any of the
         process’s tasks.  In a network, only variables for a process that is
@@ -493,6 +515,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **processId** does not exist
         default:
@@ -504,7 +528,7 @@ paths:
         - processes
       summary: Add variables
       description: |
-        Creates or updates variables for a given process. 
+        Creates or updates variables for a given process.
         If one of the variables does not exist yet, it will be created.
       operationId: addProcessVariables
       produces:
@@ -524,6 +548,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **processId** does not exist
         default:
@@ -554,6 +580,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **processId** does not exist
         default:
@@ -574,6 +602,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '401':
+          description: If authentication fails
         '404':
           description: The **processId** does not exist, or the **variableName** does not exist
         default:
@@ -587,7 +617,7 @@ paths:
       summary: Get items
       description: |
         Returns a list of items for the specified process **processId**.
-        
+
         An authenticated user will have access to a processes items if the
         user has started the process or if the user is involved in any of the
         process’s tasks.  In a network, only items for a process that is
@@ -610,6 +640,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **processId** does not exist
         default:
@@ -619,15 +651,15 @@ paths:
     post:
       tags:
         - processes
-      summary: Add an item 
+      summary: Add an item
       description: |
         Creates an item for process **processId**".
-        
+
         If the item  already is part of that process the request will have no effect.
-        
-        **Note:** You can add more than one item by 
+
+        **Note:** You can add more than one item by
         specifying a list of items in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -639,7 +671,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -683,6 +715,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **processId** does not exist
         default:
@@ -693,7 +727,7 @@ paths:
     delete:
       tags:
         - processes
-      summary: Delete an item 
+      summary: Delete an item
       description: |
         Deletes the item with the specified **itemId** from the process with the specified **processId**.
       operationId: removeProcessItem
@@ -705,6 +739,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '401':
+          description: If authentication fails
         '404':
           description: The **processId** does not exist, or the **itemId** does not exist
         default:
@@ -719,7 +755,7 @@ paths:
       summary: Get tasks
       description: |
         Returns a list of tasks for the specified process **processId**.
-        
+
         An authenticated user will have access to a processes tasks if the
         user has started the process or if the user is involved in any of the
         process’s tasks.  In a network, only tasks for a process that is
@@ -743,6 +779,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskPaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **processId** does not exist
         default:
@@ -756,7 +794,7 @@ paths:
       summary: Get all tasks
       description: |
         Returns a paged list of tasks visible to the authenticated user.
-        
+
         Tasks are returned for which the authenticated user is the assignee  or
         a candidate. If networks are enabled, the only tasks that are inside
         the given network are returned.
@@ -779,6 +817,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskPaging'
+        '401':
+            description: If authentication fails
         default:
           description: Error response
           schema:
@@ -790,7 +830,7 @@ paths:
       summary: Get a task
       description: |
         Returns the task identified by **taskId**.
-        
+
         An authenticated user will have access to a task if the user has
         started the process or if the user is involved in any of the process’s
         tasks. In a network, only tasks that are inside the given network are
@@ -811,6 +851,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskEntry'
+        '401':
+            description: If authentication fails
         '404':
           description: If **taskId** does not exist
         default:
@@ -823,7 +865,7 @@ paths:
       summary: Update a task
       description: |
         Updates the state of the task **taskId**.
-        
+
         To perform a task action the authenticated user must be the assignee  or
         a candidate. If networks is enabled, the task action is only
         performed  if the task is inside the given network.
@@ -832,48 +874,48 @@ paths:
         on  tasks. In network deployments, network administrators can see all
         tasks  in their network and perform all operations on tasks in their
         network.
-        
-        You use the **select** parameter in the URL to specify a comma-separated list of 
-        properties in the 
+
+        You use the **select** parameter in the URL to specify a comma-separated list of
+        properties in the
         task that you want to update. Use the JSON body to specify the new values for those
-        properties. 
-        
+        properties.
+
         So for example to change the state of task **123** to **completed**, use
         this URL
-        http://localhost:8080/alfresco/api/-default-/public/workflow/versions/1/tasks/123?select=state, and 
+        http://localhost:8080/alfresco/api/-default-/public/workflow/versions/1/tasks/123?select=state, and
         provide this request body:
-        
+
         ```JSON
-        {  
+        {
           "state": "completed"
         }
         ```
         State Transitions
         =================
-        
+
         Clients can invoke actions by assigning an allowed value to the state property of a task.
-        The select parameter can be used to allow for a partial update of the resource. 
-        Alfresco will check for illegal state transitions and return an HTTP Bad Request (Response 400) 
-        if an illegal state transition is attempted. 
+        The select parameter can be used to allow for a partial update of the resource.
+        Alfresco will check for illegal state transitions and return an HTTP Bad Request (Response 400)
+        if an illegal state transition is attempted.
         There are five state transitions, completing, claiming, unclaiming, delegating, resolving.
-        
+
         Completing a task
         -----------------
-        
+
         If variables are included in the JSON body, they will be set in the task and then the process will continue.
-        
+
         To complete a task, the authenticated user must be the assignee of the task, the owner of the task, or have started the process.
-        
+
         In non-network deployments, administrators can perform this task operation on all tasks.
         In network deployments, network administrators can perform this action on all tasks in their network.
-        
+
         Here's an example PUT request
-        
+
         ```
         /tasks/123?select=state,variables
         ```
         Here's is a corresponding PUT request body:
-        
+
         ```JSON
         {
           “state : “completed”,
@@ -887,65 +929,65 @@ paths:
          ]
         }
         ```
-        
+
         Claiming a task
         -----------------
-        
-        To claim a task, the authenticated user must be the assignee of the task, 
+
+        To claim a task, the authenticated user must be the assignee of the task,
         the owner of the task, or have started the process.
-        
+
         Here's an example PUT request
-        
+
         ```
         /tasks/123?select=state
         ```
         Here's a corresponding PUT request body:
-        
+
         ```JSON
         {
           “state : “claimed”
         }
         ```
-        
+
         Unclaiming a task
         -----------------
-        
+
         This removes the current assignee of the task.
-        
-        To unclaim a task, the authenticated user must be the assignee of the task, 
+
+        To unclaim a task, the authenticated user must be the assignee of the task,
         the owner of the task, or have started the process.
-        
+
         Here's an example PUT request
-        
+
         ```
         /tasks/123?select=state
         ```
         Here's a corresponding PUT request body:
-        
+
         ```JSON
         {
           “state : “unclaimed”
         }
         ```
-        
+
         Delegating a task
         -----------------
-        
-        This delegates the task from the owner to an assignee. 
-        The result is the same as if the assignee had claimed the task, 
+
+        This delegates the task from the owner to an assignee.
+        The result is the same as if the assignee had claimed the task,
         but the task can then be resolved and the owner will
         become the assignee again.
-        
-        To delegate a task, the authenticated user must be the 
+
+        To delegate a task, the authenticated user must be the
         assignee of the task and the assignee must be different from the owner.
-        
+
         Here's an example PUT request
-        
+
         ```
         /tasks/123?select=state,assignee
         ```
         Here's a corresponding PUT request body:
-        
+
         ```JSON
         {
           “state : “delegated”,
@@ -954,23 +996,23 @@ paths:
         ```
         Resolving a task
         -----------------
-        
-        This returns a delegated task back to the owner. 
-        In order to delegate a task, the authenticated user 
-        must be the assignee of the task and the assignee must 
+
+        This returns a delegated task back to the owner.
+        In order to delegate a task, the authenticated user
+        must be the assignee of the task and the assignee must
         be different from the owner.
-        
-        To resolve a task, the authenticated user must be 
-        the assignee of the task, the owner of the task, 
+
+        To resolve a task, the authenticated user must be
+        the assignee of the task, the owner of the task,
         or have started the process.
-        
+
         Here's an example PUT request
-        
+
         ```
         /tasks/123?select=state
         ```
         Here's a corresponding PUT request body:
-        
+
         ```JSON
         {
           “state : “resolved”
@@ -993,6 +1035,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskEntry'
+        '401':
+            description: If authentication fails
         default:
           description: Error response
           schema:
@@ -1004,8 +1048,8 @@ paths:
       summary: Get a task form model
       description: |
         Returns the model of the task form type definition.
-        
-        An authenticated user will have access to  access to all task form models. 
+
+        An authenticated user will have access to  access to all task form models.
         In a network, only task form models that are inside the given network
         are returned.
       operationId: getTaskFormModel
@@ -1021,6 +1065,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskFormModelPaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **taskId** does not exist
         default:
@@ -1034,7 +1080,7 @@ paths:
       summary: Get variables
       description: |
         Returns a  list of variables for the specified task **taskId**.
-        
+
         An authenticated user will have access to a tasks variables if the
         user has started the process or if the user is involved in any of the
         process’s tasks.  In a network, only variables for a process that is
@@ -1058,6 +1104,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **taskId** does not exist
         default:
@@ -1069,7 +1117,7 @@ paths:
         - tasks
       summary: Add variables
       description: |
-        Creates or updates variables for the task **taskId**. 
+        Creates or updates variables for the task **taskId**.
         If one of the variables does not exist yet, it will be created.
       operationId: addTaskVariables
       produces:
@@ -1089,6 +1137,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **taskId** does not exist
         default:
@@ -1119,6 +1169,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **taskId** does not exist
         default:
@@ -1140,6 +1192,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '401':
+          description: If authentication fails
         '404':
           description: The **taskId** does not exist, or the **variableName** does not exist
         default:
@@ -1153,7 +1207,7 @@ paths:
       summary: Get items
       description: |
         Returns a list of items for the specified task **taskId**.
-        
+
         An authenticated user will have access to a task's items if the
         user has started the process or if the user is involved in any of the
         process’s tasks.  In a network, only items for a process that is
@@ -1176,6 +1230,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **taskId** does not exist
         default:
@@ -1188,12 +1244,12 @@ paths:
       summary: Add an item
       description: |
         Creates an item for a given task **taskId**.
-        
+
         If the item  already is part of that task the request will have no effect.
-        
-        **Note:** You can add more than one item by 
+
+        **Note:** You can add more than one item by
         specifying a list of items in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -1205,7 +1261,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -1249,6 +1305,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **taskId** does not exist
         default:
@@ -1271,6 +1329,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '401':
+          description: If authentication fails
         '404':
           description: The **taskId** does not exist, or the **itemId** does not exist
         default:
@@ -1297,6 +1357,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/CandidatePaging'
+        '401':
+            description: If authentication fails
         '404':
           description: If **taskId** does not exist
         default:
@@ -1341,21 +1403,21 @@ definitions:
       hasMoreItems:
         type: boolean
         description: |
-          A boolean value which is **true** if there are more entities in the collection 
-          beyond those in this response. A true value means a request with a larger value 
+          A boolean value which is **true** if there are more entities in the collection
+          beyond those in this response. A true value means a request with a larger value
           for the **skipCount** or the **maxItems** parameter will return more entities.
       totalItems:
         type: integer
         format: int64
         description: |
-          An integer describing the total number of entities in the collection. 
-          The API might not be able to determine this value, 
+          An integer describing the total number of entities in the collection.
+          The API might not be able to determine this value,
           in which case this property will not be present.
       skipCount:
         type: integer
         format: int64
         description: |
-          An integer describing how many entities exist in the collection before 
+          An integer describing how many entities exist in the collection before
           those included in this list.
       maxItems:
         type: integer
