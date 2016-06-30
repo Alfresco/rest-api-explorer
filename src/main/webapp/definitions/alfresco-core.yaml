@@ -2025,7 +2025,7 @@ paths:
         - 5.2 changes
         - nodes
       summary: Get version content
-      descriptioxn: Returns the version content for **versionId** of file node **nodeId**.
+      description: Returns the version content for **versionId** of file node **nodeId**.
       operationId: getVersionContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
