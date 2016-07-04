@@ -1996,8 +1996,10 @@ paths:
         
         If the most recent version is deleted the live node will revert to the next most recent version.
         
-        If the last version is deleted then the node will have no version history. A new version history will
-        be created on a subsequent file node upload (content update).
+        We currently do not allow the last version to be deleted. If you wish to clear the history then you
+        can remove the "cm:versionable" aspect (via update node) which will also disable versioning. In this
+        case, you can re-enable versioning by adding back the "cm:versionable" aspect or using the version 
+        params (majorVersion and comment) on a subsequent file content update.
       operationId: deleteVersionNode
       produces:
         - application/json
@@ -2015,6 +2017,8 @@ paths:
           description: If the user does not have permission to delete the versioned node
         '404':
           description: If **nodeId** or **versionId** does not exist
+        '422':
+          description: If attempting to delete the last remaining version  
         default:
           description: Error response
           schema:
