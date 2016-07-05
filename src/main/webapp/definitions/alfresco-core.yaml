@@ -5199,8 +5199,6 @@ definitions:
           type: string
       properties:
         type: object
-        additionalProperties:
-          type: string
       allowableOperations:
         type: array
         items:
