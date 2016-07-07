@@ -4484,6 +4484,8 @@ definitions:
         $ref: '#/definitions/UserInfo'
       content:
         $ref: '#/definitions/ContentInfo'
+      path:
+        $ref: '#/definitions/PathInfo'
   NodeAssocMinimalEntry:
     type: object
     required:
