@@ -4414,24 +4414,6 @@ definitions:
         type: string
       assocType:
         type: string                  
-  PathElement:
-    type: object
-    properties:
-      id:
-        type: string
-      name:
-        type: string
-  PathInfo:
-    type: object
-    properties:
-      elements:
-        type: array
-        items:
-          $ref: '#/definitions/PathElement'
-      name:
-        type: string
-      isComplete:
-        type: boolean
   NodePaging:
     type: object
     properties:
@@ -4502,16 +4484,13 @@ definitions:
         $ref: '#/definitions/UserInfo'
       content:
         $ref: '#/definitions/ContentInfo'
-      path:
-        $ref: '#/definitions/PathElement'
-        required: false
   NodeAssocMinimalEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeAssocMinimal'
+        $ref: '#/definitions/NodeAssocMinimal'        
   NodeAssocMinimal:
     type: object
     properties:
