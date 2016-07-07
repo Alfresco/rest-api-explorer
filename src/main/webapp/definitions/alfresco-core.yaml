@@ -4964,7 +4964,25 @@ definitions:
       childId:
         type: string
       assocType:
-        type: string                  
+        type: string
+  PathElement:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+  PathInfo:
+    type: object
+    properties:
+      elements:
+        type: array
+        items:
+          $ref: '#/definitions/PathElement'
+      name:
+        type: string
+      isComplete:
+        type: boolean
   NodePaging:
     type: object
     properties:
