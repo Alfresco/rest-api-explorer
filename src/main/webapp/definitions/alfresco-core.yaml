@@ -268,9 +268,17 @@ parameters:
   orderByParam:
     name: orderBy
     in: query
-    description: A string to control the order of the entities returned.
+    description: |
+      A string to control the order of the entities returned. You can use the **orderby** parameter to 
+      sort the result-set by one or more fields.
+      
+      The **orderby** parameter sorts the entities in ascending order by default.
+      To sort the the entities in descending order, you can use the **DESC** keyword
     required: false
-    type: string
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
   whereParam:
     name: where
     in: query
@@ -945,35 +953,34 @@ paths:
         You can use the **include** parameter to return addtional information.
         
         The list of child nodes includes primary children and secondary children, if there are any.
+        
         You can use the **include** parameter (include=association) to return child association details 
         for each child, including the **assocTyp**e and the **isPrimary** flag.
+        
+        
+        The default sort order for the returned list is for folders to be sorted before files, and by ascending name
+
+        You can override the default using **orderBy** to specify one or more fields to sort by. The default order is always ascending., but
+        you can use an optional *ASC** or **DESC** modifier to specfiy an ascending or descending sort order. 
+            
+        For example, specifying ```orderBy=name DESC``` returns a mixed folder/file list in descending **name** order.
+
+        You can use any of the following fields to order the results:
+        * isFolder
+        * name
+        * mimeType
+        * nodeType
+        * sizeInBytes
+        * modifiedAt
+        * createdAt
+        * modifiedByUser
+        * createdByUser
       operationId: getNodeChildren
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - name: orderBy
-          in: query
-          description: |
-            The default sort order is for folders to be sorted before files, and by ascending name
-            i.e. "orderBy=isFolder DESC,name ASC".
-
-            You can override the default by setting **orderBy**. You specify one, two or
-            three comma-separated lists of properties, with an optional **ASC**ending or **DESC**ending term. For example,
-            specifying ```orderBy=name DESC``` would return a mixed folder/file list.
-
-            You can use and of the following properties to order the results:
-            * isFolder
-            * name
-            * mimeType
-            * nodeType
-            * sizeInBytes
-            * modifiedAt
-            * createdAt
-            * modifiedByUser
-            * createdByUser
-          required: false
-          type: string
+        - $ref: '#/parameters/orderByParam'
         - name: where
           in: query
           description: |
@@ -3090,10 +3097,9 @@ paths:
         
         You can sort the list of sites using the **orderBy** parameter.
 
-        **orderBy** specifies the name of one or more
-        comma separated properties.
-        For each property you can optionally specify the order direction.
-        Both of the these **orderBy** examples retrieve sites ordered by ascending name:
+        **orderBy** specifies the name of one or more fields.
+        For each field you can optionally specify the order direction. **ASC** or **DESC**.
+        Both of  these **orderBy** examples retrieve sites ordered by ascending name:
 
         ```
         name
@@ -3183,11 +3189,13 @@ paths:
         - sites
       summary: Get sites
       description: |
-        Returns a list of sites in this repository. You can sort the list if sites using the **orderBy** parameter.
-        **orderBy** specifies the name of one or more
-        comma separated properties.
-        For each property you can optionally specify the order direction.
-        Both of the these **orderBy** examples retrieve sites ordered by ascending name:
+        Returns a list of sites in this repository. 
+        
+        You can sort the list of sites using the **orderBy** parameter.
+
+        **orderBy** specifies the name of one or more fields.
+        For each field you can optionally specify the order direction. **ASC** or **DESC**.
+        Both of  these **orderBy** examples retrieve sites ordered by ascending name:
 
         ```
         name
@@ -4134,6 +4142,11 @@ paths:
         By default, file and folder types will be searched unless a specific type is provided as a query parameter.
 
         By default, the search will be across the repository unless a specific root node id is provided to start the search from.
+        
+        You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the orderby parameter:
+        * name
+        * modifiedAt
+        * createdAt
       operationId: liveSearchNodes
       produces:
         - application/json
@@ -4155,19 +4168,12 @@ paths:
           required: false
         - name: nodeType
           in: query
-          description: Restrict the returned results to only those of the given node type and it's sub-types
+          description: |
+            Restrict the returned results to only those of the given node type and it's sub-types
           type: string
           required: false
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
-        - name: orderBy
-          in: query
-          description: |
-            The list of results can be ordered by the following:
-            * name
-            * modifiedAt
-            * createdAt
-          type: string
-          required: false
+        - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':

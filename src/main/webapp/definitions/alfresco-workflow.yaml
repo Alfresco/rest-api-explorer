@@ -82,11 +82,18 @@ parameters:
     required: false
     type: "integer"
   orderByParam:
-    name: "orderBy"
-    in: "query"
-    description: A string to control the order of the entities returned.
+    name: orderBy
+    in: query
+    description: |
+      A string to control the order of the entities returned. You can use the **orderby** parameter to 
+      sort the result-set by one or more fields.
+      The **orderby** parameter sorts the entities in ascending order by default.
+      To sort the the entities in descending order, you can use the **DESC** keyword
     required: false
-    type: "string"
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
   whereParam:
     name: "where"
     in: "query"
