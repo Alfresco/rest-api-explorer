@@ -269,11 +269,13 @@ parameters:
     name: orderBy
     in: query
     description: |
-      A string to control the order of the entities returned. You can use the **orderby** parameter to 
-      sort the result-set by one or more fields.
-      
-      The **orderby** parameter sorts the entities in ascending order by default.
-      To sort the the entities in descending order, you can use the **DESC** keyword
+      A string to control the order of the entities returned in a list. You can use the **orderby** parameter to
+      sort the list by one or more fields.
+
+      Each field has a default sort order, which is normally acending order. Read the API method implementation notes
+      above to check if any fields used in this method have a descending default search order.
+
+      To sort the entities in a specific order, you can use the **ASC** and **DESC** keywords for any field.
     required: false
     type: array
     items:
@@ -960,7 +962,7 @@ paths:
         
         The default sort order for the returned list is for folders to be sorted before files, and by ascending name
 
-        You can override the default using **orderBy** to specify one or more fields to sort by. The default order is always ascending., but
+        You can override the default using **orderBy** to specify one or more fields to sort by. The default order is always ascending, but
         you can use an optional *ASC** or **DESC** modifier to specfiy an ascending or descending sort order. 
             
         For example, specifying ```orderBy=name DESC``` returns a mixed folder/file list in descending **name** order.
@@ -2200,7 +2202,7 @@ paths:
       description: |
         Attempts to restore the deleted node **nodeId** to its original location.
         
-        If the node is successfully restored to it's former primary parent, then only the 
+        If the node is successfully restored to its former primary parent, then only the 
         primary child association will be restored, including recursively for any primary 
         children. It should be noted that no other secondary child associations or peer 
         associations will be restored, for any of the nodes within the primary parent-child 
@@ -3194,7 +3196,7 @@ paths:
         You can sort the list of sites using the **orderBy** parameter.
 
         **orderBy** specifies the name of one or more fields.
-        For each field you can optionally specify the order direction. **ASC** or **DESC**.
+        For each field you can optionally specify the order direction, **ASC** or **DESC**.
         Both of  these **orderBy** examples retrieve sites ordered by ascending name:
 
         ```
@@ -4143,7 +4145,7 @@ paths:
 
         By default, the search will be across the repository unless a specific root node id is provided to start the search from.
         
-        You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the orderby parameter:
+        You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * name
         * modifiedAt
         * createdAt
@@ -4169,7 +4171,7 @@ paths:
         - name: nodeType
           in: query
           description: |
-            Restrict the returned results to only those of the given node type and it's sub-types
+            Restrict the returned results to only those of the given node type and its sub-types
           type: string
           required: false
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'

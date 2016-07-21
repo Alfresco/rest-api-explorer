@@ -85,10 +85,13 @@ parameters:
     name: orderBy
     in: query
     description: |
-      A string to control the order of the entities returned. You can use the **orderby** parameter to 
-      sort the result-set by one or more fields.
-      The **orderby** parameter sorts the entities in ascending order by default.
-      To sort the the entities in descending order, you can use the **DESC** keyword
+      A string to control the order of the entities returned in a list. You can use the **orderby** parameter to
+      sort the list by one or more fields.
+
+      Each field has a default sort order, which is normally acending order. Read the API method implementation notes
+      above to check if any fields used in this method have a descending default search order.
+
+      To sort the entities in a specific order, you can use the **ASC** and **DESC** keywords for any field.
     required: false
     type: array
     items:
