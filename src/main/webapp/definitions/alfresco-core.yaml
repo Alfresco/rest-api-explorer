@@ -1620,6 +1620,49 @@ paths:
       summary: Add secondary child
       description: |
         Add a secondary child association, with the given association type, between the parent **nodeId** and a child node.
+        
+        **Note:** You can create more than one secondary child association by 
+        specifying a list of associations in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+            "childId": "string",
+            "assocType": "string"
+          },
+          {
+            "childId": "string",
+            "assocType": "string"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addSecondaryChildAssoc
       produces:
         - application/json
@@ -1784,6 +1827,49 @@ paths:
       summary: Add node association
       description: |
         Add an association, with the given association type, between the source **nodeId** and a target node.
+        
+        **Note:** You can add more than one association by 
+        specifying a list of associations in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+             "targetId": "string",
+             "assocType": "string"
+          },
+          {
+            "targetId": "string",
+            "assocType": "string"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addAssoc
       produces:
         - application/json
@@ -2579,7 +2665,7 @@ paths:
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
-        **Note:** You can fovorite more than one entity by 
+        **Note:** You can favorite more than one entity by 
         specifying a list of objects in the JSON body like this:
         
         ```JSON

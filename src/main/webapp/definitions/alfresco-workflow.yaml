@@ -536,28 +536,72 @@ paths:
     post:
       tags:
         - processes
-      summary: Add variables
+      summary: Add variable
       description: |
-        Creates or updates variables for a given process.
-        If one of the variables does not exist yet, it will be created.
+        Create or update a variable for a given process.
+        If the variable does not exist yet, it will be created.        
+        
+        
+        **Note:** You can create or update more than one variable by 
+        specifying a list of variables in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+            "name": "string",
+            "value": "string",
+            "type": "string"
+          },
+          {
+            "name": "string",
+            "value": "string",
+            "type": "string"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                 ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addProcessVariables
       produces:
         - application/json
       parameters:
         - $ref: "#/parameters/processIdParam"
         - in: body
-          name: variableBody
-          description: An array of variables.
+          name: variable
+          description: A variable
           required: true
           schema:
-            type: array
-            items:
               $ref: '#/definitions/VariableBody'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/VariablePaging'
+            $ref: '#/definitions/VariableBody'
         '401':
             description: If authentication fails
         '404':
@@ -1125,28 +1169,72 @@ paths:
     post:
       tags:
         - tasks
-      summary: Add variables
+      summary: Add variable
       description: |
-        Creates or updates variables for the task **taskId**.
-        If one of the variables does not exist yet, it will be created.
+        Create or update a variable for the task **taskId**.
+        If the variable does not exist yet, it will be created.      
+        
+        
+        **Note:** You can create or update more than one variable by 
+        specifying a list of variables in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+            "name": "string",
+            "value": "string",
+            "type": "string"
+          },
+          {
+            "name": "string",
+            "value": "string",
+            "type": "string"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                 ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addTaskVariables
       produces:
         - application/json
       parameters:
         - $ref: "#/parameters/taskIdParam"
         - in: body
-          name: variableBody
-          description: An array of variables.
+          name: variable
+          description: A variable
           required: true
           schema:
-            type: array
-            items:
               $ref: '#/definitions/VariableBody'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/VariablePaging'
+            $ref: '#/definitions/VariableBody'
         '401':
             description: If authentication fails
         '404':
