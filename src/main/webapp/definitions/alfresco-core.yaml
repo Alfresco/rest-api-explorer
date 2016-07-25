@@ -4184,6 +4184,55 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
+  '/queries/live-search-people':
+    get:
+      tags:
+        - queries
+        - 5.2 changes
+      summary: Live search for people
+      description: |
+        Returns a list of people that match the given search criteria.
+        
+        The search term is used to look for matches against username, firstname and lastname.
+
+        The search term
+        - must contain a minimum of 2 alphanumeric characters
+        - can optionally use '*' for wildcard matching
+      operationId: liveSearchPeople
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - name: term
+          in: query
+          description: | 
+            The term to search for.
+          type: string
+          required: true
+        - $ref: '#/parameters/fieldsParam'
+        - name: orderBy
+          in: query
+          description: |
+            The list of results can be ordered by the following:
+            * userName
+            * firstName
+            * lastName
+          type: string
+          required: false
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PersonPaging'
+        '400':
+          description: Invalid parameter, eg. search term is too short, unknown orderBy field
+        '401':
+          description: If authentication fails          
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -4423,6 +4472,18 @@ definitions:
           - SiteCollaborator
           - SiteContributor
           - SiteManager
+  PersonPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/PersonEntry'
   PersonEntry:
     type: object
     required:
