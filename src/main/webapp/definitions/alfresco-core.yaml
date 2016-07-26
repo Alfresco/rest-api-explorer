@@ -349,8 +349,8 @@ paths:
             $ref: '#/definitions/CommentPaging'
         '400':
           description: |
-            If the **nodeId** exists, but does not identify a file or a folder 
-            or if an invalid value is provided for the **maxItems** or **skipCount** parameter
+            Invalid parameter: Either the **nodeId** exists, but does not identify a file or a folder 
+            or the value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -435,7 +435,8 @@ paths:
           schema:
             $ref: '#/definitions/CommentEntry'
         '400':
-          description: If an empty **content** property is provided
+          description: |
+            Invalid parameter: **commentBody** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -477,7 +478,8 @@ paths:
           schema:
             $ref: '#/definitions/CommentEntry'
         '400':
-          description: If an empty **content** property is provided
+          description: |
+            Invalid parameter: **commentBody** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -532,7 +534,8 @@ paths:
           schema:
             $ref: '#/definitions/RatingPaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -586,7 +589,8 @@ paths:
           schema:
             $ref: '#/definitions/RatingEntry'
         '400':
-          description: If an unknown rating scheme is supplied
+          description: |
+            Invalid parameter: **ratingBody** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -616,7 +620,8 @@ paths:
           schema:
             $ref: '#/definitions/RatingEntry'
         '400':
-          description: If an unknown rating scheme  **ratingId** is supplied
+          description: |
+            Invalid parameter: unknown rating scheme specified
         '401':
           description: If authentication fails
         '404':
@@ -640,7 +645,8 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: If an unknown rating scheme **ratingId** is supplied
+          description: |
+            Invalid parameter: unknown rating scheme specified
         '401':
           description: If authentication fails
         '404':
@@ -669,7 +675,8 @@ paths:
           schema:
             $ref: '#/definitions/TagPaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -754,7 +761,8 @@ paths:
           schema:
             $ref: '#/definitions/TagEntry'
         '400':
-          description: If an empty **tag** property is provided
+          description: |
+            Invalid parameter: **tagBody** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -819,7 +827,8 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format
+          description: |
+            Invalid parameter: **nodeId** is not a valid format
         '401':
           description: If authentication fails          
         '404':
@@ -883,7 +892,8 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the update request is invalid or if the **nodeId** is not a valid format
+          description: |
+            Invalid parameter: the update request is invalid or **nodeId** is not a valid format
         '401':
           description: If authentication fails
         '403':
@@ -932,7 +942,8 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: If **nodeId** is not a valid format
+          description: |
+            Invalid parameter: **nodeId** is not a valid format
         '401':
           description: If authentication fails
         '403':
@@ -1022,7 +1033,8 @@ paths:
           schema:
             $ref: '#/definitions/NodePaging'
         '400':
-          description: If the **nodeId** is not a valid format, or is not a folder
+          description: |
+            Invalid parameter: **nodeId** is not a valid format or is not a folder
         '401':
           description: If authentication fails
         '404':
@@ -1246,7 +1258,8 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format
+          description: |
+            Invalid parameter: **nodeId** is not a valid format or **nodeBody** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -1304,7 +1317,8 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format
+          description: |
+            Invalid parameter: **nodeId** is not a valid format or **copyBody** is invalid
         '401':
           description: If authentication fails          
         '403':
@@ -1361,7 +1375,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format or **targetParentId** is not a folder
+          description: |
+            Invalid parameter: **nodeId** is not a valid format or **targetParentId** is not a folder
+            or **moveBody** is invalid
         '401':
           description: If authentication fails          
         '403':
@@ -1394,7 +1410,8 @@ paths:
         '304':
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
-          description: If the **nodeId** is not a valid format, or is not a file
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
         '401':
           description: If authentication fails          
         '404':
@@ -1465,7 +1482,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or is not a file
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
+            or **contentBody** invalid
         '401':
           description: If authentication fails          
         '403':
@@ -1515,7 +1534,9 @@ paths:
         '202':
           description: Request accepted
         '400':
-          description: If the **nodeId** is not a valid format or is not a file
+          description: |
+            Invalid parameter: **nodeId** is not a valid format or is not a file
+            or **renditionBody** is invalid
         '401':
           description: If authentication fails          
         '403':
@@ -1549,7 +1570,8 @@ paths:
           schema:
             $ref: '#/definitions/RenditionPaging'
         '400':
-          description: If the **nodeId** is not a valid format, or is not a file
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
         '401':
           description: If authentication fails          
         '404':
@@ -1575,7 +1597,8 @@ paths:
           schema:
             $ref: '#/definitions/RenditionEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
         '401':
           description: If authentication fails          
         '404':
@@ -1603,7 +1626,8 @@ paths:
         '304':
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
-          description: If the **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
         '401':
           description: If authentication fails          
         '404':
@@ -1680,7 +1704,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeChildAssocEntry'
         '400':
-          description: Invalid parameter. For example, unknown **assocType**, or the **nodeId** is not a valid format
+          description: |
+            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
+            or **assocChildBody** invalid
         '401':
           description: If authentication fails          
         '404':
@@ -1724,7 +1750,8 @@ paths:
           schema:
             $ref: '#/definitions/NodeChildAssocPaging'
         '400':
-          description: Invalid parameter.For example, unknown **assocType**, or the **nodeId** is not a valid format
+          description: |
+            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
         '401':
           description: If authentication fails          
         '404':
@@ -1763,7 +1790,9 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: Invalid parameter. For example, unknown **assocType**, or trying to delete a primary **assocType** – use delete node instead
+          description: |
+            Invalid parameter: **assocType** is unknown, or you are trying to delete a primary **assocType**. 
+            Use delete node instead
         '401':
           description: If authentication fails          
         '404':
@@ -1810,7 +1839,8 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
-          description: Invalid parameter. For example, unknown **assocType**, or the **nodeId** is not a valid format
+          description: |
+            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
         '401':
           description: If authentication fails          
         '404':
@@ -1887,7 +1917,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocEntry'
         '400':
-          description: Invalid parameter. For example, unknown **assocType**, or the **nodeId** is not a valid format
+          description: |
+            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
+            or **assocTargetBody** invalid
         '401':
           description: If authentication fails          
         '404':
@@ -1928,7 +1960,8 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
-          description: Invalid parameter. For example, unknown **assocType**, or the **nodeId** is not a valid format
+          description: |
+            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
         '401':
           description: If authentication fails          
         '404':
@@ -1970,7 +2003,8 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: Invalid parameter. For example, unknown **assocType**, or the **nodeId** is not a valid format, or **targetId** is invalid
+          description: |
+            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format, or **targetId** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -2008,7 +2042,8 @@ paths:
           schema:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
-          description: Invalid parameter. For example, unknown **assocType**
+          description: |
+            Invalid parameter: **assocType** is unknown
         '401':
           description: If authentication fails
         '404':
@@ -2043,7 +2078,8 @@ paths:
           schema:
             $ref: '#/definitions/VersionNodesPaging'
         '400':
-          description: Invalid parameter. For example, the **nodeId** is not a valid format            
+          description: |
+            Invalid parameter: **nodeId** is not a valid format            
         '401':
           description: If authentication fails
         '404':
@@ -2069,7 +2105,8 @@ paths:
           schema:
             $ref: '#/definitions/VersionNodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or it exists, but does not identify a file, or **versionId** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -2105,7 +2142,8 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid     
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid     
         '401':
           description: If authentication fails
         '403':
@@ -2137,7 +2175,8 @@ paths:
         '304':
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
-          description: If the **nodeId** is not a valid format, or is not a file, or **versionId** is invalid
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -2179,7 +2218,10 @@ paths:
           schema:
             $ref: '#/definitions/VersionNodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid             
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or it exists, 
+            but does not identify a file, or **versionId** is invalid
+            or **revertBody** invalid          
         '401':
           description: If authentication fails
         '403':
@@ -2215,6 +2257,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DeletedNodesPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails            
         default:
@@ -2241,7 +2286,8 @@ paths:
           schema:
             $ref: '#/definitions/DeletedNodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format
+          description: |
+            Invalid parameter: **nodeId** is not a valid format
         '401':
           description: If authentication fails
         '403':
@@ -2268,7 +2314,8 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: If the **nodeId** is not a valid format          
+          description: |
+            Invalid parameter: **nodeId** is not a valid format          
         '401':
           description: If authentication fails
         '403':
@@ -2308,7 +2355,8 @@ paths:
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
-          description: If the **nodeId** is not a valid format             
+          description: |
+            Invalid parameter: **nodeId** is not a valid format             
         '401':
           description: If authentication fails
         '403':
@@ -2385,7 +2433,8 @@ paths:
           schema:
             $ref: '#/definitions/ActivityPaging'
         '400':
-          description: If an invalid value is provided for the **maxItems**, **skipCount** or **who** parameter
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount**, or **who** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -2423,7 +2472,8 @@ paths:
           schema:
             $ref: '#/definitions/SitePaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount**, or **who** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -2518,7 +2568,8 @@ paths:
                   id:
                     type: string
         '400':
-          description: If an empty **id** property is provided
+          description: |
+            Invalid parameter: **favoriteSiteBody** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -2646,7 +2697,8 @@ paths:
           schema:
             $ref: '#/definitions/FavoritePaging'
         '400':
-          description: If an invalid value is provided for the **maxItems**, **skipCount** or **where** parameter
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount**, or **where** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -2750,7 +2802,8 @@ paths:
           schema:
             $ref: '#/definitions/FavoriteEntry'
         '400':
-          description: The target **guid** does not describe a site, file, or folder 
+          description: |
+            Invalid parameter: **favoriteBody** invalid
         '401':
           description: If authentication fails
         '404':
@@ -2847,7 +2900,8 @@ paths:
           schema:
             $ref: '#/definitions/PersonNetworkPaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -2912,7 +2966,8 @@ paths:
           schema:
             $ref: '#/definitions/PreferencePaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -2981,7 +3036,8 @@ paths:
           schema:
             $ref: '#/definitions/SiteMembershipRequestPaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -3073,7 +3129,9 @@ paths:
           schema:
             $ref: '#/definitions/SiteMembershipRequestEntry'
         '400':
-          description: If an invalid **id** is provided or the user is already invited
+          description: |
+            Invalid parameter: **id** is invalid or the user is already invited
+            or **siteMembershipBody** invalid
         '401':
           description: If authentication fails
         '404':
@@ -3140,6 +3198,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SiteMembershipRequestEntry'
+        '400':
+          description: |
+            Invalid parameter: **id** is invalid
+            or **siteMembershipBody** invalid
         '401':
           description: If authentication fails
         '404':
@@ -3209,7 +3271,8 @@ paths:
           schema:
             $ref: '#/definitions/SiteRolePaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -3316,7 +3379,8 @@ paths:
           schema:
             $ref: '#/definitions/SitePaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         default:
@@ -3391,7 +3455,9 @@ paths:
           schema:
             $ref: '#/definitions/SiteEntry'
         '400':
-          description: If a site id, title or description exceed maximum length or site id contains invalid characters.
+          description: |
+            Invalid parameter: **id**, **title**, or **description** exceed the maximum length 
+            or **id** contains invalid characters or **siteBody** invalid
         '401':
           description: If authentication fails
         '409':
@@ -3488,7 +3554,8 @@ paths:
           schema:
             $ref: '#/definitions/SiteContainerPaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -3547,7 +3614,8 @@ paths:
           schema:
             $ref: '#/definitions/SiteMemberPaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         '404':
@@ -3641,7 +3709,9 @@ paths:
           schema:
             $ref: '#/definitions/SiteMemberEntry'
         '400':
-          description: If an invalid **role** or **id** property is provided
+          description: |
+            Invalid parameter: value of **role** or **id** is invalid
+            or **siteMemberBody** invalid
         '401':
           description: If authentication fails
         '403':
@@ -3725,7 +3795,9 @@ paths:
           schema:
             $ref: '#/definitions/SiteMemberEntry'
         '400':
-          description: If the **role** does not exist
+          description: |
+            Invalid parameter: **role** does not exist
+            or **siteMemberRoleBody** invalid
         '401':
           description: If authentication fails
         '404':
@@ -3778,7 +3850,8 @@ paths:
           schema:
             $ref: '#/definitions/TagPaging'
         '400':
-          description: If an invalid value is provided for the **maxItems** or **skipCount** parameter
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         default:
@@ -3840,7 +3913,8 @@ paths:
           schema:
             $ref: '#/definitions/TagEntry'
         '400':
-          description: If an empty **tag** is provided   
+          description: |
+            Invalid parameter: **tagBody** is invalid   
         '401':
           description: If authentication fails         
         '404':
@@ -3945,7 +4019,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeSharedLinkEntry'
         '400':
-          description: If the **nodeId** is not a valid format or does not identify a file
+          description: |
+            Invalid parameter: **nodeId** is not a valid format or does not identify a file
+            or **sharedLinkBody** invalid
         '401':
           description: If authentication fails          
         '403':
@@ -4018,7 +4094,8 @@ paths:
           schema:
             $ref: '#/definitions/NodeSharedLinkEntry'
         '400':
-          description: If the **sharedId** is not a valid format
+          description: |
+            Invalid parameter: **sharedId** is not a valid format
         '404':
           description: If **sharedId** does not exist
         '501':
@@ -4042,7 +4119,8 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: If **sharedId** is not a valid format
+          description: |
+            Invalid parameter: **sharedId** is not a valid format
         '401':
           description: If authentication fails          
         '403':
@@ -4076,7 +4154,8 @@ paths:
         '304':
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
-          description: If the **sharedId** is not a valid format
+          description: |
+            Invalid parameter: **sharedId** is not a valid format
         '404':
           description: If **sharedId** does not exist
         '501':
@@ -4107,7 +4186,8 @@ paths:
           schema:
             $ref: '#/definitions/RenditionPaging'
         '400':
-          description: If the **sharedId** is not a valid format
+          description: |
+            Invalid parameter: **sharedId** is not a valid format
         '404':
           description: If **sharedId** does not exist
         '501':
@@ -4138,7 +4218,8 @@ paths:
         '304':
           description: If the content has not been modified since the date provided in the If-Modified-Since header
         '400':
-          description: If the **sharedId** is not a valid format, or **renditionId** is invalid
+          description: |
+            Invalid parameter: **sharedId** is not a valid format, or **renditionId** is invalid
         '404':
           description: If **sharedId** does not exist
         '501':
@@ -4200,7 +4281,9 @@ paths:
         '202':
           description: Successful response
         '400':
-          description: If the **sharedId** is not a valid format
+          description: |
+            Invalid parameter: **sharedId** is not a valid format
+            or emailSharedLinkBody invalid
         '401':
           description: If authentication fails          
         '404':
@@ -4269,7 +4352,8 @@ paths:
           schema:
             $ref: '#/definitions/NodePaging'
         '400':
-          description: Invalid parameter, eg. search term is too short, unknown nodeType, unknown orderBy field
+          description: |
+            Invalid parameter: search **term** too short, or **nodeType** unknown, or **orderBy** invalid
         '401':
           description: If authentication fails          
         '404':

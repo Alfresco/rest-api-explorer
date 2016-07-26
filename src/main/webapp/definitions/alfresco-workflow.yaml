@@ -129,6 +129,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DeploymentPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         default:
@@ -224,6 +227,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessDefinitionPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
             description: If authentication fails
         default:
@@ -353,6 +359,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
             description: If authentication fails
         default:
@@ -432,6 +441,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessEntry'
+        '400':
+            description: |
+              Invalid parameter: **processBody** is invalid
         '401':
             description: If authentication fails
         default:
@@ -525,6 +537,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -592,7 +607,7 @@ paths:
       parameters:
         - $ref: "#/parameters/processIdParam"
         - in: body
-          name: variable
+          name: variableBody
           description: A variable
           required: true
           schema:
@@ -602,6 +617,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariableBody'
+        '400':
+            description: |
+              Invalid parameter: **variableBody** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -634,6 +652,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '400':
+            description: |
+              Invalid parameter: **variableBody** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -694,6 +715,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -769,6 +793,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '400':
+            description: |
+              Invalid parameter: **itemBody** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -833,6 +860,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount**, or **orderBy** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -871,6 +901,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
             description: If authentication fails
         default:
@@ -1089,6 +1122,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskEntry'
+        '400':
+            description: |
+              Invalid parameter: **taskBody** is invalid
         '401':
             description: If authentication fails
         default:
@@ -1119,6 +1155,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskFormModelPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -1158,6 +1197,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount**, or **where** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -1267,6 +1309,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '400':
+            description: |
+              Invalid parameter: **variableBody** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -1328,6 +1373,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -1403,6 +1451,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '400':
+            description: |
+              Invalid parameter: **itemBody** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -1455,6 +1506,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/CandidatePaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         '404':
