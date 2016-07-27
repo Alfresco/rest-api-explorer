@@ -82,11 +82,21 @@ parameters:
     required: false
     type: "integer"
   orderByParam:
-    name: "orderBy"
-    in: "query"
-    description: A string to control the order of the entities returned.
+    name: orderBy
+    in: query
+    description: |
+      A string to control the order of the entities returned in a list. You can use the **orderby** parameter to
+      sort the list by one or more fields.
+
+      Each field has a default sort order, which is normally acending order. Read the API method implementation notes
+      above to check if any fields used in this method have a descending default search order.
+
+      To sort the entities in a specific order, you can use the **ASC** and **DESC** keywords for any field.
     required: false
-    type: "string"
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
   whereParam:
     name: "where"
     in: "query"
@@ -119,6 +129,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DeploymentPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         default:
@@ -214,6 +227,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessDefinitionPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
             description: If authentication fails
         default:
@@ -343,6 +359,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
             description: If authentication fails
         default:
@@ -422,6 +441,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ProcessEntry'
+        '400':
+            description: |
+              Invalid parameter: **processBody** is invalid
         '401':
             description: If authentication fails
         default:
@@ -515,6 +537,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -526,10 +551,56 @@ paths:
     post:
       tags:
         - processes
-      summary: Add variables
+      summary: Add variable
       description: |
-        Creates or updates variables for a given process.
-        If one of the variables does not exist yet, it will be created.
+        Create or update a variable for a given process.
+        If the variable does not exist yet, it will be created.        
+        
+        
+        **Note:** You can create or update more than one variable by 
+        specifying a list of variables in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+            "name": "string",
+            "value": "string",
+            "type": "string"
+          },
+          {
+            "name": "string",
+            "value": "string",
+            "type": "string"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                 ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addProcessVariables
       produces:
         - application/json
@@ -537,17 +608,18 @@ paths:
         - $ref: "#/parameters/processIdParam"
         - in: body
           name: variableBody
-          description: An array of variables.
+          description: A variable
           required: true
           schema:
-            type: array
-            items:
               $ref: '#/definitions/VariableBody'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/VariablePaging'
+            $ref: '#/definitions/VariableBody'
+        '400':
+            description: |
+              Invalid parameter: **variableBody** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -580,6 +652,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '400':
+            description: |
+              Invalid parameter: **variableBody** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -640,6 +715,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -715,6 +793,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '400':
+            description: |
+              Invalid parameter: **itemBody** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -779,6 +860,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount**, or **orderBy** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -817,6 +901,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
             description: If authentication fails
         default:
@@ -1035,6 +1122,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskEntry'
+        '400':
+            description: |
+              Invalid parameter: **taskBody** is invalid
         '401':
             description: If authentication fails
         default:
@@ -1065,6 +1155,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/TaskFormModelPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -1104,6 +1197,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount**, or **where** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -1115,28 +1211,72 @@ paths:
     post:
       tags:
         - tasks
-      summary: Add variables
+      summary: Add variable
       description: |
-        Creates or updates variables for the task **taskId**.
-        If one of the variables does not exist yet, it will be created.
+        Create or update a variable for the task **taskId**.
+        If the variable does not exist yet, it will be created.      
+        
+        
+        **Note:** You can create or update more than one variable by 
+        specifying a list of variables in the JSON body like this:
+        
+        ```JSON
+        [
+          {
+            "name": "string",
+            "value": "string",
+            "type": "string"
+          },
+          {
+            "name": "string",
+            "value": "string",
+            "type": "string"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                 ...
+                }
+              }
+            ]
+          }
+        }
+        ```
       operationId: addTaskVariables
       produces:
         - application/json
       parameters:
         - $ref: "#/parameters/taskIdParam"
         - in: body
-          name: variableBody
-          description: An array of variables.
+          name: variable
+          description: A variable
           required: true
           schema:
-            type: array
-            items:
               $ref: '#/definitions/VariableBody'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/VariablePaging'
+            $ref: '#/definitions/VariableBody'
         '401':
             description: If authentication fails
         '404':
@@ -1169,6 +1309,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
+        '400':
+            description: |
+              Invalid parameter: **variableBody** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -1230,6 +1373,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -1305,6 +1451,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ItemPaging'
+        '400':
+            description: |
+              Invalid parameter: **itemBody** is invalid
         '401':
             description: If authentication fails
         '404':
@@ -1357,6 +1506,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/CandidatePaging'
+        '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
             description: If authentication fails
         '404':
