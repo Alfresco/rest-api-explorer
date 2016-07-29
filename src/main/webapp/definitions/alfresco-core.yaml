@@ -1484,7 +1484,6 @@ paths:
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file
-            or **contentBody** invalid
         '401':
           description: If authentication fails          
         '403':
@@ -2043,7 +2042,7 @@ paths:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown
+            Invalid parameter: **nodeId** is not a valid format or **assocType** is unknown
         '401':
           description: If authentication fails
         '404':
@@ -2473,7 +2472,7 @@ paths:
             $ref: '#/definitions/SitePaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems**, **skipCount**, or **who** is invalid
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -4283,7 +4282,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **sharedId** is not a valid format
-            or emailSharedLinkBody invalid
+            or **emailSharedLinkBody** invalid
         '401':
           description: If authentication fails          
         '404':
@@ -4353,7 +4352,7 @@ paths:
             $ref: '#/definitions/NodePaging'
         '400':
           description: |
-            Invalid parameter: search **term** too short, or **nodeType** unknown, or **orderBy** invalid
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **nodeType** unknown, or **orderBy** invalid
         '401':
           description: If authentication fails          
         '404':
