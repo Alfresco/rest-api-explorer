@@ -4361,7 +4361,7 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
-  '/queries/live-sites-nodes':
+  '/queries/live-search-sites':
     get:
       tags:
         - queries
@@ -4373,6 +4373,11 @@ paths:
         The search term is used to look for sites that match against site id, title or description.
 
         The search term must contain a minimum of 2 alphanumeric characters.
+        
+        You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * id
+        * title
+        * description
       operationId: liveSearchSites
       produces:
         - application/json
@@ -4384,6 +4389,7 @@ paths:
           description: The term to search for.
           type: string
           required: true
+        - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -4391,8 +4397,7 @@ paths:
           schema:
             $ref: '#/definitions/SitePaging'
         '400':
-          description: |
-            Invalid parameter: search **term** too short
+          description: Invalid parameter, eg. search term is too short, unknown orderBy field
         '401':
           description: If authentication fails          
         default:
@@ -4413,6 +4418,11 @@ paths:
         The search term
         - must contain a minimum of 2 alphanumeric characters
         - can optionally use '*' for wildcard matching
+        
+        You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * userName
+        * firstName
+        * lastName       
       operationId: liveSearchPeople
       produces:
         - application/json
@@ -4426,15 +4436,7 @@ paths:
           type: string
           required: true
         - $ref: '#/parameters/fieldsParam'
-        - name: orderBy
-          in: query
-          description: |
-            The list of results can be ordered by the following:
-            * userName
-            * firstName
-            * lastName
-          type: string
-          required: false
+        - $ref: '#/parameters/orderByParam'        
       responses:
         '200':
           description: Successful response
