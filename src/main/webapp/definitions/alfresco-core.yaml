@@ -4321,8 +4321,6 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/maxItemsParam'
         - name: term
           in: query
           description: The term to search for.
@@ -4336,6 +4334,8 @@ paths:
             Supports the aliases -my-, -root- and -shared-.
           type: string
           required: false
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - name: nodeType
           in: query
           description: |
@@ -4382,13 +4382,13 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/maxItemsParam'
         - name: term
           in: query
           description: The term to search for.
           type: string
           required: true
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
@@ -4397,7 +4397,8 @@ paths:
           schema:
             $ref: '#/definitions/SitePaging'
         '400':
-          description: Invalid parameter, eg. search term is too short, unknown orderBy field
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **orderBy** invalid
         '401':
           description: If authentication fails          
         default:
@@ -4413,28 +4414,28 @@ paths:
       description: |
         Returns a list of people that match the given search criteria.
         
-        The search term is used to look for matches against username, firstname and lastname.
+        The search term is used to look for matches against person id, firstname and lastname.
 
         The search term
         - must contain a minimum of 2 alphanumeric characters
         - can optionally use '*' for wildcard matching
         
         You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
-        * userName
+        * id
         * firstName
         * lastName       
       operationId: liveSearchPeople
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/maxItemsParam'
         - name: term
           in: query
           description: | 
             The term to search for.
           type: string
           required: true
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
         - $ref: '#/parameters/orderByParam'        
       responses:
@@ -4443,7 +4444,8 @@ paths:
           schema:
             $ref: '#/definitions/PersonPaging'
         '400':
-          description: Invalid parameter, eg. search term is too short, unknown orderBy field
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **orderBy** invalid
         '401':
           description: If authentication fails          
         default:
