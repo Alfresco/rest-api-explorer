@@ -48,7 +48,7 @@ tags:
   - name: trashcan
     description: Retrieve and manage deleted nodes
   - name: queries
-    description: Live search for items in the repository
+    description: Search for items in the repository
 parameters:
   nodeIdParam:
     name: nodeId
@@ -4293,12 +4293,12 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
-  '/queries/live-search-nodes':
+  '/queries/nodes':
     get:
       tags:
         - queries
         - 5.2 changes
-      summary: Live search for nodes
+      summary: Find nodes
       description: |
         Returns a list of nodes that match the given search criteria.
 
@@ -4317,7 +4317,7 @@ paths:
         * name
         * modifiedAt
         * createdAt
-      operationId: liveSearchNodes
+      operationId: findNodes
       produces:
         - application/json
       parameters:
@@ -4361,12 +4361,12 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
-  '/queries/live-search-sites':
+  '/queries/sites':
     get:
       tags:
         - queries
         - 5.2 changes
-      summary: Live search for sites
+      summary: Find sites
       description: |
         Returns a list of sites that match the given search criteria.
 
@@ -4378,7 +4378,7 @@ paths:
         * id
         * title
         * description
-      operationId: liveSearchSites
+      operationId: findSites
       produces:
         - application/json
       parameters:
@@ -4405,12 +4405,12 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'            
-  '/queries/live-search-people':
+  '/queries/people':
     get:
       tags:
         - queries
         - 5.2 changes
-      summary: Live search for people
+      summary: Find people
       description: |
         Returns a list of people that match the given search criteria.
         
@@ -4424,7 +4424,7 @@ paths:
         * id
         * firstName
         * lastName       
-      operationId: liveSearchPeople
+      operationId: findPeople
       produces:
         - application/json
       parameters:
