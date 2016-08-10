@@ -269,7 +269,7 @@ parameters:
     name: orderBy
     in: query
     description: |
-      A string to control the order of the entities returned in a list. You can use the **orderby** parameter to
+      A string to control the order of the entities returned in a list. You can use the **orderBy** parameter to
       sort the list by one or more fields.
 
       Each field has a default sort order, which is normally acending order. Read the API method implementation notes
@@ -4304,7 +4304,7 @@ paths:
 
         The search term is used to look for nodes that match against name, title, description, full text content or tags.
 
-        The search term
+        The search term:
         - must contain a minimum of 3 alphanumeric characters
         - allows "quoted term"
         - can optionally use '*' for wildcard matching
@@ -4416,7 +4416,7 @@ paths:
         
         The search term is used to look for matches against person id, firstname and lastname.
 
-        The search term
+        The search term:
         - must contain a minimum of 2 alphanumeric characters
         - can optionally use '*' for wildcard matching
         
