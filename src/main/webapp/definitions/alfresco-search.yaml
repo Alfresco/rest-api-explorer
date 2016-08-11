@@ -1,27 +1,42 @@
-# Search public API
-
-## Issues
-
-## FullNode - how is the generic properties bucket user to represent content, multi-valued properties, mltext ??
-## How to include shared and extended definitions e.g. Pagination + cursor id?
-## Filter query - support queries or'ed together for multi-select facets ?
-## Public API framework - JSON decoration support on pass through
-## Public API framework - context for all entries - the facet problem....
-
-
 swagger: '2.0'
-
 info:
-  version: "0.1"
-  title: Search Public API
-
+  description: Provides access to the search features of Alfresco
+  version: '1'
+  title: Alfresco Search REST API
+basePath: /alfresco/api/-default-/public/search/versions/1
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication
+security:
+  - basicAuth: []
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: query
+    description: The api for querying Alfresco
 paths:
   '/search':
     post:
-      description: Executes a query
-      consumes: 
-        - application/json            
-      parameters: 
+      tags:
+        - query
+      summary: Searches Alfresco using the query api
+      description: |
+        You specify the query in a JSON body. A basic query looks like this.
+
+        ```JSON
+        {
+        	"query": {
+        		"query": "foo"
+        	}
+        }
+        ```
+
+        **Note:** This is the mimum possible query parameters
+
+      parameters:
         - in: body
           name: queryBody
           description: |
@@ -32,13 +47,13 @@ paths:
                - query
              properties:
                 query:
-                  $ref: '#/definitions/RequestQuery' 
+                  $ref: '#/definitions/RequestQuery'
                 location:
-                  $ref: '#/definitions/RequestLocation' 
+                  $ref: '#/definitions/RequestLocation'
                 scope:
                   $ref: '#/definitions/RequestScope'
-                localisation: 
-                  $ref: '#/definitions/RequestLocalisation' 
+                localisation:
+                  $ref: '#/definitions/RequestLocalisation'
                 paging:
                    $ref: '#/definitions/RequestPagination'
                 parameters:
@@ -54,19 +69,19 @@ paths:
                 facetFields:
                   $ref: '#/definitions/RequestFacetFields'
                 limits:
-                  $ref: '#/definitions/RequestLimits'   
+                  $ref: '#/definitions/RequestLimits'
                 filterQueries:
-                  $ref: '#/definitions/RequestFilterQueries'     
+                  $ref: '#/definitions/RequestFilterQueries'
                 higlighting:
                   $ref: '#/definitions/RequestHighlight'
                 spellcheck:
                   $ref: '#/definitions/RequestSpellcheck'
                 sort:
-                  $ref: '#/definitions/RequestSortDefinition'     
-                              
+                  $ref: '#/definitions/RequestSortDefinition'
+
       produces:
         - application/json
-        
+
       responses:
         '200':
           description: Successful response
@@ -76,9 +91,9 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-                  
-                               
-                  
+
+
+
 definitions:
 
   ## Standard definition
@@ -108,20 +123,20 @@ definitions:
             type: string
           logId:
             type: string
-  
+
   RequestLocalisation:
     description: Localisation Trait - all values are optional
     type: object
     properties:
       timezone:
-        description: | 
+        description: |
           A Java timezone as a string.
           If not defined the default timezones for individual index servers will be used
         type: string
       localisationMode:
-          description: |  
+          description: |
             EXPERT! How localised tokens are matched
-          type: string 
+          type: string
           default: LOCALE_ONLY
           enum:
             - LOCALE_ONLY
@@ -140,15 +155,15 @@ definitions:
             - ALL_COUNTRIES_AND_ALL
       locales:
         description: |
-          A collection of Java locales as a String. 
-          The first in the list is the primary locale. This will be used when only one locale makes sense - e.g. sorting 
-          All locales will be used to match text in a locale dependent way - with stemming/lemmetisation etc 
+          A collection of Java locales as a String.
+          The first in the list is the primary locale. This will be used when only one locale makes sense - e.g. sorting
+          All locales will be used to match text in a locale dependent way - with stemming/lemmetisation etc
         type: array
         items:
           type: string
-       
-  RequestLocation:     
-    description: | 
+
+  RequestLocation:
+    description: |
       Location Trait
     type: object
     properties:
@@ -158,12 +173,12 @@ definitions:
       longtitude:
         description: The longtitude to be associated with the request
         type: number
-   
-       
+
+
   RequestQuery:
-    description: Query.  
+    description: Query.
     type: object
-    properties: 
+    properties:
         language:
           description: The query language in which the query is written.
           type: string
@@ -175,12 +190,12 @@ definitions:
         userQuery:
           description: The exact search request typed in by the user
           type: string
-        query:   
-          description: The query which may have been generated in some way from the userQuery 
+        query:
+          description: The query which may have been generated in some way from the userQuery
           type: string
-  
+
   # ReponseQuery
- 
+
   ResultSetPaging:
     description: Query results
     type: object
@@ -196,7 +211,7 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/ResultSetRowEntry'
-              
+
   ResultSetContext:
     description: Context that applies to the whole result set
     type: object
@@ -212,7 +227,7 @@ definitions:
              label:
                type: string
              count:
-               type: number    
+               type: number
       fieldFacets:
         description: The counts from field facets
         type: array
@@ -234,7 +249,7 @@ definitions:
                   count:
                     description: The count for the bucket
                     type: number
-              
+
   ResultSetRowEntry:
     description: A row in the result set
     type: object
@@ -247,7 +262,7 @@ definitions:
       score:
         description: The score for this row
         type: number
-      dbid: 
+      dbid:
         description: |
           The DBID for the node which represents this row. In future additional scope may be required to identifiy the repository.
         type: number
@@ -263,7 +278,7 @@ definitions:
             type: array
             items:
               type: string
-              
+
   ## Standard definition
   NodeFull:
     type: object
@@ -302,7 +317,7 @@ definitions:
         type: array
         items:
           type: string
- 
+
   ## Standard definition
   UserInfo:
     type: object
@@ -314,7 +329,7 @@ definitions:
         type: string
       id:
         type: string
-  
+
   ## Standard definition
   ContentInfo:
     type: object
@@ -333,16 +348,16 @@ definitions:
         type: string
       mimeTypeGroup:
         type: string
- 
+
   RequestParameters:
-    description: Parameters to insert into a parameterised query at parse time 
+    description: Parameters to insert into a parameterised query at parse time
     type: object
     properties:
       parameters:
         type: array
         items:
-          $ref: '#/definitions/RequestParameter' 
-  
+          $ref: '#/definitions/RequestParameter'
+
   RequestParameter:
     description: A named parameter
     type: object
@@ -353,15 +368,15 @@ definitions:
       value:
         description: The parameter value
         type: string
-  
+
   RequestDefaults:
     description: Common query defaults
     type: object
     properties:
        textAttributes:
-         description: | 
+         description: |
            A list of query fields/properties used to expand TEXT: queries.
-           The default is cm:content. 
+           The default is cm:content.
            You could include all content properties using d:content or list all individual content properties or types.
            As more terms are included the query size, complexity, memory impact and query time will increase.
          type: array
@@ -370,7 +385,7 @@ definitions:
            default: cm:content
        defaultFTSOperator:
          description: |
-           The default way to combine query parts when AND or OR is not explicitly stated - includes ! - +   
+           The default way to combine query parts when AND or OR is not explicitly stated - includes ! - +
            one two three
            (one two three)
          type: string
@@ -380,7 +395,7 @@ definitions:
             - OR
        defaultFTSFieldOperator:
          description: |
-           The default way to combine query parts in field query groups when AND or OR is not explicitly stated - includes ! - + 
+           The default way to combine query parts in field query groups when AND or OR is not explicitly stated - includes ! - +
            FIELD:(one two three)
          type: string
          default: AND
@@ -390,25 +405,25 @@ definitions:
        namespace:
          description: The default name space to use if one is not provided
          type: string
-         default: cm 
+         default: cm
        defaultFieldName:
          type: string
          default: TEXT
-     
+
   RequestTemplates:
-    description: | 
+    description: |
       Templates usewd for query expansion.
       A template called "WOOF" defined as "%(cm:name cm:title)" allows
       WOOF:example
       to generate
-      cm:name:example cm:name:example 
+      cm:name:example cm:name:example
     type: object
     properties:
       parameters:
         type: array
         items:
-          $ref: '#/definitions/RequestTemplate' 
-  
+          $ref: '#/definitions/RequestTemplate'
+
   RequestTemplate:
     description: A template
     type: object
@@ -419,7 +434,7 @@ definitions:
       template:
         description: The template
         type: string
-  
+
   RequestScope:
     description: Scope
     type: object
@@ -439,16 +454,16 @@ definitions:
               type: string
         repositories:
           description: |
-            Repositories to federate  
+            Repositories to federate
           type: array
           items:
               type: string
- 
+
   RequestPagination:
     type: object
     properties:
       maxItems:
-        description: The maximum number of items to return in the query results 
+        description: The maximum number of items to return in the query results
         type: integer
         default: 200
       skipCount:
@@ -461,8 +476,8 @@ definitions:
           Using a cursor provides consistent navigation into a results set frozen from the initial query.
           Cursors may be automatically closed as they consume resources.
         type: string
-       
-  ## Standard definition + cursor id  
+
+  ## Standard definition + cursor id
   Pagination:
     type: object
     required:
@@ -504,8 +519,8 @@ definitions:
       cursorId:
         type: string
         description: |
-          Cursor Id  
-        
+          Cursor Id
+
   RequestConsistency:
     description: |
       Describes the level of consistency required of the query.
@@ -517,7 +532,7 @@ definitions:
           TRANSACTIONAL_IF_POSSIBLE - Use the database if possible; if not, use SOLR
           TRANSACTIONAL - Only use the database unless
           EVENTUAL - Only use SOLR
-          HYBRID - Use SOLR and fill in the gaps using the DB - Experimental and unsupported 
+          HYBRID - Use SOLR and fill in the gaps using the DB - Experimental and unsupported
           DEFAULT - Use the default configured for the search sub-system
         type: string
         default: DEFAULT
@@ -533,20 +548,20 @@ definitions:
       atLeastTxTime:
         description: If an eventually consistent index includes and transaction greater than this timestamp it will be considered up to date and TRANSACTIONAL
         type: string
-             
+
   ResponseConsistency:
     description: The consistency state of the index used to execute the query
     type: object
     properties:
-      lastTxId: 
+      lastTxId:
         description: The id of the last indexed transaction
         type: integer
       lastTxTime:
         description: The timestamp of the last indexed transaction
         type: string
-    
+
   RequestFacetQueries:
-    description: Facet queries to include 
+    description: Facet queries to include
     type: array
     items:
       type: object
@@ -555,14 +570,14 @@ definitions:
           description: A facet query
           type: string
         label:
-          description: A label to include in place of the facet query 
+          description: A label to include in place of the facet query
           type: string
-   
+
   RequestFacetFields:
-    description: | 
+    description: |
       Simple facet fields to include
       The Properties reflect the global properties related to field facts in SOLR.
-      They are descripbed in detail by the SOLR documentation 
+      They are descripbed in detail by the SOLR documentation
     type: object
     properties:
       prefix:
@@ -628,7 +643,7 @@ definitions:
             type: string
           facetEnumCacheMinDf:
              type: integer
-  
+
   RequestLimits:
     description: Limit the time and resources used for query execution
     type: object
@@ -638,14 +653,14 @@ definitions:
         type: integer
         default: 20000
       permissionEvaluationTime:
-        description: Maximum time for post query permission evaluation 
+        description: Maximum time for post query permission evaluation
         type: integer
         default: 20000
       permissionEvaluationCount:
-        description:  Maximum count of post query permission evaluations 
-        type: integer 
+        description:  Maximum count of post query permission evaluations
+        type: integer
         default: 2000
-  
+
   RequestFilterQueries:
     description: Filter Queries. Constraints that apply to the results set but do not affect the score of each entry.
     type: array
@@ -655,16 +670,16 @@ definitions:
         type: object
         properties:
           query:
-            description: | 
+            description: |
               The filter query expression.
               For multi-select facets selected facets must be order together
             type: string
-          tags:      
+          tags:
             description: Tags used exclude the filters from facet evaluation for multi-select facet support
             type: array
             items:
               type: string
-              
+
   RequestSortDefinition:
     description: How to sort the rows? An array of sort specifications. The array order defines the ordering precedence.
     type: array
@@ -683,13 +698,13 @@ definitions:
           description: The name of the field
           type: string
         ascending:
-          description: The sort order. (The ordering of nulls is determined by the SOLR configuration) 
+          description: The sort order. (The ordering of nulls is determined by the SOLR configuration)
           type: boolean
           default: false
-          
+
   RequestHighlight:
     description: |
-      Request that highlight fragements to be added to result set rows 
+      Request that highlight fragements to be added to result set rows
       The properties reflect SOLR highlighting parameters.
     type: object
     properties:
@@ -759,10 +774,10 @@ definitions:
               type: string
             fragmenter:
               type: string
-         
+
   RequestSpellcheck:
     description: |
-      Request that highlight fragements to be added to result set rows 
+      Request that highlight fragements to be added to result set rows
       The properties reflect SOLR spellcheck parameters.
     type: object
     properties:
@@ -798,7 +813,3 @@ definitions:
         type: string
       accuracy:
         type: number
-        
-        
-      
-    
