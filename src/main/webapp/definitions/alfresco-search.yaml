@@ -24,17 +24,17 @@ paths:
         - query
       summary: Searches Alfresco using the query api
       description: |
-        You specify the query in a JSON body. A basic query looks like this.
+        You must specify the query in a JSON body. A basic query looks like this.
 
         ```JSON
         {
         	"query": {
-        		"query": "foo"
+        		"userQuery": "foo"
         	}
         }
         ```
 
-        **Note:** This is the mimum possible query parameters
+        **Note:** These are the minimum possible query parameters
 
       parameters:
         - in: body
@@ -178,6 +178,9 @@ definitions:
   RequestQuery:
     description: Query.
     type: object
+    required:
+    - language
+    - userQuery
     properties:
         language:
           description: The query language in which the query is written.
