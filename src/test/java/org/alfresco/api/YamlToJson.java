@@ -45,6 +45,10 @@ public class YamlToJson {
     public static final String WORKFLOW_JSON_DEFINITION = JSON_DESTINATION + "alfresco-workflow.json";
     public static final String WORKFLOW_DEFINITION_TITLE = "Alfresco Workflow REST API";
 
+    public static final String SEARCH_DEFINITION = "/src/main/webapp/definitions/alfresco-search.yaml";
+    public static final String SEARCH_JSON_DEFINITION = JSON_DESTINATION + "alfresco-search.json";
+    public static final String SEARCH_DEFINITION_TITLE = "Alfresco Search REST API";
+
     public static void main(String[] args) {
 
         String rootPath = args[0];
@@ -65,6 +69,10 @@ public class YamlToJson {
             //Workflow
             swagger = parseSwaggerDef(new File(rootPath + WORKFLOW_DEFINITION), WORKFLOW_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + WORKFLOW_JSON_DEFINITION), swagger);
+
+            //Search
+            swagger = parseSwaggerDef(new File(rootPath + SEARCH_DEFINITION), SEARCH_DEFINITION_TITLE);
+            Json.mapper().writeValue(new File(rootPath + SEARCH_JSON_DEFINITION), swagger);
 
         } catch (IOException e) {
             System.err.println("Failed to create a json definitions: " + e.getLocalizedMessage());
