@@ -1,0 +1,804 @@
+# Search public API
+
+## Issues
+
+## FullNode - how is the generic properties bucket user to represent content, multi-valued properties, mltext ??
+## How to include shared and extended definitions e.g. Pagination + cursor id?
+## Filter query - support queries or'ed together for multi-select facets ?
+## Public API framework - JSON decoration support on pass through
+## Public API framework - context for all entries - the facet problem....
+
+
+swagger: '2.0'
+
+info:
+  version: "0.1"
+  title: Search Public API
+
+paths:
+  '/search':
+    post:
+      description: Executes a query
+      consumes: 
+        - application/json            
+      parameters: 
+        - in: body
+          name: queryBody
+          description: |
+            Generic query API
+          required: true
+          schema:
+             required:
+               - query
+             properties:
+                query:
+                  $ref: '#/definitions/RequestQuery' 
+                location:
+                  $ref: '#/definitions/RequestLocation' 
+                scope:
+                  $ref: '#/definitions/RequestScope'
+                localisation: 
+                  $ref: '#/definitions/RequestLocalisation' 
+                paging:
+                   $ref: '#/definitions/RequestPagination'
+                parameters:
+                  $ref: '#/definitions/RequestParameters'
+                defaults:
+                  $ref: '#/definitions/RequestDefaults'
+                templates:
+                  $ref: '#/definitions/RequestTemplates'
+                consistency:
+                  $ref: '#/definitions/RequestConsistency'
+                facetQueries:
+                  $ref: '#/definitions/RequestFacetQueries'
+                facetFields:
+                  $ref: '#/definitions/RequestFacetFields'
+                limits:
+                  $ref: '#/definitions/RequestLimits'   
+                filterQueries:
+                  $ref: '#/definitions/RequestFilterQueries'     
+                higlighting:
+                  $ref: '#/definitions/RequestHighlight'
+                spellcheck:
+                  $ref: '#/definitions/RequestSpellcheck'
+                sort:
+                  $ref: '#/definitions/RequestSortDefinition'     
+                              
+      produces:
+        - application/json
+        
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ResultSetPaging'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+                  
+                               
+                  
+definitions:
+
+  ## Standard definition
+  Error:
+    type: object
+    required:
+      - error
+    properties:
+      error:
+        type: object
+        required:
+          - statusCode
+          - briefSummary
+          - stackTrace
+          - descriptionURL
+        properties:
+          errorKey:
+            type: string
+          statusCode:
+            type: integer
+            format: int32
+          briefSummary:
+            type: string
+          stackTrace:
+            type: string
+          descriptionURL:
+            type: string
+          logId:
+            type: string
+  
+  RequestLocalisation:
+    description: Localisation Trait - all values are optional
+    type: object
+    properties:
+      timezone:
+        description: | 
+          A Java timezone as a string.
+          If not defined the default timezones for individual index servers will be used
+        type: string
+      localisationMode:
+          description: |  
+            EXPERT! How localised tokens are matched
+          type: string 
+          default: LOCALE_ONLY
+          enum:
+            - LOCALE_ONLY
+            - LOCALE_AND_ALL
+            - LOCALE_AND_ALL_CONTAINING_LOCALES
+            - LOCALE_AND_ALL_CONTAINING_LOCALES_AND_ALL
+            - LOCALE_AND_ALL_CONTAINED_LOCALES
+            - ALL_ONLY
+            - ALL_LANGUAGES
+            - ALL_LANGUAGES_AND_ALL
+            - EXACT_LANGUAGE
+            - EXACT_LANGUAGE_AND_ALL
+            - EXACT_COUNRTY
+            - EXACT_COUNTRY_AND_ALL
+            - ALL_COUNTRIES
+            - ALL_COUNTRIES_AND_ALL
+      locales:
+        description: |
+          A collection of Java locales as a String. 
+          The first in the list is the primary locale. This will be used when only one locale makes sense - e.g. sorting 
+          All locales will be used to match text in a locale dependent way - with stemming/lemmetisation etc 
+        type: array
+        items:
+          type: string
+       
+  RequestLocation:     
+    description: | 
+      Location Trait
+    type: object
+    properties:
+      latitiude:
+        description: The lattitude to be associated with the request
+        type: number
+      longtitude:
+        description: The longtitude to be associated with the request
+        type: number
+   
+       
+  RequestQuery:
+    description: Query.  
+    type: object
+    properties: 
+        language:
+          description: The query language in which the query is written.
+          type: string
+          default: afts
+          enum:
+            - afts
+            - lucene
+            - cmis
+        userQuery:
+          description: The exact search request typed in by the user
+          type: string
+        query:   
+          description: The query which may have been generated in some way from the userQuery 
+          type: string
+  
+  # ReponseQuery
+ 
+  ResultSetPaging:
+    description: Query results
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          context:
+            $ref: '#/definitions/ResultSetContext'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/ResultSetRowEntry'
+              
+  ResultSetContext:
+    description: Context that applies to the whole result set
+    type: object
+    properties:
+      consistency:
+        $ref: '#/definitions/ResponseConsistency'
+      facetQueries:
+        description: The counts from facet queries
+        type: array
+        items:
+          type: object
+          properties:
+             label:
+               type: string
+             count:
+               type: number    
+      fieldFacets:
+        description: The counts from field facets
+        type: array
+        items:
+          type: object
+          properties:
+            label:
+              description: The field name or its explicit label, if provided on the request
+              type: string
+            buckets:
+              description: An array of buckets and values
+              type: array
+              items:
+                type: object
+                properties:
+                  label:
+                    description: The bucket label
+                    type: string
+                  count:
+                    description: The count for the bucket
+                    type: number
+              
+  ResultSetRowEntry:
+    description: A row in the result set
+    type: object
+    required:
+      - entry
+    properties:
+      ## Standard response structure
+      entry:
+        $ref: '#/definitions/NodeFull'
+      score:
+        description: The score for this row
+        type: number
+      dbid: 
+        description: |
+          The DBID for the node which represents this row. In future additional scope may be required to identifiy the repository.
+        type: number
+      highlight:
+        description: Highlight fragments if requested and available
+        type: object
+        properties:
+          field:
+            description: A field where a match occured (as defined on the request)
+            type: string
+          snippets:
+            description: Any number of snippets for the specified field highlighting the matching text
+            type: array
+            items:
+              type: string
+              
+  ## Standard definition
+  NodeFull:
+    type: object
+    properties:
+      id:
+        type: string
+      parentId:
+        type: string
+      name:
+        type: string
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser:
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+        format: date-time
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      content:
+        $ref: '#/definitions/ContentInfo'
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+      allowableOperations:
+        type: array
+        items:
+          type: string
+ 
+  ## Standard definition
+  UserInfo:
+    type: object
+    required:
+      - displayName
+      - id
+    properties:
+      displayName:
+        type: string
+      id:
+        type: string
+  
+  ## Standard definition
+  ContentInfo:
+    type: object
+    required:
+      - mimeType
+      - mimeTypeName
+      - sizeInBytes
+    properties:
+      mimeType:
+        type: string
+      mimeTypeName:
+        type: string
+      sizeInBytes:
+        type: integer
+      encoding:
+        type: string
+      mimeTypeGroup:
+        type: string
+ 
+  RequestParameters:
+    description: Parameters to insert into a parameterised query at parse time 
+    type: object
+    properties:
+      parameters:
+        type: array
+        items:
+          $ref: '#/definitions/RequestParameter' 
+  
+  RequestParameter:
+    description: A named parameter
+    type: object
+    properties:
+      name:
+        description: The parameter name
+        type: string
+      value:
+        description: The parameter value
+        type: string
+  
+  RequestDefaults:
+    description: Common query defaults
+    type: object
+    properties:
+       textAttributes:
+         description: | 
+           A list of query fields/properties used to expand TEXT: queries.
+           The default is cm:content. 
+           You could include all content properties using d:content or list all individual content properties or types.
+           As more terms are included the query size, complexity, memory impact and query time will increase.
+         type: array
+         items:
+           type: string
+           default: cm:content
+       defaultFTSOperator:
+         description: |
+           The default way to combine query parts when AND or OR is not explicitly stated - includes ! - +   
+           one two three
+           (one two three)
+         type: string
+         default: AND
+         enum:
+            - AND
+            - OR
+       defaultFTSFieldOperator:
+         description: |
+           The default way to combine query parts in field query groups when AND or OR is not explicitly stated - includes ! - + 
+           FIELD:(one two three)
+         type: string
+         default: AND
+         enum:
+            - AND
+            - OR
+       namespace:
+         description: The default name space to use if one is not provided
+         type: string
+         default: cm 
+       defaultFieldName:
+         type: string
+         default: TEXT
+     
+  RequestTemplates:
+    description: | 
+      Templates usewd for query expansion.
+      A template called "WOOF" defined as "%(cm:name cm:title)" allows
+      WOOF:example
+      to generate
+      cm:name:example cm:name:example 
+    type: object
+    properties:
+      parameters:
+        type: array
+        items:
+          $ref: '#/definitions/RequestTemplate' 
+  
+  RequestTemplate:
+    description: A template
+    type: object
+    properties:
+      field:
+        description: The field name
+        type: string
+      template:
+        description: The template
+        type: string
+  
+  RequestScope:
+    description: Scope
+    type: object
+    properties:
+        stores:
+          description: |
+            The stores to include in the query
+          type: array
+          items:
+              type: string
+        tenants:
+          description: |
+            The tenants to include in the query
+            Tenanst are normally comingled in each store
+          type: array
+          items:
+              type: string
+        repositories:
+          description: |
+            Repositories to federate  
+          type: array
+          items:
+              type: string
+ 
+  RequestPagination:
+    type: object
+    properties:
+      maxItems:
+        description: The maximum number of items to return in the query results 
+        type: integer
+        default: 200
+      skipCount:
+        description: The number of items to skip from the start of the query set
+        type: integer
+        default: 0
+      cursorId:
+        description: |
+          A cursor id to support deep paging.
+          Using a cursor provides consistent navigation into a results set frozen from the initial query.
+          Cursors may be automatically closed as they consume resources.
+        type: string
+       
+  ## Standard definition + cursor id  
+  Pagination:
+    type: object
+    required:
+      - count
+      - hasMoreItems
+      - skipCount
+      - maxItems
+    properties:
+      count:
+        type: integer
+        format: int64
+        description: |
+          The number of objects in the entries array.
+      hasMoreItems:
+        type: boolean
+        description: |
+          A boolean value which is **true** if there are more entities in the collection
+          beyond those in this response. A true value means a request with a larger value
+          for the **skipCount** or the **maxItems** parameter will return more entities.
+      totalItems:
+        type: integer
+        format: int64
+        description: |
+          An integer describing the total number of entities in the collection.
+          The API might not be able to determine this value,
+          in which case this property will not be present.
+      skipCount:
+        type: integer
+        format: int64
+        description: |
+          An integer describing how many entities exist in the collection before
+          those included in this list.
+      maxItems:
+        type: integer
+        format: int64
+        description: |
+          The value of the **maxItems** parameter used to generate this list,
+          or if there was no **maxItems** parameter the default value is 100
+      cursorId:
+        type: string
+        description: |
+          Cursor Id  
+        
+  RequestConsistency:
+    description: |
+      Describes the level of consistency required of the query.
+      There are limits on what can be supported transactionally.
+    type: object
+    properties:
+      queryConsistency:
+        description: |
+          TRANSACTIONAL_IF_POSSIBLE - Use the database if possible; if not, use SOLR
+          TRANSACTIONAL - Only use the database unless
+          EVENTUAL - Only use SOLR
+          HYBRID - Use SOLR and fill in the gaps using the DB - Experimental and unsupported 
+          DEFAULT - Use the default configured for the search sub-system
+        type: string
+        default: DEFAULT
+        enum:
+            - TRANSACTIONAL_IF_POSSIBLE
+            - TRANSACTIONAL
+            - EVENTUAL
+            - HYBRID
+            - DEFAULT
+      atLeastTxId:
+        description: If an eventually consistent index includes a transation with this or a higher transaction id it will be considered up to date and TRANSACTIONAL
+        type: integer
+      atLeastTxTime:
+        description: If an eventually consistent index includes and transaction greater than this timestamp it will be considered up to date and TRANSACTIONAL
+        type: string
+             
+  ResponseConsistency:
+    description: The consistency state of the index used to execute the query
+    type: object
+    properties:
+      lastTxId: 
+        description: The id of the last indexed transaction
+        type: integer
+      lastTxTime:
+        description: The timestamp of the last indexed transaction
+        type: string
+    
+  RequestFacetQueries:
+    description: Facet queries to include 
+    type: array
+    items:
+      type: object
+      properties:
+        query:
+          description: A facet query
+          type: string
+        label:
+          description: A label to include in place of the facet query 
+          type: string
+   
+  RequestFacetFields:
+    description: | 
+      Simple facet fields to include
+      The Properties reflect the global properties related to field facts in SOLR.
+      They are descripbed in detail by the SOLR documentation 
+    type: object
+    properties:
+      prefix:
+        type: string
+      contains:
+        type: string
+      containsIgnoreCase:
+        type: boolean
+      sort:
+        type: string
+      limit:
+        type: integer
+      offset:
+        type: integer
+      mincount:
+        type: integer
+      missing:
+        type: boolean
+      method:
+        type: string
+      facetEnumCacheMinDf:
+        type: integer
+      facetOverrequestCount:
+         type: integer
+      facetOverrequestRatio:
+         type: integer
+      facetThreads:
+         type: integer
+      facet:
+        description: |
+          Define specifc fields on which to facet (adds SOLR facet.field and f.<field>.facet.* options)
+        type: object
+        properties:
+          field:
+            description: The facet field
+            type: string
+          label:
+            description: A replacement label for field in the result set facets.
+            type: string
+          excludeFilters:
+            description: |
+              Support to fix counting for multi-selct facet support. Filter queries with tags listed here will not be included in facet counts.
+            type: array
+            items:
+              type: string
+          prefix:
+            type: string
+          contains:
+            type: string
+          containsIgnoreCase:
+            type: boolean
+          sort:
+             type: string
+          limit:
+             type: integer
+          offset:
+            type: integer
+          mincount:
+            type: integer
+          missing:
+            type: boolean
+          method:
+            type: string
+          facetEnumCacheMinDf:
+             type: integer
+  
+  RequestLimits:
+    description: Limit the time and resources used for query execution
+    type: object
+    properties:
+      executionTime:
+        description: Maximum query execution time - ms
+        type: integer
+        default: 20000
+      permissionEvaluationTime:
+        description: Maximum time for post query permission evaluation 
+        type: integer
+        default: 20000
+      permissionEvaluationCount:
+        description:  Maximum count of post query permission evaluations 
+        type: integer 
+        default: 2000
+  
+  RequestFilterQueries:
+    description: Filter Queries. Constraints that apply to the results set but do not affect the score of each entry.
+    type: array
+    items:
+      type: array
+      items:
+        type: object
+        properties:
+          query:
+            description: | 
+              The filter query expression.
+              For multi-select facets selected facets must be order together
+            type: string
+          tags:      
+            description: Tags used exclude the filters from facet evaluation for multi-select facet support
+            type: array
+            items:
+              type: string
+              
+  RequestSortDefinition:
+    description: How to sort the rows? An array of sort specifications. The array order defines the ordering precedence.
+    type: array
+    items:
+      type: object
+      properties:
+        type:
+          description: How to order - using a field, when position of the document in the index, score/relevence.
+          type: string
+          default: FIELD
+          enum:
+            - FIELD
+            - DOCUMENT
+            - SCORE
+        field:
+          description: The name of the field
+          type: string
+        ascending:
+          description: The sort order. (The ordering of nulls is determined by the SOLR configuration) 
+          type: boolean
+          default: false
+          
+  RequestHighlight:
+    description: |
+      Request that highlight fragements to be added to result set rows 
+      The properties reflect SOLR highlighting parameters.
+    type: object
+    properties:
+      snippetCount:
+        type: number
+      fragmentSize:
+        type: number
+      mergeContiguous:
+        type: boolean
+      requireFieldMatch:
+        type: boolean
+      maxAnalyzedChars:
+        type: number
+      maxMultiValuedToExamine:
+        type: number
+      maxMultiValuedToMatch:
+        type: number
+      alternateField:
+        type: string
+      maxAlternateFieldLength:
+        type: number
+      highlightAlternate:
+        type: boolean
+      formatter:
+        type: string
+      simplePre:
+        type: string
+      simplePost:
+        type: string
+      fragmenter:
+        type: string
+      usePhraseHighlighter:
+        type: boolean
+      highlightMultiTerm:
+        type: boolean
+      regexSlop:
+        type: number
+      regexPattern:
+        type: string
+      regexMaxAnalyzedChars:
+        type: number
+      preserveMulti:
+        type: boolean
+      fields:
+        description: The fields to highlight and and field specific configuration
+        type: array
+        items:
+          type: object
+          properties:
+            field:
+              type: string
+            local:
+              type: object
+            snippetCount:
+              type: number
+            fragmentSize:
+              type: number
+            mergeContiguous:
+             type: boolean
+            alternateField:
+              type: string
+            formatter:
+              type: string
+            simplePre:
+              type: string
+            simplePost:
+              type: string
+            fragmenter:
+              type: string
+         
+  RequestSpellcheck:
+    description: |
+      Request that highlight fragements to be added to result set rows 
+      The properties reflect SOLR spellcheck parameters.
+    type: object
+    properties:
+      query:
+        type: string
+      build:
+        type: boolean
+      reload:
+        type: boolean
+      count:
+        type: number
+      onlyMorePopular:
+        type: boolean
+      maxResultsForSuggest:
+        type: number
+      alternativeTermCount:
+        type: number
+      extendedResults:
+        type: boolean
+      collate:
+        type: boolean
+      maxCollations:
+        type: number
+      maxCollationTries:
+        type: number
+      maxCollationEvaluations:
+        type: number
+      collateExtendedResults:
+        type: boolean
+      collateMaxCollectDocs:
+        type: number
+      dictionary:
+        type: string
+      accuracy:
+        type: number
+        
+        
+      
+    
