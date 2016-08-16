@@ -47,38 +47,37 @@ paths:
                - query
              properties:
                 query:
-                  $ref: '#/definitions/RequestQuery'
-                location:
-                  $ref: '#/definitions/RequestLocation'
-                scope:
-                  $ref: '#/definitions/RequestScope'
-                localisation:
-                  $ref: '#/definitions/RequestLocalisation'
+                  $ref: '#/definitions/RequestQuery'            
                 paging:
                    $ref: '#/definitions/RequestPagination'
-                parameters:
-                  $ref: '#/definitions/RequestParameters'
+                sort:
+                  $ref: '#/definitions/RequestSortDefinition'
                 defaults:
                   $ref: '#/definitions/RequestDefaults'
                 templates:
                   $ref: '#/definitions/RequestTemplates'
-                consistency:
-                  $ref: '#/definitions/RequestConsistency'
+                filterQueries:
+                  $ref: '#/definitions/RequestFilterQueries'
                 facetQueries:
                   $ref: '#/definitions/RequestFacetQueries'
                 facetFields:
                   $ref: '#/definitions/RequestFacetFields'
-                limits:
-                  $ref: '#/definitions/RequestLimits'
-                filterQueries:
-                  $ref: '#/definitions/RequestFilterQueries'
-                higlighting:
-                  $ref: '#/definitions/RequestHighlight'
                 spellcheck:
                   $ref: '#/definitions/RequestSpellcheck'
-                sort:
-                  $ref: '#/definitions/RequestSortDefinition'
-
+                scope:
+                  $ref: '#/definitions/RequestScope'
+                limits:
+                  $ref: '#/definitions/RequestLimits'
+                consistency:
+                  $ref: '#/definitions/RequestConsistency'
+                higlighting:
+                  $ref: '#/definitions/RequestHighlight'
+                parameters:
+                  $ref: '#/definitions/RequestParameters'
+                localisation:
+                  $ref: '#/definitions/RequestLocalisation'
+                location:
+                  $ref: '#/definitions/RequestLocation'
       produces:
         - application/json
 
@@ -180,7 +179,7 @@ definitions:
     type: object
     required:
     - language
-    - userQuery
+    - query
     properties:
         language:
           description: The query language in which the query is written.
@@ -252,6 +251,29 @@ definitions:
                   count:
                     description: The count for the bucket
                     type: number
+      spellcheck:
+        description: | 
+          Suggested corrections
+          
+          If zero results were found for the original query then a single entry of type "searchInsteadFor" will be returned. 
+          If alternatives were found that return more results than the oringinal query they are returned as "didYouMean" options.
+          The highest qulaity suggestion is first.
+        type: array
+        items:
+           type: object
+           properties:
+             suggestion:
+               description: A suggested alternative query
+               type: string
+             type:
+
+               type: string
+               enum:
+                 - searchInsteadFor
+                 - didYouMean
+               
+                
+               
 
   ResultSetRowEntry:
     description: A row in the result set
