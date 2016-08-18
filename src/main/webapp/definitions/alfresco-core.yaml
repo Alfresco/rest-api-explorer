@@ -140,9 +140,10 @@ parameters:
     in: query
     description: |
       Returns additional information about the node. The following optional fields can be requested:
-      * path
-      * isLink
       * allowableOperations
+      * isLink
+      * isLocked
+      * path
     required: false
     type: array
     items:
@@ -5609,6 +5610,13 @@ definitions:
         $ref: '#/definitions/NodeFull'
   NodeFull:
     type: object
+    required:
+    - id
+    - nodeType
+    - isFolder
+    - isFile
+    - createdAt
+    - createdByUser
     properties:
       id:
         type: string
@@ -5622,6 +5630,10 @@ definitions:
         type: boolean
       isFile:
         type: boolean
+        default: false
+      isLocked:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
