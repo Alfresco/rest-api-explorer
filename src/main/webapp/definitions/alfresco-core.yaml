@@ -1333,6 +1333,86 @@ paths:
           description: Error response
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/lock':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Lock a node
+      description: |
+        Places a lock on node **nodeId**. If **includeChildren** is true, locks are also recursively placed on all of **nodeId**'s children.
+        If any one of the child locks can't be taken then an exception is raised and all locks canceled.
+          
+        The lock is owned by the current user, and prevents other users or processes from making updates to the node until the lock is released.
+          
+        If the **timeToExpire** is not sent or is zero, then the lock never expires.  Otherwise, the **timeToExpire** is the number of seconds before the lock expires.  
+
+        When a lock expires, the lock is released.
+
+        If the node is already locked, and the user is the lock owner, then the lock is renewed with the new **timeToExpire**.        
+
+        By default, a lock is applied that allows the owner to update, delete, and add children to the node. 
+        You can use **type** to change the lock type to one of the following: 
+        * **FULL** no changes by any user are allowed
+        * **ALLOW_ADD_CHILDREN** children can be added but the node itself cannot be updated or deleted by any user
+        * **ALLOW_OWNER_CHANGES** changes to the node can be made only by the lock owner
+
+        By default, a lock is persisted in the database. You can create a volatile in-memory lock by setting the **lifetime** property to EPHEMERAL.
+      operationId: lockNode
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: lockBody
+          description: Lock details
+          required: true
+          schema:
+            properties:
+              includeChildren:
+                type: boolean
+                default: false
+              timeToExpire:
+                type: integer
+              type:
+                type: string
+                default: ALLOW_OWNER_CHANGES
+                enum:
+                 - FULL
+                 - ALLOW_ADD_CHILDREN
+                 - ALLOW_OWNER_CHANGES
+              lifetime:
+                type: string
+                default: PERSISTENT
+                enum:
+                 - PERSISTENT
+                 - EPHEMERAL
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format
+        '401':
+          description: Authentication failed          
+        '403':
+          description: |
+            Current user does not have permission to lock **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '422':
+          description: Lock fails due to a lock exception
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/move':
     post:
       tags:
