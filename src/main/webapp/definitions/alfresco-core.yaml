@@ -835,7 +835,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
@@ -952,7 +952,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/children':
@@ -1331,7 +1331,7 @@ paths:
         '422':
           description: Model integrity exception, including file name with invalid characters
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/lock':
@@ -1532,7 +1532,7 @@ paths:
         '422':
           description: Model integrity exception, including file name with invalid characters
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/content':
@@ -1560,7 +1560,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
@@ -1642,7 +1642,7 @@ paths:
         '507':
           description: If file content exceeds overall storage quota limit (configured for network/system)
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions':
@@ -1690,7 +1690,7 @@ paths:
         '501':
           description: If rendition/thumbnails are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
@@ -1719,7 +1719,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}':
@@ -1746,7 +1746,7 @@ paths:
         '404':
           description: If **nodeId** or **renditionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}/content':
@@ -1775,7 +1775,7 @@ paths:
         '404':
           description: If **nodeId** or **renditionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/secondary-children':
@@ -1858,7 +1858,7 @@ paths:
         '422':
           description: Model integrity exception
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
@@ -1899,7 +1899,7 @@ paths:
         '404':
           description: If parent **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/secondary-children/{childId}':
@@ -1940,7 +1940,7 @@ paths:
         '404':
           description: If parent **nodeId** or **childId** does not exist (with given assocType, if specified)
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'              
   '/nodes/{nodeId}/parents':
@@ -1988,7 +1988,7 @@ paths:
         '404':
           description: If child **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'     
   '/nodes/{nodeId}/targets':
@@ -2071,7 +2071,7 @@ paths:
         '422':
           description: Model integrity exception
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
@@ -2109,7 +2109,7 @@ paths:
         '404':
           description: If source **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'            
   '/nodes/{nodeId}/targets/{targetId}':
@@ -2152,7 +2152,7 @@ paths:
         '404':
           description: If source **nodeId** or **targetId** does not exist (with given assocType, if specified)
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/sources':
@@ -2191,7 +2191,7 @@ paths:
         '404':
           description: If target **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions':
@@ -2227,7 +2227,7 @@ paths:
         '404':
           description: If target **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'  
   '/nodes/{nodeId}/versions/{versionId}':
@@ -2254,7 +2254,7 @@ paths:
         '404':
           description: If **nodeId** or **versionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'     
     delete:
@@ -2295,7 +2295,7 @@ paths:
         '422':
           description: If attempting to delete the last remaining version  
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'        
   '/nodes/{nodeId}/versions/{versionId}/content':
@@ -2324,7 +2324,7 @@ paths:
         '404':
           description: If **nodeId** or **versionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/revert':
@@ -2373,7 +2373,7 @@ paths:
         '422':
           description: Model integrity exception trying to revert the node
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'                                           
   '/deleted-nodes':
@@ -2405,7 +2405,7 @@ paths:
         '401':
           description: If authentication fails            
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}':
@@ -2437,7 +2437,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -2465,7 +2465,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}/restore':
@@ -2510,7 +2510,7 @@ paths:
         '422':
           description: Model integrity exception trying to restore the node
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}':
@@ -3673,7 +3673,7 @@ paths:
         '404':
           description: If **siteId** does not exist or the user does not have permission to view the site.
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'            
   '/sites/{siteId}/containers':
@@ -4175,7 +4175,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
@@ -4210,7 +4210,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}':
@@ -4243,7 +4243,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -4272,7 +4272,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/content':
@@ -4303,7 +4303,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/renditions':
@@ -4335,7 +4335,7 @@ paths:
         '501':
           description: If shared links are disabled for the system          
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'        
   '/shared-links/{sharedId}/renditions/{renditionId}/content':
@@ -4367,7 +4367,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/email':
@@ -4433,7 +4433,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/queries/nodes':
@@ -4501,7 +4501,7 @@ paths:
         '404':
           description: If **rootNodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/queries/sites':
@@ -4545,7 +4545,7 @@ paths:
         '401':
           description: If authentication fails          
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'            
   '/queries/people':
@@ -4592,7 +4592,7 @@ paths:
         '401':
           description: If authentication fails          
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
 definitions:
