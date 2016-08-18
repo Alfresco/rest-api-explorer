@@ -1365,7 +1365,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: lockBody
-          description: Lock details
+          description: Lock details.
           required: true
           schema:
             properties:
@@ -1409,6 +1409,68 @@ paths:
             **nodeId** does not exist
         '422':
           description: Lock fails due to a lock exception
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/unlock':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary:  Unlock a node
+      description: |
+        Removes a lock on node **nodeId**. 
+
+        If **includeChildren** is true, all **nodeId's** children are also unlocked recursively. Any children without locks are ignored,
+        and the operation continues for all other children.
+
+        If the node or any of its children are currently checked-out, then an error is returned. You can override this behaviour by 
+        setting **allowCheckedOut**.
+
+        The current user must be the owner of the locks or have admin rights, otherwise an error is returned.
+
+        If a lock on the node, or on any child node if unlocking children, cannot be released, then an error is returned.
+
+      operationId: unlockNode
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: unlockBody
+          description: Unlock details.
+          required: true
+          schema:
+            properties:
+              includeChildren:
+                type: boolean
+                default: false
+              allowCheckedOut:
+                type: boolean
+                default: false
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format
+        '401':
+          description: Authentication failed         
+        '403':
+          description: |
+            Current user does not have permission to unlock **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '422':
+          description: Unlock failed due to an unlock exception
         default:
           description: Unexpected error
           schema:
