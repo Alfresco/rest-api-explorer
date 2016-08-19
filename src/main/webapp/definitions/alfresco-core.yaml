@@ -109,12 +109,13 @@ parameters:
     in: query
     description: |
       Returns additional information about the node. The following optional fields can be requested:
-      * properties
-      * aspectNames
-      * path
-      * isLink
       * allowableOperations
+      * aspectNames
       * association
+      * isLink
+      * isLocked
+      * path
+      * properties
     required: false
     type: array
     items:
@@ -125,11 +126,12 @@ parameters:
     in: query
     description: |
       Returns additional information about the node. The following optional fields can be requested:
-      * properties
-      * aspectNames
-      * path
-      * isLink
       * allowableOperations
+      * aspectNames
+      * isLink
+      * isLocked
+      * path
+      * properties
     required: false
     type: array
     items:
@@ -5469,6 +5471,9 @@ definitions:
         type: boolean
       isFile:
         type: boolean
+      isLocked:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
@@ -5517,6 +5522,9 @@ definitions:
         type: boolean
       isFile:
         type: boolean
+      isLocked:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
@@ -5553,6 +5561,9 @@ definitions:
         type: boolean
       isFile:
         type: boolean
+      isLocked:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
