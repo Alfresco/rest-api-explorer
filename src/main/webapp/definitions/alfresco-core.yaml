@@ -953,6 +953,8 @@ paths:
           description: If the current user does not have permission to delete **nodeId**
         '404':
           description: If **nodeId** does not exist
+        '409':
+          description: If **nodeId** is locked and cannot be deleted
         default:
           description: Unexpected error
           schema:
