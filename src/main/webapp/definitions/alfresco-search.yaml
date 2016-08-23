@@ -299,27 +299,7 @@ definitions:
       ## Standard response structure
       entry:
         $ref: '#/definitions/NodeFull'
-      score:
-        description: The score for this row
-        type: number
-      dbid:
-        description: |
-          The DBID for the node which represents this row. In future additional scope may be required to identifiy the repository.
-        type: number
-      highlight:
-        description: Highlight fragments if requested and available
-        type: object
-        properties:
-          field:
-            description: A field where a match occured (as defined on the request)
-            type: string
-          snippets:
-            description: Any number of snippets for the specified field highlighting the matching text
-            type: array
-            items:
-              type: string
-
-  ## Standard definition
+  ## Standard definition with Search added
   NodeFull:
     type: object
     properties:
@@ -347,6 +327,8 @@ definitions:
         $ref: '#/definitions/UserInfo'
       content:
         $ref: '#/definitions/ContentInfo'
+      search:
+        $ref: '#/definitions/SearchEntry'
       aspectNames:
         type: array
         items:
@@ -358,6 +340,25 @@ definitions:
         items:
           type: string
 
+  SearchEntry:
+    type: object
+    properties:
+      score:
+        description: The score for this row
+        type: number
+        format: float        
+      highlight:
+        description: Highlight fragments if requested and available
+        type: object
+        properties:
+          field:
+            description: A field where a match occured (as defined on the request)
+            type: string
+          snippets:
+            description: Any number of snippets for the specified field highlighting the matching text
+            type: array
+            items:
+              type: string
   ## Standard definition
   UserInfo:
     type: object
