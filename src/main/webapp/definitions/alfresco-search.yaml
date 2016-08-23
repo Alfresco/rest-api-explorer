@@ -29,12 +29,27 @@ paths:
         ```JSON
         {
         	"query": {
-        		"userQuery": "foo"
+        		"query": "foo",
+        		"language": "afts"
         	}
         }
         ```
 
         **Note:** These are the minimum possible query parameters
+
+        By default, **results are Unlimited**, there is no default paging.
+        Results can be restricted by setting "paging". For example,
+
+        ```JSON
+        {
+          "paging": {
+            "maxItems": "50",
+            "skipCount": "28"
+          }
+        }
+        ```
+        This example would ensure that results are **limited by Final Size**,
+        skipping the first 28 results and returning the next 50.
 
       parameters:
         - in: body
@@ -47,7 +62,7 @@ paths:
                - query
              properties:
                 query:
-                  $ref: '#/definitions/RequestQuery'            
+                  $ref: '#/definitions/RequestQuery'
                 paging:
                    $ref: '#/definitions/RequestPagination'
                 sort:
@@ -252,10 +267,10 @@ definitions:
                     description: The count for the bucket
                     type: number
       spellcheck:
-        description: | 
+        description: |
           Suggested corrections
-          
-          If zero results were found for the original query then a single entry of type "searchInsteadFor" will be returned. 
+
+          If zero results were found for the original query then a single entry of type "searchInsteadFor" will be returned.
           If alternatives were found that return more results than the oringinal query they are returned as "didYouMean" options.
           The highest qulaity suggestion is first.
         type: array
@@ -271,9 +286,9 @@ definitions:
                enum:
                  - searchInsteadFor
                  - didYouMean
-               
-                
-               
+
+
+
 
   ResultSetRowEntry:
     description: A row in the result set
