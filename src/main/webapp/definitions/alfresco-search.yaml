@@ -24,7 +24,8 @@ paths:
         - query
       summary: Searches Alfresco using the query api
       description: |
-        You must specify the query in a JSON body. A basic query looks like this.
+        **You must specify all the parameters in a JSON body**, url parameters are not supported.
+        A basic query looks like this.
 
         ```JSON
         {
@@ -346,7 +347,7 @@ definitions:
       score:
         description: The score for this row
         type: number
-        format: float        
+        format: float
       highlight:
         description: Highlight fragments if requested and available
         type: object
