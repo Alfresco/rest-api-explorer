@@ -29,10 +29,10 @@ paths:
 
         ```JSON
         {
-        	"query": {
-        		"query": "foo",
-        		"language": "afts"
-        	}
+          "query": {
+            "query": "foo",
+            "language": "afts"
+          }
         }
         ```
 
@@ -63,7 +63,9 @@ paths:
                - query
              properties:
                 query:
-                  $ref: '#/definitions/RequestQuery'
+                  $ref: '#/definitions/RequestQuery' 
+                include:
+                  $ref: '#/definitions/RequestInclude'            
                 paging:
                    $ref: '#/definitions/RequestPagination'
                 sort:
@@ -188,7 +190,31 @@ definitions:
       longtitude:
         description: The longtitude to be associated with the request
         type: number
-
+        
+  RequestInclude:
+    description: |
+      What to include in the returned items
+    type: object
+    properties:
+       includes:
+         description: |
+           Returns additional information about the node. The following optional fields can be requested:
+            * allowableOperations
+            * aspectNames
+            * isLink
+            * isLocked
+            * path
+            * properties
+         type: array
+         items:
+           type: string
+           enum:
+             - allowableOperations
+             - aspectNames
+             - isLink
+             - isLocked
+             - path
+             - properties
 
   RequestQuery:
     description: Query.
