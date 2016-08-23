@@ -1381,9 +1381,9 @@ paths:
                 type: string
                 default: ALLOW_OWNER_CHANGES
                 enum:
+                 - ALLOW_OWNER_CHANGES
                  - FULL
                  - ALLOW_ADD_CHILDREN
-                 - ALLOW_OWNER_CHANGES
               lifetime:
                 type: string
                 default: PERSISTENT
