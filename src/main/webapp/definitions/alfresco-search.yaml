@@ -66,6 +66,14 @@ paths:
           "sort": [{"type":"FIELD", "field":"cm:description", "ascending":"true"}]
         }
         ```
+
+        To specify templates you can use a **templates JSON body parameter**, for example:
+        ```JSON
+        {
+          "templates": [{"name": "_PERSON","template": "|%firstName OR |%lastName OR |%userName"},
+                        {"name": "mytemplate","template": "%cm:content"}]
+        }
+        ```
       parameters:
         - in: body
           name: queryBody
