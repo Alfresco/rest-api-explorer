@@ -38,7 +38,6 @@ paths:
 
         **Note:** These are the minimum possible query parameters
 
-
         By default, **results are Unlimited**, there is no default paging.
         Results can be restricted by setting "paging". For example,
 
@@ -53,12 +52,18 @@ paths:
         This example would ensure that results are **limited by Final Size**,
         skipping the first 28 results and returning the next 50.
 
-
         You can use the **include JSON body parameter** to return additional information.
         This works in the same way as /nodes/{nodeId}/children. For example:
         ```JSON
         {
           "include": ["aspectNames", "properties", "isLink"]
+        }
+        ```
+
+        To specify sorting you can use a **sort JSON body parameter**, for example:
+        ```JSON
+        {
+          "sort": [{"type":"FIELD", "field":"cm:description", "ascending":"true"}]
         }
         ```
       parameters:
