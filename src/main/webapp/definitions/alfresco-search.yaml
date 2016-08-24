@@ -70,10 +70,10 @@ paths:
                    $ref: '#/definitions/RequestPagination'
                 sort:
                   $ref: '#/definitions/RequestSortDefinition'
-                defaults:
-                  $ref: '#/definitions/RequestDefaults'
                 templates:
                   $ref: '#/definitions/RequestTemplates'
+                defaults:
+                  $ref: '#/definitions/RequestDefaults'
                 filterQueries:
                   $ref: '#/definitions/RequestFilterQueries'
                 facetQueries:
@@ -472,7 +472,6 @@ definitions:
        defaultFieldName:
          type: string
          default: TEXT
-
   RequestTemplates:
     description: |
       Templates usewd for query expansion.
@@ -480,24 +479,16 @@ definitions:
       WOOF:example
       to generate
       cm:name:example cm:name:example
-    type: object
-    properties:
-      parameters:
-        type: array
-        items:
-          $ref: '#/definitions/RequestTemplate'
-
-  RequestTemplate:
-    description: A template
-    type: object
-    properties:
-      field:
-        description: The field name
-        type: string
-      template:
-        description: The template
-        type: string
-
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          description: The template name
+          type: string
+        template:
+          description: The template
+          type: string
   RequestScope:
     description: Scope
     type: object
