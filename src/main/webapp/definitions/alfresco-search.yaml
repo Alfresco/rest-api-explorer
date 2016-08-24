@@ -38,6 +38,7 @@ paths:
 
         **Note:** These are the minimum possible query parameters
 
+
         By default, **results are Unlimited**, there is no default paging.
         Results can be restricted by setting "paging". For example,
 
@@ -52,6 +53,14 @@ paths:
         This example would ensure that results are **limited by Final Size**,
         skipping the first 28 results and returning the next 50.
 
+
+        You can use the **include JSON body parameter** to return additional information.
+        This works in the same way as /nodes/{nodeId}/children. For example:
+        ```JSON
+        {
+          "include": ["aspectNames", "properties", "isLink"]
+        }
+        ```
       parameters:
         - in: body
           name: queryBody
@@ -64,10 +73,10 @@ paths:
              properties:
                 query:
                   $ref: '#/definitions/RequestQuery'
-                include:
-                  $ref: '#/definitions/RequestInclude'
                 paging:
                    $ref: '#/definitions/RequestPagination'
+                include:
+                  $ref: '#/definitions/RequestInclude'
                 sort:
                   $ref: '#/definitions/RequestSortDefinition'
                 templates:
