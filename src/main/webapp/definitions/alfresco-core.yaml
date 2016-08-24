@@ -1430,9 +1430,6 @@ paths:
         If **includeChildren** is true, all **nodeId** children are also unlocked recursively. Any children without locks are ignored,
         and the operation continues for all other children.
 
-        If the node or any of its children are currently checked-out, then an error is returned. You can override this behaviour by 
-        setting **allowCheckedOut**.
-
         The current user must be the owner of the locks or have admin rights, otherwise an error is returned.
 
         If a lock on the node, or on any child node if unlocking children, cannot be released, then an error is returned.
@@ -1449,9 +1446,6 @@ paths:
           schema:
             properties:
               includeChildren:
-                type: boolean
-                default: false
-              allowCheckedOut:
                 type: boolean
                 default: false
       consumes:
