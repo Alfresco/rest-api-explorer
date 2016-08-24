@@ -15,14 +15,14 @@ consumes:
 produces:
   - application/json
 tags:
-  - name: query
-    description: The api for querying Alfresco
+  - name: search
+    description: The api for searching Alfresco
 paths:
   '/search':
     post:
       tags:
-        - query
-      summary: Searches Alfresco using the query api
+        - search
+      summary: Searches Alfresco using the search api
       description: |
         **You must specify all the parameters in a JSON body**, url parameters are not supported.
         A basic query looks like this.
