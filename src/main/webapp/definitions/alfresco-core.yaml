@@ -2985,7 +2985,7 @@ paths:
         Removes **favoriteId** as a favorite of person **personId**.
 
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: removeFavoriteSite
+      operationId: removeFavorite
       produces:
         - application/json
       parameters:
