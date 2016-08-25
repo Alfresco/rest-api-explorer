@@ -1345,9 +1345,8 @@ paths:
         - 5.2 changes
       summary: Lock a node
       description: |
-        Places a lock on node **nodeId**. If **includeChildren** is true, locks are also recursively placed on all of **nodeId** children.
-        If any one of the child locks can't be taken then an exception is raised and all locks canceled.
-          
+        Places a lock on node **nodeId**.
+
         The lock is owned by the current user, and prevents other users or processes from making updates to the node until the lock is released.
           
         If the **timeToExpire** is not sent or is zero, then the lock never expires.  Otherwise, the **timeToExpire** is the number of seconds before the lock expires.  
@@ -1360,9 +1359,12 @@ paths:
         You can use **type** to change the lock type to one of the following: 
         * **FULL** no changes by any user are allowed
         * **ALLOW_ADD_CHILDREN** children can be added but the node itself cannot be updated or deleted by any user
-        * **ALLOW_OWNER_CHANGES** changes to the node can be made only by the lock owner
+        * **ALLOW_OWNER_CHANGES** (default) changes to the node can be made only by the lock owner
 
         By default, a lock is persisted in the database. You can create a volatile in-memory lock by setting the **lifetime** property to EPHEMERAL.
+        
+        If a lock on the node cannot be taken, then an error is returned.
+                
       operationId: lockNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1374,9 +1376,6 @@ paths:
           required: true
           schema:
             properties:
-              includeChildren:
-                type: boolean
-                default: false
               timeToExpire:
                 type: integer
               type:
@@ -1427,27 +1426,15 @@ paths:
       description: |
         Removes a lock on node **nodeId**. 
 
-        If **includeChildren** is true, all **nodeId** children are also unlocked recursively. Any children without locks are ignored,
-        and the operation continues for all other children.
-
         The current user must be the owner of the locks or have admin rights, otherwise an error is returned.
 
-        If a lock on the node, or on any child node if unlocking children, cannot be released, then an error is returned.
+        If a lock on the node cannot be released, then an error is returned.
 
       operationId: unlockNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
-        - in: body
-          name: unlockBody
-          description: Unlock details.
-          required: true
-          schema:
-            properties:
-              includeChildren:
-                type: boolean
-                default: false
       consumes:
         - application/json
       produces:
