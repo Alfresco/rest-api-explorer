@@ -74,6 +74,21 @@ paths:
                         {"name": "mytemplate","template": "%cm:content"}]
         }
         ```
+
+        To specify defaults you can use a **defaults JSON body parameter**, for example:
+        ```JSON
+        {
+          "defaults": {
+            "textAttributes": [
+              "cm:content", "cm:name"
+            ],
+            "defaultFTSOperator": "AND",
+            "defaultFTSFieldOperator": "OR",
+            "namespace": "cm",
+            "defaultFieldName": "PATH"
+          }
+        }
+        ```
       parameters:
         - in: body
           name: queryBody
