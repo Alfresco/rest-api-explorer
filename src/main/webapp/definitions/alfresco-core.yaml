@@ -896,7 +896,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: the update request is invalid or **nodeId** is not a valid format
+            Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBody** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -1402,7 +1402,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format
+            Invalid parameter: **nodeId** is not a valid format or **lockBody** is invalid
         '401':
           description: Authentication failed          
         '403':
