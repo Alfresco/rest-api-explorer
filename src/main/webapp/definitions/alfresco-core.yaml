@@ -1605,12 +1605,11 @@ paths:
           in: query
           description: |
             Optional new name. This should include the file extension.
+            The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+            The character `.` must not be used at the end of the name. 
           required: false
           type: string
           pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-          description: |
-            The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-            The character `.` must not be used at the end of the name.      
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
