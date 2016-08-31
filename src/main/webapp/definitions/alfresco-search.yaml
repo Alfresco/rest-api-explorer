@@ -89,6 +89,12 @@ paths:
           }
         }
         ```
+        You can specify a several filter queries using the **filterQueries JSON body parameter**, for example:
+        ```JSON
+        {
+          "filterQueries": [{"query": "myquery"},{"query": "myquery2"}]
+        }
+        ```
       parameters:
         - in: body
           name: queryBody
@@ -756,20 +762,18 @@ definitions:
     description: Filter Queries. Constraints that apply to the results set but do not affect the score of each entry.
     type: array
     items:
-      type: array
-      items:
-        type: object
-        properties:
-          query:
-            description: |
-              The filter query expression.
-              For multi-select facets selected facets must be order together
+      type: object
+      properties:
+        query:
+          description: |
+            The filter query expression.
+            For multi-select facets selected facets must be order together
+          type: string
+        tags:
+          description: Tags used exclude the filters from facet evaluation for multi-select facet support
+          type: array
+          items:
             type: string
-          tags:
-            description: Tags used exclude the filters from facet evaluation for multi-select facet support
-            type: array
-            items:
-              type: string
 
   RequestSortDefinition:
     description: How to sort the rows? An array of sort specifications. The array order defines the ordering precedence.
