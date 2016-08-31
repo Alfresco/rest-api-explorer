@@ -877,6 +877,10 @@ paths:
             properties:
               name:
                 type: string
+                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+                description: |
+                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+                  The character . must not be used at the end of the name.
               nodeType:
                 type: string
               aspectNames:
@@ -1227,6 +1231,10 @@ paths:
             properties:
               name:
                 type: string
+                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+                description: |
+                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+                  The character . must not be used at the end of the name.
               nodeType:
                 type: string
               aspectNames:
@@ -1312,6 +1320,10 @@ paths:
                 type: string
               name:
                 type: string
+                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+                description: |
+                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+                  The character . must not be used at the end of the name.
       consumes:
         - application/json
       produces:
@@ -1493,6 +1505,10 @@ paths:
                 type: string
               name:
                 type: string
+                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+                description: |
+                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+                  The character . must not be used at the end of the name.
       consumes:
         - application/json
       produces:
@@ -1590,7 +1606,11 @@ paths:
           description: |
             Optional new name. This should include the file extension.
           required: false
-          type: string          
+          type: string
+          pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+          description: |
+            The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+            The character `.` must not be used at the end of the name.      
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
@@ -5457,6 +5477,10 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
@@ -5508,6 +5532,10 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
@@ -5547,6 +5575,10 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
@@ -5627,6 +5659,10 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
@@ -5692,6 +5728,10 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       modifiedAt:
         type: string
         format: date-time
@@ -5762,6 +5802,10 @@ definitions:
         format: date-time
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
@@ -5797,6 +5841,10 @@ definitions:
         format: date-time
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
@@ -5853,6 +5901,10 @@ definitions:
         type: string        
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
@@ -5880,6 +5932,10 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
