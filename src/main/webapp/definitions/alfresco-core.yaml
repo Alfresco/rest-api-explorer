@@ -1367,11 +1367,10 @@ paths:
 
         If the node is already locked, and the user is the lock owner, then the lock is renewed with the new **timeToExpire**.        
 
-        By default, a lock is applied that allows the owner to update, delete, and add children to the node. 
+        By default, a lock is applied that allows the owner to update or delete the node.
         You can use **type** to change the lock type to one of the following: 
-        * **FULL** no changes by any user are allowed
-        * **ALLOW_ADD_CHILDREN** children can be added but the node itself cannot be updated or deleted by any user
         * **ALLOW_OWNER_CHANGES** (default) changes to the node can be made only by the lock owner
+        * **FULL** no changes by any user are allowed
 
         By default, a lock is persisted in the database. You can create a volatile in-memory lock by setting the **lifetime** property to EPHEMERAL.
         
@@ -1396,7 +1395,6 @@ paths:
                 enum:
                  - ALLOW_OWNER_CHANGES
                  - FULL
-                 - ALLOW_ADD_CHILDREN
               lifetime:
                 type: string
                 default: PERSISTENT
