@@ -1358,10 +1358,13 @@ paths:
       summary: Lock a node
       description: |
         Places a lock on node **nodeId**.
+        
+        **Note:** you can only lock files. More specifically, a node can only be locked if it is
+        of type `cm:content` or a subtype of `cm:content`.
 
         The lock is owned by the current user, and prevents other users or processes from making updates to the node until the lock is released.
           
-        If the **timeToExpire** is not sent or is zero, then the lock never expires.  Otherwise, the **timeToExpire** is the number of seconds before the lock expires.  
+        If the **timeToExpire** is not set or is zero, then the lock never expires.  Otherwise, the **timeToExpire** is the number of seconds before the lock expires.  
 
         When a lock expires, the lock is released.
 
@@ -1369,10 +1372,13 @@ paths:
 
         By default, a lock is applied that allows the owner to update or delete the node.
         You can use **type** to change the lock type to one of the following: 
-        * **ALLOW_OWNER_CHANGES** (default) changes to the node can be made only by the lock owner
-        * **FULL** no changes by any user are allowed
+        * **ALLOW_OWNER_CHANGES** (default) changes to the node can be made only by the lock owner. This enum is the same value as the deprecated WRITE_LOCK described in `org.alfresco.service.cmr.lock.LockType` in the Alfresco Public Java API. This is the default value.
+        * **FULL** no changes by any user are allowed. This enum is the same value as the deprecated READ_ONLY_LOCK described in `org.alfresco.service.cmr.lock.LockType` in the Alfresco Public Java API.
 
         By default, a lock is persisted in the database. You can create a volatile in-memory lock by setting the **lifetime** property to EPHEMERAL.
+        You might choose use EPHEMERAL locks, for example, if you are taking frequent short-term locks that you don't need 
+        to be kept over a restart of the repository. In this case you don't need the 
+        overhead of writing the locks to the database.
         
         If a lock on the node cannot be taken, then an error is returned.
                 
@@ -1412,7 +1418,8 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or **lockBody** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or **lockBody** is invalid,
+            or a lock was attempted on a node that is not a file
         '401':
           description: Authentication failed          
         '403':
