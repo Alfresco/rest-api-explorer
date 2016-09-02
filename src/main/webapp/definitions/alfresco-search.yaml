@@ -94,6 +94,18 @@ paths:
         {
           "filterQueries": [{"query": "myquery"},{"query": "myquery2"}]
         }
+
+        You can specify several facet queries using the **facetQueries JSON body parameter**, for example:
+        ```JSON
+        "facetQueries": [{"query": "created:2016","label": "CreatedThisYear"}]
+        ```
+        The response will contain a matching "context" section, the "label" will match the facet query.
+        ```JSON
+        "context": {
+          "facetQueries": [
+            {"label": "CreatedThisYear","count": 3}
+          ]
+        },
         ```
       parameters:
         - in: body
