@@ -79,6 +79,37 @@ paths:
                       {"name": "mytemplate","template": "%cm:content"}]
         ```
 
+        For **spell checking** you could use a complete query like this:
+        ```JSON
+        {
+          "query": {
+            "query": "cm:title:alfrezco",
+            "language": "afts"
+          },
+          "spellcheck": {"query": "alfrezco"}
+        }
+        ```
+        If you are already specifying "userQuery" then the following may be easier
+        and produces the same result :
+        ```JSON
+        {
+          "query": {
+            "query": "cm:title:alfrezco",
+            "userQuery": "alfrezco",
+            "language": "afts"
+          },
+          "spellcheck": {}
+        }
+        ```
+        The spellcheck response will include a spellCheck context like this:
+        ```JSON
+        "context": {
+          "spellCheck": {
+            "type": "searchInsteadFor",
+            "suggestions": ["alfresco"]
+          }
+        },
+        ```
         To specify defaults you can use a **defaults JSON body parameter**, for example:
         ```JSON
         "defaults": {
