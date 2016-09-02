@@ -36,17 +36,26 @@ paths:
         }
         ```
 
-        **Note:** These are the minimum possible query parameters
+        **Note:** These are the minimum possible query parameters.
 
-        By default, **results are Unlimited**, there is no default paging.
-        Results can be restricted by setting "paging". For example,
+        A basic CMIS query looks like this.
 
         ```JSON
         {
-          "paging": {
-            "maxItems": "50",
-            "skipCount": "28"
+          "query": {
+            "query": "select * from cmis:folder",
+            "language": "cmis"
           }
+        }
+        ```
+
+        By default, **results are limited to the first 100.**
+        Results can be restricted by setting "paging". For example,
+
+        ```JSON
+        "paging": {
+          "maxItems": "50",
+          "skipCount": "28"
         }
         ```
         This example would ensure that results are **limited by Final Size**,
@@ -55,45 +64,37 @@ paths:
         You can use the **include JSON body parameter** to return additional information.
         This works in the same way as /nodes/{nodeId}/children. For example:
         ```JSON
-        {
-          "include": ["aspectNames", "properties", "isLink"]
-        }
+        "include": ["aspectNames", "properties", "isLink"]
         ```
 
         To specify sorting you can use a **sort JSON body parameter**, for example:
         ```JSON
-        {
-          "sort": [{"type":"FIELD", "field":"cm:description", "ascending":"true"}]
-        }
+        "sort": [{"type":"FIELD", "field":"cm:description", "ascending":"true"}]
         ```
+        The "sort" parameter is not supported for CMIS queries.
 
         To specify templates you can use a **templates JSON body parameter**, for example:
         ```JSON
-        {
-          "templates": [{"name": "_PERSON","template": "|%firstName OR |%lastName OR |%userName"},
-                        {"name": "mytemplate","template": "%cm:content"}]
-        }
+        "templates": [{"name": "_PERSON","template": "|%firstName OR |%lastName OR |%userName"},
+                      {"name": "mytemplate","template": "%cm:content"}]
         ```
 
         To specify defaults you can use a **defaults JSON body parameter**, for example:
         ```JSON
-        {
-          "defaults": {
-            "textAttributes": [
-              "cm:content", "cm:name"
-            ],
-            "defaultFTSOperator": "AND",
-            "defaultFTSFieldOperator": "OR",
-            "namespace": "cm",
-            "defaultFieldName": "PATH"
-          }
+        "defaults": {
+          "textAttributes": [
+            "cm:content", "cm:name"
+          ],
+          "defaultFTSOperator": "AND",
+          "defaultFTSFieldOperator": "OR",
+          "namespace": "cm",
+          "defaultFieldName": "PATH"
         }
         ```
-        You can specify a several filter queries using the **filterQueries JSON body parameter**, for example:
+        You can specify several filter queries using the **filterQueries JSON body parameter**, for example:
         ```JSON
-        {
-          "filterQueries": [{"query": "myquery"},{"query": "myquery2"}]
-        }
+        "filterQueries": [{"query": "TYPE:'cm:folder'"},{"query": "cm:creator:mjackson"}]
+        ```
 
         You can specify several facet queries using the **facetQueries JSON body parameter**, for example:
         ```JSON
