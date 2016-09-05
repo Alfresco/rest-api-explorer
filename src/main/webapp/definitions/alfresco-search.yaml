@@ -379,7 +379,7 @@ definitions:
                type: string
              count:
                type: number
-      fieldFacets:
+      facetFields:
         description: The counts from field facets
         type: array
         items:
@@ -680,10 +680,6 @@ definitions:
         description: |
           The value of the **maxItems** parameter used to generate this list,
           or if there was no **maxItems** parameter the default value is 100
-      cursorId:
-        type: string
-        description: |
-          Cursor Id
 
   RequestConsistency:
     description: |
@@ -744,70 +740,37 @@ definitions:
       They are descripbed in detail by the SOLR documentation
     type: object
     properties:
-      prefix:
-        type: string
-      contains:
-        type: string
-      containsIgnoreCase:
-        type: boolean
-      sort:
-        type: string
-      limit:
-        type: integer
-      offset:
-        type: integer
-      mincount:
-        type: integer
-      missing:
-        type: boolean
-      method:
-        type: string
-      facetEnumCacheMinDf:
-        type: integer
-      facetOverrequestCount:
-         type: integer
-      facetOverrequestRatio:
-         type: integer
-      facetThreads:
-         type: integer
-      facet:
+      facets:
         description: |
           Define specifc fields on which to facet (adds SOLR facet.field and f.<field>.facet.* options)
-        type: object
-        properties:
-          field:
-            description: The facet field
-            type: string
-          label:
-            description: A replacement label for field in the result set facets.
-            type: string
-          excludeFilters:
-            description: |
-              Support to fix counting for multi-selct facet support. Filter queries with tags listed here will not be included in facet counts.
-            type: array
-            items:
-              type: string
-          prefix:
-            type: string
-          contains:
-            type: string
-          containsIgnoreCase:
-            type: boolean
-          sort:
-             type: string
-          limit:
-             type: integer
-          offset:
-            type: integer
-          mincount:
-            type: integer
-          missing:
-            type: boolean
-          method:
-            type: string
-          facetEnumCacheMinDf:
-             type: integer
-
+        type: array
+        items:
+          type: object
+          properties:
+              field:
+                description: The facet field
+                type: string
+              prefix:
+                description: Restricts the possible constraints to only indexed values with a specified prefix.
+                type: string
+              sort:
+                 type: string
+                 enum:
+                  - COUNT
+                  - INDEX
+              method:
+                 type: string
+                 enum:
+                  - ENUM
+                  - FC
+              limit:
+                 type: integer
+              offset:
+                type: integer
+              mincount:
+                type: integer
+              facetEnumCacheMinDf:
+                 type: integer
   RequestLimits:
     description: Limit the time and resources used for query execution
     type: object
