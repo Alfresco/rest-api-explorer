@@ -51,7 +51,6 @@ paths:
 
         By default, **results are limited to the first 100.**
         Results can be restricted by setting "paging". For example,
-
         ```JSON
         "paging": {
           "maxItems": "50",
@@ -61,6 +60,13 @@ paths:
         This example would ensure that results are **limited by Final Size**,
         skipping the first 28 results and returning the next 50.
 
+        The **default search uses workspace://SpacesStore**.  To change the scope
+        to a particular store you can use the **scope JSON body parameter**. For example,
+        ```JSON
+        "scope": {
+            "stores": ["archive://SpacesStore", "workspace://SpacesStore"]
+        }
+        ```
         You can use the **include JSON body parameter** to return additional information.
         This works in the same way as /nodes/{nodeId}/children. For example:
         ```JSON
