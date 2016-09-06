@@ -151,6 +151,12 @@ parameters:
     items:
       type: string
     collectionFormat: csv
+  workingCopyNodeIdParam:
+    name: workingCopyNodeId
+    in: path
+    description: The identifier of a working copy node.
+    required: true
+    type: string
   sharedIdParam:
     name: sharedId
     in: path
@@ -1478,6 +1484,153 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+
+
+  '/nodes/{nodeId}/checkout':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Checkout a node
+      description: |
+        Checks out node **nodeId** and creates a working copy node.
+
+        The node returned in the response represents the working copy.
+      operationId: checkout
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or **checkoutBody** is invalid,
+            or a checkout was attempted on a node that is not a file
+        '401':
+          description: Authentication failed
+        '403':
+          description: |
+            Current user does not have permission to checkout **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '422':
+          description: Checkout is attempted on a node that is already checked out
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+    '/nodes/{workingCopyNodeId}/checkin':
+      post:
+        tags:
+          - nodes
+          - 5.2 changes
+        summary: Checkin a node
+        description: |
+          Checks in working copy node **workingCopyNodeId**.
+
+          NOTE: This endpoint can accept both multipart/form-data or JSON
+
+          properties
+          content
+          checkin comment
+
+          The response represents the state of the node after checkin.
+
+        operationId: checkin
+        parameters:
+          - $ref: '#/parameters/workingCopyNodeIdParam'
+          - $ref: '#/parameters/nodeEntryIncludeParam'
+          - $ref: '#/parameters/fieldsParam'
+          - in: body
+            name: checkinBody
+            description: Checkin details.
+            required: true
+            schema:
+              properties:
+                major:
+                  type: boolean
+                  default: false
+        consumes:
+          - application/json
+          - multipart/form-data
+        produces:
+          - application/json
+        responses:
+          '200':
+            description: Successful response
+            schema:
+              $ref: '#/definitions/NodeEntry'
+          '400':
+            description: |
+              Invalid parameter: **nodeId** is not a valid format, **checkoutBody** is invalid
+          '401':
+            description: Authentication failed
+          '403':
+            description: |
+              Current user does not have permission to checkin **nodeId**
+          '404':
+            description: |
+              **nodeId** does not exist
+          '422':
+            description: Checkin is attempted on a node that is not a working copy
+          default:
+            description: Unexpected error
+            schema:
+              $ref: '#/definitions/Error'
+
+    '/nodes/{workingCopyNodeId}/cancel-checkout':
+      post:
+        tags:
+          - nodes
+          - 5.2 changes
+        summary: Cancels the checkout of a node
+        description: |
+          Cancels the checkout of working copy node **workingCopyNodeId**.
+
+          The response represents the latest state of the node that was originally checked out.
+        operationId: cancelCheckout
+        parameters:
+          - $ref: '#/parameters/workingCopyNodeIdParam'
+          - $ref: '#/parameters/nodeEntryIncludeParam'
+          - $ref: '#/parameters/fieldsParam'
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        responses:
+          '200':
+            description: Successful response
+            schema:
+              $ref: '#/definitions/NodeEntry'
+          '400':
+            description: |
+              Invalid parameter: **workingCopyNodeId** is not a valid format
+          '401':
+            description: Authentication failed
+          '403':
+            description: |
+              Current user does not have permission to cancel the checkout of **workingCopyNodeId**
+          '404':
+            description: |
+              **workingCopyNodeId** does not exist
+          '422':
+            description: Cancel checkout is attempted on a node that is not a working copy
+          default:
+            description: Unexpected error
+            schema:
+              $ref: '#/definitions/Error'
+
+
   '/nodes/{nodeId}/move':
     post:
       tags:
