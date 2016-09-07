@@ -17,6 +17,8 @@ produces:
 paths:
   '/search':
     post:
+      tags:
+        - search
       summary: Searches Alfresco
       description: |
         **You specify all the parameters in this API in a JSON body**, URL parameters are not supported.
