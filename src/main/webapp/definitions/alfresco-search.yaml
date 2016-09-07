@@ -14,18 +14,13 @@ consumes:
   - application/json
 produces:
   - application/json
-tags:
-  - name: search
-    description: The api for searching Alfresco
 paths:
   '/search':
     post:
-      tags:
-        - search
-      summary: Searches Alfresco using the search api
+      summary: Searches Alfresco
       description: |
-        **You must specify all the parameters in a JSON body**, url parameters are not supported.
-        A basic query looks like this.
+        **You specify all the parameters in this API in a JSON body**, URL parameters are not supported.
+        A basic query looks like this:
 
         ```JSON
         {
@@ -37,8 +32,10 @@ paths:
         ```
 
         **Note:** These are the minimum possible query parameters.
-
-        A basic CMIS query looks like this.
+        
+        The default search language is **afts** ([Alfresco Full Text Search](http://docs.alfresco.com/5.1/concepts/rm-searchsyntax-intro.html)), but you can also specify **cmis**, and **lucene**.
+        
+        A basic CMIS query looks like this:
 
         ```JSON
         {
@@ -50,7 +47,7 @@ paths:
         ```
 
         By default, **results are limited to the first 100.**
-        Results can be restricted by setting "paging". For example,
+        Results can be restricted using "paging". For example:
         ```JSON
         "paging": {
           "maxItems": "50",
@@ -68,24 +65,24 @@ paths:
         }
         ```
         You can use the **include JSON body parameter** to return additional information.
-        This works in the same way as /nodes/{nodeId}/children. For example:
+        This works in the same way as in the /nodes/{nodeId}/children method in the core API. For example:
         ```JSON
         "include": ["aspectNames", "properties", "isLink"]
         ```
 
-        To specify sorting you can use a **sort JSON body parameter**, for example:
+        You can sort the results using the **sort JSON body parameter**, for example:
         ```JSON
         "sort": [{"type":"FIELD", "field":"cm:description", "ascending":"true"}]
         ```
-        The "sort" parameter is not supported for CMIS queries.
+        **Note:** the **sort** parameter is not supported for CMIS queries.
 
-        To specify templates you can use a **templates JSON body parameter**, for example:
+        You can specify templates using the **templates JSON body parameter**, for example:
         ```JSON
         "templates": [{"name": "_PERSON","template": "|%firstName OR |%lastName OR |%userName"},
                       {"name": "mytemplate","template": "%cm:content"}]
         ```
 
-        For **spell checking** you could use a complete query like this:
+        For **spell checking** you can use a query like this:
         ```JSON
         {
           "query": {
@@ -95,6 +92,7 @@ paths:
           "spellcheck": {"query": "alfrezco"}
         }
         ```
+        
         If you are already specifying "userQuery" then the following may be easier
         and produces the same result :
         ```JSON
@@ -107,7 +105,8 @@ paths:
           "spellcheck": {}
         }
         ```
-        The spellcheck response will include a spellCheck context like this:
+        
+        The spellcheck response includes a spellCheck context like this:
         ```JSON
         "context": {
           "spellCheck": {
@@ -116,7 +115,8 @@ paths:
           }
         },
         ```
-        To specify defaults you can use a **defaults JSON body parameter**, for example:
+        
+        To specify defaults, you  use a **defaults JSON body parameter**, for example:
         ```JSON
         "defaults": {
           "textAttributes": [
@@ -128,6 +128,7 @@ paths:
           "defaultFieldName": "PATH"
         }
         ```
+        
         You can specify several filter queries using the **filterQueries JSON body parameter**, for example:
         ```JSON
         "filterQueries": [{"query": "TYPE:'cm:folder'"},{"query": "cm:creator:mjackson"}]
