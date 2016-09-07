@@ -70,6 +70,12 @@ paths:
         "include": ["aspectNames", "properties", "isLink"]
         ```
 
+        You can use the **fields JSON body parameter** to restrict the fields returned within a response if, for example, you want to save on overall bandwidth.
+        This works in the same way as in the /nodes/{nodeId}/children method in the core API. For example:
+        ```JSON
+        "fields": ["id", "name", "search"]
+        ```
+
         You can sort the results using the **sort JSON body parameter**, for example:
         ```JSON
         "sort": [{"type":"FIELD", "field":"cm:description", "ascending":"true"}]
@@ -195,6 +201,8 @@ paths:
                    $ref: '#/definitions/RequestPagination'
                 include:
                   $ref: '#/definitions/RequestInclude'
+                fields:
+                  $ref: '#/definitions/RequestFields'
                 sort:
                   $ref: '#/definitions/RequestSortDefinition'
                 templates:
@@ -277,6 +285,20 @@ definitions:
        - path
        - properties
 
+  RequestFields:
+    description: A list of field names.
+
+      You can use this parameter to restrict the fields
+      returned within a response if, for example, you want to save on overall bandwidth.
+
+      The list applies to a returned individual
+      entity or entries within a collection.
+
+      If the **include** parameter is used aswell then the fields specified in the **include**
+      parameter are returned in addition to those specified in the **fields** parameter.
+    type: array
+    items:
+     type: string
   RequestQuery:
     description: Query.
     type: object
