@@ -60,7 +60,7 @@ paths:
         '403':
           description: If the login fails
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/tickets/-me-':
@@ -88,7 +88,7 @@ paths:
         '404':
           description: If the status of the user has changed (e.g. The user is locked or the account is disabled) or the ticket has expired
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -106,7 +106,7 @@ paths:
         '404':
           description: If the status of the user has changed (e.g. The user is locked or the account is disabled) or the ticket has expired
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
 definitions:

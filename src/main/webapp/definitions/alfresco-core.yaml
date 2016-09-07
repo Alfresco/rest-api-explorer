@@ -109,12 +109,13 @@ parameters:
     in: query
     description: |
       Returns additional information about the node. The following optional fields can be requested:
-      * properties
-      * aspectNames
-      * path
-      * isLink
       * allowableOperations
+      * aspectNames
       * association
+      * isLink
+      * isLocked
+      * path
+      * properties
     required: false
     type: array
     items:
@@ -125,11 +126,12 @@ parameters:
     in: query
     description: |
       Returns additional information about the node. The following optional fields can be requested:
-      * properties
-      * aspectNames
-      * path
-      * isLink
       * allowableOperations
+      * aspectNames
+      * isLink
+      * isLocked
+      * path
+      * properties
     required: false
     type: array
     items:
@@ -140,9 +142,10 @@ parameters:
     in: query
     description: |
       Returns additional information about the node. The following optional fields can be requested:
-      * path
-      * isLink
       * allowableOperations
+      * isLink
+      * isLocked
+      * path
     required: false
     type: array
     items:
@@ -834,7 +837,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
@@ -874,6 +877,10 @@ paths:
             properties:
               name:
                 type: string
+                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+                description: |
+                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+                  The character . must not be used at the end of the name.
               nodeType:
                 type: string
               aspectNames:
@@ -893,7 +900,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: the update request is invalid or **nodeId** is not a valid format
+            Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBody** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -950,8 +957,10 @@ paths:
           description: If the current user does not have permission to delete **nodeId**
         '404':
           description: If **nodeId** does not exist
+        '409':
+          description: If **nodeId** is locked and cannot be deleted
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/children':
@@ -1222,6 +1231,10 @@ paths:
             properties:
               name:
                 type: string
+                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+                description: |
+                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+                  The character . must not be used at the end of the name.
               nodeType:
                 type: string
               aspectNames:
@@ -1307,6 +1320,10 @@ paths:
                 type: string
               name:
                 type: string
+                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+                description: |
+                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+                  The character . must not be used at the end of the name.
       consumes:
         - application/json
       produces:
@@ -1330,7 +1347,135 @@ paths:
         '422':
           description: Model integrity exception, including file name with invalid characters
         default:
-          description: Error response
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/lock':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Lock a node
+      description: |
+        Places a lock on node **nodeId**.
+        
+        **Note:** you can only lock files. More specifically, a node can only be locked if it is
+        of type `cm:content` or a subtype of `cm:content`.
+
+        The lock is owned by the current user, and prevents other users or processes from making updates to the node until the lock is released.
+          
+        If the **timeToExpire** is not set or is zero, then the lock never expires.  Otherwise, the **timeToExpire** is the number of seconds before the lock expires.  
+
+        When a lock expires, the lock is released.
+
+        If the node is already locked, and the user is the lock owner, then the lock is renewed with the new **timeToExpire**.        
+
+        By default, a lock is applied that allows the owner to update or delete the node.
+        You can use **type** to change the lock type to one of the following: 
+        * **ALLOW_OWNER_CHANGES** (default) changes to the node can be made only by the lock owner. This enum is the same value as the deprecated WRITE_LOCK described in `org.alfresco.service.cmr.lock.LockType` in the Alfresco Public Java API. This is the default value.
+        * **FULL** no changes by any user are allowed. This enum is the same value as the deprecated READ_ONLY_LOCK described in `org.alfresco.service.cmr.lock.LockType` in the Alfresco Public Java API.
+
+        By default, a lock is persisted in the database. You can create a volatile in-memory lock by setting the **lifetime** property to EPHEMERAL.
+        You might choose use EPHEMERAL locks, for example, if you are taking frequent short-term locks that you don't need 
+        to be kept over a restart of the repository. In this case you don't need the 
+        overhead of writing the locks to the database.
+        
+        If a lock on the node cannot be taken, then an error is returned.
+                
+      operationId: lockNode
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: lockBody
+          description: Lock details.
+          required: true
+          schema:
+            properties:
+              timeToExpire:
+                type: integer
+              type:
+                type: string
+                default: ALLOW_OWNER_CHANGES
+                enum:
+                 - ALLOW_OWNER_CHANGES
+                 - FULL
+              lifetime:
+                type: string
+                default: PERSISTENT
+                enum:
+                 - PERSISTENT
+                 - EPHEMERAL
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or **lockBody** is invalid,
+            or a lock was attempted on a node that is not a file
+        '401':
+          description: Authentication failed          
+        '403':
+          description: |
+            Current user does not have permission to lock **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '422':
+          description: Lock fails due to a lock exception
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/unlock':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary:  Unlock a node
+      description: |
+        Removes a lock on node **nodeId**. 
+
+        The current user must be the owner of the locks or have admin rights, otherwise an error is returned.
+
+        If a lock on the node cannot be released, then an error is returned.
+
+      operationId: unlockNode
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format
+        '401':
+          description: Authentication failed         
+        '403':
+          description: |
+            Current user does not have permission to unlock **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '422':
+          description: Unlock failed due to an unlock exception
+        default:
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/move':
@@ -1365,6 +1510,10 @@ paths:
                 type: string
               name:
                 type: string
+                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+                description: |
+                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+                  The character . must not be used at the end of the name.
       consumes:
         - application/json
       produces:
@@ -1389,7 +1538,7 @@ paths:
         '422':
           description: Model integrity exception, including file name with invalid characters
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/content':
@@ -1417,7 +1566,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
@@ -1461,8 +1610,11 @@ paths:
           in: query
           description: |
             Optional new name. This should include the file extension.
+            The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+            The character `.` must not be used at the end of the name. 
           required: false
-          type: string          
+          type: string
+          pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
@@ -1499,7 +1651,7 @@ paths:
         '507':
           description: If file content exceeds overall storage quota limit (configured for network/system)
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions':
@@ -1547,7 +1699,7 @@ paths:
         '501':
           description: If rendition/thumbnails are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
@@ -1576,7 +1728,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}':
@@ -1603,7 +1755,7 @@ paths:
         '404':
           description: If **nodeId** or **renditionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}/content':
@@ -1619,6 +1771,15 @@ paths:
         - $ref: '#/parameters/renditionIdParam'
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
+        - name: placeholder
+          in: query
+          description: |
+            If **true** and there is no rendition for this **nodeId** and **renditionId**, 
+            then the placeholder image for the mime type of this rendition is returned, rather 
+            than a 404 response.
+          required: false
+          type: boolean
+          default: false
       responses:
         '200':
           description: Successful response
@@ -1632,7 +1793,7 @@ paths:
         '404':
           description: If **nodeId** or **renditionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/secondary-children':
@@ -1715,7 +1876,7 @@ paths:
         '422':
           description: Model integrity exception
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
@@ -1756,7 +1917,7 @@ paths:
         '404':
           description: If parent **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/secondary-children/{childId}':
@@ -1797,7 +1958,7 @@ paths:
         '404':
           description: If parent **nodeId** or **childId** does not exist (with given assocType, if specified)
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'              
   '/nodes/{nodeId}/parents':
@@ -1845,7 +2006,7 @@ paths:
         '404':
           description: If child **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'     
   '/nodes/{nodeId}/targets':
@@ -1928,7 +2089,7 @@ paths:
         '422':
           description: Model integrity exception
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
@@ -1966,7 +2127,7 @@ paths:
         '404':
           description: If source **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'            
   '/nodes/{nodeId}/targets/{targetId}':
@@ -2009,7 +2170,7 @@ paths:
         '404':
           description: If source **nodeId** or **targetId** does not exist (with given assocType, if specified)
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/sources':
@@ -2048,7 +2209,7 @@ paths:
         '404':
           description: If target **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions':
@@ -2084,7 +2245,7 @@ paths:
         '404':
           description: If target **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'  
   '/nodes/{nodeId}/versions/{versionId}':
@@ -2111,7 +2272,7 @@ paths:
         '404':
           description: If **nodeId** or **versionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'     
     delete:
@@ -2152,7 +2313,7 @@ paths:
         '422':
           description: If attempting to delete the last remaining version  
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'        
   '/nodes/{nodeId}/versions/{versionId}/content':
@@ -2181,7 +2342,7 @@ paths:
         '404':
           description: If **nodeId** or **versionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/revert':
@@ -2230,7 +2391,7 @@ paths:
         '422':
           description: Model integrity exception trying to revert the node
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'                                           
   '/deleted-nodes':
@@ -2262,7 +2423,7 @@ paths:
         '401':
           description: If authentication fails            
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}':
@@ -2294,7 +2455,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -2322,7 +2483,7 @@ paths:
         '404':
           description: If **nodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}/restore':
@@ -2367,7 +2528,7 @@ paths:
         '422':
           description: Model integrity exception trying to restore the node
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/people/{personId}':
@@ -2857,7 +3018,7 @@ paths:
         Removes **favoriteId** as a favorite of person **personId**.
 
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: removeFavoriteSite
+      operationId: removeFavorite
       produces:
         - application/json
       parameters:
@@ -3530,7 +3691,7 @@ paths:
         '404':
           description: If **siteId** does not exist or the user does not have permission to view the site.
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'            
   '/sites/{siteId}/containers':
@@ -4032,7 +4193,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
@@ -4067,7 +4228,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}':
@@ -4100,7 +4261,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -4129,7 +4290,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/content':
@@ -4160,7 +4321,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/renditions':
@@ -4192,7 +4353,7 @@ paths:
         '501':
           description: If shared links are disabled for the system          
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'        
   '/shared-links/{sharedId}/renditions/{renditionId}/content':
@@ -4224,7 +4385,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/email':
@@ -4290,7 +4451,7 @@ paths:
         '501':
           description: If shared links are disabled for the system
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/queries/nodes':
@@ -4358,7 +4519,7 @@ paths:
         '404':
           description: If **rootNodeId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/queries/sites':
@@ -4402,7 +4563,7 @@ paths:
         '401':
           description: If authentication fails          
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'            
   '/queries/people':
@@ -4449,7 +4610,7 @@ paths:
         '401':
           description: If authentication fails          
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
 definitions:
@@ -5320,12 +5481,19 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
         type: boolean
       isFile:
         type: boolean
+      isLocked:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
@@ -5368,12 +5536,19 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
         type: boolean
       isFile:
         type: boolean
+      isLocked:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
@@ -5404,12 +5579,19 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
         type: boolean
       isFile:
         type: boolean
+      isLocked:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
@@ -5467,6 +5649,13 @@ definitions:
         $ref: '#/definitions/NodeFull'
   NodeFull:
     type: object
+    required:
+    - id
+    - nodeType
+    - isFolder
+    - isFile
+    - createdAt
+    - createdByUser
     properties:
       id:
         type: string
@@ -5474,12 +5663,20 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
         type: boolean
       isFile:
         type: boolean
+        default: false
+      isLocked:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
@@ -5535,6 +5732,10 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       modifiedAt:
         type: string
         format: date-time
@@ -5605,6 +5806,10 @@ definitions:
         format: date-time
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
@@ -5640,6 +5845,10 @@ definitions:
         format: date-time
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
@@ -5696,6 +5905,10 @@ definitions:
         type: string        
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
@@ -5723,6 +5936,10 @@ definitions:
         type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:

@@ -135,7 +135,7 @@ paths:
         '401':
             description: If authentication fails
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/deployments/{deploymentId}':
@@ -171,7 +171,7 @@ paths:
         '404':
           description: If **deploymentId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -197,7 +197,7 @@ paths:
         '401':
           description: If authentication fails
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   /process-definitions:
@@ -233,7 +233,7 @@ paths:
         '401':
             description: If authentication fails
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/process-definitions/{processDefinitionId}':
@@ -263,7 +263,7 @@ paths:
         '404':
           description: If **processDefinitionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/process-definitions/{processDefinitionId}/image':
@@ -295,7 +295,7 @@ paths:
         '404':
           description: If **processDefinitionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/process-definitions/{processDefinitionId}/start-form-model':
@@ -324,7 +324,7 @@ paths:
         '404':
           description: If **processDefinitionId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   /processes:
@@ -365,7 +365,7 @@ paths:
         '401':
             description: If authentication fails
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -447,7 +447,7 @@ paths:
         '401':
             description: If authentication fails
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/processes/{processId}':
@@ -483,7 +483,7 @@ paths:
         '404':
           description: If **processId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -504,7 +504,7 @@ paths:
         '404':
           description: The processId does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/processes/{processId}/variables':
@@ -545,7 +545,7 @@ paths:
         '404':
           description: If **processId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -625,7 +625,7 @@ paths:
         '404':
           description: If **processId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/processes/{processId}/variables/{variableName}':
@@ -660,7 +660,7 @@ paths:
         '404':
           description: If **processId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -682,7 +682,7 @@ paths:
         '404':
           description: The **processId** does not exist, or the **variableName** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/processes/{processId}/items':
@@ -723,7 +723,7 @@ paths:
         '404':
           description: If **processId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -801,7 +801,7 @@ paths:
         '404':
           description: If **processId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/processes/{processId}/items/{itemId}':
@@ -825,7 +825,7 @@ paths:
         '404':
           description: The **processId** does not exist, or the **itemId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/processes/{processId}/tasks':
@@ -868,7 +868,7 @@ paths:
         '404':
           description: If **processId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   /tasks:
@@ -907,7 +907,7 @@ paths:
         '401':
             description: If authentication fails
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/tasks/{taskId}':
@@ -943,7 +943,7 @@ paths:
         '404':
           description: If **taskId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
@@ -1128,7 +1128,7 @@ paths:
         '401':
             description: If authentication fails
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/tasks/{taskId}/task-form-model':
@@ -1163,7 +1163,7 @@ paths:
         '404':
           description: If **taskId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/tasks/{taskId}/variables':
@@ -1205,7 +1205,7 @@ paths:
         '404':
           description: If **taskId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -1282,7 +1282,7 @@ paths:
         '404':
           description: If **taskId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/tasks/{taskId}/variables/{variableName}':
@@ -1317,7 +1317,7 @@ paths:
         '404':
           description: If **taskId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -1340,7 +1340,7 @@ paths:
         '404':
           description: The **taskId** does not exist, or the **variableName** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/tasks/{taskId}/items':
@@ -1381,7 +1381,7 @@ paths:
         '404':
           description: If **taskId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
@@ -1459,7 +1459,7 @@ paths:
         '404':
           description: If **taskId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/tasks/{taskId}/items/{itemId}':
@@ -1483,7 +1483,7 @@ paths:
         '404':
           description: The **taskId** does not exist, or the **itemId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/tasks/{taskId}/candidates':
@@ -1514,7 +1514,7 @@ paths:
         '404':
           description: If **taskId** does not exist
         default:
-          description: Error response
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
 definitions:
