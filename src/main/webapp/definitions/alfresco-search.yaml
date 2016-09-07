@@ -14,18 +14,13 @@ consumes:
   - application/json
 produces:
   - application/json
-tags:
-  - name: search
-    description: The api for searching Alfresco
 paths:
   '/search':
     post:
-      tags:
-        - search
-      summary: Searches Alfresco using the search api
+      summary: Searches Alfresco
       description: |
-        **You must specify all the parameters in a JSON body**, url parameters are not supported.
-        A basic query looks like this.
+        **You specify all the parameters in this API in a JSON body**, URL parameters are not supported.
+        A basic query looks like this:
 
         ```JSON
         {
@@ -37,8 +32,10 @@ paths:
         ```
 
         **Note:** These are the minimum possible query parameters.
-
-        A basic CMIS query looks like this.
+        
+        The default search language is **afts** ([Alfresco Full Text Search](http://docs.alfresco.com/5.1/concepts/rm-searchsyntax-intro.html)), but you can also specify **cmis**, and **lucene**.
+        
+        A basic CMIS query looks like this:
 
         ```JSON
         {
@@ -50,7 +47,7 @@ paths:
         ```
 
         By default, **results are limited to the first 100.**
-        Results can be restricted by setting "paging". For example,
+        Results can be restricted using "paging". For example:
         ```JSON
         "paging": {
           "maxItems": "50",
@@ -60,6 +57,14 @@ paths:
         This example would ensure that results are **limited by Final Size**,
         skipping the first 28 results and returning the next 50.
 
+        Alternatively, you can limit the results by using the **limits JSON body parameter**. For example,
+        ```JSON
+        "limits": {
+          "permissionEvaluationTime": 20000,
+          "permissionEvaluationCount": 2000
+        }
+        ```
+
         The **default search uses workspace://SpacesStore**.  To change the scope
         to a particular store you can use the **scope JSON body parameter**. For example,
         ```JSON
@@ -68,24 +73,30 @@ paths:
         }
         ```
         You can use the **include JSON body parameter** to return additional information.
-        This works in the same way as /nodes/{nodeId}/children. For example:
+        This works in the same way as in the /nodes/{nodeId}/children method in the core API. For example:
         ```JSON
         "include": ["aspectNames", "properties", "isLink"]
         ```
 
-        To specify sorting you can use a **sort JSON body parameter**, for example:
+        You can use the **fields JSON body parameter** to restrict the fields returned within a response if, for example, you want to save on overall bandwidth.
+        This works in the same way as in the /nodes/{nodeId}/children method in the core API. For example:
+        ```JSON
+        "fields": ["id", "name", "search"]
+        ```
+
+        You can sort the results using the **sort JSON body parameter**, for example:
         ```JSON
         "sort": [{"type":"FIELD", "field":"cm:description", "ascending":"true"}]
         ```
-        The "sort" parameter is not supported for CMIS queries.
+        **Note:** the **sort** parameter is not supported for CMIS queries.
 
-        To specify templates you can use a **templates JSON body parameter**, for example:
+        You can specify templates using the **templates JSON body parameter**, for example:
         ```JSON
         "templates": [{"name": "_PERSON","template": "|%firstName OR |%lastName OR |%userName"},
                       {"name": "mytemplate","template": "%cm:content"}]
         ```
 
-        For **spell checking** you could use a complete query like this:
+        For **spell checking** you can use a query like this:
         ```JSON
         {
           "query": {
@@ -95,6 +106,7 @@ paths:
           "spellcheck": {"query": "alfrezco"}
         }
         ```
+        
         If you are already specifying "userQuery" then the following may be easier
         and produces the same result :
         ```JSON
@@ -107,7 +119,8 @@ paths:
           "spellcheck": {}
         }
         ```
-        The spellcheck response will include a spellCheck context like this:
+        
+        The spellcheck response includes a spellCheck context like this:
         ```JSON
         "context": {
           "spellCheck": {
@@ -116,7 +129,8 @@ paths:
           }
         },
         ```
-        To specify defaults you can use a **defaults JSON body parameter**, for example:
+        
+        To specify defaults, you  use a **defaults JSON body parameter**, for example:
         ```JSON
         "defaults": {
           "textAttributes": [
@@ -128,6 +142,7 @@ paths:
           "defaultFieldName": "PATH"
         }
         ```
+        
         You can specify several filter queries using the **filterQueries JSON body parameter**, for example:
         ```JSON
         "filterQueries": [{"query": "TYPE:'cm:folder'"},{"query": "cm:creator:mjackson"}]
@@ -164,6 +179,20 @@ paths:
             "facetFields": {"facets": [{"field": "'content.size'"}]}
         }
         ```
+
+        The response will contain a matching "context" section, the "label" will match the facet query.
+        ```JSON
+        "context": {
+          "facetQueries": [
+            { "label": "small","count": 2 },
+            { "label": "large","count": 0 },
+            { "label": "xtra small","count": 5 },
+            { "label": "xtra large","count": 56},
+            { "label": "medium","count": 4 },
+            { "label": "XX large", "count": 1 }
+          ]
+        },
+        ```
       parameters:
         - in: body
           name: queryBody
@@ -180,6 +209,8 @@ paths:
                    $ref: '#/definitions/RequestPagination'
                 include:
                   $ref: '#/definitions/RequestInclude'
+                fields:
+                  $ref: '#/definitions/RequestFields'
                 sort:
                   $ref: '#/definitions/RequestSortDefinition'
                 templates:
@@ -198,16 +229,6 @@ paths:
                   $ref: '#/definitions/RequestScope'
                 limits:
                   $ref: '#/definitions/RequestLimits'
-                consistency:
-                  $ref: '#/definitions/RequestConsistency'
-                higlighting:
-                  $ref: '#/definitions/RequestHighlight'
-                parameters:
-                  $ref: '#/definitions/RequestParameters'
-                localisation:
-                  $ref: '#/definitions/RequestLocalisation'
-                location:
-                  $ref: '#/definitions/RequestLocation'
       produces:
         - application/json
 
@@ -252,57 +273,6 @@ definitions:
             type: string
           logId:
             type: string
-
-  RequestLocalisation:
-    description: Localisation Trait - all values are optional
-    type: object
-    properties:
-      timezone:
-        description: |
-          A Java timezone as a string.
-          If not defined the default timezones for individual index servers will be used
-        type: string
-      localisationMode:
-          description: |
-            EXPERT! How localised tokens are matched
-          type: string
-          default: LOCALE_ONLY
-          enum:
-            - LOCALE_ONLY
-            - LOCALE_AND_ALL
-            - LOCALE_AND_ALL_CONTAINING_LOCALES
-            - LOCALE_AND_ALL_CONTAINING_LOCALES_AND_ALL
-            - LOCALE_AND_ALL_CONTAINED_LOCALES
-            - ALL_ONLY
-            - ALL_LANGUAGES
-            - ALL_LANGUAGES_AND_ALL
-            - EXACT_LANGUAGE
-            - EXACT_LANGUAGE_AND_ALL
-            - EXACT_COUNRTY
-            - EXACT_COUNTRY_AND_ALL
-            - ALL_COUNTRIES
-            - ALL_COUNTRIES_AND_ALL
-      locales:
-        description: |
-          A collection of Java locales as a String.
-          The first in the list is the primary locale. This will be used when only one locale makes sense - e.g. sorting
-          All locales will be used to match text in a locale dependent way - with stemming/lemmetisation etc
-        type: array
-        items:
-          type: string
-
-  RequestLocation:
-    description: |
-      Location Trait
-    type: object
-    properties:
-      latitiude:
-        description: The lattitude to be associated with the request
-        type: number
-      longtitude:
-        description: The longtitude to be associated with the request
-        type: number
-
   RequestInclude:
     description: |
          Returns additional information about the node. The following optional fields can be requested:
@@ -323,6 +293,20 @@ definitions:
        - path
        - properties
 
+  RequestFields:
+    description: A list of field names.
+
+      You can use this parameter to restrict the fields
+      returned within a response if, for example, you want to save on overall bandwidth.
+
+      The list applies to a returned individual
+      entity or entries within a collection.
+
+      If the **include** parameter is used aswell then the fields specified in the **include**
+      parameter are returned in addition to those specified in the **fields** parameter.
+    type: array
+    items:
+     type: string
   RequestQuery:
     description: Query.
     type: object
@@ -471,7 +455,6 @@ definitions:
         type: array
         items:
           type: string
-
   SearchEntry:
     type: object
     properties:
@@ -479,18 +462,6 @@ definitions:
         description: The score for this row
         type: number
         format: float
-      highlight:
-        description: Highlight fragments if requested and available
-        type: object
-        properties:
-          field:
-            description: A field where a match occured (as defined on the request)
-            type: string
-          snippets:
-            description: Any number of snippets for the specified field highlighting the matching text
-            type: array
-            items:
-              type: string
   ## Standard definition
   UserInfo:
     type: object
@@ -521,27 +492,6 @@ definitions:
         type: string
       mimeTypeGroup:
         type: string
-
-  RequestParameters:
-    description: Parameters to insert into a parameterised query at parse time
-    type: object
-    properties:
-      parameters:
-        type: array
-        items:
-          $ref: '#/definitions/RequestParameter'
-
-  RequestParameter:
-    description: A named parameter
-    type: object
-    properties:
-      name:
-        description: The parameter name
-        type: string
-      value:
-        description: The parameter value
-        type: string
-
   RequestDefaults:
     description: Common query defaults
     type: object
@@ -609,20 +559,6 @@ definitions:
           type: array
           items:
               type: string
-        tenants:
-          description: |
-            The tenants to include in the query
-            Tenanst are normally comingled in each store
-          type: array
-          items:
-              type: string
-        repositories:
-          description: |
-            Repositories to federate
-          type: array
-          items:
-              type: string
-
   RequestPagination:
     type: object
     properties:
@@ -634,14 +570,6 @@ definitions:
         description: The number of items to skip from the start of the query set
         type: integer
         default: 0
-      cursorId:
-        description: |
-          A cursor id to support deep paging.
-          Using a cursor provides consistent navigation into a results set frozen from the initial query.
-          Cursors may be automatically closed as they consume resources.
-        type: string
-
-  ## Standard definition + cursor id
   Pagination:
     type: object
     required:
@@ -680,35 +608,6 @@ definitions:
         description: |
           The value of the **maxItems** parameter used to generate this list,
           or if there was no **maxItems** parameter the default value is 100
-
-  RequestConsistency:
-    description: |
-      Describes the level of consistency required of the query.
-      There are limits on what can be supported transactionally.
-    type: object
-    properties:
-      queryConsistency:
-        description: |
-          TRANSACTIONAL_IF_POSSIBLE - Use the database if possible; if not, use SOLR
-          TRANSACTIONAL - Only use the database unless
-          EVENTUAL - Only use SOLR
-          HYBRID - Use SOLR and fill in the gaps using the DB - Experimental and unsupported
-          DEFAULT - Use the default configured for the search sub-system
-        type: string
-        default: DEFAULT
-        enum:
-            - TRANSACTIONAL_IF_POSSIBLE
-            - TRANSACTIONAL
-            - EVENTUAL
-            - HYBRID
-            - DEFAULT
-      atLeastTxId:
-        description: If an eventually consistent index includes a transation with this or a higher transaction id it will be considered up to date and TRANSACTIONAL
-        type: integer
-      atLeastTxTime:
-        description: If an eventually consistent index includes and transaction greater than this timestamp it will be considered up to date and TRANSACTIONAL
-        type: string
-
   ResponseConsistency:
     description: The consistency state of the index used to execute the query
     type: object
@@ -716,10 +615,6 @@ definitions:
       lastTxId:
         description: The id of the last indexed transaction
         type: integer
-      lastTxTime:
-        description: The timestamp of the last indexed transaction
-        type: string
-
   RequestFacetQueries:
     description: Facet queries to include
     type: array
@@ -747,38 +642,34 @@ definitions:
         items:
           type: object
           properties:
-              field:
-                description: The facet field
-                type: string
-              prefix:
-                description: Restricts the possible constraints to only indexed values with a specified prefix.
-                type: string
-              sort:
-                 type: string
-                 enum:
-                  - COUNT
-                  - INDEX
-              method:
-                 type: string
-                 enum:
-                  - ENUM
-                  - FC
-              limit:
-                 type: integer
-              offset:
-                type: integer
-              mincount:
-                type: integer
-              facetEnumCacheMinDf:
-                 type: integer
+            field:
+              description: The facet field
+              type: string
+            prefix:
+              description: Restricts the possible constraints to only indexed values with a specified prefix.
+              type: string
+            sort:
+              type: string
+              enum:
+                - COUNT
+                - INDEX
+            method:
+              type: string
+              enum:
+                - ENUM
+                - FC
+            limit:
+              type: integer
+            offset:
+              type: integer
+            mincount:
+              type: integer
+            facetEnumCacheMinDf:
+               type: integer
   RequestLimits:
     description: Limit the time and resources used for query execution
     type: object
     properties:
-      executionTime:
-        description: Maximum query execution time - ms
-        type: integer
-        default: 20000
       permissionEvaluationTime:
         description: Maximum time for post query permission evaluation
         type: integer
@@ -799,11 +690,6 @@ definitions:
             The filter query expression.
             For multi-select facets selected facets must be order together
           type: string
-        tags:
-          description: Tags used exclude the filters from facet evaluation for multi-select facet support
-          type: array
-          items:
-            type: string
 
   RequestSortDefinition:
     description: How to sort the rows? An array of sort specifications. The array order defines the ordering precedence.
@@ -826,80 +712,6 @@ definitions:
           description: The sort order. (The ordering of nulls is determined by the SOLR configuration)
           type: boolean
           default: false
-
-  RequestHighlight:
-    description: |
-      Request that highlight fragements to be added to result set rows
-      The properties reflect SOLR highlighting parameters.
-    type: object
-    properties:
-      snippetCount:
-        type: number
-      fragmentSize:
-        type: number
-      mergeContiguous:
-        type: boolean
-      requireFieldMatch:
-        type: boolean
-      maxAnalyzedChars:
-        type: number
-      maxMultiValuedToExamine:
-        type: number
-      maxMultiValuedToMatch:
-        type: number
-      alternateField:
-        type: string
-      maxAlternateFieldLength:
-        type: number
-      highlightAlternate:
-        type: boolean
-      formatter:
-        type: string
-      simplePre:
-        type: string
-      simplePost:
-        type: string
-      fragmenter:
-        type: string
-      usePhraseHighlighter:
-        type: boolean
-      highlightMultiTerm:
-        type: boolean
-      regexSlop:
-        type: number
-      regexPattern:
-        type: string
-      regexMaxAnalyzedChars:
-        type: number
-      preserveMulti:
-        type: boolean
-      fields:
-        description: The fields to highlight and and field specific configuration
-        type: array
-        items:
-          type: object
-          properties:
-            field:
-              type: string
-            local:
-              type: object
-            snippetCount:
-              type: number
-            fragmentSize:
-              type: number
-            mergeContiguous:
-             type: boolean
-            alternateField:
-              type: string
-            formatter:
-              type: string
-            simplePre:
-              type: string
-            simplePost:
-              type: string
-            fragmenter:
-              type: string
-
   RequestSpellcheck:
     description: |
       Request that highlight fragements to be added to result set rows
@@ -908,33 +720,3 @@ definitions:
     properties:
       query:
         type: string
-      build:
-        type: boolean
-      reload:
-        type: boolean
-      count:
-        type: number
-      onlyMorePopular:
-        type: boolean
-      maxResultsForSuggest:
-        type: number
-      alternativeTermCount:
-        type: number
-      extendedResults:
-        type: boolean
-      collate:
-        type: boolean
-      maxCollations:
-        type: number
-      maxCollationTries:
-        type: number
-      maxCollationEvaluations:
-        type: number
-      collateExtendedResults:
-        type: boolean
-      collateMaxCollectDocs:
-        type: number
-      dictionary:
-        type: string
-      accuracy:
-        type: number
