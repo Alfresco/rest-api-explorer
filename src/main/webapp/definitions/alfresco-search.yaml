@@ -57,6 +57,14 @@ paths:
         This example would ensure that results are **limited by Final Size**,
         skipping the first 28 results and returning the next 50.
 
+        Alternatively, you can limit the results by using the **limits JSON body parameter**. For example,
+        ```JSON
+        "limits": {
+          "permissionEvaluationTime": 20000,
+          "permissionEvaluationCount": 2000
+        }
+        ```
+
         The **default search uses workspace://SpacesStore**.  To change the scope
         to a particular store you can use the **scope JSON body parameter**. For example,
         ```JSON
