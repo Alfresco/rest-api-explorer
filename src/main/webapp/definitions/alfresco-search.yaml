@@ -165,6 +165,20 @@ paths:
             "facetFields": {"facets": [{"field": "'content.size'"}]}
         }
         ```
+
+        The response will contain a matching "context" section, the "label" will match the facet query.
+        ```JSON
+        "context": {
+          "facetQueries": [
+            { "label": "small","count": 2 },
+            { "label": "large","count": 0 },
+            { "label": "xtra small","count": 5 },
+            { "label": "xtra large","count": 56},
+            { "label": "medium","count": 4 },
+            { "label": "XX large", "count": 1 }
+          ]
+        },
+        ```
       parameters:
         - in: body
           name: queryBody
