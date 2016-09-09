@@ -116,6 +116,8 @@ parameters:
       * isLocked
       * path
       * properties
+      * workingCopyId
+      * checkoutSourceId
     required: false
     type: array
     items:
@@ -132,6 +134,8 @@ parameters:
       * isLocked
       * path
       * properties
+      * workingCopyId
+      * checkoutSourceId
     required: false
     type: array
     items:
@@ -146,6 +150,8 @@ parameters:
       * isLink
       * isLocked
       * path
+      * workingCopyId
+      * checkoutSourceId
     required: false
     type: array
     items:
@@ -1484,8 +1490,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
-
   '/nodes/{nodeId}/checkout':
     post:
       tags:
@@ -1523,114 +1527,136 @@ paths:
           description: |
             **nodeId** does not exist
         '422':
-          description: Checkout is attempted on a node that is already checked out
+          description: Checkout is attempted on a node that is already locked, checked out or a working copy
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{workingCopyNodeId}/checkin':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Checkin a node
+      description: |
+        Checks in working copy node **workingCopyNodeId**.
 
-    '/nodes/{workingCopyNodeId}/checkin':
-      post:
-        tags:
-          - nodes
-          - 5.2 changes
-        summary: Checkin a node
-        description: |
-          Checks in working copy node **workingCopyNodeId**.
+        This API method supports file upload using multipart/form-data.
 
-          NOTE: This endpoint can accept both multipart/form-data or JSON
+        Use the **filedata** field to represent the content to checkin.
 
-          properties
-          content
-          checkin comment
+        For multipart/form-data checkin you can use the **majorVersion** and **comment** fields.
 
-          The response represents the state of the node after checkin.
+        You can set the majorVersion boolean field to true to indicate a major version should be created. The default for majorVersion is false.
 
-        operationId: checkin
-        parameters:
-          - $ref: '#/parameters/workingCopyNodeIdParam'
-          - $ref: '#/parameters/nodeEntryIncludeParam'
-          - $ref: '#/parameters/fieldsParam'
-          - in: body
-            name: checkinBody
-            description: Checkin details.
-            required: true
-            schema:
+        You can use the **comment** field to add a version comment that appears in the version history.
+
+        Any other form field provided will be treated as a property to set on the node, these must follow the prefix:localname naming convention i.e. cm:description
+
+        This API method also supports checkin using application/json.
+
+        The content of the working copy node will be used when using application/json.
+
+        To checkin using a comment, major version and setting properties:
+        ```JSON
+        {
+          "majorVersion": true,
+          "comment": "Updated description property",
+          "properties":
+          {
+            "cm:description":"This is the new description"
+          }
+        }
+
+        The response from this API represents the state of the node after checkin.
+      operationId: checkin
+      parameters:
+        - $ref: '#/parameters/workingCopyNodeIdParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: checkinBody
+          description: Checkin details.
+          required: true
+          schema:
+            properties:
+              majorVersion:
+                type: boolean
+                default: false
+              comment:
+                type: string
               properties:
-                major:
-                  type: boolean
-                  default: false
-        consumes:
-          - application/json
-          - multipart/form-data
-        produces:
-          - application/json
-        responses:
-          '200':
-            description: Successful response
-            schema:
-              $ref: '#/definitions/NodeEntry'
-          '400':
-            description: |
-              Invalid parameter: **nodeId** is not a valid format, **checkoutBody** is invalid
-          '401':
-            description: Authentication failed
-          '403':
-            description: |
-              Current user does not have permission to checkin **nodeId**
-          '404':
-            description: |
-              **nodeId** does not exist
-          '422':
-            description: Checkin is attempted on a node that is not a working copy
-          default:
-            description: Unexpected error
-            schema:
-              $ref: '#/definitions/Error'
+                type: object
+                additionalProperties:
+                  type: string
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, **checkinBody** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: |
+            Current user does not have permission to checkin **workingCopyNodeId**
+        '404':
+          description: |
+            **workingCopyNodeId** does not exist
+        '422':
+          description: Checkin is attempted on a node that is not a working copy or the node can not be checked in
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{workingCopyNodeId}/cancel-checkout':
+    post:
+      tags:
+        - nodes
+        - 5.2 changes
+      summary: Cancels the checkout of a node
+      description: |
+        Cancels the checkout of working copy node **workingCopyNodeId**.
 
-    '/nodes/{workingCopyNodeId}/cancel-checkout':
-      post:
-        tags:
-          - nodes
-          - 5.2 changes
-        summary: Cancels the checkout of a node
-        description: |
-          Cancels the checkout of working copy node **workingCopyNodeId**.
-
-          The response represents the latest state of the node that was originally checked out.
-        operationId: cancelCheckout
-        parameters:
-          - $ref: '#/parameters/workingCopyNodeIdParam'
-          - $ref: '#/parameters/nodeEntryIncludeParam'
-          - $ref: '#/parameters/fieldsParam'
-        consumes:
-          - application/json
-        produces:
-          - application/json
-        responses:
-          '200':
-            description: Successful response
-            schema:
-              $ref: '#/definitions/NodeEntry'
-          '400':
-            description: |
-              Invalid parameter: **workingCopyNodeId** is not a valid format
-          '401':
-            description: Authentication failed
-          '403':
-            description: |
-              Current user does not have permission to cancel the checkout of **workingCopyNodeId**
-          '404':
-            description: |
-              **workingCopyNodeId** does not exist
-          '422':
-            description: Cancel checkout is attempted on a node that is not a working copy
-          default:
-            description: Unexpected error
-            schema:
-              $ref: '#/definitions/Error'
-
-
+        The response represents the latest state of the node that was originally checked out.
+      operationId: cancelCheckout
+      parameters:
+        - $ref: '#/parameters/workingCopyNodeIdParam'
+        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeEntry'
+        '400':
+          description: |
+            Invalid parameter: **workingCopyNodeId** is not a valid format
+        '401':
+          description: Authentication failed
+        '403':
+          description: |
+            Current user does not have permission to cancel the checkout of **workingCopyNodeId**
+        '404':
+          description: |
+            **workingCopyNodeId** does not exist
+        '422':
+          description: Cancel checkout is attempted on a node that is not a working copy or the checkout can not be cancelled
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/move':
     post:
       tags:
@@ -5647,6 +5673,12 @@ definitions:
       isLocked:
         type: boolean
         default: false
+      isCheckedOut:
+        type: boolean
+        default: false
+      isWorkingCopy:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
@@ -5702,6 +5734,12 @@ definitions:
       isLocked:
         type: boolean
         default: false
+      isCheckedOut:
+        type: boolean
+        default: false
+      isWorkingCopy:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
@@ -5743,6 +5781,12 @@ definitions:
       isFile:
         type: boolean
       isLocked:
+        type: boolean
+        default: false
+      isCheckedOut:
+        type: boolean
+        default: false
+      isWorkingCopy:
         type: boolean
         default: false
       modifiedAt:
@@ -5828,6 +5872,12 @@ definitions:
         type: boolean
         default: false
       isLocked:
+        type: boolean
+        default: false
+      isCheckedOut:
+        type: boolean
+        default: false
+      isWorkingCopy:
         type: boolean
         default: false
       modifiedAt:
