@@ -27,16 +27,15 @@ paths:
         ```JSON
         {
           "query": {
-            "query": "foo",
-            "language": "afts"
+            "query": "foo"
           }
         }
         ```
 
         **Note:** These are the minimum possible query parameters.
-        
+
         The default search language is **afts** ([Alfresco Full Text Search](http://docs.alfresco.com/5.1/concepts/rm-searchsyntax-intro.html)), but you can also specify **cmis**, and **lucene**.
-        
+
         A basic CMIS query looks like this:
 
         ```JSON
@@ -108,7 +107,7 @@ paths:
           "spellcheck": {"query": "alfrezco"}
         }
         ```
-        
+
         If you are already specifying "userQuery" then the following may be easier
         and produces the same result :
         ```JSON
@@ -121,7 +120,7 @@ paths:
           "spellcheck": {}
         }
         ```
-        
+
         The spellcheck response includes a spellCheck context like this:
         ```JSON
         "context": {
@@ -131,7 +130,7 @@ paths:
           }
         },
         ```
-        
+
         To specify defaults, you  use a **defaults JSON body parameter**, for example:
         ```JSON
         "defaults": {
@@ -144,7 +143,7 @@ paths:
           "defaultFieldName": "PATH"
         }
         ```
-        
+
         You can specify several filter queries using the **filterQueries JSON body parameter**, for example:
         ```JSON
         "filterQueries": [{"query": "TYPE:'cm:folder'"},{"query": "cm:creator:mjackson"}]
@@ -313,7 +312,6 @@ definitions:
     description: Query.
     type: object
     required:
-    - language
     - query
     properties:
         language:
