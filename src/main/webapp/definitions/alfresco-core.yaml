@@ -1074,7 +1074,7 @@ paths:
         
         This API method supports file upload using multipart/form-data.
 
-        Use the **filedata** field to represent the content to upload.
+        Use the **filedata** field to represent the content to upload.        
         You can use a **name** field to give an alternative name for the new file.
 
         For multipart/form-data upload you can use the **renditions** field to create renditions (e.g. doclib) asynchronously upon upload.
@@ -1322,7 +1322,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: copyBody
-          description: The targetParentId and, optionally, a new name which should include the file extension.
+          description: The targetParentId and, optionally, a new name which should include the file extension.
           required: true
           schema:
             required:
@@ -1527,7 +1527,7 @@ paths:
           description: |
             **nodeId** does not exist
         '422':
-          description: Checkout is attempted on a node that is already locked, checked out or a working copy
+          description: Checkout is attempted on a node that is already locked, checked out, or a working copy
         default:
           description: Unexpected error
           schema:
@@ -1543,21 +1543,23 @@ paths:
 
         This API method supports file upload using multipart/form-data.
 
-        Use the **filedata** field to represent the content to checkin.
+        * You use the **filedata** field to represent the content to checkin.
 
-        For multipart/form-data checkin you can use the **majorVersion** and **comment** fields.
+        * For multipart/form-data checkin you can use the **majorVersion** and **comment** fields.
 
-        You can set the majorVersion boolean field to true to indicate a major version should be created. The default for majorVersion is false.
+        * You can set the **majorVersion** boolean field to **true** to indicate a major version should be created. The default for **majorVersion** is **false**.
 
-        You can use the **comment** field to add a version comment that appears in the version history.
+        * You can use the **comment** field to add a version comment that appears in the version history.
 
-        Any other form field provided will be treated as a property to set on the node, these must follow the prefix:localname naming convention i.e. cm:description
+        * Any other form field provided will be treated as a property to set on the node. These must follow the prefix:localname naming convention; 
+        for example, cm:description
 
         This API method also supports checkin using application/json.
 
-        The content of the working copy node will be used when using application/json.
+        * The content of the working copy node is used when you use application/json.
 
-        To checkin using a comment, major version and setting properties:
+        * This example shows a checkin using a comment, major version and setting properties:
+          
         ```JSON
         {
           "majorVersion": true,
@@ -1567,8 +1569,9 @@ paths:
             "cm:description":"This is the new description"
           }
         }
+        ```
 
-        The response from this API represents the state of the node after checkin.
+        A successful response contains a body that represents the state of the node after checkin.
       operationId: checkin
       parameters:
         - $ref: '#/parameters/workingCopyNodeIdParam'
@@ -1601,7 +1604,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, **checkinBody** is invalid
+            Invalid parameter: **nodeId** is not a valid format or **checkinBody** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -1679,7 +1682,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: moveBody
-          description: The targetParentId and, optionally, a new name which should include the file extension.
+          description: The targetParentId and, optionally, a new name which should include the file extension.
           required: true
           schema:
             required:
@@ -1788,7 +1791,7 @@ paths:
         - name: name
           in: query
           description: |
-            Optional new name. This should include the file extension.
+            Optional new name. This should include the file extension.
             The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
             The character `.` must not be used at the end of the name. 
           required: false
@@ -1889,7 +1892,7 @@ paths:
       description: Returns the rendition information for the file **nodeId**.
       
         This will return rendition information, including the rendition id, for each rendition.
-        The rendition status is CREATED, which means it is available to view or download; or NOT_CREATED, which means the rendition can be requested.
+        The rendition status is CREATED, which means it is available to view or download; or NOT_CREATED, which means the rendition can be requested.
         
       operationId: getRenditions
       parameters:
@@ -4513,7 +4516,7 @@ paths:
         Returns the rendition information for the file with shared link identifier **sharedId**.
         
         This will only return rendition information, including the rendition id, for each rendition
-        where the rendition status is CREATED (ie. available to view/download).
+        where the rendition status is CREATED (ie. available to view/download).
         
         **Note:** No authentication is required to call this endpoint.      
       operationId: getSharedLinkRenditions
