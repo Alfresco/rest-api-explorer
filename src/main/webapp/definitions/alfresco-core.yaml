@@ -1074,10 +1074,10 @@ paths:
         
         This API method supports file upload using multipart/form-data.
 
-        Use the **filedata** field to represent the content to upload.        
-        You can use a **name** field to give an alternative name for the new file.
+        Use the **filedata** form-data field to represent the content to upload.        
+        You can use a **name** form-data field to give an alternative name for the new file.
 
-        For multipart/form-data upload you can use the **renditions** field to create renditions (e.g. doclib) asynchronously upon upload.
+        For multipart/form-data upload you can use the **renditions** form-data field to create renditions (e.g. doclib) asynchronously upon upload.
         Note that currently only one rendition can be requested. Also, as requesting rendition is a background process,
         any rendition failure (e.g. No transformer is currently available) will not fail the whole upload and has the potential to silently fail.
 
@@ -1542,15 +1542,15 @@ paths:
 
         This API method supports file upload using multipart/form-data.
 
-        * You use the **filedata** field to represent the content to checkin.
+        * You use the **filedata** form-data field to represent the content to checkin.
 
-        * For multipart/form-data checkin you can use the **majorVersion** and **comment** fields.
+        * For multipart/form-data checkin you can use the **majorVersion** and **comment** form-data fields.
 
-        * You can set the **majorVersion** boolean field to **true** to indicate a major version should be created. The default for **majorVersion** is **false**.
+        * You can set the **majorVersion** boolean form-data field to **true** to indicate a major version should be created. The default for **majorVersion** is **false**.
 
-        * You can use the **comment** field to add a version comment that appears in the version history.
+        * You can use the **comment** form-data field to add a version comment that appears in the version history.
 
-        * Any other form field provided will be treated as a property to set on the node. These must follow the prefix:localname naming convention; 
+        * Any other form-data field provided will be treated as a property to set on the node. These must follow the prefix:localname naming convention; 
         for example, cm:description
 
         This API method also supports checkin using application/json.
