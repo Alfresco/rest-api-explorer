@@ -1510,14 +1510,13 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or **checkoutBody** is invalid,
-            or a checkout was attempted on a node that is not a file
+            Invalid parameter: **nodeId** is not a valid format or a checkout was attempted on a node that is not a file
         '401':
           description: Authentication failed
         '403':
@@ -1598,7 +1597,7 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
             $ref: '#/definitions/NodeEntry'
