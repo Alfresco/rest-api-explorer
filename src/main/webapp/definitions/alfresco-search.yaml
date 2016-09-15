@@ -194,6 +194,29 @@ paths:
           ]
         },
         ```
+
+        You can specify several facet fields using the **facetFields JSON body parameter**, for example:
+        ```JSON
+        "facetFields": {"facets": [{"field": "creator", "mincount": 1}, {"field": "modifier", "mincount": 1}]}
+        ```
+        The response will contain a matching "context" section, the "label" will match the facet field.
+        ```JSON
+        "context": {
+           "facetsFields": [
+             {  "label": "creator",
+                "buckets": [
+                  { "label": "System", "count": 75 },
+                  { "label": "mjackson", "count": 5 }
+                ]},
+             {  "label": "modifier",
+                "buckets": [
+                  { "label": "System", "count": 72 },
+                  { "label": "mjackson", "count": 5 },
+                  { "label": "admin", "count": 3 }
+                ]}
+           ]
+        },
+        ```
       parameters:
         - in: body
           name: queryBody
