@@ -23,30 +23,34 @@ consumes:
 produces:
   - application/json
 tags:
-  - name: nodes
-    description: Retrieve and manage nodes
-  - name: renditions
-    description: Retrieve and manage file renditions
-  - name: shared-links
-    description: Retrieve and manage public shared links
+  - name: activities
+    description: Retrieve and manage activities
   - name: comments
     description: Retrieve and manage comments
   - name: favorites
     description: Retrieve and manage favorites
   - name: networks
     description: Retrieve and manage networks
+  - name: nodes
+    description: Retrieve and manage nodes
   - name: people
     description: Retrieve and manage people
+  - name: preferences
+    description: Retrieve and manage preferences
+  - name: queries
+    description: Search for items in the repository
   - name: ratings
     description: Retrieve and manage ratings
+  - name: renditions
+    description: Retrieve and manage file renditions
+  - name: shared-links
+    description: Retrieve and manage public shared links
   - name: sites
     description: Retrieve and manage sites
   - name: tags
     description: Retrieve and manage tags
   - name: trashcan
     description: Retrieve and manage deleted nodes
-  - name: queries
-    description: Search for items in the repository
 parameters:
   nodeIdParam:
     name: nodeId
@@ -4295,7 +4299,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Find (search for) links that current user has read permission on source node.
+        Return a list of links that the current user has read permission on source node.
       operationId: findSharedLinks
       parameters:
         - name: where
