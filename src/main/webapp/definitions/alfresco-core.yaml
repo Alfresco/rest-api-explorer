@@ -1492,11 +1492,13 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/checkout':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Checkout a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Checks out node **nodeId** and creates a working copy node.
 
         The node returned in the response represents the working copy.
@@ -1533,11 +1535,13 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{workingCopyNodeId}/checkin':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Checkin a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Checks in working copy node **workingCopyNodeId**.
 
         This API method supports file upload using multipart/form-data.
@@ -1620,11 +1624,13 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{workingCopyNodeId}/cancel-checkout':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Cancels the checkout of a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Cancels the checkout of working copy node **workingCopyNodeId**.
 
         The response represents the latest state of the node that was originally checked out.
