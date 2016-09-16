@@ -51,6 +51,8 @@ tags:
     description: Retrieve and manage tags
   - name: trashcan
     description: Retrieve and manage deleted nodes
+  - name: versions
+    description: Retrieve and manage versions
 parameters:
   nodeIdParam:
     name: nodeId
@@ -666,7 +668,7 @@ paths:
         - tags
       summary: Get tags
       description: Returns a list of tags for node **nodeId**.
-      operationId: getNodeTags
+      operationId: getTagsForNode
       produces:
         - application/json
       parameters:
@@ -745,7 +747,7 @@ paths:
           }
         }
         ```
-      operationId: addTag
+      operationId: addTagToNode
       produces:
         - application/json
       parameters:
@@ -786,7 +788,7 @@ paths:
         - tags
       summary: Delete a tag
       description: Removes tag **tagId** from node **nodeId**.
-      operationId: removeTag
+      operationId: removeTagFromNode
       produces:
         - application/json
       parameters:
@@ -2283,7 +2285,7 @@ paths:
     get:
       x-alfresco-since: "5.2"
       tags:
-        - nodes
+        - versions
       summary: Get node version history
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
@@ -2321,7 +2323,7 @@ paths:
     get:
       x-alfresco-since: "5.2"
       tags:
-        - nodes
+        - versions
       summary: Get version information
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
@@ -2350,7 +2352,7 @@ paths:
     delete:
       x-alfresco-since: "5.2"
       tags:
-        - nodes
+        - versions
       summary: Delete a version node
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
@@ -2394,7 +2396,7 @@ paths:
     get:
       x-alfresco-since: "5.2"
       tags:
-        - nodes
+        - versions
       summary: Get version content
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
@@ -2426,7 +2428,7 @@ paths:
     post:
       x-alfresco-since: "5.2"
       tags:
-        - nodes
+        - versions
       summary: Revert a version node
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
@@ -2650,7 +2652,7 @@ paths:
   '/people/{personId}/activities':
     get:
       tags:
-        - people
+        - activities
       summary: Get activities
       description: |
         Returns a list of activities for person **personId**.
@@ -2697,7 +2699,7 @@ paths:
     get:
       deprecated: true
       tags:
-        - people
+        - favorites
       summary: Get favorite sites
       description: |
         Get a person's favorite sites.
@@ -2735,7 +2737,7 @@ paths:
     post:
       deprecated: true
       tags:
-        - people
+        - favorites
       summary: Favorite a site
       description: |
         Add a favorite site for person **personId**.
@@ -2834,7 +2836,7 @@ paths:
     get:
       deprecated: true
       tags:
-        - people
+        - favorites
       summary: Get a favorite site
       description: |
         Returns information on favorite site **siteId** of person **personId**.
@@ -2868,7 +2870,7 @@ paths:
     delete:
       deprecated: true
       tags:
-        - people
+        - favorites
       summary: Delete favorite site
       description: |
         Removes site **siteId** from the favorite site list of person **personId**.
@@ -2900,7 +2902,6 @@ paths:
     get:
       tags:
         - favorites
-        - people
       summary: Get favorites
       description: |
         Returns a list of favorites for person **personId**.
@@ -2958,7 +2959,6 @@ paths:
     post:
       tags:
         - favorites
-        - people
       summary: Add a favorite
       description: |
         Favorite a **site**, **file**, or **folder** in the repository.
@@ -3070,7 +3070,6 @@ paths:
     get:
       tags:
         - favorites
-        - people
       summary: Get a favorite
       description: |
         Returns favorite **favoriteId** for person **personId**.
@@ -3100,7 +3099,6 @@ paths:
     delete:
       tags:
         - favorites
-        - people
       summary: Delete a favorite
       description: |
         Removes **favoriteId** as a favorite of person **personId**.
@@ -3127,14 +3125,13 @@ paths:
   '/people/{personId}/networks':
     get:
       tags:
-        - people
         - networks
       summary: Get network membership
       description: |
         Gets a list of network memberships for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getPersonNetworks
+      operationId: getNetworksForPerson
       produces:
         - application/json
       parameters:
@@ -3161,14 +3158,13 @@ paths:
   '/people/{personId}/networks/{networkId}':
     get:
       tags:
-        - people
         - networks
       summary: Get network information
       description: |
         Returns network information on a single network specified by **networkId** for **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getPersonNetwork
+      operationId: getNetworkForPerson
       produces:
         - application/json
       parameters:
@@ -3191,7 +3187,7 @@ paths:
   '/people/{personId}/preferences':
     get:
       tags:
-        - people
+        - preferences
       summary: Get preferences
       description: |
         Returns a list of preferences for person **personId**.
@@ -3229,7 +3225,7 @@ paths:
   '/people/{personId}/preferences/{preferenceName}':
     get:
       tags:
-        - people
+        - preferences
       summary: Get a preference
       description: |
         Returns a specific preference for person **personId**.
@@ -3264,13 +3260,13 @@ paths:
   '/people/{personId}/site-membership-requests':
     get:
       tags:
-        - people
+        - sites
       summary: Get site membership requests
       description: |
         Returns the current site membership requests for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getSiteMembershipRequests
+      operationId: getSiteMembershipRequestsForPerson
       produces:
         - application/json
       parameters:
@@ -3296,7 +3292,7 @@ paths:
             $ref: '#/definitions/Error'
     post:
       tags:
-        - people
+        - sites
       summary: Create a site membership request
       description: |
         Create a site membership request for yourself on the site with the identifier of **id**, specified in the JSON body. 
@@ -3352,7 +3348,7 @@ paths:
           }
         }
         ```
-      operationId: addSiteMembershipRequest
+      operationId: addSiteMembershipRequestForPerson
       produces:
         - application/json
       parameters:
@@ -3391,13 +3387,13 @@ paths:
   '/people/{personId}/site-membership-requests/{siteId}':
     get:
       tags:
-        - people
+        - sites
       summary: Get a site membership request
       description: |
         Returns the site membership request for site **siteId** for person **personId**, if one exists.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getSiteMembershipRequest
+      operationId: getSiteMembershipRequestForPerson
       produces:
         - application/json
       parameters:
@@ -3419,13 +3415,13 @@ paths:
             $ref: '#/definitions/Error'
     put:
       tags:
-        - people
+        - sites
       summary: Update a site membership request
       description: |
         Updates the message for the site membership request to site **siteId** for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: updateSiteMembershipRequest
+      operationId: updateSiteMembershipRequestForPerson
       consumes:
         - application/json
       produces:
@@ -3460,13 +3456,13 @@ paths:
             $ref: '#/definitions/Error'
     delete:
       tags:
-        - people
+        - sites
       summary: Cancel a site membership
       description: |
         Cancels the site membership request to site **siteId** for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: removeSiteMembershipRequest
+      operationId: removeSiteMembershipRequestForPerson
       produces:
         - application/json
       parameters:
@@ -3486,7 +3482,7 @@ paths:
   '/people/{personId}/sites':
     get:
       tags:
-        - people
+        - sites
       summary: Get site membership information
       description: |
         Returns a list of site membership information for person **personId**.
@@ -3503,7 +3499,7 @@ paths:
         name
         name ASC
         ```
-      operationId: getSiteMembership
+      operationId: getSiteMembershipsForPerson
       produces:
         - application/json
       parameters:
@@ -3532,13 +3528,13 @@ paths:
   '/people/{personId}/sites/{siteId}':
     get:
       tags:
-        - people
+        - sites
       summary: Get site membership for a site
       description: |
         Returns site membership information for person **personId** on site **siteId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getSiteForMember
+      operationId: getSiteMembershipForPerson
       produces:
         - application/json
       parameters:
@@ -3559,13 +3555,13 @@ paths:
             $ref: '#/definitions/Error'
     delete:
       tags:
-        - people
+        - sites
       summary: Delete a site member
       description: |
         Removes person **personId** as a member of site **siteId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: removeMemberFromSite
+      operationId: removeSiteMembershipForPerson
       produces:
         - application/json
       parameters:
@@ -4433,7 +4429,7 @@ paths:
     get:
       x-alfresco-since: "5.2"
       tags:
-        - renditions
+        - shared-links
       summary: List information for created renditions
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
@@ -4467,7 +4463,7 @@ paths:
     get:
       x-alfresco-since: "5.2"
       tags:
-        - renditions
+        - shared-links
       summary: Get shared link rendition content
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
