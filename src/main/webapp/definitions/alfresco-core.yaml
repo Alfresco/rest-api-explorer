@@ -1708,14 +1708,22 @@ paths:
         - renditions
         - 5.2 changes
       summary: List information for renditions
-      description: Returns the rendition information for the file **nodeId**.
+      description: |
+        Returns the rendition information for each rendition of the the file **nodeId**, including the rendition id.    
       
-        This will return rendition information, including the rendition id, for each rendition.
-        The rendition status is CREATED, which means it is available to view or download; or NOT_CREATED, which means the rendition can be requested.
+        Each rendition returned has a **status**: CREATED means it is available to view or download, NOT_CREATED means the rendition can be requested.
+      
+        You can use the **where** parameter to filter the returned renditions by **status**. For example, the following **where** 
+        clause will return just the CREATED renditions:
+          
+        ```
+        (status=CREATED)
+        ```
         
       operationId: getRenditions
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/whereParam'
       responses:
         '200':
           description: Successful response
@@ -4334,8 +4342,8 @@ paths:
       description: |
         Returns the rendition information for the file with shared link identifier **sharedId**.
         
-        This will only return rendition information, including the rendition id, for each rendition
-        where the rendition status is CREATED (ie. available to view/download).
+        This API method returns rendition information, including the rendition id, for each rendition
+        where the rendition status is CREATED, which means the rendition is available to view/download.
         
         **Note:** No authentication is required to call this endpoint.      
       operationId: getSharedLinkRenditions
@@ -5766,6 +5774,9 @@ definitions:
         $ref: '#/definitions/ContentInfo'
       status:
         type: string
+        enum:
+          - CREATED
+          - NOT_CREATED
   RenditionPaging:
     type: object
     properties:
