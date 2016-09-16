@@ -2696,10 +2696,10 @@ paths:
         - people
       summary: Get favorite sites
       description: |
-        Get a person's favorite sites.
-
-        **Note: This method is deprecated and will be removed in the future**.
+        **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
         Use `/people/{personId}/favorites` instead.
+
+        Get a person's favorite sites.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getFavoriteSites
@@ -2734,11 +2734,11 @@ paths:
         - people
       summary: Favorite a site
       description: |
+        **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
+        Use `/people/{personId}/favorites` instead.
+
         Add a favorite site for person **personId**.
 
-        **Note: that this method is deprecated and will be removed in the future**.
-        Use `/people/{personId}/favorites` instead.
-        
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
          **Note:** You can favorite more than one site by 
@@ -2833,11 +2833,11 @@ paths:
         - people
       summary: Get a favorite site
       description: |
+        **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
+        Use `/people/{personId}/favorites/{favoriteId}` instead.
+
         Returns information on favorite site **siteId** of person **personId**.
 
-        **Note: This method is deprecated and will be removed in the future.**
-        Use `/people/{personId}/favorites/{favoriteId}` instead.
-        
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getFavoriteSite
       produces:
@@ -2867,11 +2867,11 @@ paths:
         - people
       summary: Delete favorite site
       description: |
-        Removes site **siteId** from the favorite site list of person **personId**.
-        
-        **Please note that this method is deprecated and will be removed in the future.**
+        **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
         Use `/people/{personId}/favorites/{favoriteId}` instead.
-        
+
+        Removes site **siteId** from the favorite site list of person **personId**.
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: deleteFavoriteSite
       produces:
