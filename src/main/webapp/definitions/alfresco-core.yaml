@@ -23,8 +23,6 @@ consumes:
 produces:
   - application/json
 tags:
-  - name: 5.2 changes
-    description: Endpoints added in the 5.2 release
   - name: nodes
     description: Retrieve and manage nodes
   - name: renditions
@@ -805,11 +803,14 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Get a node
-      description: Get information for node **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Get information for node **nodeId**.
       operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -841,11 +842,13 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     put:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Update a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Updates the node **nodeId**. For example, you can rename a file or folder:
         ```JSON
         {
@@ -916,13 +919,17 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     delete:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Delete a node
       description: |
+         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
          Deletes the node **nodeId**.
+
          If **nodeId** is a folder, then its children are also deleted.
+
          Deleted nodes move to the trashcan unless the **permanent** query parameter is **true** and the current user is the owner of the node or an admin.
          
          Deleting a node removes it from its primary parent and also from any secondary parents. Peer associations are also removed, where the deleted 
@@ -965,20 +972,23 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/children':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Get node children
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns the children of the parent node **nodeId**.
+
         Minimal information for each child is returned by default.
+
         You can use the **include** parameter to return addtional information.
         
         The list of child nodes includes primary children and secondary children, if there are any.
         
         You can use the **include** parameter (include=association) to return child association details 
         for each child, including the **assocTyp**e and the **isPrimary** flag.
-        
         
         The default sort order for the returned list is for folders to be sorted before files, and by ascending name
 
@@ -1053,11 +1063,13 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Add a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Add a node as a primary child of node **nodeId**.
         
         This API method supports file upload using multipart/form-data.
@@ -1293,11 +1305,13 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/copy':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Copy a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Copies the node **nodeId** to the parent folder node **targetParentId**. You specify the **targetParentId** in the request body.
 
         The new node has the same name as the source node unless you specify a new **name** in the request body.
@@ -1352,11 +1366,13 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/lock':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Lock a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Places a lock on node **nodeId**.
         
         **Note:** you can only lock files. More specifically, a node can only be locked if it is
@@ -1437,12 +1453,14 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/unlock':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary:  Unlock a node
       description: |
-        Removes a lock on node **nodeId**. 
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Removes a lock on node **nodeId**.
 
         The current user must be the owner of the locks or have admin rights, otherwise an error is returned.
 
@@ -1481,19 +1499,22 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/move':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Move a node
       description: |
-        Move the node **nodeId** to the parent folder node **targetParentId**.  in request body.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Move the node **nodeId** to the parent folder node **targetParentId**.
+
         The **targetParentId** is specified in the in request body.
 
         The moved node retains its name unless you specify a new **name** in the request body.
 
         If the source **nodeId** is a folder, then its children are also moved.
         
-        The move will effectively change the primary parent
+        The move will effectively change the primary parent.
       operationId: moveNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -1544,11 +1565,14 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/content':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Get file content
-      description: Returns the file content of the node with identifier **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Returns the file content of the node with identifier **nodeId**.
       operationId: getFileContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1571,11 +1595,13 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     put:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Update file content
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Updates the content of the node with identifier **nodeId**.
 
         The request body for this endpoint can be any text or binary stream.
@@ -1657,12 +1683,15 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - renditions
-        - 5.2 changes
       summary: Create rendition
       description: |
-        An asynchronous request to create a rendition for file **nodeId**. 
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        An asynchronous request to create a rendition for file **nodeId**.
+
         The rendition is specified by name **id** in the request body:
         ```JSON
         {
@@ -1704,12 +1733,14 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     get:
+      x-alfresco-since: "5.2"
       tags:
         - renditions
-        - 5.2 changes
       summary: List information for renditions
       description: |
-        Returns the rendition information for each rendition of the the file **nodeId**, including the rendition id.    
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Returns the rendition information for each rendition of the the file **nodeId**, including the rendition id.
       
         Each rendition returned has a **status**: CREATED means it is available to view or download, NOT_CREATED means the rendition can be requested.
       
@@ -1742,11 +1773,14 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - renditions
-        - 5.2 changes
       summary: Get rendition information
-      description: Returns the rendition information for **renditionId** of file **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Returns the rendition information for **renditionId** of file **nodeId**.
       operationId: getRendition
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1769,11 +1803,14 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}/content':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - renditions
-        - 5.2 changes
       summary: Get rendition content
-      description: Returns the rendition content for **renditionId** of file **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Returns the rendition content for **renditionId** of file **nodeId**.
       operationId: getRenditionContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1807,11 +1844,13 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/secondary-children':
     post:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: Add secondary child
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Add a secondary child association, with the given association type, between the parent **nodeId** and a child node.
         
         **Note:** You can create more than one secondary child association by 
@@ -1889,11 +1928,13 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: Get secondary children
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns a list of secondary child nodes that are associated with the current parent **nodeId**, via a secondary child association.
       operationId: listSecondaryChildAssociations
       produces:
@@ -1931,15 +1972,18 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/secondary-children/{childId}':
     delete:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: Remove secondary child or children
       description: |
-        Remove secondary child associations between the parent **nodeId** and child nodes for the given association type. 
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Remove secondary child associations between the parent **nodeId** and child nodes for the given association type.
         
         If the association type is **not** specified, then all secondary child associations, of any type in the direction 
-        from parent to secondary child, will be removed. The child will still have a primary parent and may still be associated as a secondary child with other secondary parents.
+        from parent to secondary child, will be removed. The child will still have a primary parent and may still be
+        associated as a secondary child with other secondary parents.
       operationId: removeSecondaryChildAssoc
       produces:
         - application/json
@@ -1972,12 +2016,14 @@ paths:
             $ref: '#/definitions/Error'              
   '/nodes/{nodeId}/parents':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: List parents
       description: |
-        Returns a list of parent nodes that are associated with the current child **nodeId**. 
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Returns a list of parent nodes that are associated with the current child **nodeId**.
         
         The list includes both the primary parent and any secondary parents.
       operationId: listParents
@@ -2020,14 +2066,16 @@ paths:
             $ref: '#/definitions/Error'     
   '/nodes/{nodeId}/targets':
     post:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: Add node association
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Add an association, with the given association type, between the source **nodeId** and a target node.
         
-        **Note:** You can add more than one association by 
+        **Note:** You can add more than one association by
         specifying a list of associations in the JSON body like this:
         
         ```JSON
@@ -2102,11 +2150,13 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: List node associations
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns a list of target nodes that are associated with the current source **nodeId**.
       operationId: listTargetAssociations
       produces:
@@ -2141,12 +2191,14 @@ paths:
             $ref: '#/definitions/Error'            
   '/nodes/{nodeId}/targets/{targetId}':
     delete:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: Remove node association(s)
       description: |
-        Remove an association, or associations, from the source **nodeId* to a target node for the given association type. 
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Remove an association, or associations, from the source **nodeId* to a target node for the given association type.
         
         If the association type is **not** specified, then all peer associations, of any type, in the direction 
         from source to target, are removed.
@@ -2184,11 +2236,13 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/sources':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: List node associations
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns a list of source nodes that are associated with the current target **nodeId**.
       operationId: listSourceNodeAssociations
       produces:
@@ -2223,11 +2277,13 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: Get node version history
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns the version history as an ordered list of version nodes for the specified **nodeId**.
         
         The list is ordered in descending modified order. So the most recent version is first and 
@@ -2259,11 +2315,14 @@ paths:
             $ref: '#/definitions/Error'  
   '/nodes/{nodeId}/versions/{versionId}':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: Get version information
-      description: Returns the version information for **versionId** of file node **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Returns the version information for **versionId** of file node **nodeId**.
       operationId: getVersion
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -2285,11 +2344,13 @@ paths:
           schema:
             $ref: '#/definitions/Error'     
     delete:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: Delete a version node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Delete the versioned node identified by **versionId** and **nodeId*.
         
         If the version is successfully deleted then the content and metadata for that versioned node
@@ -2327,11 +2388,14 @@ paths:
             $ref: '#/definitions/Error'        
   '/nodes/{nodeId}/versions/{versionId}/content':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: Get version content
-      description: Returns the version content for **versionId** of file node **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Returns the version content for **versionId** of file node **nodeId**.
       operationId: getVersionContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -2356,11 +2420,13 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/revert':
     post:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: Revert a version node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Attempts to revert the versioned node identified by **versionId** and **nodeId** to the live node.
         
         If the node is successfully reverted then the content and metadata for that versioned node
@@ -2405,14 +2471,17 @@ paths:
             $ref: '#/definitions/Error'                                           
   '/deleted-nodes':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - trashcan
-        - 5.2 changes
       summary: Get deleted nodes
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns a list of deleted nodes for the current user.
-        If the current user is an administrator deleted nodes
-        for all users will be returned.
+
+        If the current user is an administrator deleted nodes for all users will be returned.
+
         The list of deleted nodes will be ordered with the most recently deleted node at the top of the list.
       operationId: getDeletedNodes
       produces:
@@ -2437,11 +2506,13 @@ paths:
             $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - trashcan
-        - 5.2 changes
       summary: Get a deleted node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns the specific deleted node **nodeId**.
       operationId: getDeletedNode
       produces:
@@ -2468,11 +2539,13 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     delete:
+      x-alfresco-since: "5.2"
       tags:
         - trashcan
-        - 5.2 changes
       summary: Purge a deleted node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Permanently removes the deleted node **nodeId**.
       operationId: purgeDeletedNode
       produces:
@@ -2497,11 +2570,13 @@ paths:
             $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}/restore':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - trashcan
-        - 5.2 changes
       summary: Restore a deleted node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Attempts to restore the deleted node **nodeId** to its original location.
         
         If the node is successfully restored to its former primary parent, then only the 
@@ -3557,13 +3632,15 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     post:
+      x-alfresco-since: "5.2"
       tags:
         - sites
-        - 5.2 changes
       summary: Create a site
       description: |
-        Creates a default site with the given details.  Unless explicitly specified, the site id will be generated from the site title. The site id must be unique and only contain alphanumeric and/or dash
-        characters.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Creates a default site with the given details.  Unless explicitly specified, the site id will be generated
+        from the site title. The site id must be unique and only contain alphanumeric and/or dash characters.
 
         For example, to create a public site called "Marketing" the following body could be used:
         ```JSON
@@ -3575,7 +3652,7 @@ paths:
 
         The creation of the (surf) configuration files required by Share can be skipped via the **skipConfiguration** query parameter.
 
-        **Please note: if skipped then such a site will *not* work within Share.**
+        **Note:** if skipped then such a site will **not** work within Share.
 
         The addition of the site to the user's site favorites can be skipped via the **skipAddToFavorites** query parameter.
 
@@ -3675,11 +3752,14 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     delete:
+      x-alfresco-since: "5.2"
       tags:
         - sites
-        - 5.2 changes
       summary: Delete a site
-      description: Deletes the site with **siteId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Deletes the site with **siteId**.
       operationId: deleteSite
       produces:
         - application/json
@@ -4119,11 +4199,13 @@ paths:
             $ref: '#/definitions/Error'
   '/shared-links':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
       summary: Create a shared link to a file
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Create a shared link to the file **nodeId** in the request body.
         
         **Note:** You can create shared links to more than one file 
@@ -4206,11 +4288,14 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     get:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
       summary: Find shared links
-      description: Find (search for) links that current user has read permission on source node.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Find (search for) links that current user has read permission on source node.
       operationId: findSharedLinks
       parameters:
         - name: where
@@ -4242,11 +4327,13 @@ paths:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
       summary: Get a shared link
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns minimal information for the file with shared link identifier **sharedId**.
 
         **Note:** No authentication is required to call this endpoint.
@@ -4274,11 +4361,14 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     delete:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
       summary: Deletes a shared link
-      description: Deletes the shared link with identifier **sharedId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Deletes the shared link with identifier **sharedId**.
       operationId: deleteSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -4304,11 +4394,13 @@ paths:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/content':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
       summary: Get file content
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns the content of the file with shared link identifier **sharedId**.
 
         **Note:** No authentication is required to call this endpoint.
@@ -4335,11 +4427,13 @@ paths:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/renditions':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - renditions
-        - 5.2 changes
       summary: List information for created renditions
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns the rendition information for the file with shared link identifier **sharedId**.
         
         This API method returns rendition information, including the rendition id, for each rendition
@@ -4367,11 +4461,13 @@ paths:
             $ref: '#/definitions/Error'        
   '/shared-links/{sharedId}/renditions/{renditionId}/content':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - renditions
-        - 5.2 changes
       summary: Get shared link rendition content
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns the rendition content for file with shared link identifier **sharedId**.
 
         **Note:** No authentication is required to call this endpoint.
@@ -4399,11 +4495,13 @@ paths:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/email':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
       summary: Email shared link
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Sends email with app-specific url including identifier **sharedId**.
 
         The client and recipientEmails properties are mandatory in the request body. For example, to email a shared link with minimum info:
@@ -4465,11 +4563,13 @@ paths:
             $ref: '#/definitions/Error'
   '/queries/nodes':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - queries
-        - 5.2 changes
       summary: Find nodes
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns a list of nodes that match the given search criteria.
 
         The search term is used to look for nodes that match against name, title, description, full text content or tags.
@@ -4533,11 +4633,13 @@ paths:
             $ref: '#/definitions/Error'
   '/queries/sites':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - queries
-        - 5.2 changes
       summary: Find sites
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns a list of sites that match the given search criteria.
 
         The search term is used to look for sites that match against site id, title or description.
@@ -4577,11 +4679,13 @@ paths:
             $ref: '#/definitions/Error'            
   '/queries/people':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - queries
-        - 5.2 changes
       summary: Find people
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Returns a list of people that match the given search criteria.
         
         The search term is used to look for matches against person id, firstname and lastname.

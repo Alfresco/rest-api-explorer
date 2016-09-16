@@ -17,11 +17,15 @@ produces:
 paths:
   '/tickets':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - authentication
       summary: Create ticket (login)
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Logs in and returns the new authentication ticket.
+
         The userId and password properties are mandatory in the request body. For example:
         ```JSON
         {
@@ -65,10 +69,13 @@ paths:
             $ref: '#/definitions/Error'
   '/tickets/-me-':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - authentication
       summary: Validate ticket
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Validates the specified ticket (derived from Authorization header) is still valid.
 
         For example, you can pass the Authorization request header using Javascript:
@@ -92,10 +99,13 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     delete:
+      x-alfresco-since: "5.2"
       tags:
         - authentication
       summary: Delete ticket (logout)
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Deletes logged in ticket (logout).
       operationId: deleteTicket
       responses:
