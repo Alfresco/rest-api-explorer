@@ -25,17 +25,17 @@ tags:
     description: Retrieve and manage tasks
 parameters:
   processIdParam:
-    name: "processId"
-    in: "path"
+    name: processId
+    in: path
     description:  The identifier of a process.
     required: true
-    type: "string"
+    type: string
   processDefinitionIdParam:
-    name: "processDefinitionId"
-    in: "path"
+    name: processDefinitionId
+    in: path
     description: The identifier of a process definition.
     required: true
-    type: "string"
+    type: string
   taskIdParam:
     name: taskId
     in: path
@@ -43,17 +43,19 @@ parameters:
     required: true
     type: string
   skipCountParam:
-    name: "skipCount"
-    in: "query"
+    name: skipCount
+    in: query
     description: The number of entities that  exist in the collection before those included in this list.
     required: false
-    type: "integer"
+    type: integer
+    minimum: 0
   maxItemsParam:
-    name: "maxItems"
-    in: "query"
+    name: maxItems
+    in: query
     description: The maximum number of items to return in the list.
     required: false
-    type: "integer"
+    type: integer
+    minimum: 1
   propertiesParam:
     name: properties
     in: query
@@ -64,23 +66,23 @@ parameters:
       type: string
     collectionFormat: csv
   variableNameParam:
-    name: "variableName"
+    name: variableName
     in: path
     description:  The name of a variable.
     required: true
-    type: "string"
+    type: string
   itemIdParam:
-    name: "itemId"
-    in: "path"
+    name: itemId
+    in: path
     description: The identifier of an item.
     required: true
-    type: "string"
+    type: string
   selectParam:
-    name: "select"
-    in: "query"
+    name: select
+    in: query
     description: A string specifying a required subset of properties to be returned for an entity or list of entities. Properties are separated by commas.
     required: false
-    type: "integer"
+    type: integer
   orderByParam:
     name: orderBy
     in: query
@@ -98,11 +100,11 @@ parameters:
       type: string
     collectionFormat: csv
   whereParam:
-    name: "where"
-    in: "query"
+    name: where
+    in: query
     description: A string to restrict the returned objects by using a predicate.
     required: false
-    type: "string"
+    type: string
 paths:
   /deployments:
     get:

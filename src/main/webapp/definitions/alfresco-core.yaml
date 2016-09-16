@@ -1395,6 +1395,7 @@ paths:
             properties:
               timeToExpire:
                 type: integer
+                minimum: 0
               type:
                 type: string
                 default: ALLOW_OWNER_CHANGES

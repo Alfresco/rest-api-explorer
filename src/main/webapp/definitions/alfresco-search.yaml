@@ -588,10 +588,12 @@ definitions:
       maxItems:
         description: The maximum number of items to return in the query results
         type: integer
-        default: 200
+        minimum: 1
+        default: 100
       skipCount:
         description: The number of items to skip from the start of the query set
         type: integer
+        minimum: 0
         default: 0
   Pagination:
     type: object
