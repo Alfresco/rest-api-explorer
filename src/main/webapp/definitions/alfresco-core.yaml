@@ -4296,7 +4296,7 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Get a list of links that the current user has read permission on source node.
-      operationId: findSharedLinks
+      operationId: getSharedLinks
       parameters:
         - name: where
           in: query
