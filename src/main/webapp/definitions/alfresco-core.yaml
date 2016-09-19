@@ -526,7 +526,7 @@ paths:
       tags:
         - ratings
       summary: Get ratings
-      description: Get the ratings for node **nodeId**.
+      description: Gets a list of ratings for node **nodeId**.
       operationId: getRatings
       produces:
         - application/json
@@ -985,7 +985,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Gets the children of the parent node **nodeId**.
+        Gets a list of children of the parent node **nodeId**.
 
         Minimal information for each child is returned by default.
 
@@ -1748,7 +1748,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Gets the rendition information for each rendition of the the file **nodeId**, including the rendition id.
+        Gets a list of the rendition information for each rendition of the the file **nodeId**, including the rendition id.
       
         Each rendition returned has a **status**: CREATED means it is available to view or download, NOT_CREATED means the rendition can be requested.
       
@@ -2704,7 +2704,7 @@ paths:
         - favorites
       summary: Get favorite sites
       description: |
-        Get a person's favorite sites.
+        Gets a list of a person's favorite sites.
 
         **Note: This method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
@@ -3265,7 +3265,7 @@ paths:
         - sites
       summary: Get site membership requests
       description: |
-        Gets the current site membership requests for person **personId**.
+        Gets a list of the current site membership requests for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getSiteMembershipRequestsForPerson
@@ -4436,7 +4436,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Gets the rendition information for the file with shared link identifier **sharedId**.
+        Gets a list of the rendition information for the file with shared link identifier **sharedId**.
         
         This API method returns rendition information, including the rendition id, for each rendition
         where the rendition status is CREATED, which means the rendition is available to view/download.

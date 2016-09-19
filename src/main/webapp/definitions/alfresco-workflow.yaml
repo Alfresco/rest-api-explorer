@@ -515,7 +515,7 @@ paths:
         - processes
       summary: Get variables
       description: |
-        Gets a paged list of variables for the process **processId**.
+        Gets a list of variables for the process **processId**.
 
         An authenticated user will have access to a processes variables if the
         user has started  the process or if the user is involved in any of the
@@ -879,7 +879,7 @@ paths:
         - tasks
       summary: Get all tasks
       description: |
-        Gets a paged list of tasks visible to the authenticated user.
+        Gets a list of tasks visible to the authenticated user.
 
         Tasks are returned for which the authenticated user is the assignee  or
         a candidate. If networks are enabled, the only tasks that are inside
@@ -1174,7 +1174,7 @@ paths:
         - tasks
       summary: Get variables
       description: |
-        Gets a  list of variables for the specified task **taskId**.
+        Gets a list of variables for the specified task **taskId**.
 
         An authenticated user will have access to a tasks variables if the
         user has started the process or if the user is involved in any of the
