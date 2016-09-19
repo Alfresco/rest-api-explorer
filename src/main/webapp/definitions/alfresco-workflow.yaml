@@ -135,7 +135,7 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -169,9 +169,10 @@ paths:
           schema:
             $ref: '#/definitions/DeploymentEntry'
         '401':
-            description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **deploymentId** does not exist
+          description: |
+            **deploymentId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -197,7 +198,7 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -233,7 +234,7 @@ paths:
             description: |
               Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -261,9 +262,10 @@ paths:
           schema:
             $ref: '#/definitions/ProcessDefinitionEntry'
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processDefinitionId** does not exist
+          description: |
+            **processDefinitionId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -293,9 +295,10 @@ paths:
           schema:
             type: file
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processDefinitionId** does not exist
+          description: |
+            **processDefinitionId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -322,9 +325,10 @@ paths:
           schema:
             $ref: '#/definitions/ProcessDefinitionEntry'
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processDefinitionId** does not exist
+          description: |
+            **processDefinitionId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -365,7 +369,7 @@ paths:
             description: |
               Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -447,7 +451,7 @@ paths:
             description: |
               Invalid parameter: **processBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -481,9 +485,10 @@ paths:
           schema:
             $ref: '#/definitions/ProcessEntry'
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -502,7 +507,7 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
           description: The processId does not exist
         default:
@@ -543,9 +548,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -623,9 +629,10 @@ paths:
             description: |
               Invalid parameter: **variableBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -658,9 +665,10 @@ paths:
             description: |
               Invalid parameter: **variableBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -680,9 +688,9 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: The **processId** does not exist, or the **variableName** does not exist
+          description: The **processId** does not exist or the **variableName** does not exist
         default:
           description: Unexpected error
           schema:
@@ -721,9 +729,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -799,9 +808,10 @@ paths:
             description: |
               Invalid parameter: **itemBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -823,9 +833,9 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: The **processId** does not exist, or the **itemId** does not exist
+          description: The **processId** does not exist or the **itemId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -866,9 +876,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems**, **skipCount**, or **orderBy** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -907,7 +918,7 @@ paths:
             description: |
               Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -941,9 +952,10 @@ paths:
           schema:
             $ref: '#/definitions/TaskEntry'
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1128,7 +1140,7 @@ paths:
             description: |
               Invalid parameter: **taskBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -1161,9 +1173,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1203,9 +1216,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems**, **skipCount**, or **where** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1280,9 +1294,10 @@ paths:
           schema:
             $ref: '#/definitions/VariableBody'
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1315,9 +1330,10 @@ paths:
             description: |
               Invalid parameter: **variableBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1338,9 +1354,9 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: The **taskId** does not exist, or the **variableName** does not exist
+          description: The **taskId** does not exist or the **variableName** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1379,9 +1395,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1457,9 +1474,10 @@ paths:
             description: |
               Invalid parameter: **itemBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1481,9 +1499,9 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: The **taskId** does not exist, or the **itemId** does not exist
+          description: The **taskId** does not exist or the **itemId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1512,9 +1530,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
