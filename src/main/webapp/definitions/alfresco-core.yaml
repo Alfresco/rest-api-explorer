@@ -993,7 +993,7 @@ paths:
         The default sort order for the returned list is for folders to be sorted before files, and by ascending name
 
         You can override the default using **orderBy** to specify one or more fields to sort by. The default order is always ascending, but
-        you can use an optional *ASC** or **DESC** modifier to specfiy an ascending or descending sort order. 
+        you can use an optional *ASC** or **DESC** modifier to specify an ascending or descending sort order. 
             
         For example, specifying ```orderBy=name DESC``` returns a mixed folder/file list in descending **name** order.
 
@@ -1053,7 +1053,7 @@ paths:
             $ref: '#/definitions/NodePaging'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or is not a folder
+            Invalid parameter: **nodeId** is not a valid format or is not a folder, or **orderBy** invalid
         '401':
           description: If authentication fails
         '404':
@@ -3489,16 +3489,11 @@ paths:
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
-        You can sort the list of sites using the **orderBy** parameter.
-
-        **orderBy** specifies the name of one or more fields.
-        For each field you can optionally specify the order direction. **ASC** or **DESC**.
-        Both of  these **orderBy** examples retrieve sites ordered by ascending name:
-
-        ```
-        name
-        name ASC
-        ```
+        The default sort order for the returned list is for sites to be sorted by ascending title.
+        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * id
+        * title
+        * description
       operationId: getSiteMembership
       produces:
         - application/json
@@ -3516,7 +3511,7 @@ paths:
             $ref: '#/definitions/SiteRolePaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid, or **orderBy** invalid
         '401':
           description: If authentication fails
         '404':
@@ -3584,18 +3579,13 @@ paths:
         - sites
       summary: Get sites
       description: |
-        Returns a list of sites in this repository. 
+        Returns a list of sites in this repository.
         
-        You can sort the list of sites using the **orderBy** parameter.
-
-        **orderBy** specifies the name of one or more fields.
-        For each field you can optionally specify the order direction, **ASC** or **DESC**.
-        Both of  these **orderBy** examples retrieve sites ordered by ascending name:
-
-        ```
-        name
-        name ASC
-        ```
+        The default sort order for the returned list is for sites to be sorted by ascending id.
+        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * id
+        * title
+        * description
 
         You can use the **relations** parameter to include one or more related
         entities in a single response and so reduce network traffic.
@@ -4646,7 +4636,8 @@ paths:
 
         The search term must contain a minimum of 2 alphanumeric characters.
         
-        You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        The default sort order for the returned list is for sites to be sorted by ascending id. 
+        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * id
         * title
         * description
