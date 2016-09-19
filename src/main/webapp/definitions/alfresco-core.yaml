@@ -3493,7 +3493,7 @@ paths:
         You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * id
         * title
-        * description
+        * role
       operationId: getSiteMembership
       produces:
         - application/json
