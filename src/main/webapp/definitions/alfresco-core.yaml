@@ -421,13 +421,13 @@ paths:
           }
         }
         ```
-      operationId: addComment
+      operationId: createComment
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: commentBody
+          name: commentBodyCreate
           description: The comment text. Note that you can also provide a list of comments.
           required: true
           schema:
@@ -443,7 +443,7 @@ paths:
             $ref: '#/definitions/CommentEntry'
         '400':
           description: |
-            Invalid parameter: **commentBody** is invalid
+            Invalid parameter: **commentBodyCreate** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -470,7 +470,7 @@ paths:
         - $ref: '#/parameters/commentIdParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: commentBody
+          name: commentBodyUpdate
           description: The JSON representing the comment to be updated.
           required: true
           schema:
@@ -486,7 +486,7 @@ paths:
             $ref: '#/definitions/CommentEntry'
         '400':
           description: |
-            Invalid parameter: **commentBody** is invalid
+            Invalid parameter: **commentBodyUpdate** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -879,7 +879,7 @@ paths:
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: nodeBody
+          name: nodeBodyUpdate
           description: The node information to update.
           required: true
           schema:
@@ -909,7 +909,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBody** is invalid
+            Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBodyUpdate** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -1239,7 +1239,7 @@ paths:
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: nodeBody
+          name: nodeBodyCreate
           description: The node information to create.
           required: true
           schema:
@@ -1290,7 +1290,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or **nodeBody** is invalid
+            Invalid parameter: **nodeId** is not a valid format or **nodeBodyCreate** is invalid
         '401':
           description: If authentication fails
         '403':
@@ -2789,7 +2789,7 @@ paths:
           }
         }
         ```
-      operationId: favoriteSite
+      operationId: createFavoriteSite
       produces:
         - application/json
       parameters:
@@ -3356,7 +3356,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: siteMembershipBody
+          name: siteMembershipBodyCreate
           description: Site membership request details
           required: true
           schema:
@@ -3377,7 +3377,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **id** is invalid or the user is already invited
-            or **siteMembershipBody** invalid
+            or **siteMembershipBodyCreate** invalid
         '401':
           description: If authentication fails
         '404':
@@ -3432,7 +3432,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
         - in: body
-          name: siteMembershipBody
+          name: siteMembershipBodyUpdate
           description: The new message to display
           required: true
           schema:
@@ -3447,7 +3447,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **id** is invalid
-            or **siteMembershipBody** invalid
+            or **siteMembershipBodyUpdate** invalid
         '401':
           description: If authentication fails
         '404':
@@ -4165,7 +4165,7 @@ paths:
             $ref: '#/definitions/TagEntry'
         '400':
           description: |
-            Invalid parameter: **tagBody** is invalid   
+            Invalid parameter: **tagBody** is invalid
         '401':
           description: If authentication fails         
         '404':
