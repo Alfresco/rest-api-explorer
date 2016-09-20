@@ -356,14 +356,15 @@ paths:
             $ref: '#/definitions/CommentPaging'
         '400':
           description: |
-            Invalid parameter: Either the **nodeId** exists, but does not identify a file or a folder 
-            or the value of **maxItems** or **skipCount** is invalid
+            Invalid parameter: **nodeId** exists but does not identify a file or a folder, 
+            or the value of **maxItems** is invalid, or the value of **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission read comments on the node
+          description: User does not have permission read comments on the node
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -445,13 +446,14 @@ paths:
           description: |
             Invalid parameter: **commentBodyCreate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to create a comment           
+          description: User does not have permission to create a comment           
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '405':
-          description: If it is not possible to comment on a node of this type
+          description: Cannot comment on a node of this type
         default:
           description: Unexpected error
           schema:
@@ -488,11 +490,12 @@ paths:
           description: |
             Invalid parameter: **commentBodyUpdate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to update a comment
+          description: User does not have permission to update a comment
         '404':
-          description: If **nodeId** or **commentId** does not exist
+          description: |
+            **nodeId** or **commentId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -512,11 +515,12 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to delete a comment
+          description: User does not have permission to delete a comment
         '404':
-          description: If **nodeId** or **commentId** does not exist
+          description: |
+            **nodeId** or **commentId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -526,7 +530,7 @@ paths:
       tags:
         - ratings
       summary: Get ratings
-      description: Get the ratings for node **nodeId**.
+      description: Gets a list of ratings for node **nodeId**.
       operationId: getRatings
       produces:
         - application/json
@@ -544,9 +548,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -599,11 +604,12 @@ paths:
           description: |
             Invalid parameter: **ratingBody** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '405':
-          description: If is not possible to rate a node of this type
+          description: Cannot rate a node of this type
         default:
           description: Unexpected error
           schema:
@@ -630,9 +636,10 @@ paths:
           description: |
             Invalid parameter: unknown rating scheme specified
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -655,9 +662,10 @@ paths:
           description: |
             Invalid parameter: unknown rating scheme specified
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -685,11 +693,12 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to read tags on the node            
+          description: User does not have permission to read tags on the node            
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -771,13 +780,14 @@ paths:
           description: |
             Invalid parameter: **tagBody** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to create tags on the node                      
+          description: User does not have permission to create tags on the node                      
         '404':
-          description: If **nodeId** does not exist       
+          description: |
+            **nodeId** does not exist       
         '405':
-          description: If not possible to tag a node of this type 
+          description: Cannot tag a node of this type 
         default:
           description: Unexpected error
           schema:
@@ -798,11 +808,12 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to delete the tag
+          description: User does not have permission to delete the tag
         '404':
-          description: If **nodeId** or **tagId** does not exist
+          description: |
+            **nodeId** or **tagId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -840,9 +851,10 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -911,13 +923,14 @@ paths:
           description: |
             Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBodyUpdate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If current user does not have permission to update **nodeId**
+          description: Current user does not have permission to update **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If the updated name clashes with an existing node in the current parent folder
+          description: Updated name clashes with an existing node in the current parent folder
         '422':
           description: Model integrity exception, including file name with invalid characters
         default:
@@ -965,13 +978,15 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the current user does not have permission to delete **nodeId**
+          description: Current user does not have permission to delete **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If **nodeId** is locked and cannot be deleted
+          description: |
+            **nodeId** is locked and cannot be deleted
         default:
           description: Unexpected error
           schema:
@@ -985,7 +1000,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Gets the children of the parent node **nodeId**.
+        Gets a list of children of the parent node **nodeId**.
 
         Minimal information for each child is returned by default.
 
@@ -1061,9 +1076,10 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format or is not a folder
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1292,19 +1308,20 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format or **nodeBodyCreate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If current user does not have permission to create children of **nodeId**
+          description: Current user does not have permission to create children of **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If new name clashes with an existing node in the current parent folder
+          description: New name clashes with an existing node in the current parent folder
         '413':
-          description: If file content exceeds individual file size limit configured for the network or system
+          description: Content exceeds individual file size limit configured for the network or system
         '422':
-          description: Model integrity exception, including file name with invalid characters
+          description: Model integrity exception including a file name containing invalid characters
         '507':
-          description: If file content exceeds overall storage quota limit configured for the network or system
+          description: Content exceeds overall storage quota limit configured for the network or system
         default:
           description: Unexpected error
           schema:
@@ -1357,15 +1374,16 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format or **copyBody** is invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission to create children of **nodeId**
+          description: Current user does not have permission to create children of **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If the new name clashes with an existing node in the destination parent folder
+          description: New name clashes with an existing node in the destination parent folder
         '422':
-          description: Model integrity exception, including file name with invalid characters
+          description: Model integrity exception including a file name containing invalid characters
         default:
           description: Unexpected error
           schema:
@@ -1555,18 +1573,19 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or **targetParentId** is not a folder
+            Invalid parameter: **nodeId** is not a valid format, or **targetParentId** is not a folder,
             or **moveBody** is invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission to create children of **nodeId**
+          description: Current user does not have permission to create children of **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If the new name clashes with an existing node in the destination parent folder
+          description: New name clashes with an existing node in the destination parent folder
         '422':
-          description: Model integrity exception, including file name with invalid characters
+          description: Model integrity exception including a file name containing invalid characters
         default:
           description: Unexpected error
           schema:
@@ -1590,14 +1609,15 @@ paths:
         '200':
           description: Successful response
         '304':
-          description: If the content has not been modified since the date provided in the If-Modified-Since header
+          description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1672,19 +1692,20 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission to update **nodeId**
+          description: Current user does not have permission to update **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If optional new name clashes with an existing node in the current parent folder
+          description: Optional new name clashes with an existing node in the current parent folder
         '413':
-          description: If file content exceeds individual file size limit (configured for network/system)          
+          description: Content exceeds individual file size limit (configured for network/system)          
         '422':
           description: Model integrity exception, including file name with invalid characters
         '507':
-          description: If file content exceeds overall storage quota limit (configured for network/system)
+          description: Content exceeds overall storage quota limit configured for the network/system
         default:
           description: Unexpected error
           schema:
@@ -1727,15 +1748,16 @@ paths:
             Invalid parameter: **nodeId** is not a valid format or is not a file
             or **renditionBody** is invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission for **nodeId**
+          description: Current user does not have permission for **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If the rendition already exists
+          description: Rendition already exists
         '501':
-          description: If rendition/thumbnails are disabled for the system
+          description: Renditions/thumbnails are disabled for the system
         default:
           description: Unexpected error
           schema:
@@ -1748,7 +1770,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Gets the rendition information for each rendition of the the file **nodeId**, including the rendition id.
+        Gets a list of the rendition information for each rendition of the the file **nodeId**, including the rendition id.
       
         Each rendition returned has a **status**: CREATED means it is available to view or download, NOT_CREATED means the rendition can be requested.
       
@@ -1770,11 +1792,12 @@ paths:
             $ref: '#/definitions/RenditionPaging'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or is not a file
+            Invalid parameter: **nodeId** is not a valid format or is not a file
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1802,9 +1825,10 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **nodeId** or **renditionId** does not exist
+          description: |
+            **nodeId** or **renditionId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1838,14 +1862,15 @@ paths:
         '200':
           description: Successful response
         '304':
-          description: If the content has not been modified since the date provided in the If-Modified-Since header
+          description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **nodeId** or **renditionId** does not exist
+          description: |
+            **nodeId** or **renditionId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1921,12 +1946,12 @@ paths:
             $ref: '#/definitions/NodeChildAssocEntry'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
+            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format,
             or **assocChildBody** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If parent **nodeId** or **childId** does not exist
+          description: Parent **nodeId** or **childId** does not exist
         '409':
           description: An association of this assoc type already exists between these two nodes
         '422':
@@ -1969,11 +1994,11 @@ paths:
             $ref: '#/definitions/NodeChildAssocPaging'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
+            Invalid parameter: **assocType** is unknown or the **nodeId** is not a valid format
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If parent **nodeId** does not exist
+          description: Parent **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2012,12 +2037,12 @@ paths:
           description: Successful response
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or you are trying to delete a primary **assocType**. 
+            Invalid parameter: **assocType** is unknown or you are trying to delete a primary **assocType**. 
             Use delete node instead
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If parent **nodeId** or **childId** does not exist (with given assocType, if specified)
+          description: Parent **nodeId** or **childId** does not exist (with given assocType, if specified)
         default:
           description: Unexpected error
           schema:
@@ -2063,11 +2088,11 @@ paths:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
+            Invalid parameter: **assocType** is unknown or the **nodeId** is not a valid format
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If child **nodeId** does not exist
+          description: Child **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2143,12 +2168,12 @@ paths:
             $ref: '#/definitions/NodeAssocEntry'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
+            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format,
             or **assocTargetBody** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If source **nodeId** or **targetId** does not exist
+          description: Source **nodeId** or **targetId** does not exist
         '409':
           description: An association of this assoc type already exists between these two nodes
         '422':
@@ -2188,11 +2213,11 @@ paths:
             $ref: '#/definitions/NodeAssocPaging'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
+            Invalid parameter: **assocType** is unknown or the **nodeId** is not a valid format
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If source **nodeId** does not exist
+          description: Source **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2235,9 +2260,9 @@ paths:
           description: |
             Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format, or **targetId** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If source **nodeId** or **targetId** does not exist (with given assocType, if specified)
+          description: Source **nodeId** or **targetId** does not exist (with given assocType, if specified)
         default:
           description: Unexpected error
           schema:
@@ -2276,9 +2301,9 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format or **assocType** is unknown
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If target **nodeId** does not exist
+          description: Target **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2314,9 +2339,9 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format            
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If target **nodeId** does not exist
+          description: Target **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2342,11 +2367,12 @@ paths:
             $ref: '#/definitions/VersionNodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or it exists, but does not identify a file, or **versionId** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or it exists but does not identify a file, or **versionId** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** or **versionId** does not exist
+          description: |
+            **nodeId** or **versionId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2381,15 +2407,16 @@ paths:
           description: Successful response
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid     
+            Invalid parameter: **nodeId** is not a valid format, or exists but does not identify a file, or **versionId** is invalid     
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to delete the versioned node
+          description: User does not have permission to delete the versioned node
         '404':
-          description: If **nodeId** or **versionId** does not exist
+          description: |
+            **nodeId** or **versionId** does not exist
         '422':
-          description: If attempting to delete the last remaining version  
+          description: Cannot delete the last remaining version  
         default:
           description: Unexpected error
           schema:
@@ -2414,14 +2441,15 @@ paths:
         '200':
           description: Successful response
         '304':
-          description: If the content has not been modified since the date provided in the If-Modified-Since header
+          description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** or **versionId** does not exist
+          description: |
+            **nodeId** or **versionId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2462,15 +2490,16 @@ paths:
             $ref: '#/definitions/VersionNodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or it exists, 
-            but does not identify a file, or **versionId** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or it exists 
+            but does not identify a file, or **versionId** is invalid,
             or **revertBody** invalid          
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to revert the versioned node
+          description: User does not have permission to revert the versioned node
         '404':
-          description: If **nodeId** or **versionId** does not exist
+          description: |
+            **nodeId** or **versionId** does not exist
         '422':
           description: Model integrity exception trying to revert the node
         default:
@@ -2507,7 +2536,7 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails            
+          description: Authentication failed            
         default:
           description: Unexpected error
           schema:
@@ -2537,11 +2566,12 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to view the deleted node
+          description: User does not have permission to view the deleted node
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2567,11 +2597,12 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format          
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to purge the deleted node
+          description: User does not have permission to purge the deleted node
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2610,13 +2641,14 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format             
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to restore the deleted node
+          description: User does not have permission to restore the deleted node
         '404':
-          description: If **nodeId** does not exist or if the restore destination parent node no longer exists
+          description: |
+            **nodeId** does not exist or the restore destination parent node no longer exists
         '409':
-          description: If the node name already exists in the restore destination
+          description: Node name already exists in the restore destination
         '422':
           description: Model integrity exception trying to restore the node
         default:
@@ -2644,9 +2676,10 @@ paths:
           schema:
             $ref: '#/definitions/PersonEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2688,11 +2721,12 @@ paths:
           description: |
             Invalid parameter: value of **maxItems**, **skipCount**, or **who** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the activities for **personId**
+          description: Current user does not have access to the activities for **personId**
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2704,7 +2738,7 @@ paths:
         - favorites
       summary: Get favorite sites
       description: |
-        Get a person's favorite sites.
+        Gets a list of a person's favorite sites.
 
         **Note: This method is deprecated and will be removed in the future**.
         Use `/people/{personId}/favorites` instead.
@@ -2727,11 +2761,12 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the favorite sites for **personId**
+          description: Current user does not have access to the favorite sites for **personId**
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2823,13 +2858,15 @@ paths:
           description: |
             Invalid parameter: **favoriteSiteBody** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the favorite sites for **personId**
+          description: Current user does not have access to the favorite sites for **personId**
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         '409':
-          description: If **id** is already a site favorite
+          description: |
+            **id** is already a site favorite
         default:
           description: Unexpected error
           schema:
@@ -2860,11 +2897,12 @@ paths:
           schema:
             $ref: '#/definitions/SiteEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the favorite sites for **personId**
+          description: Current user does not have access to the favorite sites for **personId**
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2891,11 +2929,12 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the favorite sites for **personId**
+          description: Current user does not have access to the favorite sites for **personId**
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2951,9 +2990,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems**, **skipCount**, or **where** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** does not exist, or the current user does not have permission to access the favorites of **personId**
+          description: |
+            **personId** does not exist or the current user does not have permission to access the favorites of **personId**
         default:
           description: Unexpected error
           schema:
@@ -3055,12 +3095,12 @@ paths:
           description: |
             Invalid parameter: **favoriteBody** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
           description: |
-            If **personId** does not exist, or the target entity does not exist,
+            **personId** does not exist, or the target entity does not exist,
             or a favorite already exists with the specified id, or an
-            entity does exist with the id of the posted object,
+            entity exists with the id of the posted object
             but is not of the same type of the posted object
         '409':
           description: The target **guid** has already been favorited            
@@ -3090,10 +3130,10 @@ paths:
           schema:
             $ref: '#/definitions/FavoriteEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
           description: |
-            If **personId** or **favoriteId** does not exist
+            **personId** or **favoriteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3116,10 +3156,10 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
           description: |
-            If **personId** or **favoriteId** does not exist
+            **personId** or **favoriteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3150,9 +3190,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3179,9 +3220,10 @@ paths:
           schema:
             $ref: '#/definitions/PersonNetworkEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **networkId** does not exist
+          description: |
+            **personId** or **networkId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3215,11 +3257,12 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the preferences for **personId**
+          description: Current user does not have access to the preferences for **personId**
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3250,11 +3293,12 @@ paths:
           schema:
             $ref: '#/definitions/PreferenceEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the preferences for **personId**
+          description: Current user does not have access to the preferences for **personId**
         '404':
-          description: If **personId** or **preferenceName** does not exist
+          description: |
+            **personId** or **preferenceName** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3265,7 +3309,7 @@ paths:
         - sites
       summary: Get site membership requests
       description: |
-        Gets the current site membership requests for person **personId**.
+        Gets a list of the current site membership requests for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getSiteMembershipRequestsForPerson
@@ -3285,9 +3329,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3376,12 +3421,13 @@ paths:
             $ref: '#/definitions/SiteMembershipRequestEntry'
         '400':
           description: |
-            Invalid parameter: **id** is invalid or the user is already invited
+            Invalid parameter: **id** is invalid, or the user is already invited,
             or **siteMembershipBodyCreate** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **id** does not exist
+          description: |
+            **personId** or **id** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3408,9 +3454,10 @@ paths:
           schema:
             $ref: '#/definitions/SiteMembershipRequestEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3449,9 +3496,10 @@ paths:
             Invalid parameter: **id** is invalid
             or **siteMembershipBodyUpdate** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3474,9 +3522,10 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3520,9 +3569,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3548,9 +3598,10 @@ paths:
           schema:
             $ref: '#/definitions/SiteRoleEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3573,9 +3624,10 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3628,7 +3680,7 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -3704,12 +3756,12 @@ paths:
             $ref: '#/definitions/SiteEntry'
         '400':
           description: |
-            Invalid parameter: **id**, **title**, or **description** exceed the maximum length 
-            or **id** contains invalid characters or **siteBody** invalid
+            Invalid parameter: **id**, **title**, or **description** exceed the maximum length; 
+            or **id** contains invalid characters; or **siteBody** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '409':
-          description: If a site with the given identifier already exists
+          description: Site with the given identifier already exists
         default:
           description: Unexpected error
           schema:
@@ -3746,9 +3798,10 @@ paths:
           schema:
             $ref: '#/definitions/SiteEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** does not exist
+          description: |
+            **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3776,11 +3829,12 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If user does not have permission to delete the site (that is visible to them).
+          description: User does not have permission to delete the site that is visible to them.
         '404':
-          description: If **siteId** does not exist or the user does not have permission to view the site.
+          description: |
+            **siteId** does not exist or the user does not have permission to view the site.
         default:
           description: Unexpected error
           schema:
@@ -3808,9 +3862,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** does not exist
+          description: |
+            **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3838,9 +3893,10 @@ paths:
           schema:
             $ref: '#/definitions/SiteContainerEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** or **containerId** does not exist
+          description: |
+            **siteId** or **containerId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3868,9 +3924,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** does not exist
+          description: |
+            **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3964,13 +4021,14 @@ paths:
             Invalid parameter: value of **role** or **id** is invalid
             or **siteMemberBody** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to invite a person
+          description: User does not have permission to invite a person
         '404':
-          description: If **siteId** or **personId** does not exist
+          description: |
+            **siteId** or **personId** does not exist
         '409':
-          description: If the person with this **id** is already a member
+          description: Person with this **id** is already a member
         default:
           description: Unexpected error
           schema:
@@ -3997,9 +4055,10 @@ paths:
           schema:
             $ref: '#/definitions/SiteMemberEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** or **personId** does not exist
+          description: |
+            **siteId** or **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -4050,9 +4109,10 @@ paths:
             Invalid parameter: **role** does not exist
             or **siteMemberRoleBody** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** or **personId** does not exist
+          description: |
+            **siteId** or **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -4075,9 +4135,10 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -4104,7 +4165,7 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -4131,9 +4192,10 @@ paths:
               id: ed2444b5-d0c1-440b-b5b8-34a53e578091
               tag: test tag 1
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **tagId** does not exist
+          description: |
+            **tagId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -4167,9 +4229,10 @@ paths:
           description: |
             Invalid parameter: **tagBody** is invalid
         '401':
-          description: If authentication fails         
+          description: Authentication failed         
         '404':
-          description: If **tagId** does not exist
+          description: |
+            **tagId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -4192,9 +4255,10 @@ paths:
           schema:
             $ref: '#/definitions/PersonNetworkEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **networkId** does not exist
+          description: |
+            **networkId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -4273,18 +4337,19 @@ paths:
             $ref: '#/definitions/NodeSharedLinkEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or does not identify a file
+            Invalid parameter: **nodeId** is not a valid format, or does not identify a file,
             or **sharedLinkBody** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission to create **sharedId** (eg. no read permission)
+          description: Current user does not have permission to create **sharedId** (for example, no read permission)
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If shared link already exists for **nodeId**
+          description: Shared link already exists for **nodeId**
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
@@ -4320,9 +4385,9 @@ paths:
           schema:
             $ref: '#/definitions/NodeSharedLinkPaging'
         '401':
-          description: If authentication fails            
+          description: Authentication failed            
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
@@ -4355,9 +4420,10 @@ paths:
           description: |
             Invalid parameter: **sharedId** is not a valid format
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
@@ -4383,13 +4449,14 @@ paths:
           description: |
             Invalid parameter: **sharedId** is not a valid format
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission to delete **sharedId**
+          description: Current user does not have permission to delete **sharedId**
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
@@ -4415,14 +4482,15 @@ paths:
         '200':
           description: Successful response
         '304':
-          description: If the content has not been modified since the date provided in the If-Modified-Since header
+          description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: |
             Invalid parameter: **sharedId** is not a valid format
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
@@ -4436,7 +4504,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Gets the rendition information for the file with shared link identifier **sharedId**.
+        Gets a list of the rendition information for the file with shared link identifier **sharedId**.
         
         This API method returns rendition information, including the rendition id, for each rendition
         where the rendition status is CREATED, which means the rendition is available to view/download.
@@ -4454,9 +4522,10 @@ paths:
           description: |
             Invalid parameter: **sharedId** is not a valid format
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system          
+          description: Shared links are disabled for the system          
         default:
           description: Unexpected error
           schema:
@@ -4483,14 +4552,15 @@ paths:
         '200':
           description: Successful response
         '304':
-          description: If the content has not been modified since the date provided in the If-Modified-Since header
+          description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: |
             Invalid parameter: **sharedId** is not a valid format, or **renditionId** is invalid
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
@@ -4554,11 +4624,12 @@ paths:
             Invalid parameter: **sharedId** is not a valid format
             or **emailSharedLinkBody** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
@@ -4626,9 +4697,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **nodeType** unknown, or **orderBy** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **rootNodeId** does not exist
+          description: |
+            **rootNodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -4674,7 +4746,7 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **orderBy** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         default:
           description: Unexpected error
           schema:
@@ -4723,7 +4795,7 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **orderBy** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         default:
           description: Unexpected error
           schema:

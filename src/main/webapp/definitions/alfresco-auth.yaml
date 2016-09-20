@@ -60,9 +60,10 @@ paths:
           schema:
             $ref: '#/definitions/LoginTicketEntry'
         '400':
-          description: If the **userId** and/or **password** are/is not provided
+          description: |
+            **userId** or **password** is not provided
         '403':
-          description: If the login fails
+          description: Login failed
         default:
           description: Unexpected error
           schema:
@@ -91,9 +92,9 @@ paths:
           schema:
             $ref: '#/definitions/ValidateTicketEntry'
         '400':
-          description: If the URL path does not include **-me-** or the ticket is not provided by the Authorization header
+          description: URL path does not include **-me-** or the ticket is not provided by the Authorization header
         '404':
-          description: If the status of the user has changed (e.g. The user is locked or the account is disabled) or the ticket has expired
+          description: Status of the user has changed (for example, the user is locked or the account is disabled) or the ticket has expired
         default:
           description: Unexpected error
           schema:
@@ -112,9 +113,9 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: If the URL path does not include **-me-** or the ticket is not provided by the Authorization header
+          description: URL path does not include **-me-** or the ticket is not provided by the Authorization header
         '404':
-          description: If the status of the user has changed (e.g. The user is locked or the account is disabled) or the ticket has expired
+          description: Status of the user has changed (for example, the user is locked or the account is disabled) or the ticket has expired
         default:
           description: Unexpected error
           schema:
