@@ -559,7 +559,7 @@ paths:
     post:
       tags:
         - processes
-      summary: Create variable
+      summary: Create or update variables
       description: |
         Create or update a variable for a given process.
         If the variable does not exist yet, it will be created.        
@@ -641,7 +641,7 @@ paths:
     put:
       tags:
         - processes
-      summary: Create a variable
+      summary: Create or update a variable
       description: |
         Creates or updates a specific variable **variableName** for process **processId**.
       operationId: createProcessVariable
@@ -796,9 +796,7 @@ paths:
           description: The **nodeId** of the item
           required: true
           schema:
-            properties:
-              id:
-                type: string
+            $ref: '#/definitions/ItemBody'
       responses:
         '201':
           description: Successful response
@@ -843,9 +841,8 @@ paths:
   '/processes/{processId}/tasks':
     get:
       tags:
-        - processes
         - tasks
-      summary: Get tasks
+      summary: Get tasks for a process
       description: |
         Gets a list of tasks for the specified process **processId**.
 
@@ -858,7 +855,7 @@ paths:
         perform all operations  on those tasks. In network deployments,
         network administrators can see all tasks in their network and
         perform all operations on tasks in their network.
-      operationId: getProcessTasks
+      operationId: getTasksForProcess
       produces:
         - application/json
       parameters:
@@ -1227,7 +1224,7 @@ paths:
     post:
       tags:
         - tasks
-      summary: Create variable
+      summary: Create or update variables
       description: |
         Create or update a variable for the task **taskId**.
         If the variable does not exist yet, it will be created.      
@@ -1306,7 +1303,7 @@ paths:
     put:
       tags:
         - tasks
-      summary: Create a variable
+      summary: Create or update a variable
       description: |
         Creates or updates a specific variable **variableName** for a given task **taskId**.
       operationId: updateTaskVariable
@@ -1462,9 +1459,7 @@ paths:
           description: The nodeId of the item
           required: true
           schema:
-            properties:
-              id:
-                type: string
+            $ref: '#/definitions/ItemBody'
       responses:
         '201':
           description: Successful response
@@ -1912,6 +1907,13 @@ definitions:
         type: boolean
       bpm_workflowPriority:
         type: integer
+  ItemBody:
+    type: object
+    description: |
+      The **nodeId** of the item
+    properties:
+      id:
+        type: string
   ItemPaging:
     type: object
     properties:

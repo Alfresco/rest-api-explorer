@@ -38,7 +38,7 @@ tags:
   - name: preferences
     description: Retrieve and manage preferences
   - name: queries
-    description: Search for items in the repository
+    description: Find items in the repository
   - name: ratings
     description: Retrieve and manage ratings
   - name: renditions
@@ -561,7 +561,7 @@ paths:
         - ratings
       summary: Rate
       description: Rate the node with identifier **nodeId**
-      operationId: rate
+      operationId: rateNode
       produces:
         - application/json
       parameters:
@@ -674,7 +674,7 @@ paths:
     get:
       tags:
         - tags
-      summary: Get tags
+      summary: Get tags for a node
       description: Gets a list of tags for node **nodeId**.
       operationId: getTagsForNode
       produces:
@@ -706,7 +706,7 @@ paths:
     post:
       tags:
         - tags
-      summary: Create a tag
+      summary: Create a tag for a node
       description: |
         Creates a tag on the node **nodeId**. You specify the tag in a JSON body like this:
         
@@ -756,18 +756,18 @@ paths:
           }
         }
         ```
-      operationId: createTagToNode
+      operationId: createTagForNode
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: tagBody
+          name: tagBodyCreate
           description: The new tag
           required: true
           schema:
             required:
-              - tag          
+              - tag
             properties:
               tag:
                 type: string
@@ -778,7 +778,7 @@ paths:
             $ref: '#/definitions/TagEntry'
         '400':
           description: |
-            Invalid parameter: **tagBody** is invalid
+            Invalid parameter: **tagBodyCreate** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -796,7 +796,7 @@ paths:
     delete:
       tags:
         - tags
-      summary: Delete a tag
+      summary: Delete a tag from a node
       description: Deletes tag **tagId** from node **nodeId**.
       operationId: deleteTagFromNode
       produces:
@@ -1595,12 +1595,12 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - nodes
-      summary: Get file content
+      summary: Get node content
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Gets the file content of the node with identifier **nodeId**.
-      operationId: getFileContent
+        Gets the content of the node with identifier **nodeId**.
+      operationId: getNodeContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/attachmentParam'
@@ -1626,7 +1626,7 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - nodes
-      summary: Update file content
+      summary: Update node content
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
@@ -1643,7 +1643,7 @@ paths:
         **Note:** This API method accepts any content type, but for testing with this tool text based content can be provided.
         This is because the OpenAPI Specification does not allow a wildcard to be provided or the ability for
         tooling to accept an arbitrary file.
-      operationId: updateFileContent
+      operationId: updateNodeContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - name: majorVersion
@@ -1673,7 +1673,7 @@ paths:
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: contentBody
+          name: contentBodyUpdate
           description: The binary content
           required: true
           schema:
@@ -1731,7 +1731,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - in: body
-          name: renditionBody
+          name: renditionBodyCreate
           description: The rendition "id".
           required: true
           schema:
@@ -1746,7 +1746,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format or is not a file
-            or **renditionBody** is invalid
+            or **renditionBodyCreate** is invalid
         '401':
           description: Authentication failed          
         '403':
@@ -1928,13 +1928,13 @@ paths:
           }
         }
         ```
-      operationId: createSecondaryChildAssoc
+      operationId: createSecondaryChildAssocation
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeParentIdParam'
         - in: body
-          name: assocChildBody
+          name: assocChildBodyCreate
           description: The child node id and assoc type.
           required: true
           schema:
@@ -1947,7 +1947,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format,
-            or **assocChildBody** invalid
+            or **assocChildBodyCreate** invalid
         '401':
           description: Authentication failed          
         '404':
@@ -2017,7 +2017,7 @@ paths:
         If the association type is **not** specified, then all secondary child associations, of any type in the direction 
         from parent to secondary child, will be deleted. The child will still have a primary parent and may still be
         associated as a secondary child with other secondary parents.
-      operationId: deleteSecondaryChildAssoc
+      operationId: deleteSecondaryChildAssocation
       produces:
         - application/json
       parameters:
@@ -2150,13 +2150,13 @@ paths:
           }
         }
         ```
-      operationId: createAssoc
+      operationId: createAssocation
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeSourceIdParam'
         - in: body
-          name: assocTargetBody
+          name: assocTargetBodyCreate
           description: The target node id and assoc type.
           required: true
           schema:
@@ -2169,7 +2169,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format,
-            or **assocTargetBody** invalid
+            or **assocTargetBodyCreate** invalid
         '401':
           description: Authentication failed          
         '404':
@@ -2238,7 +2238,7 @@ paths:
         
         **Note:** After removal of the peer association, or associations, from source to target, the two nodes may still have peer associations
         in the other direction.
-      operationId: deleteAssoc
+      operationId: deleteAssocation
       produces:
         - application/json
       parameters:
@@ -2830,7 +2830,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: favoriteSiteBody
+          name: favoriteSiteBodyCreate
           description: The id of the site to favorite.
           required: true
           schema:
@@ -2856,7 +2856,7 @@ paths:
                     type: string
         '400':
           description: |
-            Invalid parameter: **favoriteSiteBody** is invalid
+            Invalid parameter: **favoriteSiteBodyCreate** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -3061,7 +3061,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: favoriteBody
+          name: favoriteBodyCreate
           description: |      
             An object identifying the entity to be favorited. 
             
@@ -3093,7 +3093,7 @@ paths:
             $ref: '#/definitions/FavoriteEntry'
         '400':
           description: |
-            Invalid parameter: **favoriteBody** invalid
+            Invalid parameter: **favoriteBodyCreate** invalid
         '401':
           description: Authentication failed
         '404':
@@ -3727,7 +3727,7 @@ paths:
           type: boolean
           default: false
         - in: body
-          name: siteBody
+          name: siteBodyCreate
           description: The site details
           required: true
           schema:
@@ -3757,7 +3757,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **id**, **title**, or **description** exceed the maximum length; 
-            or **id** contains invalid characters; or **siteBody** invalid
+            or **id** contains invalid characters; or **siteBodyCreate** invalid
         '401':
           description: Authentication failed
         '409':
@@ -3994,7 +3994,7 @@ paths:
       parameters:
         - $ref: '#/parameters/siteIdParam'
         - in: body
-          name: siteMemberBody
+          name: siteMemberBodyCreate
           description: The person to add and their role
           required: true
           schema:
@@ -4019,7 +4019,7 @@ paths:
         '400':
           description: |
             Invalid parameter: value of **role** or **id** is invalid
-            or **siteMemberBody** invalid
+            or **siteMemberBodyCreate** invalid
         '401':
           description: Authentication failed
         '403':
@@ -4085,7 +4085,7 @@ paths:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: siteMemberRoleBody
+          name: siteMemberRoleBodyUpdate
           description: The persons new role
           required: true
           schema:
@@ -4107,7 +4107,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **role** does not exist
-            or **siteMemberRoleBody** invalid
+            or **siteMemberRoleBodyUpdate** invalid
         '401':
           description: Authentication failed
         '404':
@@ -4211,7 +4211,7 @@ paths:
       parameters:
         - $ref: '#/parameters/tagIdParam'
         - in: body
-          name: tagBody
+          name: tagBodyUpdate
           description: The updated tag
           required: true
           schema:
@@ -4227,7 +4227,7 @@ paths:
             $ref: '#/definitions/TagEntry'
         '400':
           description: |
-            Invalid parameter: **tagBody** is invalid
+            Invalid parameter: **tagBodyUpdate** is invalid
         '401':
           description: Authentication failed         
         '404':
@@ -4319,7 +4319,7 @@ paths:
         - $ref: '#/parameters/sharedLinkEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: sharedLinkBody
+          name: sharedLinkBodyCreate
           description: The nodeId to create a shared link for.
           required: true
           schema:
@@ -4338,7 +4338,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or does not identify a file,
-            or **sharedLinkBody** invalid
+            or **sharedLinkBodyCreate** invalid
         '401':
           description: Authentication failed          
         '403':
@@ -4466,7 +4466,7 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - shared-links
-      summary: Get file content
+      summary: Get shared link content
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
