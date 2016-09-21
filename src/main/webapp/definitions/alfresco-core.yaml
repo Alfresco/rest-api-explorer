@@ -38,7 +38,7 @@ tags:
   - name: preferences
     description: Retrieve and manage preferences
   - name: queries
-    description: Find items in the repository
+    description: Find nodes, sites, and people using a simple search term
   - name: ratings
     description: Retrieve and manage ratings
   - name: renditions
