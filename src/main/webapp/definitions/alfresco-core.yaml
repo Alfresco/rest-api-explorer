@@ -3581,7 +3581,7 @@ paths:
       description: |
         Returns a list of sites in this repository.
         
-        The default sort order for the returned list is for sites to be sorted by ascending id.
+        The default sort order for the returned list is for sites to be sorted by ascending title.
         You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * id
         * title
