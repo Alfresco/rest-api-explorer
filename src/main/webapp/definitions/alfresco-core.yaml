@@ -4041,6 +4041,8 @@ paths:
           description: If authentication fails
         '404':
           description: If **siteId** or **personId** does not exist
+        '422':
+          description: Integrity exception (eg. last site member must be a site manager)          
         default:
           description: Unexpected error
           schema:
