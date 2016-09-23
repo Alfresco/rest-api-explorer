@@ -1071,7 +1071,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodePaging'
+            $ref: '#/definitions/NodeChildAssocPaging'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format or is not a folder
@@ -1289,11 +1289,11 @@ paths:
               secondaryChildren:
                 type: array
                 items:
-                  $ref: '#/definitions/AssocChild'
+                  $ref: '#/definitions/ChildAssociationBody'
               targets:
                 type: array
                 items:
-                  $ref: '#/definitions/AssocTarget'     
+                  $ref: '#/definitions/AssociationBody'
       consumes:
         - application/json
         - multipart/form-data
@@ -1934,20 +1934,20 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeParentIdParam'
         - in: body
-          name: assocChildBodyCreate
+          name: secondaryChildAssocBodyCreate
           description: The child node id and assoc type.
           required: true
           schema:
-            $ref: '#/definitions/AssocChild'
+            $ref: '#/definitions/ChildAssociationBody'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeChildAssocEntry'
+            $ref: '#/definitions/ChildAssociationEntry'
         '400':
           description: |
             Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format,
-            or **assocChildBodyCreate** invalid
+            or **secondaryChildAssocBodyCreate** invalid
         '401':
           description: Authentication failed          
         '404':
@@ -2156,20 +2156,20 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeSourceIdParam'
         - in: body
-          name: assocTargetBodyCreate
+          name: associationBodyCreate
           description: The target node id and assoc type.
           required: true
           schema:
-            $ref: '#/definitions/AssocTarget'
+            $ref: '#/definitions/AssociationBody'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeAssocEntry'
+            $ref: '#/definitions/AssociationEntry'
         '400':
           description: |
             Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format,
-            or **assocTargetBodyCreate** invalid
+            or **associationBodyCreate** invalid
         '401':
           description: Authentication failed          
         '404':
@@ -2843,17 +2843,7 @@ paths:
         '201':
           description: Successful response
           schema:
-            type: object
-            required:
-              - entry
-            properties:
-              entry:
-                type: object
-                required:
-                - id
-                properties:
-                  id:
-                    type: string
+            $ref: '#/definitions/FavoriteSiteEntry'
         '400':
           description: |
             Invalid parameter: **favoriteSiteBodyCreate** is invalid
@@ -4334,7 +4324,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeSharedLinkEntry'
+            $ref: '#/definitions/SharedLinkEntry'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or does not identify a file,
@@ -4383,7 +4373,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeSharedLinkPaging'
+            $ref: '#/definitions/SharedLinkPaging'
         '401':
           description: Authentication failed            
         '501':
@@ -4415,7 +4405,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeSharedLinkEntry'
+            $ref: '#/definitions/SharedLinkEntry'
         '400':
           description: |
             Invalid parameter: **sharedId** is not a valid format
@@ -5383,6 +5373,20 @@ definitions:
         description: The time the object was made a favorite.
       target:
         type: object
+  FavoriteSiteEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/FavoriteSite'
+  FavoriteSite:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
   ActivityPaging:
     type: object
     required:
@@ -5562,7 +5566,7 @@ definitions:
     properties:
       assocType:
         type: string
-  AssocTarget:
+  AssociationBody:
     type: object
     required:
     - targetId
@@ -5571,7 +5575,7 @@ definitions:
       targetId:
         type: string
       assocType:
-        type: string        
+        type: string
   ChildAssocInfo:
     type: object
     required:
@@ -5579,10 +5583,10 @@ definitions:
       - isPrimary
     properties:
       assocType:
-        type: string 
+        type: string
       isPrimary:
-        type: boolean  
-  AssocChild:
+        type: boolean
+  ChildAssociationBody:
     type: object
     required:
     - childId
@@ -5621,9 +5625,9 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeMinimalEntry'
+              $ref: '#/definitions/NodeEntry'
           source:
-            $ref: '#/definitions/NodeMinimal'
+            $ref: '#/definitions/Node'
   NodeAssocPaging:
     type: object
     properties:
@@ -5635,9 +5639,9 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeAssocMinimalEntry'
+              $ref: '#/definitions/NodeAssocEntry'
           source:
-            $ref: '#/definitions/NodeMinimal'
+            $ref: '#/definitions/Node'
   NodeChildAssocPaging:
     type: object
     properties:
@@ -5649,150 +5653,9 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeChildAssocMinimalEntry'
+              $ref: '#/definitions/NodeChildAssocEntry'
           source:
-            $ref: '#/definitions/NodeMinimal'                         
-  NodeMinimalEntry:
-    type: object
-    required:
-      - entry
-    properties:
-      entry:
-        $ref: '#/definitions/NodeMinimal'
-  NodeMinimal:
-    type: object
-    properties:
-      id:
-        type: string
-      parentId:
-        type: string
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      isLocked:
-        type: boolean
-        default: false
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
-      path:
-        $ref: '#/definitions/PathInfo'
-  NodeAssocMinimalEntry:
-    type: object
-    required:
-      - entry
-    properties:
-      entry:
-        $ref: '#/definitions/NodeAssocMinimal'        
-  NodeAssocMinimal:
-    type: object
-    required:
-      - id
-      - parentId
-      - name
-      - nodeType
-      - isFolder
-      - isFile
-      - modifiedAt
-      - modifiedByUser
-      - createdAt
-      - createdByUser
-      - association
-    properties:
-      id:
-        type: string
-      parentId:
-        type: string
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      isLocked:
-        type: boolean
-        default: false
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
-      association:
-        $ref: '#/definitions/AssocInfo' 
-  NodeChildAssocMinimalEntry:
-    type: object
-    required:
-      - entry
-    properties:
-      entry:
-        $ref: '#/definitions/NodeChildAssocMinimal'
-  NodeChildAssocMinimal:
-    type: object
-    properties:
-      id:
-        type: string
-      parentId:
-        type: string
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      isLocked:
-        type: boolean
-        default: false
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
-      association:
-        $ref: '#/definitions/ChildAssocInfo'                         
+            $ref: '#/definitions/Node'
   NodeAssocEntry:
     type: object
     required:
@@ -5801,6 +5664,34 @@ definitions:
       entry:
         $ref: '#/definitions/NodeAssoc'
   NodeAssoc:
+    allOf:
+      - $ref: '#/definitions/Node'
+      - type: object
+        properties:
+          association:
+            $ref: '#/definitions/AssocInfo'
+  NodeChildAssocEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeChildAssoc'
+  NodeChildAssoc:
+    allOf:
+      - $ref: '#/definitions/Node'
+      - type: object
+        properties:
+          association:
+            $ref: '#/definitions/ChildAssocInfo'
+  AssociationEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Association'
+  Association:
     type: object
     required:
       - targetId
@@ -5810,14 +5701,14 @@ definitions:
         type: string
       assocType:
         type: string
-  NodeChildAssocEntry:
+  ChildAssociationEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeChildAssoc'
-  NodeChildAssoc:
+        $ref: '#/definitions/ChildAssociation'
+  ChildAssociation:
     type: object
     required:
       - childId
@@ -5833,26 +5724,27 @@ definitions:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeFull'
-  NodeFull:
+        $ref: '#/definitions/Node'
+  Node:
     type: object
     required:
     - id
+    - name
     - nodeType
     - isFolder
     - isFile
     - createdAt
     - createdByUser
+    - modifiedAt
+    - modifiedByUser
     properties:
       id:
-        type: string
-      parentId:
         type: string
       name:
         type: string
         pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
         description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
           The character . must not be used at the end of the name.
       nodeType:
         type: string
@@ -5860,7 +5752,6 @@ definitions:
         type: boolean
       isFile:
         type: boolean
-        default: false
       isLocked:
         type: boolean
         default: false
@@ -5874,6 +5765,10 @@ definitions:
         format: date-time
       createdByUser:
         $ref: '#/definitions/UserInfo'
+      parentId:
+        type: string
+      isLink:
+        type: boolean
       content:
         $ref: '#/definitions/ContentInfo'
       aspectNames:
@@ -5886,7 +5781,9 @@ definitions:
         type: array
         items:
           type: string
-  NodeSharedLinkPaging:
+      path:
+        $ref: '#/definitions/PathInfo'
+  SharedLinkPaging:
     type: object
     required:
       - list
@@ -5902,15 +5799,15 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeSharedLinkEntry'
-  NodeSharedLinkEntry:
+              $ref: '#/definitions/SharedLinkEntry'
+  SharedLinkEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeSharedLink'
-  NodeSharedLink:
+        $ref: '#/definitions/SharedLink'
+  SharedLink:
     type: object
     properties:
       id:
@@ -5978,97 +5875,25 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/DeletedNodeMinimalEntry'
-  DeletedNodeMinimalEntry:
-    type: object
-    properties:
-      entry:
-        $ref: '#/definitions/DeletedNodeMinimal'
-  DeletedNodeMinimal:
-    type: object
-    properties:
-      id:
-        type: string
-      archivedByUser:
-        $ref: '#/definitions/UserInfo'
-      archivedAt:
-        type: string
-        format: date-time
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
+              $ref: '#/definitions/DeletedNodeEntry'
   DeletedNodeEntry:
     type: object
     properties:
       entry:
         $ref: '#/definitions/DeletedNode'
   DeletedNode:
-    type: object
-    properties:
-      id:
-        type: string
-      archivedByUser:
-        $ref: '#/definitions/UserInfo'
-      archivedAt:
-        type: string
-        format: date-time
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
-      aspectNames:
-        type: array
-        items:
-          type: string
-      properties:
-        type: object
-        additionalProperties:
-          type: string
-      allowableOperations:
-        type: array
-        items:
-          type: string
+    allOf:
+      - $ref: '#/definitions/Node'
+      - type: object
+        required:
+          - archivedByUser
+          - archivedAt
+        properties:
+          archivedByUser:
+            $ref: '#/definitions/UserInfo'
+          archivedAt:
+            type: string
+            format: date-time
   VersionNodesPaging:
     type: object
     properties:
@@ -6080,38 +5905,7 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/VersionNodeMinimalEntry'
-  VersionNodeMinimalEntry:
-    type: object
-    properties:
-      entry:
-        $ref: '#/definitions/VersionNodeMinimal'
-  VersionNodeMinimal:
-    type: object
-    properties:
-      id:
-        type: string
-      versionComment:
-        type: string        
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
+              $ref: '#/definitions/VersionNodeEntry'
   VersionNodeEntry:
     type: object
     properties:
@@ -6119,6 +5913,14 @@ definitions:
         $ref: '#/definitions/VersionNode'
   VersionNode:
     type: object
+    required:
+      - id
+      - name
+      - nodeType
+      - isFolder
+      - isFile
+      - modifiedAt
+      - modifiedByUser
     properties:
       id:
         type: string
