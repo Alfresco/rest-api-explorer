@@ -4094,7 +4094,7 @@ paths:
           description: |
             **siteId** or **personId** does not exist
         '422':
-          description: Integrity exception (eg. last site member must be a site manager)          
+          description: Integrity exception (eg. last site member must be a site manager) or not allowed to update member          
         default:
           description: Unexpected error
           schema:
@@ -4121,6 +4121,8 @@ paths:
         '404':
           description: |
             **siteId** or **personId** does not exist
+        '422':
+          description: Integrity exception (eg. last site member must be a site manager) or not allowed to delete member
         default:
           description: Unexpected error
           schema:
