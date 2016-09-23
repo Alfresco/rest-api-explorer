@@ -256,6 +256,7 @@ paths:
                   $ref: '#/definitions/RequestScope'
                 limits:
                   $ref: '#/definitions/RequestLimits'
+      operationId: search
       produces:
         - application/json
 
