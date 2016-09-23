@@ -2843,17 +2843,7 @@ paths:
         '201':
           description: Successful response
           schema:
-            type: object
-            required:
-              - entry
-            properties:
-              entry:
-                type: object
-                required:
-                - id
-                properties:
-                  id:
-                    type: string
+            $ref: '#/definitions/FavoriteSiteEntry'
         '400':
           description: |
             Invalid parameter: **favoriteSiteBodyCreate** is invalid
@@ -5383,6 +5373,20 @@ definitions:
         description: The time the object was made a favorite.
       target:
         type: object
+  FavoriteSiteEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/FavoriteSite'
+  FavoriteSite:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
   ActivityPaging:
     type: object
     required:
