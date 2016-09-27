@@ -41,15 +41,11 @@ paths:
       operationId: createTicket
       parameters:
         - in: body
-          name: loginRequest
+          name: ticketBodyCreate
           description: The user credential.
           required: true
           schema:
-            properties:
-              userId:
-                type: string
-              password:
-                type: string
+            $ref: '#/definitions/TicketBody'
       consumes:
         - application/json
       produces:
@@ -58,7 +54,7 @@ paths:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/LoginTicketEntry'
+            $ref: '#/definitions/TicketEntry'
         '400':
           description: |
             **userId** or **password** is not provided
@@ -90,7 +86,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/ValidateTicketEntry'
+            $ref: '#/definitions/ValidTicketEntry'
         '400':
           description: URL path does not include **-me-** or the ticket is not provided by the Authorization header
         '404':
@@ -147,21 +143,36 @@ definitions:
             type: string
           logId:
             type: string
-  LoginTicketEntry:
+  TicketBody:
     type: object
     properties:
-      entry:
-        type: object
-        properties:
-          id:
-            type: string
-          userId:
-            type: string
-  ValidateTicketEntry:
+      userId:
+        type: string
+      password:
+        type: string
+  TicketEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
-        type: object
-        properties:
-          id:
-            type: string
+        $ref: '#/definitions/Ticket'
+  Ticket:
+    type: object
+    properties:
+      id:
+        type: string
+      userId:
+        type: string
+  ValidTicketEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ValidTicket'
+  ValidTicket:
+    type: object
+    properties:
+      id:
+        type: string

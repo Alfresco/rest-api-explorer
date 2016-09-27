@@ -432,11 +432,7 @@ paths:
           description: The comment text. Note that you can also provide a list of comments.
           required: true
           schema:
-            required:
-              - content          
-            properties:
-              content:
-                type: string
+            $ref: '#/definitions/CommentBody'
       responses:
         '201':
           description: Successful response
@@ -476,11 +472,7 @@ paths:
           description: The JSON representing the comment to be updated.
           required: true
           schema:
-            required:
-              - content          
-            properties:
-              content:
-                type: string
+            $ref: '#/definitions/CommentBody'
       responses:
         '200':
           description: Successful response
@@ -573,28 +565,15 @@ paths:
 
             For example, to "like" a file the following body would be used:
 
-              ```JSON
-                {
-                  "id": "likes",
-                  "myRating": true
-                }
-              ```
+            ```JSON
+              {
+                "id": "likes",
+                "myRating": true
+              }
+            ```
           required: true
           schema:
-            required:
-              - id
-              - myRating
-            properties:
-              id:
-                type: string
-                description: The rating scheme type. Possible values are likes and fiveStar.
-                default: likes
-                enum:
-                  - likes
-                  - fiveStar
-              myRating:
-                type: string
-                description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar
+            $ref: '#/definitions/RatingBody'
       responses:
         '201':
           description: Successful response
@@ -766,11 +745,7 @@ paths:
           description: The new tag
           required: true
           schema:
-            required:
-              - tag
-            properties:
-              tag:
-                type: string
+            $ref: '#/definitions/TagBody'
       responses:
         '201':
           description: Successful response
@@ -895,23 +870,7 @@ paths:
           description: The node information to update.
           required: true
           schema:
-            properties:
-              name:
-                type: string
-                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-                description: |
-                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-                  The character . must not be used at the end of the name.
-              nodeType:
-                type: string
-              aspectNames:
-                type: array
-                items:
-                  type: string
-              properties:
-                type: object
-                additionalProperties:
-                  type: string
+            $ref: '#/definitions/NodeBodyUpdate'
       produces:
         - application/json
       responses:
@@ -1259,41 +1218,7 @@ paths:
           description: The node information to create.
           required: true
           schema:
-            required:
-              - name
-              - nodeType  
-            properties:
-              name:
-                type: string
-                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-                description: |
-                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-                  The character . must not be used at the end of the name.
-              nodeType:
-                type: string
-              aspectNames:
-                type: array
-                items:
-                  type: string
-              properties:
-                type: object
-                additionalProperties:
-                  type: string
-              relativePath:
-                type: string
-              association:
-                type: object
-                properties:
-                  assocType:
-                    type: string
-              secondaryChildren:
-                type: array
-                items:
-                  $ref: '#/definitions/ChildAssociationBody'
-              targets:
-                type: array
-                items:
-                  $ref: '#/definitions/AssociationBody'
+            $ref: '#/definitions/NodeBodyCreate'
       consumes:
         - application/json
         - multipart/form-data
@@ -1346,21 +1271,11 @@ paths:
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: copyBody
+          name: nodeBodyCopy
           description: The targetParentId and, optionally, a new name which should include the file extension.
           required: true
           schema:
-            required:
-              - targetParentId
-            properties:
-              targetParentId:
-                type: string
-              name:
-                type: string
-                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-                description: |
-                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-                  The character . must not be used at the end of the name.
+            $ref: '#/definitions/NodeBodyCopy'
       consumes:
         - application/json
       produces:
@@ -1372,7 +1287,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or **copyBody** is invalid
+            Invalid parameter: **nodeId** is not a valid format or **nodeBodyCopy** is invalid
         '401':
           description: Authentication failed          
         '403':
@@ -1428,26 +1343,11 @@ paths:
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: lockBody
+          name: nodeBodyLock
           description: Lock details.
           required: true
           schema:
-            properties:
-              timeToExpire:
-                type: integer
-                minimum: 0
-              type:
-                type: string
-                default: ALLOW_OWNER_CHANGES
-                enum:
-                 - ALLOW_OWNER_CHANGES
-                 - FULL
-              lifetime:
-                type: string
-                default: PERSISTENT
-                enum:
-                 - PERSISTENT
-                 - EPHEMERAL
+            $ref: '#/definitions/NodeBodyLock'
       consumes:
         - application/json
       produces:
@@ -1459,7 +1359,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or **lockBody** is invalid,
+            Invalid parameter: **nodeId** is not a valid format, or **nodeBodyLock** is invalid,
             or a lock was attempted on a node that is not a file
         '401':
           description: Authentication failed          
@@ -1547,21 +1447,11 @@ paths:
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: moveBody
+          name: nodeBodyMove
           description: The targetParentId and, optionally, a new name which should include the file extension.
           required: true
           schema:
-            required:
-              - targetParentId
-            properties:
-              targetParentId:
-                type: string
-              name:
-                type: string
-                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-                description: |
-                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-                  The character . must not be used at the end of the name.
+            $ref: '#/definitions/NodeBodyMove'
       consumes:
         - application/json
       produces:
@@ -1574,7 +1464,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or **targetParentId** is not a folder,
-            or **moveBody** is invalid
+            or **nodeBodyMove** is invalid
         '401':
           description: Authentication failed          
         '403':
@@ -1735,9 +1625,7 @@ paths:
           description: The rendition "id".
           required: true
           schema:
-            properties:
-              id:
-                type: string
+            $ref: '#/definitions/RenditionBodyCreate'
       consumes:
         - application/json
       responses:
@@ -2478,11 +2366,7 @@ paths:
           description: Optionally, specify a version comment and whether this should be a major version, or not.
           required: true
           schema:
-            properties:
-              majorVersion:
-                type: boolean
-              comment:
-                type: string
+            $ref: '#/definitions/RevertBody'
       responses:
         '200':
           description: Successful response
@@ -2834,11 +2718,7 @@ paths:
           description: The id of the site to favorite.
           required: true
           schema:
-            required:
-              - id
-            properties:
-              id:
-                type: string
+            $ref: '#/definitions/FavoriteSiteBodyCreate'
       responses:
         '201':
           description: Successful response
@@ -3071,11 +2951,7 @@ paths:
             ```
           required: true
           schema:
-            required:
-              - target
-            properties:
-               target:
-                  type: object
+            $ref: '#/definitions/FavoriteBodyCreate'
       responses:
         '201':
           description: Successful response
@@ -3391,19 +3267,11 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: siteMembershipBodyCreate
+          name: siteMembershipRequestBodyCreate
           description: Site membership request details
           required: true
           schema:
-            required:
-              - id
-            properties:
-              message:
-                type: string
-              id:
-                type: string
-              title:
-                type: string
+            $ref: '#/definitions/SiteMembershipRequestBodyCreate'
       responses:
         '201':
           description: Successful response
@@ -3412,7 +3280,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **id** is invalid, or the user is already invited,
-            or **siteMembershipBodyCreate** invalid
+            or **siteMembershipRequestBodyCreate** invalid
         '401':
           description: Authentication failed
         '404':
@@ -3469,13 +3337,11 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
         - in: body
-          name: siteMembershipBodyUpdate
+          name: siteMembershipRequestBodyUpdate
           description: The new message to display
           required: true
           schema:
-            properties:
-              message:
-                type: string
+            $ref: '#/definitions/SiteMembershipRequestBodyUpdate'
       responses:
         '200':
           description: Successful response
@@ -3484,7 +3350,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **id** is invalid
-            or **siteMembershipBodyUpdate** invalid
+            or **siteMembershipRequestBodyUpdate** invalid
         '401':
           description: Authentication failed
         '404':
@@ -3711,24 +3577,7 @@ paths:
           description: The site details
           required: true
           schema:
-            type: object
-            required:
-              - title
-              - visibility
-            properties:
-              id:
-                type: string
-              title:
-                type: string
-              description:
-                type: string
-              visibility:
-                type: string
-                default: PUBLIC
-                enum:
-                  - PUBLIC
-                  - PRIVATE
-                  - MODERATED
+            $ref: '#/definitions/SiteBodyCreate'
       responses:
         '201':
           description: Successful response
@@ -3968,29 +3817,17 @@ paths:
           }
         }
         ```
-      operationId: createSiteMember
+      operationId: createSiteMembership
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/siteIdParam'
         - in: body
-          name: siteMemberBodyCreate
+          name: siteMembershipBodyCreate
           description: The person to add and their role
           required: true
           schema:
-            required:
-              - role
-              - id
-            properties:
-              role:
-                type: string
-                enum:
-                - SiteConsumer
-                - SiteCollaborator
-                - SiteContributor
-                - SiteManager
-              id:
-                type: string
+            $ref: '#/definitions/SiteMembershipBodyCreate'
       responses:
         '201':
           description: Successful response
@@ -3999,7 +3836,7 @@ paths:
         '400':
           description: |
             Invalid parameter: value of **role** or **id** is invalid
-            or **siteMemberBodyCreate** invalid
+            or **siteMembershipBodyCreate** invalid
         '401':
           description: Authentication failed
         '403':
@@ -4065,20 +3902,11 @@ paths:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/personIdParam'
         - in: body
-          name: siteMemberRoleBodyUpdate
+          name: siteMembershipBodyUpdate
           description: The persons new role
           required: true
           schema:
-            required:
-              - role
-            properties:
-              role:
-                type: string
-                enum:
-                - SiteConsumer
-                - SiteCollaborator
-                - SiteContributor
-                - SiteManager
+            $ref: '#/definitions/SiteMembershipBodyUpdate'
       responses:
         '200':
           description: Successful response
@@ -4087,7 +3915,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **role** does not exist
-            or **siteMemberRoleBodyUpdate** invalid
+            or **siteMembershipBodyUpdate** invalid
         '401':
           description: Authentication failed
         '404':
@@ -4199,11 +4027,7 @@ paths:
           description: The updated tag
           required: true
           schema:
-            required:
-              - tag
-            properties:
-              tag:
-                type: string
+            $ref: '#/definitions/TagBody'
       responses:
         '200':
           description: Successful response
@@ -4307,9 +4131,7 @@ paths:
           description: The nodeId to create a shared link for.
           required: true
           schema:
-            properties:
-              nodeId:
-                type: string
+            $ref: '#/definitions/SharedLinkBodyCreate'
       consumes:
         - application/json
       produces:
@@ -4583,21 +4405,11 @@ paths:
       parameters:
         - $ref: '#/parameters/sharedIdParam'
         - in: body
-          name: emailSharedLinkBody
+          name: sharedLinkBodyEmail
           description: The shared link email to send.
           required: true
           schema:
-            properties:
-              client:
-                type: string
-              message:
-                type: string
-              locale:
-                type: string
-              recipientEmails:
-                type: array
-                items:
-                  type: string
+            $ref: '#/definitions/SharedLinkBodyEmail'
       consumes:
         - application/json
       responses:
@@ -4606,7 +4418,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **sharedId** is not a valid format
-            or **emailSharedLinkBody** invalid
+            or **sharedLinkBodyEmail** invalid
         '401':
           description: Authentication failed          
         '404':
@@ -4850,6 +4662,25 @@ definitions:
         description: |
           The value of the **maxItems** parameter used to generate this list,
           or if there was no **maxItems** parameter the default value is 100
+  SiteBodyCreate:
+    type: object
+    required:
+      - title
+      - visibility
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      visibility:
+        type: string
+        default: PUBLIC
+        enum:
+          - PUBLIC
+          - PRIVATE
+          - MODERATED
   SitePaging:
     type: object
     required:
@@ -4937,6 +4768,33 @@ definitions:
         type: string
       folderId:
         type: string
+  SiteMembershipBodyCreate:
+    type: object
+    required:
+      - role
+      - id
+    properties:
+      role:
+        type: string
+        enum:
+        - SiteConsumer
+        - SiteCollaborator
+        - SiteContributor
+        - SiteManager
+      id:
+        type: string
+  SiteMembershipBodyUpdate:
+    type: object
+    required:
+      - role
+    properties:
+      role:
+        type: string
+        enum:
+        - SiteConsumer
+        - SiteCollaborator
+        - SiteContributor
+        - SiteManager
   SiteMemberPaging:
     type: object
     required:
@@ -5108,6 +4966,13 @@ definitions:
         type: string
       email:
         type: string
+  CommentBody:
+    type: object
+    required:
+      - content
+    properties:
+      content:
+        type: string
   CommentPaging:
     type: object
     required:
@@ -5165,6 +5030,13 @@ definitions:
         type: boolean
       canDelete:
         type: boolean
+  TagBody:
+    type: object
+    required:
+      - tag
+    properties:
+      tag:
+        type: string
   TagPaging:
     type: object
     required:
@@ -5275,6 +5147,22 @@ definitions:
       usage:
         type: integer
         format: int64
+  RatingBody:
+    type: object
+    required:
+      - id
+      - myRating
+    properties:
+      id:
+        type: string
+        description: The rating scheme type. Possible values are likes and fiveStar.
+        default: likes
+        enum:
+          - likes
+          - fiveStar
+      myRating:
+        type: string
+        description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar
   RatingPaging:
     type: object
     required:
@@ -5326,6 +5214,13 @@ definitions:
       myRating:
         type: string
         description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar.
+  FavoriteBodyCreate:
+    type: object
+    required:
+      - target
+    properties:
+       target:
+          type: object
   FavoritePaging:
     type: object
     required:
@@ -5368,6 +5263,13 @@ definitions:
         description: The time the object was made a favorite.
       target:
         type: object
+  FavoriteSiteBodyCreate:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
   FavoriteSiteEntry:
     type: object
     required:
@@ -5489,6 +5391,22 @@ definitions:
       value:
         type: string        
         description: The value of the preference. Note that this can be of any JSON type.
+  SiteMembershipRequestBodyCreate:
+    type: object
+    required:
+      - id
+    properties:
+      message:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+  SiteMembershipRequestBodyUpdate:
+    type: object
+    properties:
+      message:
+        type: string
   SiteMembershipRequestPaging:
     type: object
     required:
@@ -5609,6 +5527,106 @@ definitions:
         type: string
       isComplete:
         type: boolean
+  NodeBodyCreate:
+    type: object
+    required:
+      - name
+      - nodeType
+    properties:
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+      nodeType:
+        type: string
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        additionalProperties:
+          type: string
+      relativePath:
+        type: string
+      association:
+        type: object
+        properties:
+          assocType:
+            type: string
+      secondaryChildren:
+        type: array
+        items:
+          $ref: '#/definitions/ChildAssociationBody'
+      targets:
+        type: array
+        items:
+          $ref: '#/definitions/AssociationBody'
+  NodeBodyUpdate:
+    type: object
+    properties:
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+      nodeType:
+        type: string
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        additionalProperties:
+          type: string
+  NodeBodyCopy:
+    type: object
+    required:
+      - targetParentId
+    properties:
+      targetParentId:
+        type: string
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+  NodeBodyMove:
+    type: object
+    required:
+      - targetParentId
+    properties:
+      targetParentId:
+        type: string
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+  NodeBodyLock:
+    type: object
+    properties:
+      timeToExpire:
+        type: integer
+        minimum: 0
+      type:
+        type: string
+        default: ALLOW_OWNER_CHANGES
+        enum:
+         - ALLOW_OWNER_CHANGES
+         - FULL
+      lifetime:
+        type: string
+        default: PERSISTENT
+        enum:
+         - PERSISTENT
+         - EPHEMERAL
   NodePaging:
     type: object
     properties:
@@ -5778,6 +5796,26 @@ definitions:
           type: string
       path:
         $ref: '#/definitions/PathInfo'
+  SharedLinkBodyCreate:
+    type: object
+    required:
+      - nodeId
+    properties:
+      nodeId:
+        type: string
+  SharedLinkBodyEmail:
+    type: object
+    properties:
+      client:
+        type: string
+      message:
+        type: string
+      locale:
+        type: string
+      recipientEmails:
+        type: array
+        items:
+          type: string
   SharedLinkPaging:
     type: object
     required:
@@ -5828,6 +5866,13 @@ definitions:
         type: array
         items:
           type: string
+  RenditionBodyCreate:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
   RenditionEntry:
     type: object
     required:
@@ -5889,6 +5934,13 @@ definitions:
           archivedAt:
             type: string
             format: date-time
+  RevertBody:
+    type: object
+    properties:
+      majorVersion:
+        type: boolean
+      comment:
+        type: string
   VersionNodesPaging:
     type: object
     properties:
