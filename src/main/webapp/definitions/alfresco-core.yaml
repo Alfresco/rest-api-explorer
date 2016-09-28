@@ -368,7 +368,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     post:
       tags:
         - comments
@@ -453,7 +453,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/comments/{commentId}':
     put:
       tags:
@@ -491,7 +491,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       tags:
         - comments
@@ -516,7 +516,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/ratings':
     get:
       tags:
@@ -547,7 +547,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     post:
       tags:
         - ratings
@@ -592,7 +592,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/ratings/{ratingId}':
     get:
       tags:
@@ -622,7 +622,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       tags:
         - ratings
@@ -648,7 +648,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/tags':
     get:
       tags:
@@ -681,7 +681,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     post:
       tags:
         - tags
@@ -766,7 +766,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/tags/{tagId}':
     delete:
       tags:
@@ -792,7 +792,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}':
     get:
       x-alfresco-since: "5.2"
@@ -833,7 +833,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     put:
       x-alfresco-since: "5.2"
       tags:
@@ -895,7 +895,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       x-alfresco-since: "5.2"
       tags:
@@ -949,7 +949,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/children':
     get:
       x-alfresco-since: "5.2"
@@ -1042,7 +1042,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     post:
       x-alfresco-since: "5.2"
       tags:
@@ -1250,7 +1250,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/copy':
     post:
       x-alfresco-since: "5.2"
@@ -1302,7 +1302,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/lock':
     post:
       x-alfresco-since: "5.2"
@@ -1375,7 +1375,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/unlock':
     post:
       x-alfresco-since: "5.2"
@@ -1422,7 +1422,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/move':
     post:
       x-alfresco-since: "5.2"
@@ -1479,7 +1479,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -1511,7 +1511,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     put:
       x-alfresco-since: "5.2"
       tags:
@@ -1599,7 +1599,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/renditions':
     post:
       x-alfresco-since: "5.2"
@@ -1649,7 +1649,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     get:
       x-alfresco-since: "5.2"
       tags:
@@ -1689,7 +1689,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/renditions/{renditionId}':
     get:
       x-alfresco-since: "5.2"
@@ -1720,7 +1720,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/renditions/{renditionId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -1762,7 +1762,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/secondary-children':
     post:
       x-alfresco-since: "5.2"
@@ -1847,7 +1847,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     get:
       x-alfresco-since: "5.2"
       tags:
@@ -1890,7 +1890,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/secondary-children/{childId}':
     delete:
       x-alfresco-since: "5.2"
@@ -1934,7 +1934,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'              
+            $ref: '#/definitions/Exception'              
   '/nodes/{nodeId}/parents':
     get:
       x-alfresco-since: "5.2"
@@ -1984,7 +1984,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'     
+            $ref: '#/definitions/Exception'     
   '/nodes/{nodeId}/targets':
     post:
       x-alfresco-since: "5.2"
@@ -2069,7 +2069,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     get:
       x-alfresco-since: "5.2"
       tags:
@@ -2109,7 +2109,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Exception'            
   '/nodes/{nodeId}/targets/{targetId}':
     delete:
       x-alfresco-since: "5.2"
@@ -2154,7 +2154,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/sources':
     get:
       x-alfresco-since: "5.2"
@@ -2195,7 +2195,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/versions':
     get:
       x-alfresco-since: "5.2"
@@ -2233,7 +2233,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'  
+            $ref: '#/definitions/Exception'  
   '/nodes/{nodeId}/versions/{versionId}':
     get:
       x-alfresco-since: "5.2"
@@ -2264,7 +2264,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'     
+            $ref: '#/definitions/Exception'     
     delete:
       x-alfresco-since: "5.2"
       tags:
@@ -2308,7 +2308,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'        
+            $ref: '#/definitions/Exception'        
   '/nodes/{nodeId}/versions/{versionId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -2341,7 +2341,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/nodes/{nodeId}/versions/{versionId}/revert':
     post:
       x-alfresco-since: "5.2"
@@ -2389,7 +2389,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'                                           
+            $ref: '#/definitions/Exception'                                           
   '/deleted-nodes':
     get:
       x-alfresco-since: "5.2"
@@ -2424,7 +2424,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/deleted-nodes/{nodeId}':
     get:
       x-alfresco-since: "5.2"
@@ -2459,7 +2459,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       x-alfresco-since: "5.2"
       tags:
@@ -2490,7 +2490,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/deleted-nodes/{nodeId}/restore':
     post:
       x-alfresco-since: "5.2"
@@ -2538,7 +2538,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}':
     get:
       tags:
@@ -2567,7 +2567,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/activities':
     get:
       tags:
@@ -2614,7 +2614,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/favorite-sites':
     get:
       deprecated: true
@@ -2654,7 +2654,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     post:
       deprecated: true
       tags:
@@ -2740,7 +2740,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/favorite-sites/{siteId}':
     get:
       deprecated: true
@@ -2776,7 +2776,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       deprecated: true
       tags:
@@ -2808,7 +2808,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/favorites':
     get:
       tags:
@@ -2867,7 +2867,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     post:
       tags:
         - favorites
@@ -2973,7 +2973,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/favorites/{favoriteId}':
     get:
       tags:
@@ -3003,7 +3003,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       tags:
         - favorites
@@ -3029,7 +3029,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/networks':
     get:
       tags:
@@ -3063,7 +3063,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/networks/{networkId}':
     get:
       tags:
@@ -3093,7 +3093,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/preferences':
     get:
       tags:
@@ -3132,7 +3132,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/preferences/{preferenceName}':
     get:
       tags:
@@ -3168,7 +3168,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/site-membership-requests':
     get:
       tags:
@@ -3202,7 +3202,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     post:
       tags:
         - sites
@@ -3289,7 +3289,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/site-membership-requests/{siteId}':
     get:
       tags:
@@ -3319,7 +3319,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     put:
       tags:
         - sites
@@ -3359,7 +3359,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       tags:
         - sites
@@ -3385,7 +3385,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/sites':
     get:
       tags:
@@ -3427,7 +3427,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/people/{personId}/sites/{siteId}':
     get:
       tags:
@@ -3456,7 +3456,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       tags:
         - sites
@@ -3482,7 +3482,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   /sites:
     get:
       tags:
@@ -3530,7 +3530,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     post:
       x-alfresco-since: "5.2"
       tags:
@@ -3594,7 +3594,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/sites/{siteId}':
     get:
       tags:
@@ -3634,7 +3634,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       x-alfresco-since: "5.2"
       tags:
@@ -3667,7 +3667,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Exception'            
   '/sites/{siteId}/containers':
     get:
       tags:
@@ -3698,7 +3698,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/sites/{siteId}/containers/{containerId}':
     get:
       tags:
@@ -3729,7 +3729,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/sites/{siteId}/members':
     get:
       tags:
@@ -3760,7 +3760,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     post:
       tags:
         - sites
@@ -3849,7 +3849,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/sites/{siteId}/members/{personId}':
     get:
       tags:
@@ -3879,7 +3879,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     put:
       tags:
         - sites
@@ -3926,7 +3926,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       tags:
         - sites
@@ -3954,7 +3954,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   /tags:
     get:
       tags:
@@ -3981,7 +3981,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/tags/{tagId}':
     get:
       tags:
@@ -4011,7 +4011,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     put:
       tags:
         - tags
@@ -4044,7 +4044,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/networks/{networkId}':
     get:
       tags:
@@ -4070,7 +4070,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/shared-links':
     post:
       x-alfresco-since: "5.2"
@@ -4159,7 +4159,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     get:
       x-alfresco-since: "5.2"
       tags:
@@ -4199,7 +4199,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/shared-links/{sharedId}':
     get:
       x-alfresco-since: "5.2"
@@ -4235,7 +4235,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       x-alfresco-since: "5.2"
       tags:
@@ -4268,7 +4268,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/shared-links/{sharedId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -4302,7 +4302,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/shared-links/{sharedId}/renditions':
     get:
       x-alfresco-since: "5.2"
@@ -4337,7 +4337,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'        
+            $ref: '#/definitions/Exception'        
   '/shared-links/{sharedId}/renditions/{renditionId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -4372,7 +4372,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/shared-links/{sharedId}/email':
     post:
       x-alfresco-since: "5.2"
@@ -4431,7 +4431,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/queries/nodes':
     get:
       x-alfresco-since: "5.2"
@@ -4502,7 +4502,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/queries/sites':
     get:
       x-alfresco-since: "5.2"
@@ -4549,7 +4549,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Exception'            
   '/queries/people':
     get:
       x-alfresco-since: "5.2"
@@ -4598,9 +4598,9 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
 definitions:
-  Error:
+  Exception:
     type: object
     required:
       - error

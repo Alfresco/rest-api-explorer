@@ -63,7 +63,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
   '/tickets/-me-':
     get:
       x-alfresco-since: "5.2"
@@ -94,7 +94,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
     delete:
       x-alfresco-since: "5.2"
       tags:
@@ -115,9 +115,9 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/Exception'
 definitions:
-  Error:
+  Exception:
     type: object
     required:
       - error
