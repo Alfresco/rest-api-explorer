@@ -139,7 +139,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/deployments/{deploymentId}':
     get:
       tags:
@@ -176,7 +176,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - deployments
@@ -202,7 +202,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   /process-definitions:
     get:
       tags:
@@ -238,7 +238,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/process-definitions/{processDefinitionId}':
     get:
       tags:
@@ -269,7 +269,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/process-definitions/{processDefinitionId}/image':
     get:
       tags:
@@ -302,7 +302,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/process-definitions/{processDefinitionId}/start-form-model':
     get:
       tags:
@@ -332,7 +332,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   /processes:
     get:
       tags:
@@ -373,7 +373,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
     post:
       tags:
         - processes
@@ -455,7 +455,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/processes/{processId}':
     get:
       tags:
@@ -492,7 +492,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - processes
@@ -513,7 +513,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/processes/{processId}/variables':
     get:
       tags:
@@ -555,7 +555,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
     post:
       tags:
         - processes
@@ -636,7 +636,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/processes/{processId}/variables/{variableName}':
     put:
       tags:
@@ -672,7 +672,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - processes
@@ -694,7 +694,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/processes/{processId}/items':
     get:
       tags:
@@ -736,7 +736,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
     post:
       tags:
         - processes
@@ -813,7 +813,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/processes/{processId}/items/{itemId}':
     delete:
       tags:
@@ -837,7 +837,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/processes/{processId}/tasks':
     get:
       tags:
@@ -880,7 +880,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   /tasks:
     get:
       tags:
@@ -919,7 +919,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}':
     get:
       tags:
@@ -956,7 +956,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
     put:
       tags:
         - tasks
@@ -1141,7 +1141,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}/task-form-model':
     get:
       tags:
@@ -1177,7 +1177,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}/variables':
     get:
       tags:
@@ -1220,7 +1220,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
     post:
       tags:
         - tasks
@@ -1298,7 +1298,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}/variables/{variableName}':
     put:
       tags:
@@ -1334,7 +1334,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - tasks
@@ -1357,7 +1357,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}/items':
     get:
       tags:
@@ -1399,7 +1399,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
     post:
       tags:
         - tasks
@@ -1476,7 +1476,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}/items/{itemId}':
     delete:
       tags:
@@ -1500,7 +1500,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
   '/tasks/{taskId}/candidates':
     get:
       tags:
@@ -1532,9 +1532,9 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Exception'
+            $ref: '#/definitions/Error'
 definitions:
-  Exception:
+  Error:
     type: object
     required:
       - error
