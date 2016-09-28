@@ -110,7 +110,7 @@ paths:
     get:
       tags:
         - deployments
-      summary: Get deployments
+      summary: List deployments
       description: |
         Gets a list of deployments.
 
@@ -119,7 +119,7 @@ paths:
 
         If networks are enabled, the network admin can only see the deployments
         in the given network.
-      operationId: getDeployments
+      operationId: listDeployments
       parameters:
         - $ref: "#/parameters/skipCountParam"
         - $ref: "#/parameters/maxItemsParam"
@@ -207,7 +207,7 @@ paths:
     get:
       tags:
         - process-definitions
-      summary: Get process definitions
+      summary: List process definitions
       description: |
         Gets a list of process definitions.
 
@@ -216,7 +216,7 @@ paths:
 
         If networks are enabled, the network admin can only see the deployments
         in the given network.
-      operationId: getProcessDefinitions
+      operationId: listProcessDefinitions
       parameters:
         - $ref: "#/parameters/skipCountParam"
         - $ref: "#/parameters/maxItemsParam"
@@ -337,7 +337,7 @@ paths:
     get:
       tags:
         - processes
-      summary: Get processes
+      summary: List processes
       description: |
         Gets a  list of processes.
 
@@ -351,7 +351,7 @@ paths:
 
         If networks are enabled, the network admin can only see the deployments
         in the given network.
-      operationId: getProcesses
+      operationId: listProcesses
       parameters:
         - $ref: "#/parameters/skipCountParam"
         - $ref: "#/parameters/maxItemsParam"
@@ -377,9 +377,9 @@ paths:
     post:
       tags:
         - processes
-      summary: Start a process
+      summary: Create a process
       description: |
-        Starts a new process.
+        Creates a new process.
 
         In non-network deployments, any authenticated user can start a new process for
         any process definition.
@@ -518,7 +518,7 @@ paths:
     get:
       tags:
         - processes
-      summary: Get variables
+      summary: List variables
       description: |
         Gets a list of variables for the process **processId**.
 
@@ -531,7 +531,7 @@ paths:
         perform all operations  on those variable. In network deployments,
         network administrators can see all variables in  their network and
         perform all operations on variables in their network.
-      operationId: getProcessVariables
+      operationId: listProcessVariables
       produces:
         - application/json
       parameters:
@@ -699,7 +699,7 @@ paths:
     get:
       tags:
         - processes
-      summary: Get items
+      summary: List items
       description: |
         Gets a list of items for the specified process **processId**.
 
@@ -712,7 +712,7 @@ paths:
         perform all operations  on those items. In network deployments,
         network administrators can see all items in their network and
         perform all operations on items in their network.
-      operationId: getProcessItems
+      operationId: listProcessItems
       produces:
         - application/json
       parameters:
@@ -842,7 +842,7 @@ paths:
     get:
       tags:
         - tasks
-      summary: Get tasks for a process
+      summary: List tasks for a process
       description: |
         Gets a list of tasks for the specified process **processId**.
 
@@ -855,7 +855,7 @@ paths:
         perform all operations  on those tasks. In network deployments,
         network administrators can see all tasks in their network and
         perform all operations on tasks in their network.
-      operationId: getTasksForProcess
+      operationId: listTasksForProcess
       produces:
         - application/json
       parameters:
@@ -885,7 +885,7 @@ paths:
     get:
       tags:
         - tasks
-      summary: Get all tasks
+      summary: List tasks
       description: |
         Gets a list of tasks visible to the authenticated user.
 
@@ -897,7 +897,7 @@ paths:
         perform all operations on tasks. In network deployments, network
         administrators can see all processes in their network and perform all
         operations on tasks in their network.
-      operationId: getTasks
+      operationId: listTasks
       parameters:
         - $ref: "#/parameters/skipCountParam"
         - $ref: "#/parameters/maxItemsParam"
@@ -1182,7 +1182,7 @@ paths:
     get:
       tags:
         - tasks
-      summary: Get variables
+      summary: List variables
       description: |
         Gets a list of variables for the specified task **taskId**.
 
@@ -1195,7 +1195,7 @@ paths:
         perform all operations  on those variable. In network deployments,
         network administrators can see all variables in  their network and
         perform all operations on variables in their network.
-      operationId: getTaskVariables
+      operationId: listTaskVariables
       produces:
         - application/json
       parameters:
@@ -1362,7 +1362,7 @@ paths:
     get:
       tags:
         - tasks
-      summary: Get items
+      summary: List items
       description: |
         Gets a list of items for the specified task **taskId**.
 
@@ -1375,7 +1375,7 @@ paths:
         perform all operations  on those items. In network deployments,
         network administrators can see all items in their network and
         perform all operations on items in their network.
-      operationId: getTaskItems
+      operationId: listTaskItems
       produces:
         - application/json
       parameters:
@@ -1505,10 +1505,10 @@ paths:
     get:
       tags:
         - tasks
-      summary: Get task candidates
+      summary: List task candidates
       description: |
         Gets a list of candidate users and groups for the specified task **taskId**.
-      operationId: getTaskCandidates
+      operationId: listTaskCandidates
       produces:
         - application/json
       parameters:
