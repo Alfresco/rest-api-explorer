@@ -2222,7 +2222,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/VersionNodesPaging'
+            $ref: '#/definitions/VersionPaging'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format            
@@ -2252,7 +2252,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/VersionNodeEntry'
+            $ref: '#/definitions/VersionEntry'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or it exists but does not identify a file, or **versionId** is invalid
@@ -2371,7 +2371,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/VersionNodeEntry'
+            $ref: '#/definitions/VersionEntry'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or it exists 
@@ -5943,7 +5943,7 @@ definitions:
         type: boolean
       comment:
         type: string
-  VersionNodesPaging:
+  VersionPaging:
     type: object
     properties:
       list:
@@ -5954,13 +5954,13 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/VersionNodeEntry'
-  VersionNodeEntry:
+              $ref: '#/definitions/VersionEntry'
+  VersionEntry:
     type: object
     properties:
       entry:
-        $ref: '#/definitions/VersionNode'
-  VersionNode:
+        $ref: '#/definitions/Version'
+  Version:
     type: object
     required:
       - id
