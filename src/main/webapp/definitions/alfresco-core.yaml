@@ -339,9 +339,9 @@ paths:
     get:
       tags:
         - comments
-      summary: Get comments
+      summary: List comments
       description: Gets a list of comments for the node **nodeId**, sorted chronologically with the newest comment first.
-      operationId: getComments
+      operationId: listComments
       produces:
         - application/json
       parameters:
@@ -521,9 +521,9 @@ paths:
     get:
       tags:
         - ratings
-      summary: Get ratings
+      summary: List ratings
       description: Gets a list of ratings for node **nodeId**.
-      operationId: getRatings
+      operationId: listRatings
       produces:
         - application/json
       parameters:
@@ -653,9 +653,9 @@ paths:
     get:
       tags:
         - tags
-      summary: Get tags for a node
+      summary: List tags for a node
       description: Gets a list of tags for node **nodeId**.
-      operationId: getTagsForNode
+      operationId: listTagsForNode
       produces:
         - application/json
       parameters:
@@ -955,7 +955,7 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - nodes
-      summary: Get node children
+      summary: List node children
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
@@ -987,7 +987,7 @@ paths:
         * createdAt
         * modifiedByUser
         * createdByUser
-      operationId: getNodeChildren
+      operationId: listNodeChildren
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/skipCountParam'
@@ -1654,7 +1654,7 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - renditions
-      summary: Get information for renditions
+      summary: List renditions
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
@@ -1669,7 +1669,7 @@ paths:
         (status=CREATED)
         ```
         
-      operationId: getRenditions
+      operationId: listRenditions
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/whereParam'
@@ -1852,12 +1852,12 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - nodes
-      summary: Get secondary children
+      summary: List secondary children
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Gets a list of secondary child nodes that are associated with the current parent **nodeId**, via a secondary child association.
-      operationId: getSecondaryChildAssociations
+      operationId: listSecondaryChildren
       produces:
         - application/json
       parameters:
@@ -1940,14 +1940,14 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - nodes
-      summary: Get parents
+      summary: List parents
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Gets a list of parent nodes that are associated with the current child **nodeId**.
         
         The list includes both the primary parent and any secondary parents.
-      operationId: getParents
+      operationId: listParents
       produces:
         - application/json
       parameters:
@@ -2074,12 +2074,12 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - nodes
-      summary: Get node associations
+      summary: List target associations
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Gets a list of target nodes that are associated with the current source **nodeId**.
-      operationId: getTargetAssociations
+      operationId: listTargetAssociations
       produces:
         - application/json
       parameters:
@@ -2160,12 +2160,12 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - nodes
-      summary: Get node associations
+      summary: List source associations
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Gets a list of source nodes that are associated with the current target **nodeId**.
-      operationId: getSourceNodeAssociations
+      operationId: listSourceAssociations
       produces:
         - application/json
       parameters:
@@ -2201,15 +2201,15 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - versions
-      summary: Get node version history
+      summary: List version history
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Gets the version history as an ordered list of version nodes for the specified **nodeId**.
+        Gets the version history as an ordered list of versions for the specified **nodeId**.
         
         The list is ordered in descending modified order. So the most recent version is first and 
         the original version is last in the list. 
-      operationId: getVersionHistory
+      operationId: listVersionHistory
       produces:
         - application/json
       parameters:
@@ -2269,11 +2269,11 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - versions
-      summary: Delete a version node
+      summary: Delete a version
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Delete the versioned node identified by **versionId** and **nodeId*.
+        Delete the version identified by **versionId** and **nodeId*.
         
         If the version is successfully deleted then the content and metadata for that versioned node
         will be deleted and will no longer appear in the version history. This operation cannot be undone.
@@ -2284,7 +2284,7 @@ paths:
         can remove the "cm:versionable" aspect (via update node) which will also disable versioning. In this
         case, you can re-enable versioning by adding back the "cm:versionable" aspect or using the version 
         params (majorVersion and comment) on a subsequent file content update.
-      operationId: deleteVersionNode
+      operationId: deleteVersion
       produces:
         - application/json
       parameters:
@@ -2347,15 +2347,15 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - versions
-      summary: Revert a version node
+      summary: Revert a version
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Attempts to revert the versioned node identified by **versionId** and **nodeId** to the live node.
+        Attempts to revert the version identified by **versionId** and **nodeId** to the live node.
         
         If the node is successfully reverted then the content and metadata for that versioned node
         will be promoted to the live node and a new version will appear in the version history.
-      operationId: revertVersionNode
+      operationId: revertVersion
       produces:
         - application/json
       parameters:
@@ -2395,7 +2395,7 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - trashcan
-      summary: Get deleted nodes
+      summary: List deleted nodes
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
@@ -2404,7 +2404,7 @@ paths:
         If the current user is an administrator deleted nodes for all users will be returned.
 
         The list of deleted nodes will be ordered with the most recently deleted node at the top of the list.
-      operationId: getDeletedNodes
+      operationId: listDeletedNodes
       produces:
         - application/json
       parameters:
@@ -2511,7 +2511,7 @@ paths:
         
         Also, any previously shared link will not be restored since it is deleted at the time 
         of delete of each node.
-      operationId: restoreNode
+      operationId: restoreDeletedNode
       produces:
         - application/json
       parameters:
@@ -2572,12 +2572,12 @@ paths:
     get:
       tags:
         - activities
-      summary: Get activities
+      summary: List activities
       description: |
         Gets a list of activities for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getActivities
+      operationId: listActivitiesForPerson
       produces:
         - application/json
       parameters:
@@ -2620,7 +2620,7 @@ paths:
       deprecated: true
       tags:
         - favorites
-      summary: Get favorite sites
+      summary: List favorite sites
       description: |
         **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
         Use `/people/{personId}/favorites` instead.
@@ -2628,7 +2628,7 @@ paths:
         Gets a list of a person's favorite sites.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getFavoriteSites
+      operationId: listFavoriteSitesForPerson
       produces:
         - application/json
       parameters:
@@ -2659,12 +2659,12 @@ paths:
       deprecated: true
       tags:
         - favorites
-      summary: Favorite a site
+      summary: Create a site favorite
       description: |
         **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
         Use `/people/{personId}/favorites` instead.
 
-        Add a favorite site for person **personId**.
+        Create a site favorite for person **personId**.
 
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
@@ -2708,7 +2708,7 @@ paths:
           }
         }
         ```
-      operationId: createFavoriteSite
+      operationId: createSiteFavorite
       produces:
         - application/json
       parameters:
@@ -2781,7 +2781,7 @@ paths:
       deprecated: true
       tags:
         - favorites
-      summary: Delete favorite site
+      summary: Delete a site favorite
       description: |
         **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
         Use `/people/{personId}/favorites/{favoriteId}` instead.
@@ -2789,7 +2789,7 @@ paths:
         Deletes site **siteId** from the favorite site list of person **personId**.
 
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: deleteFavoriteSite
+      operationId: deleteSiteFavorite
       produces:
         - application/json
       parameters:
@@ -2813,7 +2813,7 @@ paths:
     get:
       tags:
         - favorites
-      summary: Get favorites
+      summary: List favorites
       description: |
         Gets a list of favorites for person **personId**.
         
@@ -2842,7 +2842,7 @@ paths:
         ```SQL
         (EXISTS(target/file) OR EXISTS(target/folder))
         ```
-      operationId: getFavorites
+      operationId: listFavorites
       produces:
         - application/json
       parameters:
@@ -3034,12 +3034,12 @@ paths:
     get:
       tags:
         - networks
-      summary: Get network membership
+      summary: List network membership
       description: |
         Gets a list of network memberships for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getNetworksForPerson
+      operationId: listNetworksForPerson
       produces:
         - application/json
       parameters:
@@ -3098,7 +3098,7 @@ paths:
     get:
       tags:
         - preferences
-      summary: Get preferences
+      summary: List preferences
       description: |
         Gets a list of preferences for person **personId**.
         
@@ -3106,7 +3106,7 @@ paths:
         Note that each preference consists of an **id** and a **value**. 
 
         The **value** can be of any JSON type.
-      operationId: getPreferences
+      operationId: listPreferences
       produces:
         - application/json
       parameters:
@@ -3173,12 +3173,12 @@ paths:
     get:
       tags:
         - sites
-      summary: Get site membership requests
+      summary: List site membership requests
       description: |
         Gets a list of the current site membership requests for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getSiteMembershipRequestsForPerson
+      operationId: listSiteMembershipRequestsForPerson
       produces:
         - application/json
       parameters:
@@ -3390,7 +3390,7 @@ paths:
     get:
       tags:
         - sites
-      summary: Get site membership information
+      summary: List site memberships
       description: |
         Gets a list of site membership information for person **personId**.
         
@@ -3401,7 +3401,7 @@ paths:
         * id
         * title
         * role
-      operationId: getSiteMembershipsForPerson
+      operationId: listSiteMembershipsForPerson
       produces:
         - application/json
       parameters:
@@ -3432,7 +3432,7 @@ paths:
     get:
       tags:
         - sites
-      summary: Get site membership for a site
+      summary: Get a site membership
       description: |
         Gets site membership information for person **personId** on site **siteId**.
         
@@ -3460,7 +3460,7 @@ paths:
     delete:
       tags:
         - sites
-      summary: Delete a site member
+      summary: Delete a site membership
       description: |
         Deletes person **personId** as a member of site **siteId**.
         
@@ -3487,7 +3487,7 @@ paths:
     get:
       tags:
         - sites
-      summary: Get sites
+      summary: List sites
       description: |
         Gets a list of sites in this repository.
         
@@ -3508,7 +3508,7 @@ paths:
         ```
         containers,members
         ```
-      operationId: getSites
+      operationId: listSites
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
@@ -3672,9 +3672,9 @@ paths:
     get:
       tags:
         - sites
-      summary: Get containers
-      description: Gets a list of containers information for the site **siteId**.
-      operationId: getSiteContainers
+      summary: List site containers
+      description: Gets a list of containers for the site **siteId**.
+      operationId: listSiteContainers
       produces:
         - application/json
       parameters:
@@ -3703,7 +3703,7 @@ paths:
     get:
       tags:
         - sites
-      summary: Get a container
+      summary: Get a site container
       description: Gets information on the container **containerId** in site **siteId**.
       operationId: getSiteContainer
       produces:
@@ -3734,9 +3734,9 @@ paths:
     get:
       tags:
         - sites
-      summary: Get members
+      summary: List site memberships
       description: Gets a list of site memberships for site **siteId**.
-      operationId: getSiteMembers
+      operationId: listSiteMemberships
       produces:
         - application/json
       parameters:
@@ -3854,12 +3854,12 @@ paths:
     get:
       tags:
         - sites
-      summary: Get a site member
+      summary: Get a site membership
       description: |
         Gets site membership information for person **personId** on site **siteId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getSiteMember
+      operationId: getSiteMembership
       produces:
         - application/json
       parameters:
@@ -3883,7 +3883,7 @@ paths:
     put:
       tags:
         - sites
-      summary: Update a site member
+      summary: Update a site membership
       description: |
         Update the membership of person **personId** in site **siteId**.
         
@@ -3895,7 +3895,7 @@ paths:
         * SiteCollaborator
         * SiteContributor
         * SiteManager
-      operationId: updateSiteMember
+      operationId: updateSiteMembership
       produces:
         - application/json
       parameters:
@@ -3930,12 +3930,12 @@ paths:
     delete:
       tags:
         - sites
-      summary: Delete a site member
+      summary: Delete a site membership
       description: |
         Deletes person **personId** as a member of site **siteId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: deleteSiteMember
+      operationId: deleteSiteMembership
       produces:
         - application/json
       parameters:
@@ -3959,9 +3959,9 @@ paths:
     get:
       tags:
         - tags
-      summary: Get tags
+      summary: List tags
       description: Gets a list of tags in this repository.
-      operationId: getTags
+      operationId: listTags
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
@@ -4164,12 +4164,14 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - shared-links
-      summary: Get shared links
+      summary: List shared links
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Get a list of links that the current user has read permission on source node.
-      operationId: getSharedLinks
+
+        **Note:** The list of links is eventually consistent so newly created shared links may not appear immediately.
+      operationId: listSharedLinks
       parameters:
         - name: where
           in: query
@@ -4306,7 +4308,7 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - shared-links
-      summary: Get information for created renditions
+      summary: List renditions for a shared link
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
@@ -4316,7 +4318,7 @@ paths:
         where the rendition status is CREATED, which means the rendition is available to view/download.
         
         **Note:** No authentication is required to call this endpoint.      
-      operationId: getSharedLinkRenditions
+      operationId: listSharedLinkRenditions
       parameters:
         - $ref: '#/parameters/sharedIdParam'
       responses:
