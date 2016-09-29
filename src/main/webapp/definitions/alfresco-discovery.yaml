@@ -18,19 +18,19 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - discovery
-      summary: Retrieve repository information
+      summary: Get repository information
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Retrieves the capabilities and detailed version information from the repository.
-      operationId: discovery
+      operationId: getRepositoryInformation
       produces:
         - application/json
       responses:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/RepositoryInfo'
+            $ref: '#/definitions/DiscoveryEntry'
         default:
           description: Unexpected error
           schema:
@@ -181,3 +181,17 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ModuleInfo'
+  RepositoryEntry:
+    type: object
+    required:
+    - repository
+    properties:
+      repository:
+        $ref: '#/definitions/RepositoryInfo'
+  DiscoveryEntry:
+    type: object
+    required:
+    - entry
+    properties:
+      entry:
+        $ref: '#/definitions/RepositoryEntry'
