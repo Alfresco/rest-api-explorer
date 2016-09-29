@@ -3557,6 +3557,8 @@ paths:
         The addition of the site to the user's site favorites can be skipped via the **skipAddToFavorites** query parameter.
 
         The creator will be added as a member with Site Manager role.
+        
+        When you create a site, a container called **documentLibrary** is created for you in the new site.
 
       operationId: createSite
       produces:
