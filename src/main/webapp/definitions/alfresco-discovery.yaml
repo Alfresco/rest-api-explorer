@@ -116,9 +116,6 @@ definitions:
       isCryptodocEnabled:
         type: boolean
         default: false
-      transformationServerExpiresAt:
-        type: string
-        format: date-time
   LicenseInfo:
     type: object
     required:
