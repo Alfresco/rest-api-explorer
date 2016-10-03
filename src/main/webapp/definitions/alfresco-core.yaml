@@ -3558,7 +3558,8 @@ paths:
 
         The creator will be added as a member with Site Manager role.
         
-        When you create a site, a container called **documentLibrary** is created for you in the new site.
+        When you create a site, a container called **documentLibrary** is created for you in the new site. 
+        This container is the root folder for content stored in the site.
 
       operationId: createSite
       produces:
