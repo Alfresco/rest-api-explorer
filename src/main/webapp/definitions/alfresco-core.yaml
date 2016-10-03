@@ -2614,7 +2614,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/PeoplePaging'
+            $ref: '#/definitions/PersonPaging'
         '400':
           description: |
             Invalid parameter: value of **maxItems**, **skipCount**, **orderBy** or **where** is invalid
