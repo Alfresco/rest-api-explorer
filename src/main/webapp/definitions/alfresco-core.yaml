@@ -2539,6 +2539,91 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/people':
+    post:
+      x-alfresco-since: "5.2"
+      tags:
+        - people
+      summary: Create person
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Create a person.
+      operationId: createPerson
+      parameters:
+        - in: body
+          name: personBodyCreate
+          description: The person details.
+          required: true
+          schema:
+            $ref: '#/definitions/PersonBodyCreate'
+        - $ref: '#/parameters/fieldsParam'
+      consumes:
+        - application/json
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PersonEntry'
+        '400':
+          description: |
+            Invalid parameter: **personBodyCreate** is invalid
+        '401':
+          description: Authentication failed          
+        '403':
+          description: Current user does not have permission to create a person
+        '409':
+          description: Person within given *id* already exists
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      x-alfresco-since: "5.2"
+      tags:
+        - people
+      summary: List people
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
+        List people.
+
+        The default sort order for the returned list is for people to be sorted by ascending id.
+        You can override the default specify one or more fields in the **orderBy** parameter. For example:
+        * id
+        * firstName
+        * lastName
+        
+        You can use the **where** parameter to filter the returned people by a specified property. For example:
+        ```
+        (firstName='Fred')
+        (lastName MATCHES 'Smit*')
+        ```
+        Note: in both examples, the match is case-insensitive.
+        
+      operationId: listPeople
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - $ref: '#/parameters/fieldsParam'
+        - $ref: '#/parameters/whereParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PeoplePaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy** or **where** is invalid
+        '401':
+          description: Authentication failed
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}':
     get:
       tags:
@@ -2568,6 +2653,48 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "5.2"
+      tags:
+        - people
+      summary: Update person
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Update the given person's details.
+        
+        If applicable, the given person's login access can also be optionally disabled (or re-enabled), eg. by an admin.
+      operationId: updatePerson
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: personBodyUpdate
+          description: The person details.
+          required: true
+          schema:
+            $ref: '#/definitions/PersonBodyUpdate'
+      consumes:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PersonEntry'
+        '400':
+          description: |
+            Invalid parameter: the update request is invalid or **personId** is not a valid format or **personBodyUpdate** is invalid
+        '401':
+          description: Authentication failed          
+        '403':
+          description: Current user does not have permission to update a person
+        '404':
+          description: |
+            **personId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
   '/people/{personId}/activities':
     get:
       tags:
@@ -4886,6 +5013,90 @@ definitions:
           - SiteCollaborator
           - SiteContributor
           - SiteManager
+  PersonBodyCreate:
+    type: object
+    required:
+      - id
+      - firstName
+      - email
+      - enabled
+    properties:
+      id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      description:
+        type: string
+      avatarId:
+        type: string
+      email:
+        type: string
+      skypeId:
+        type: string
+      googleId:
+        type: string
+      instantMessageId:
+        type: string
+      jobTitle:
+        type: string
+      location:
+        type: string
+      company:
+        $ref: '#/definitions/Company'
+      mobile:
+        type: string
+      telephone:
+        type: string
+      statusUpdatedAt:
+        type: string
+        format: date-time
+      userStatus:
+        type: string
+      enabled:
+        type: boolean
+        default: true
+      emailNotificationsEnabled:
+        type: boolean        
+  PersonBodyUpdate:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      description:
+        type: string
+      avatarId:
+        type: string
+      email:
+        type: string
+      skypeId:
+        type: string
+      googleId:
+        type: string
+      instantMessageId:
+        type: string
+      jobTitle:
+        type: string
+      location:
+        type: string
+      company:
+        $ref: '#/definitions/Company'
+      mobile:
+        type: string
+      telephone:
+        type: string
+      statusUpdatedAt:
+        type: string
+        format: date-time
+      userStatus:
+        type: string
+      enabled:
+        type: boolean
+      emailNotificationsEnabled:
+        type: boolean   
   PersonPaging:
     type: object
     properties:
