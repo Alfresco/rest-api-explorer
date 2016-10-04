@@ -427,6 +427,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: commentBodyCreate
           description: The comment text. Note that you can also provide a list of comments.
@@ -558,6 +559,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: ratingBody
           description: |
@@ -740,6 +742,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: tagBodyCreate
           description: The new tag
@@ -1821,6 +1824,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeParentIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: secondaryChildAssocBodyCreate
           description: The child node id and assoc type.
@@ -2043,6 +2047,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeSourceIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: associationBodyCreate
           description: The target node id and assoc type.
@@ -2361,6 +2366,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
           name: revertBody
           description: Optionally, specify a version comment and whether this should be a major version, or not.
@@ -2516,6 +2522,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/fieldsParam'        
       responses:
         '200':
           description: Successful response
@@ -2551,13 +2558,13 @@ paths:
         Create a person.
       operationId: createPerson
       parameters:
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: personBodyCreate
           description: The person details.
           required: true
           schema:
             $ref: '#/definitions/PersonBodyCreate'
-        - $ref: '#/parameters/fieldsParam'
       consumes:
         - application/json
       responses:
@@ -2840,6 +2847,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
           name: favoriteSiteBodyCreate
           description: The id of the site to favorite.
@@ -3057,6 +3065,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
           name: favoriteBodyCreate
           description: |      
@@ -3393,6 +3402,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
           name: siteMembershipRequestBodyCreate
           description: Site membership request details
@@ -3463,6 +3473,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: siteMembershipRequestBodyUpdate
           description: The new message to display
@@ -3701,6 +3712,7 @@ paths:
           description: Flag to indicate whether the site should not be added to the user's site favorites.
           type: boolean
           default: false
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: siteBodyCreate
           description: The site details
@@ -3951,6 +3963,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
           name: siteMembershipBodyCreate
           description: The person to add and their role
@@ -4030,6 +4043,7 @@ paths:
       parameters:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
           name: siteMembershipBodyUpdate
           description: The persons new role
@@ -4151,6 +4165,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/tagIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
           name: tagBodyUpdate
           description: The updated tag
@@ -5029,8 +5044,6 @@ definitions:
         type: string
       description:
         type: string
-      avatarId:
-        type: string
       email:
         type: string
       skypeId:
@@ -5049,9 +5062,6 @@ definitions:
         type: string
       telephone:
         type: string
-      statusUpdatedAt:
-        type: string
-        format: date-time
       userStatus:
         type: string
       enabled:
@@ -5068,8 +5078,6 @@ definitions:
         type: string
       description:
         type: string
-      avatarId:
-        type: string
       email:
         type: string
       skypeId:
@@ -5088,9 +5096,6 @@ definitions:
         type: string
       telephone:
         type: string
-      statusUpdatedAt:
-        type: string
-        format: date-time
       userStatus:
         type: string
       enabled:
