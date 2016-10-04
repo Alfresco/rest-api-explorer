@@ -256,6 +256,8 @@ paths:
                   $ref: '#/definitions/RequestScope'
                 limits:
                   $ref: '#/definitions/RequestLimits'
+                highlight:
+                  $ref: '#/definitions/RequestHighlight'
       operationId: search
       produces:
         - application/json
@@ -489,6 +491,22 @@ definitions:
         description: The score for this row
         type: number
         format: float
+      highlight:
+        description: |
+          Highlight fragments if requested and available. A match can happen in any of the requested field.
+        type: array
+        items:
+          type: object
+          properties:
+            field:
+              description: The field where a match occured (one of the fields defined on the request)
+              type: string
+            snippets:
+              description: Any number of snippets for the specified field highlighting the matching text
+              type: array
+              items:
+                description: The highlighted fragment for the field.
+                type: string
   ## Standard definition
   UserInfo:
     type: object
@@ -741,11 +759,65 @@ definitions:
           description: The sort order. (The ordering of nulls is determined by the SOLR configuration)
           type: boolean
           default: false
+
   RequestSpellcheck:
     description: |
-      Request that highlight fragements to be added to result set rows
+      Request that spellcheck fragements to be added to result set rows
       The properties reflect SOLR spellcheck parameters.
     type: object
     properties:
       query:
         type: string
+
+  RequestHighlight:
+    description: |
+      Request that highlight fragements to be added to result set rows
+      The properties reflect SOLR highlighting parameters.
+    type: object
+    properties:
+      snippetCount:
+        description:  The maximum number of distinct highlight snippets tor eturn for each highlight field.
+        type: number
+      fragmentSize:
+        description: The character lenght of each snippet.
+        type: number
+      mergeContiguous:
+        description: If fragments over lap they can be  merged into one larger fragment
+        type: boolean
+      requireFieldMatch:
+        description: For a fragment to be shown does the query need to match the given field.
+        type: boolean
+      maxAnalyzedChars:
+        description: The number of characters to be considered for highlighting. Matches after this count will not be shown.
+        type: number
+      simplePre:
+        description: The string used to mark the start of a highlight in a fragment.
+        type: string
+      simplePost:
+        description: The string used to mark the end of a highlight in a fragment.
+        type: string
+      usePhraseHighlighter:
+        description: Should phrases be identified.
+        type: boolean
+      highlightMultiTerm:
+        description: Should multiple terms be identified.
+        type: boolean
+      fields:
+        description: The fields to highlight and and field specific configuration
+        type: array
+        items:
+          type: object
+          properties:
+            field:
+              description: The field to highlight with specific configuration properties for the field.
+              type: string
+            snippetCount:
+              type: number
+            fragmentSize:
+              type: number
+            mergeContiguous:
+             type: boolean
+            simplePre:
+              type: string
+            simplePost:
+              type: string
