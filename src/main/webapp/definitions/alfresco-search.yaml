@@ -762,7 +762,7 @@ definitions:
 
   RequestSpellcheck:
     description: |
-      Request that spellcheck fragements to be added to result set rows
+      Request that spellcheck fragments to be added to result set rows
       The properties reflect SOLR spellcheck parameters.
     type: object
     properties:
@@ -771,45 +771,39 @@ definitions:
 
   RequestHighlight:
     description: |
-      Request that highlight fragements to be added to result set rows
+      Request that highlight fragments to be added to result set rows
       The properties reflect SOLR highlighting parameters.
     type: object
     properties:
+      prefix:
+        description: The string used to mark the start of a highlight in a fragment.
+        type: string
+      postfix:
+        description: The string used to mark the end of a highlight in a fragment.
+        type: string
       snippetCount:
-        description:  The maximum number of distinct highlight snippets tor eturn for each highlight field.
+        description:  The maximum number of distinct highlight snippets to return for each highlight field.
         type: number
       fragmentSize:
-        description: The character lenght of each snippet.
+        description: The character length of each snippet.
+        type: number
+      maxAnalyzedChars:
+        description: The number of characters to be considered for highlighting. Matches after this count will not be shown.
         type: number
       mergeContiguous:
         description: If fragments over lap they can be  merged into one larger fragment
         type: boolean
-      requireFieldMatch:
-        description: For a fragment to be shown does the query need to match the given field.
-        type: boolean
-      maxAnalyzedChars:
-        description: The number of characters to be considered for highlighting. Matches after this count will not be shown.
-        type: number
-      simplePre:
-        description: The string used to mark the start of a highlight in a fragment.
-        type: string
-      simplePost:
-        description: The string used to mark the end of a highlight in a fragment.
-        type: string
       usePhraseHighlighter:
         description: Should phrases be identified.
         type: boolean
-      highlightMultiTerm:
-        description: Should multiple terms be identified.
-        type: boolean
       fields:
-        description: The fields to highlight and and field specific configuration
+        description: The fields to highlight and field specific configuration properties for each field
         type: array
         items:
           type: object
           properties:
             field:
-              description: The field to highlight with specific configuration properties for the field.
+              description: The name of the field to highlight.
               type: string
             snippetCount:
               type: number
@@ -817,7 +811,7 @@ definitions:
               type: number
             mergeContiguous:
              type: boolean
-            simplePre:
+            prefix:
               type: string
-            simplePost:
+            postfix:
               type: string
