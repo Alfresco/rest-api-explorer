@@ -3541,6 +3541,8 @@ paths:
 
         Creates a default site with the given details.  Unless explicitly specified, the site id will be generated
         from the site title. The site id must be unique and only contain alphanumeric and/or dash characters.
+        
+        Note: the id of a site cannot be updated once the site has been created.
 
         For example, to create a public site called "Marketing" the following body could be used:
         ```JSON
@@ -3638,6 +3640,50 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "5.2"
+      tags:
+        - sites
+      summary: Update a site
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Update the details for the given site **siteId**. Site Manager or otherwise a 
+        (site) admin can update title, description or visibility.
+        
+        Note: the id of a site cannot be updated once the site has been created.
+
+      operationId: updateSite
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: siteBodyUpdate
+          description: The site information to update.
+          required: true
+          schema:
+            $ref: '#/definitions/SiteBodyUpdate'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SiteEntry'
+        '400':
+          description: |
+            Invalid parameter: **siteBodyUpdate** invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to update the site that is visible to them.
+        '404':
+          description: |
+            **siteId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       x-alfresco-since: "5.2"
       tags:
@@ -3663,10 +3709,10 @@ paths:
         '401':
           description: Authentication failed          
         '403':
-          description: User does not have permission to delete the site that is visible to them.
+          description: Current user does not have permission to delete the site that is visible to them.
         '404':
           description: |
-            **siteId** does not exist or the user does not have permission to view the site.
+            **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -4739,6 +4785,19 @@ definitions:
           - SiteCollaborator
           - SiteContributor
           - SiteManager
+  SiteBodyUpdate:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      visibility:
+        type: string
+        enum:
+          - PRIVATE
+          - MODERATED
+          - PUBLIC
   SiteContainerPaging:
     type: object
     required:
