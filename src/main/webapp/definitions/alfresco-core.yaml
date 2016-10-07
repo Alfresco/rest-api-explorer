@@ -4772,6 +4772,44 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    put:
+      tags:
+        - groups
+      summary: Update group details
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+      
+        Update details (displayName) for group **groupId**.
+        
+        You must have admin rights to update a group.
+      operationId: updateGroup
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/groupIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: groupBodyUpdate
+          description: The group information to update.
+          required: true
+          schema:
+            $ref: '#/definitions/GroupBodyUpdate'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GroupEntry'
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to update a group             
+        '404':
+          description: |
+            **groupId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
     delete:
       tags:
         - groups
@@ -5448,7 +5486,14 @@ definitions:
       displayName:
         type: string
       parentGroupId:
-        type: string     
+        type: string 
+  GroupBodyUpdate:
+    type: object
+    required:
+      - displayName
+    properties:
+      displayName:
+        type: string            
   CommentBody:
     type: object
     required:
