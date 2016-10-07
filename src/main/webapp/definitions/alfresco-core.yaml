@@ -9,6 +9,7 @@ info:
     * The **id** of an entity of type **node** is the **NodeRef** with the `workspace://SpacesStore` prefix removed.
     * The **id** of an entity of type **site** is the site's short name.
     * The **id** for an entity of type **person** is the person's username.
+    * The **id** for an entity of type **group** is the group's short name.
   version: '1'
   title: Alfresco Core REST API
 basePath: /alfresco/api/-default-/public/alfresco/versions/1
@@ -35,6 +36,8 @@ tags:
     description: Retrieve and manage nodes
   - name: people
     description: Retrieve and manage people
+  - name: groups
+    description: Retrieve and manage groups
   - name: preferences
     description: Retrieve and manage preferences
   - name: queries
@@ -202,6 +205,18 @@ parameters:
     description: The identifier of a person.
     required: true
     type: string
+  groupIdParam:
+    name: groupId
+    in: path
+    description: The identifier of a group.
+    required: true
+    type: string
+  groupMemberIdParam:
+    name: groupMemberId
+    in: path
+    description: The identifier of a person or group.
+    required: true
+    type: string     
   siteIdParam:
     name: siteId
     in: path
@@ -3483,6 +3498,45 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/people/{personId}/groups':
+    get:
+      tags:
+        - groups
+      summary: List group memberships
+      description: |
+        Gets a list of group membership information for person **personId**.
+        
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+
+        The default sort order for the returned list is for groups to be sorted by ascending displayName.
+        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * id
+        * displayName
+      operationId: listGroupMembershipsForPerson
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GroupPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount** is invalid
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **personId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
   /sites:
     get:
       tags:
@@ -4601,6 +4655,344 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/groups':
+    get:
+      tags:
+        - groups
+      summary: List groups
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+      
+        Gets a list of groups. 
+        
+        You can use the **where** parameter to filter the returned groups by **isRoot**. For example, the following **where** 
+        clause will return just the root groups:
+          
+        ```
+        (isRoot=true)
+        ```
+        
+        The default sort order for the returned list is for groups to be sorted by ascending displayName.
+        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * id
+        * displayName
+      operationId: listGroups
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GroupPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **groupId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - groups
+      summary: Create a group
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
+        Create a group. 
+        
+        If the parent group is not specified then this will be a root group (with no
+        parents) otherwise the group will become a member of the specified parent group.
+        
+        You must have admin rights to create a group. 
+      operationId: addGroup
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: groupBodyCreate
+          description: The group to create.
+          required: true
+          schema:
+            $ref: '#/definitions/GroupBodyCreate'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GroupEntry'
+        '400':
+          description: |
+            Invalid parameter: invalid **groupBodyCreate**
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to create a group          
+        '404':
+          description: |
+            **parentGroupId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
+  '/groups/{groupId}':
+    get:
+      tags:
+        - groups
+      summary: Get group details
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+      
+        Get details for group **groupId**.
+      operationId: getGroup
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/groupIdParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GroupEntry'
+        '401':
+          description: Authentication failed        
+        '404':
+          description: |
+            **groupId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - groups
+      summary: Delete a group
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
+        Delete group **groupId**. This applies recursively to any hierarchy of group members.
+        
+        Removing a group member does not delete the person or sub-group itself.
+        
+        If a removed sub-group no longer has any parent groups then it becomes a root group.
+        
+        You must have admin rights to delete a group.
+      operationId: deleteGroup
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/groupIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to delete a group member
+        '404':
+          description: |
+            **groupId** or **groupMemberId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'                
+  '/groups/{groupId}/parents':
+    get:
+      tags:
+        - groups
+      summary: List parents of a group
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
+        Gets a list of parent groups for group **groupId**. A root group will have no parents.
+        
+        To list the groups that a person belongs, see "listGroupMembershipsForPerson".
+        
+        The default sort order for the returned list is for the parent groups to be sorted by ascending displayName.
+        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * id
+        * displayName
+      operationId: listGroupParents
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/groupIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GroupPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **groupId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
+  '/groups/{groupId}/members':
+    post:
+      tags:
+        - groups
+      summary: Add a group member
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
+        Add a group member (person or sub-group) to group **groupId**.
+        
+        If the added sub-group was previously a root group then it becomes a non-root 
+        group since it now has a parent.
+        
+        You must have admin rights to add a group member.
+      operationId: addGroupMember
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/groupIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: groupMemberBodyAdd
+          description: The group member to add (person or sub-group).
+          required: true
+          schema:
+            $ref: '#/definitions/GroupMemberBodyAdd'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GroupMemberEntry'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount** or **groupMemberBodyAdd** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to add a group member          
+        '404':
+          description: |
+            **groupId** or **groupMemberId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - groups
+      summary: List members of a group
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
+        Gets a list of members (persons or sub-groups) for group **groupId**.
+        
+        The default sort order for the returned list is for group members to be sorted by ascending displayName.
+        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * id
+        * displayName
+      operationId: listGroupMembers
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/groupIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GroupMemberPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **groupId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/groups/{groupId}/members/{groupMemberId}':
+    get:
+      tags:
+        - groups
+      summary: Get a group member
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
+        Get group member information for **groupMemberId** (person or sub-group) in group **groupId**.
+      operationId: getGroupMember
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/groupIdParam'
+        - $ref: '#/parameters/groupMemberIdParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GroupMemberEntry'
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            *groupId** or **groupMemberId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - groups
+      summary: Delete a group member
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
+        Delete group member **groupMemberId** (person or sub-group) from group **groupId**.
+        
+        Removing a group member does not delete the person or sub-group itself.
+        
+        If a removed sub-group no longer has any parent groups then it becomes a root group.
+        
+        You must have admin rights to delete a group member.
+      operationId: deleteGroupMember
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/groupIdParam'
+        - $ref: '#/parameters/groupMemberIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to delete a group member
+        '404':
+          description: |
+            **groupId** or **groupMemberId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
 definitions:
   Error:
     type: object
@@ -4970,6 +5362,93 @@ definitions:
         type: string
       email:
         type: string
+  GroupPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/GroupEntry'
+  GroupEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Group'
+  Group:
+    type: object
+    required:
+      - id
+      - displayName
+      - isRoot
+    properties:
+      id:
+        type: string
+      displayName:
+        type: string
+      isRoot:
+        type: boolean
+        default: true
+  GroupMemberPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/GroupMemberEntry'
+  GroupMemberEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/GroupMember'
+  GroupMember:
+    type: object
+    required:
+      - id
+      - displayName
+      - memberType
+    properties:
+      id:
+        type: string
+      displayName:
+        type: string
+      memberType:
+        type: string
+        enum:
+          - PERSON
+          - GROUP
+  GroupMemberBodyAdd:
+    type: object
+    required:
+      - groupMembmerId
+    properties:
+      groupMembmerId:
+        type: string
+  GroupBodyCreate:
+    type: object
+    required:
+      - id
+      - displayName
+    properties:
+      id:
+        type: string
+      displayName:
+        type: string
+      parentGroupId:
+        type: string     
   CommentBody:
     type: object
     required:
