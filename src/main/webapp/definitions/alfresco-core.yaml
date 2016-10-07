@@ -551,15 +551,15 @@ paths:
     post:
       tags:
         - ratings
-      summary: Rate
-      description: Rate the node with identifier **nodeId**
-      operationId: rateNode
+      summary: Create a rating
+      description: Create a rating for the node with identifier **nodeId**
+      operationId: createRating
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: ratingBody
+          name: ratingBodyCreate
           description: |
             For "myRating" the type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar.
 
@@ -581,7 +581,7 @@ paths:
             $ref: '#/definitions/RatingEntry'
         '400':
           description: |
-            Invalid parameter: **ratingBody** is invalid
+            Invalid parameter: **ratingBodyCreate** is invalid
         '401':
           description: Authentication failed
         '404':
@@ -1030,7 +1030,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeChildAssocPaging'
+            $ref: '#/definitions/NodeChildAssociationPaging'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, **nodeId** is not a folder or **orderBy** is invalid
@@ -1822,7 +1822,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeParentIdParam'
         - in: body
-          name: secondaryChildAssocBodyCreate
+          name: secondaryChildAssociationBodyCreate
           description: The child node id and assoc type.
           required: true
           schema:
@@ -1835,7 +1835,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format,
-            or **secondaryChildAssocBodyCreate** invalid
+            or **secondaryChildAssociationBodyCreate** invalid
         '401':
           description: Authentication failed          
         '404':
@@ -1879,7 +1879,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeChildAssocPaging'
+            $ref: '#/definitions/NodeChildAssociationPaging'
         '400':
           description: |
             Invalid parameter: **assocType** is unknown or the **nodeId** is not a valid format
@@ -1973,7 +1973,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeAssocPaging'
+            $ref: '#/definitions/NodeAssociationPaging'
         '400':
           description: |
             Invalid parameter: **assocType** is unknown or the **nodeId** is not a valid format
@@ -2098,7 +2098,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeAssocPaging'
+            $ref: '#/definitions/NodeAssociationPaging'
         '400':
           description: |
             Invalid parameter: **assocType** is unknown or the **nodeId** is not a valid format
@@ -2184,7 +2184,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeAssocPaging'
+            $ref: '#/definitions/NodeAssociationPaging'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format or **assocType** is unknown
@@ -2464,12 +2464,12 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - trashcan
-      summary: Purge a deleted node
+      summary: Permanently delete a deleted node
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Permanently deletes the deleted node **nodeId**.
-      operationId: purgeDeletedNode
+      operationId: deleteDeletedNode
       produces:
         - application/json
       parameters:
@@ -2483,7 +2483,7 @@ paths:
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to purge the deleted node
+          description: User does not have permission to permanently delete the deleted node
         '404':
           description: |
             **nodeId** does not exist
@@ -5536,7 +5536,7 @@ definitions:
         type: integer
       encoding:
         type: string
-  AssocInfo:
+  AssociationInfo:
     type: object
     required:
       - assocType
@@ -5553,7 +5553,7 @@ definitions:
         type: string
       assocType:
         type: string
-  ChildAssocInfo:
+  ChildAssociationInfo:
     type: object
     required:
       - assocType
@@ -5705,7 +5705,7 @@ definitions:
               $ref: '#/definitions/NodeEntry'
           source:
             $ref: '#/definitions/Node'
-  NodeAssocPaging:
+  NodeAssociationPaging:
     type: object
     properties:
       list:
@@ -5716,10 +5716,10 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeAssocEntry'
+              $ref: '#/definitions/NodeAssociationEntry'
           source:
             $ref: '#/definitions/Node'
-  NodeChildAssocPaging:
+  NodeChildAssociationPaging:
     type: object
     properties:
       list:
@@ -5730,37 +5730,37 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeChildAssocEntry'
+              $ref: '#/definitions/NodeChildAssociationEntry'
           source:
             $ref: '#/definitions/Node'
-  NodeAssocEntry:
+  NodeAssociationEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeAssoc'
-  NodeAssoc:
+        $ref: '#/definitions/NodeAssociation'
+  NodeAssociation:
     allOf:
       - $ref: '#/definitions/Node'
       - type: object
         properties:
           association:
-            $ref: '#/definitions/AssocInfo'
-  NodeChildAssocEntry:
+            $ref: '#/definitions/AssociationInfo'
+  NodeChildAssociationEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeChildAssoc'
-  NodeChildAssoc:
+        $ref: '#/definitions/NodeChildAssociation'
+  NodeChildAssociation:
     allOf:
       - $ref: '#/definitions/Node'
       - type: object
         properties:
           association:
-            $ref: '#/definitions/ChildAssocInfo'
+            $ref: '#/definitions/ChildAssociationInfo'
   AssociationEntry:
     type: object
     required:

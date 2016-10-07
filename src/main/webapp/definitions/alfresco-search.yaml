@@ -443,47 +443,16 @@ definitions:
     properties:
       ## Standard response structure
       entry:
-        $ref: '#/definitions/NodeFull'
-  ## Standard definition with Search added
-  NodeFull:
-    type: object
-    properties:
-      id:
-        type: string
-      parentId:
-        type: string
-      name:
-        type: string
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
-      search:
-        $ref: '#/definitions/SearchEntry'
-      aspectNames:
-        type: array
-        items:
-          type: string
-      properties:
-        type: object
-      allowableOperations:
-        type: array
-        items:
-          type: string
+        $ref: '#/definitions/ResultNode'
+
+  ResultNode:
+    allOf:
+      - $ref: '#/definitions/Node'
+      - type: object
+        properties:
+          search:
+            $ref: '#/definitions/SearchEntry'
+
   SearchEntry:
     type: object
     properties:
@@ -507,6 +476,67 @@ definitions:
               items:
                 description: The highlighted fragment for the field.
                 type: string
+
+  ## Standard definition
+  Node:
+    type: object
+    required:
+    - id
+    - name
+    - nodeType
+    - isFolder
+    - isFile
+    - createdAt
+    - createdByUser
+    - modifiedAt
+    - modifiedByUser
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      isLocked:
+        type: boolean
+        default: false
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser:
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+        format: date-time
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      parentId:
+        type: string
+      isLink:
+        type: boolean
+      content:
+        $ref: '#/definitions/ContentInfo'
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+      allowableOperations:
+        type: array
+        items:
+          type: string
+      path:
+        $ref: '#/definitions/PathInfo'
+
   ## Standard definition
   UserInfo:
     type: object
@@ -537,6 +567,29 @@ definitions:
         type: string
       mimeTypeGroup:
         type: string
+
+  ## Standard definition
+  PathElement:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+
+  ## Standard definition
+  PathInfo:
+    type: object
+    properties:
+      elements:
+        type: array
+        items:
+          $ref: '#/definitions/PathElement'
+      name:
+        type: string
+      isComplete:
+        type: boolean
+
   RequestDefaults:
     description: Common query defaults
     type: object
