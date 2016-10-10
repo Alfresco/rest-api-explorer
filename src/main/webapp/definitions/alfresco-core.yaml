@@ -3395,6 +3395,13 @@ paths:
         Gets a list of site membership information for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+        
+        You can use the **where** parameter to filter the returned sites by **visibility**. For example, any one of:
+        ```
+        (visibility=PRIVATE)
+        (visibility=PUBLIC)
+        (visibility=MODERATED)
+        ```
 
         The default sort order for the returned list is for sites to be sorted by ascending title.
         You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
@@ -3411,6 +3418,7 @@ paths:
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/relationsParam'
         - $ref: '#/parameters/fieldsParam'
+        - $ref: '#/parameters/whereParam'
       responses:
         '200':
           description: Successful response
@@ -3418,7 +3426,7 @@ paths:
             $ref: '#/definitions/SiteRolePaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
           description: Authentication failed
         '404':
@@ -3490,7 +3498,14 @@ paths:
       summary: List sites
       description: |
         Gets a list of sites in this repository.
-        
+
+        You can use the **where** parameter to filter the returned sites by **visibility**. For example, any one of:
+        ```
+        (visibility=PRIVATE)
+        (visibility=PUBLIC)
+        (visibility=MODERATED)
+        ```
+
         The default sort order for the returned list is for sites to be sorted by ascending title.
         You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * id
@@ -3515,6 +3530,7 @@ paths:
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/relationsParam'
         - $ref: '#/parameters/fieldsParam'
+        - $ref: '#/parameters/whereParam'
       produces:
         - application/json
       responses:
@@ -3524,7 +3540,7 @@ paths:
             $ref: '#/definitions/SitePaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
           description: Authentication failed
         default:
