@@ -157,10 +157,10 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-  workingCopyNodeIdParam:
-    name: workingCopyNodeId
+  workingCopyIdParam:
+    name: workingCopyId
     in: path
-    description: The identifier of a working copy node.
+    description: The transient identifier of a working copy node. Not accessible after checkin or cancel checkout.
     required: true
     type: string
   sharedIdParam:
@@ -989,8 +989,9 @@ paths:
         The list of child nodes includes primary children and secondary children, if there are any.
         
         You can use the **include** parameter (include=association) to return child association details 
-        for each child, including the **assocTyp**e and the **isPrimary** flag.
+        for each child, including the **assocType** and the **isPrimary** flag.
         
+        If a node is checked-out then the working copy is returned (rather than the original source node) if visible to the current user.
         
         The default sort order for the returned list is for folders to be sorted before files, and by ascending name
 
@@ -1009,6 +1010,7 @@ paths:
         * createdAt
         * modifiedByUser
         * createdByUser
+        
       operationId: getNodeChildren
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -1502,6 +1504,9 @@ paths:
         Checks out node **nodeId** and creates a working copy node.
 
         The node returned in the response represents the working copy.
+        
+        The id of the returned node is a transient **workingCopyId** which must be passed 
+        back to checkin or cancel checkout.
       operationId: checkout
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1533,7 +1538,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{workingCopyNodeId}/checkin':
+  '/nodes/{workingCopyId}/checkin':
     post:
       x-alfresco-since: "5.2"
       tags:
@@ -1542,7 +1547,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Checks in working copy node **workingCopyNodeId**.
+        Checks in working copy node **workingCopyId**.
 
         This API method supports file upload using multipart/form-data.
 
@@ -1575,9 +1580,11 @@ paths:
         ```
 
         A successful response contains a body that represents the state of the node after checkin.
+        
+        The id of the returned node is the original source node id. The working copy node (via **workingCopyId**) will no longer exist.
       operationId: checkin
       parameters:
-        - $ref: '#/parameters/workingCopyNodeIdParam'
+        - $ref: '#/parameters/workingCopyIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
@@ -1612,17 +1619,17 @@ paths:
           description: Authentication failed
         '403':
           description: |
-            Current user does not have permission to checkin **workingCopyNodeId**
+            Current user does not have permission to checkin **workingCopyId**
         '404':
           description: |
-            **workingCopyNodeId** does not exist
+            **workingCopyId** does not exist
         '422':
           description: Checkin is attempted on a node that is not a working copy or the node can not be checked in
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{workingCopyNodeId}/cancel-checkout':
+  '/nodes/{workingCopyId}/cancel-checkout':
     post:
       x-alfresco-since: "5.2"
       tags:
@@ -1631,12 +1638,14 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Cancels the checkout of working copy node **workingCopyNodeId**.
+        Cancels the checkout of working copy node **workingCopyId**.
 
         The response represents the latest state of the node that was originally checked out.
+        
+        The id of the returned node is the original source node id. The working copy node (via **workingCopyId**) will no longer exist.
       operationId: cancelCheckout
       parameters:
-        - $ref: '#/parameters/workingCopyNodeIdParam'
+        - $ref: '#/parameters/workingCopyIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       consumes:
@@ -1650,15 +1659,15 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **workingCopyNodeId** is not a valid format
+            Invalid parameter: **workingCopyId** is not a valid format
         '401':
           description: Authentication failed
         '403':
           description: |
-            Current user does not have permission to cancel the checkout of **workingCopyNodeId**
+            Current user does not have permission to cancel the checkout of **workingCopyId**
         '404':
           description: |
-            **workingCopyNodeId** does not exist
+            **workingCopyId** does not exist
         '422':
           description: Cancel checkout is attempted on a node that is not a working copy or the checkout can not be cancelled
         default:
@@ -4761,7 +4770,7 @@ paths:
       summary: Find people
       description: |
         Returns a list of people that match the given search criteria.
-        
+        workingCopyId
         The search term is used to look for matches against person id, firstname and lastname.
 
         The search term:
