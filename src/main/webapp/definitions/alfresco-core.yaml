@@ -155,6 +155,17 @@ parameters:
     items:
       type: string
     collectionFormat: csv
+  personMinimalEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the person. The following optional fields can be requested:
+      * properties
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv    
   sharedIdParam:
     name: sharedId
     in: path
@@ -966,7 +977,7 @@ paths:
 
         Minimal information for each child is returned by default.
 
-        You can use the **include** parameter to return addtional information.
+        You can use the **include** parameter to return additional information.
         
         The list of child nodes includes primary children and secondary children, if there are any.
         
@@ -2594,6 +2605,8 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
         
         List people.
+        
+        You can use the **include** parameter to return any additional information.
 
         The default sort order for the returned list is for people to be sorted by ascending id.
         You can override the default specify one or more fields in the **orderBy** parameter. For example:
@@ -2615,8 +2628,9 @@ paths:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
-        - $ref: '#/parameters/fieldsParam'
         - $ref: '#/parameters/whereParam'
+        - $ref: '#/parameters/personMinimalEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -5167,6 +5181,8 @@ definitions:
         default: true
       emailNotificationsEnabled:
         type: boolean
+      properties:
+        type: object  
   Company:
     type: object
     properties:
