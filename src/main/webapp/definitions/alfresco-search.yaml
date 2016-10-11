@@ -758,12 +758,18 @@ definitions:
               enum:
                 - ENUM
                 - FC
+            missing:
+              description: When true, count results that match the query but which have no facet value for the field (in addition to the Term-based constraints).
+              type: boolean
+              default: false
             limit:
               type: integer
             offset:
               type: integer
             mincount:
               type: integer
+              description:  The minimum count required for a facet field to be included in the response.
+              default: 1
             facetEnumCacheMinDf:
                type: integer
   RequestLimits:
