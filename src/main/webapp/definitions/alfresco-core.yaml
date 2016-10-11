@@ -4402,6 +4402,42 @@ paths:
         default:
           description: Unexpected error
           schema:
+            $ref: '#/definitions/Error'
+  '/shared-links/{sharedId}/renditions/{renditionId}':
+    get:
+      x-alfresco-since: "5.2"
+      tags:
+        - shared-links
+      summary: Get shared link rendition information
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets rendition information for the file with shared link identifier **sharedId**.
+        
+        This API method returns rendition information where the rendition status is CREATED, 
+        which means the rendition is available to view/download.
+        
+        **Note:** No authentication is required to call this endpoint.      
+      operationId: getSharedLinkRendition
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RenditionEntry'
+        '400':
+          description: |
+            Invalid parameter: **sharedId** is not a valid format, or **renditionId** is invalid
+        '404':
+          description: |
+            **sharedId**  or **renditionId** does not exist (ie. not CREATED)
+        '501':
+          description: Shared links are disabled for the system
+        default:
+          description: Unexpected error
+          schema:
             $ref: '#/definitions/Error'        
   '/shared-links/{sharedId}/renditions/{renditionId}/content':
     get:
