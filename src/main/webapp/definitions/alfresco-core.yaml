@@ -1267,7 +1267,7 @@ paths:
         If the source **nodeId** is a folder, then all of its children are also copied.
       operationId: copyNode
       parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
@@ -1443,7 +1443,7 @@ paths:
         The move will effectively change the primary parent.
       operationId: moveNode
       parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
@@ -1619,7 +1619,7 @@ paths:
         ```
       operationId: createRendition
       parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeIdParam'
         - in: body
           name: renditionBodyCreate
           description: The rendition "id".
