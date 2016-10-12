@@ -220,6 +220,57 @@ paths:
            ]
         },
         ```
+        An example query for **search highlighting** could look like this:
+        ```JSON
+        {
+          "query": {
+            "query": "description:workflow",
+            "userQuery":"workflow"
+          },
+          "highlight": {
+            "prefix": "¿",
+            "postfix": "?",
+            "mergeContiguous": true,
+            "fields": [
+              {
+                "field": "cm:title"
+              },
+              {
+                "field": "description",
+                "prefix": "(",
+                "postfix": ")"
+              }
+
+            ]
+          }
+        }
+        ```
+        The example above changes the highlighting prefix and postfix from the
+         default <em> for all fields to ¿? and just for the "description" field to ().
+         The hightlight information is added in each node entry response; here is
+         an example partial response:
+        ```
+        "entry": {
+                "createdAt": "2016-10-12T15:24:31.202+0000",
+                "isFolder": true,
+                "search": {
+                  "score": 1,
+                  "highlight": [
+                    {
+                      "field": "cm:title",
+                      "snippets": [
+                        "Customized ¿Workflow? Process Definitions"
+                      ]
+                    },
+                    {
+                      "field": "description",
+                      "snippets": [
+                        "Customized (Workflow) Process Definitions"
+                      ]
+                    }
+                  ]
+              },
+        ```
       parameters:
         - in: body
           name: queryBody
