@@ -4703,24 +4703,21 @@ paths:
     post:
       tags:
         - groups
-      summary: Create a group
+      summary: Create a root group
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
         
-        Create a group. 
+        Create a root group. 
         
-        If the parent group is not specified then this will be a root group (with no
-        parents) otherwise the group will become a member of the specified parent group.
-        
-        You must have admin rights to create a group. 
-      operationId: createGroup
+        You must have admin rights to create a root group. 
+      operationId: createRootGroup
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: groupBodyCreate
-          description: The group to create.
+          description: The root group to create.
           required: true
           schema:
             $ref: '#/definitions/GroupBodyCreate'
@@ -4735,10 +4732,10 @@ paths:
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to create a group          
-        '404':
+          description: User does not have permission to create a root group
+        '409':
           description: |
-            **parentGroupId** does not exist
+            **id** clashes with an existing group
         default:
           description: Unexpected error
           schema:
@@ -4898,6 +4895,14 @@ paths:
         If the added sub-group was previously a root group then it becomes a non-root 
         group since it now has a parent.
         
+        If the added sub-group does not exist then it will be created as a member, with specified
+        the **id** and **displayName**.
+        
+        It is an error to specify a **displayName** for a person or a sub-group that already exists.
+        
+        It is an error to specify an *id** that does not exist (unless creating a new sub-group
+        with a specified **displayName**).
+        
         You must have admin rights to create a group membership.
       operationId: createGroupMembership
       produces:
@@ -4925,7 +4930,10 @@ paths:
           description: User does not have permission to create a group membeship
         '404':
           description: |
-            **groupId** or **groupMemberId** does not exist
+            **groupId** or *id* (of a person) does not exist
+        '409':
+          description: |
+            **id** clashes with an existing group            
         default:
           description: Unexpected error
           schema:
@@ -5467,15 +5475,23 @@ definitions:
       memberType:
         type: string
         enum:
-          - PERSON
           - GROUP
+          - PERSON
   GroupMembershipBodyCreate:
     type: object
     required:
-      - groupMembmerId
+      - id
+      - memberType
     properties:
-      groupMembmerId:
+      id:
         type: string
+      displayName:
+        type: string
+      memberType:
+        type: string
+        enum:
+          - GROUP
+          - PERSON
   GroupBodyCreate:
     type: object
     required:
@@ -5486,8 +5502,6 @@ definitions:
         type: string
       displayName:
         type: string
-      parentGroupId:
-        type: string 
   GroupBodyUpdate:
     type: object
     required:
