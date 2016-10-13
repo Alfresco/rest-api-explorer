@@ -4713,7 +4713,7 @@ paths:
         parents) otherwise the group will become a member of the specified parent group.
         
         You must have admin rights to create a group. 
-      operationId: addGroup
+      operationId: createGroup
       produces:
         - application/json
       parameters:
@@ -4725,7 +4725,7 @@ paths:
           schema:
             $ref: '#/definitions/GroupBodyCreate'
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
             $ref: '#/definitions/GroupEntry'
@@ -4817,9 +4817,10 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
         
-        Delete group **groupId**. This applies recursively to any hierarchy of group members.
+        Delete group **groupId**. 
         
-        Removing a group member does not delete the person or sub-group itself.
+        This applies recursively to any hierarchy of group members. In this case, removing 
+        a group member does not delete the person or sub-group itself.
         
         If a removed sub-group no longer has any parent groups then it becomes a root group.
         
@@ -4888,40 +4889,40 @@ paths:
     post:
       tags:
         - groups
-      summary: Add a group member
+      summary: Create a group membership
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
         
-        Add a group member (person or sub-group) to group **groupId**.
+        Create a group membership (for a person or a sub-group) within a group **groupId**.
         
         If the added sub-group was previously a root group then it becomes a non-root 
         group since it now has a parent.
         
-        You must have admin rights to add a group member.
-      operationId: addGroupMember
+        You must have admin rights to create a group membership.
+      operationId: createGroupMembership
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/groupIdParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: groupMemberBodyAdd
-          description: The group member to add (person or sub-group).
+          name: groupMembershipBodyCreate
+          description: The group membership to add (person or sub-group).
           required: true
           schema:
-            $ref: '#/definitions/GroupMemberBodyAdd'
+            $ref: '#/definitions/GroupMembershipBodyCreate'
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
             $ref: '#/definitions/GroupMemberEntry'
         '400':
           description: |
-            Invalid parameter: value of **maxItems**, **skipCount** or **groupMemberBodyAdd** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount** or **groupMembershipBodyCreate** is invalid
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to add a group member          
+          description: User does not have permission to create a group membeship
         '404':
           description: |
             **groupId** or **groupMemberId** does not exist
@@ -4932,17 +4933,17 @@ paths:
     get:
       tags:
         - groups
-      summary: List members of a group
+      summary: List memberships of a group
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
         
-        Gets a list of members (persons or sub-groups) for group **groupId**.
+        Gets a list of memberships (persons or sub-groups) with a group **groupId**.
         
         The default sort order for the returned list is for group members to be sorted by ascending displayName.
         You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * id
         * displayName
-      operationId: listGroupMembers
+      operationId: listGroupMemberships
       produces:
         - application/json
       parameters:
@@ -5000,7 +5001,7 @@ paths:
     delete:
       tags:
         - groups
-      summary: Delete a group member
+      summary: Delete a group membership
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
         
@@ -5010,8 +5011,8 @@ paths:
         
         If a removed sub-group no longer has any parent groups then it becomes a root group.
         
-        You must have admin rights to delete a group member.
-      operationId: deleteGroupMember
+        You must have admin rights to delete a group membership.
+      operationId: deleteGroupMembership
       produces:
         - application/json
       parameters:
@@ -5023,7 +5024,7 @@ paths:
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to delete a group member
+          description: User does not have permission to delete a group membership
         '404':
           description: |
             **groupId** or **groupMemberId** does not exist
@@ -5468,7 +5469,7 @@ definitions:
         enum:
           - PERSON
           - GROUP
-  GroupMemberBodyAdd:
+  GroupMembershipBodyCreate:
     type: object
     required:
       - groupMembmerId
