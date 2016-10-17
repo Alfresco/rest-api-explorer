@@ -31,6 +31,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DiscoveryEntry'
+        '501':
+          description: Discovery is disabled for the system
         default:
           description: Unexpected error
           schema:
