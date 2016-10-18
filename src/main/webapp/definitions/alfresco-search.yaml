@@ -823,6 +823,13 @@ definitions:
               default: 1
             facetEnumCacheMinDf:
                type: integer
+            excludeFilters:
+              description: |
+                Filter Queries with tags listed here will not be included in facet counts.
+                This is used for multi-select facetting.
+              type: array
+              items:
+                type: string
   RequestLimits:
     description: Limit the time and resources used for query execution
     type: object
@@ -847,7 +854,11 @@ definitions:
             The filter query expression.
             For multi-select facets selected facets must be order together
           type: string
-
+        tags:
+          description: Tags used exclude the filters from facet evaluation for multi-select facet support
+          type: array
+          items:
+            type: string
   RequestSortDefinition:
     description: How to sort the rows? An array of sort specifications. The array order defines the ordering precedence.
     type: array
