@@ -3396,11 +3396,20 @@ paths:
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
-        You can use the **where** parameter to filter the returned sites by **visibility**. For example, any one of:
+        You can use the **where** parameter to filter the returned sites by **visibility** and site **preset**.
+
+        Example to filter by **visibility**, use any one of:
+
         ```
         (visibility=PRIVATE)
         (visibility=PUBLIC)
         (visibility=MODERATED)
+        ```
+
+        Example to filter by site **preset**:
+
+        ```
+        (preset=site-dashboard)
         ```
 
         The default sort order for the returned list is for sites to be sorted by ascending title.
@@ -3499,11 +3508,20 @@ paths:
       description: |
         Gets a list of sites in this repository.
 
-        You can use the **where** parameter to filter the returned sites by **visibility**. For example, any one of:
+        You can use the **where** parameter to filter the returned sites by **visibility** and site **preset**.
+
+        Example to filter by **visibility**, use any one of:
+
         ```
         (visibility=PRIVATE)
         (visibility=PUBLIC)
         (visibility=MODERATED)
+        ```
+
+        Example to filter by site **preset**:
+
+        ```
+        (preset=site-dashboard)
         ```
 
         The default sort order for the returned list is for sites to be sorted by ascending title.
@@ -4830,6 +4848,8 @@ definitions:
           - PRIVATE
           - MODERATED
           - PUBLIC
+      preset:
+        type: string
       role:
         type: string
         enum:
