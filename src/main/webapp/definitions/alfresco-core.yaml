@@ -862,7 +862,7 @@ paths:
         **Note:** Currently there is no optimistic locking for updates, so they are applied in "last one wins" order.
       operationId: updateNode
       parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
