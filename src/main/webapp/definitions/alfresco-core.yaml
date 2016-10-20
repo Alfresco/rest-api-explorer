@@ -3396,7 +3396,7 @@ paths:
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
-        You can use the **where** parameter to filter the returned sites by **visibility** and site **preset**.
+        You can use the **where** parameter to filter the returned sites by **visibility** or site **preset**.
 
         Example to filter by **visibility**, use any one of:
 
@@ -3508,7 +3508,7 @@ paths:
       description: |
         Gets a list of sites in this repository.
 
-        You can use the **where** parameter to filter the returned sites by **visibility** and site **preset**.
+        You can use the **where** parameter to filter the returned sites by **visibility** or site **preset**.
 
         Example to filter by **visibility**, use any one of:
 
