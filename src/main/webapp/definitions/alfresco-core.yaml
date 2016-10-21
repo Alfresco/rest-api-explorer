@@ -120,6 +120,7 @@ parameters:
       * isLocked
       * path
       * properties
+      * nodePermissions
     required: false
     type: array
     items:
@@ -150,6 +151,7 @@ parameters:
       * isLink
       * isLocked
       * path
+      * nodePermissions
     required: false
     type: array
     items:
@@ -803,6 +805,8 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Get information for node **nodeId**.
+        
+        You can use the **include** parameter to return additional information.
       operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -858,6 +862,22 @@ paths:
         }
         ```
         **Note:** if you want to add or remove aspects, then you must use **GET /nodes/{nodeId}** first to get the complete set of *aspectNames*.
+        
+        You can set/update direct permissions and disable (or re-enable) inherited permissions:
+        ```JSON
+        {
+          "nodePermissions":
+            {
+              "inherit":true,
+              "directPermissions":
+                [
+                  {"authorityId": "GROUP_special", "name": "Read", "accessStatus":"DENIED"},
+                  {"authorityId": "testuser", "name": "Contributor", "accessStatus":"ALLOWED"}
+                ]
+            }
+        }
+        ```
+        **Note:** if you want to add or remove diredct permissions, then you must use **GET /nodes/{nodeId}** first to get the complete set of *directPermissions*.
 
         **Note:** Currently there is no optimistic locking for updates, so they are applied in "last one wins" order.
       operationId: updateNode
@@ -963,7 +983,7 @@ paths:
 
         Minimal information for each child is returned by default.
 
-        You can use the **include** parameter to return addtional information.
+        You can use the **include** parameter to return additional information.
         
         The list of child nodes includes primary children and secondary children, if there are any.
         
@@ -5663,6 +5683,26 @@ definitions:
         type: string
       isComplete:
         type: boolean
+  PermissionElement:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+  PermissionsInfo:
+    type: object
+    properties:
+      inheritedPermissions:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionElement'
+      directPermissions:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionElement'    
+      inherit:
+        type: boolean        
   NodeBodyCreate:
     type: object
     required:
@@ -5932,6 +5972,8 @@ definitions:
           type: string
       path:
         $ref: '#/definitions/PathInfo'
+      nodePermissions:
+        $ref: '#/definitions/PermissionsInfo' 
   SharedLinkBodyCreate:
     type: object
     required:
