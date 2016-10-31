@@ -1680,7 +1680,7 @@ paths:
         clause will return just the CREATED renditions:
           
         ```
-        (status=CREATED)
+        (status='CREATED')
         ```
         
       operationId: listRenditions
@@ -3559,15 +3559,15 @@ paths:
         Example to filter by **visibility**, use any one of:
 
         ```
-        (visibility=PRIVATE)
-        (visibility=PUBLIC)
-        (visibility=MODERATED)
+        (visibility='PRIVATE')
+        (visibility='PUBLIC')
+        (visibility='MODERATED')
         ```
 
         Example to filter by site **preset**:
 
         ```
-        (preset=site-dashboard)
+        (preset='site-dashboard')
         ```
 
         The default sort order for the returned list is for sites to be sorted by ascending title.
@@ -3671,15 +3671,15 @@ paths:
         Example to filter by **visibility**, use any one of:
 
         ```
-        (visibility=PRIVATE)
-        (visibility=PUBLIC)
-        (visibility=MODERATED)
+        (visibility='PRIVATE')
+        (visibility='PUBLIC')
+        (visibility='MODERATED')
         ```
 
         Example to filter by site **preset**:
 
         ```
-        (preset=site-dashboard)
+        (preset='site-dashboard')
         ```
 
         The default sort order for the returned list is for sites to be sorted by ascending title.
