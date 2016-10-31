@@ -2567,6 +2567,10 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Create a person.
+        
+        If applicable, the given person's login access can also be optionally disabled.
+        
+        You must have admin rights to create a person.
       operationId: createPerson
       parameters:
         - $ref: '#/parameters/fieldsParam'
@@ -2684,7 +2688,9 @@ paths:
 
         Update the given person's details.
         
-        If applicable, the given person's login access can also be optionally disabled (or re-enabled), eg. by an admin.
+        If applicable, the given person's login access can also be optionally be disabled or re-enabled.
+        
+        You must have admin rights to update a person.
       operationId: updatePerson
       parameters:
         - $ref: '#/parameters/personIdParam'
@@ -5082,7 +5088,9 @@ definitions:
         type: boolean
         default: true
       emailNotificationsEnabled:
-        type: boolean        
+        type: boolean
+      password:
+        type: string
   PersonBodyUpdate:
     type: object
     properties:
@@ -5115,7 +5123,9 @@ definitions:
       enabled:
         type: boolean
       emailNotificationsEnabled:
-        type: boolean   
+        type: boolean
+      password:
+        type: string
   PersonPaging:
     type: object
     properties:
@@ -5181,8 +5191,6 @@ definitions:
         default: true
       emailNotificationsEnabled:
         type: boolean
-      properties:
-        type: object  
   Company:
     type: object
     properties:
