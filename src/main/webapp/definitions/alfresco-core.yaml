@@ -2617,14 +2617,6 @@ paths:
         * id
         * firstName
         * lastName
-        
-        You can use the **where** parameter to filter the returned people by a specified property. For example:
-        ```
-        (firstName='Fred')
-        (lastName MATCHES 'Smit*')
-        ```
-        Note: in both examples, the match is case-insensitive.
-        
       operationId: listPeople
       produces:
         - application/json
@@ -2632,7 +2624,6 @@ paths:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
-        - $ref: '#/parameters/whereParam'
         - $ref: '#/parameters/personMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
@@ -2642,7 +2633,7 @@ paths:
             $ref: '#/definitions/PersonPaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy** or **where** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
         '401':
           description: Authentication failed
         default:
@@ -5187,6 +5178,7 @@ definitions:
       - firstName
       - email
       - enabled
+      - password
     properties:
       id:
         type: string
