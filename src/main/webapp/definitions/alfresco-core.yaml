@@ -905,7 +905,7 @@ paths:
         '409':
           description: Updated name clashes with an existing node in the current parent folder
         '422':
-          description: Model integrity exception, including file name with invalid characters
+          description: Model integrity exception including a file name containing invalid characters
         default:
           description: Unexpected error
           schema:
@@ -1607,7 +1607,7 @@ paths:
         '413':
           description: Content exceeds individual file size limit (configured for network/system)          
         '422':
-          description: Model integrity exception, including file name with invalid characters
+          description: Model integrity exception including a file name containing invalid characters
         '507':
           description: Content exceeds overall storage quota limit configured for the network/system
         default:
@@ -2596,6 +2596,8 @@ paths:
           description: Current user does not have permission to create a person
         '409':
           description: Person within given *id* already exists
+        '422':
+          description: Model integrity exception          
         default:
           description: Unexpected error
           schema:
@@ -2709,6 +2711,8 @@ paths:
         '404':
           description: |
             **personId** does not exist
+        '422':
+          description: Model integrity exception            
         default:
           description: Unexpected error
           schema:
