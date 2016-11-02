@@ -464,6 +464,9 @@ definitions:
                   count:
                     description: The count for the bucket
                     type: number
+                  display:
+                    description: An optional field for additional display information
+                    type: object
       spellcheck:
         description: |
           Suggested corrections
