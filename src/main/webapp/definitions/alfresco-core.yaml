@@ -23,32 +23,36 @@ consumes:
 produces:
   - application/json
 tags:
-  - name: 5.2 changes
-    description: Endpoints added in the 5.2 release
-  - name: nodes
-    description: Retrieve and manage nodes
-  - name: renditions
-    description: Retrieve and manage file renditions
-  - name: shared-links
-    description: Retrieve and manage public shared links
+  - name: activities
+    description: Retrieve and manage activities
   - name: comments
     description: Retrieve and manage comments
   - name: favorites
     description: Retrieve and manage favorites
   - name: networks
     description: Retrieve and manage networks
+  - name: nodes
+    description: Retrieve and manage nodes
   - name: people
     description: Retrieve and manage people
+  - name: preferences
+    description: Retrieve and manage preferences
+  - name: queries
+    description: Find nodes, sites, and people using a simple search term
   - name: ratings
     description: Retrieve and manage ratings
+  - name: renditions
+    description: Retrieve and manage file renditions
+  - name: shared-links
+    description: Retrieve and manage public shared links
   - name: sites
     description: Retrieve and manage sites
   - name: tags
     description: Retrieve and manage tags
   - name: trashcan
     description: Retrieve and manage deleted nodes
-  - name: queries
-    description: Search for items in the repository
+  - name: versions
+    description: Retrieve and manage versions
 parameters:
   nodeIdParam:
     name: nodeId
@@ -151,6 +155,17 @@ parameters:
     items:
       type: string
     collectionFormat: csv
+  personMinimalEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the person. The following optional fields can be requested:
+      * properties
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv    
   sharedIdParam:
     name: sharedId
     in: path
@@ -335,9 +350,9 @@ paths:
     get:
       tags:
         - comments
-      summary: Get comments
-      description: Returns a list of comments for the node **nodeId**, sorted chronologically with the newest comment first.
-      operationId: getComments
+      summary: List comments
+      description: Gets a list of comments for the node **nodeId**, sorted chronologically with the newest comment first.
+      operationId: listComments
       produces:
         - application/json
       parameters:
@@ -352,14 +367,15 @@ paths:
             $ref: '#/definitions/CommentPaging'
         '400':
           description: |
-            Invalid parameter: Either the **nodeId** exists, but does not identify a file or a folder 
-            or the value of **maxItems** or **skipCount** is invalid
+            Invalid parameter: **nodeId** exists but does not identify a file or a folder, 
+            or the value of **maxItems** is invalid, or the value of **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission read comments on the node
+          description: User does not have permission read comments on the node
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -367,7 +383,7 @@ paths:
     post:
       tags:
         - comments
-      summary: Add a comment
+      summary: Create a comment
       description: |
         Creates a comment on node **nodeId**. You specify the comment in a JSON body like this:
         
@@ -417,21 +433,18 @@ paths:
           }
         }
         ```
-      operationId: addComment
+      operationId: createComment
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: commentBody
+          name: commentBodyCreate
           description: The comment text. Note that you can also provide a list of comments.
           required: true
           schema:
-            required:
-              - content          
-            properties:
-              content:
-                type: string
+            $ref: '#/definitions/CommentBody'
       responses:
         '201':
           description: Successful response
@@ -439,15 +452,16 @@ paths:
             $ref: '#/definitions/CommentEntry'
         '400':
           description: |
-            Invalid parameter: **commentBody** is invalid
+            Invalid parameter: **commentBodyCreate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to add a comment           
+          description: User does not have permission to create a comment           
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '405':
-          description: If it is not possible to comment on a node of this type
+          description: Cannot comment on a node of this type
         default:
           description: Unexpected error
           schema:
@@ -466,15 +480,11 @@ paths:
         - $ref: '#/parameters/commentIdParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: commentBody
+          name: commentBodyUpdate
           description: The JSON representing the comment to be updated.
           required: true
           schema:
-            required:
-              - content          
-            properties:
-              content:
-                type: string
+            $ref: '#/definitions/CommentBody'
       responses:
         '200':
           description: Successful response
@@ -482,13 +492,14 @@ paths:
             $ref: '#/definitions/CommentEntry'
         '400':
           description: |
-            Invalid parameter: **commentBody** is invalid
+            Invalid parameter: **commentBodyUpdate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to update a comment
+          description: User does not have permission to update a comment
         '404':
-          description: If **nodeId** or **commentId** does not exist
+          description: |
+            **nodeId** or **commentId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -497,8 +508,8 @@ paths:
       tags:
         - comments
       summary: Delete a comment
-      description: Removes the comment **commentId** from node **nodeId**.
-      operationId: removeComment
+      description: Deletes the comment **commentId** from node **nodeId**.
+      operationId: deleteComment
       produces:
         - application/json
       parameters:
@@ -508,11 +519,12 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to delete a comment
+          description: User does not have permission to delete a comment
         '404':
-          description: If **nodeId** or **commentId** does not exist
+          description: |
+            **nodeId** or **commentId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -521,9 +533,9 @@ paths:
     get:
       tags:
         - ratings
-      summary: Get ratings
-      description: Get the ratings for node **nodeId**.
-      operationId: getRatings
+      summary: List ratings
+      description: Gets a list of ratings for node **nodeId**.
+      operationId: listRatings
       produces:
         - application/json
       parameters:
@@ -540,9 +552,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -550,42 +563,30 @@ paths:
     post:
       tags:
         - ratings
-      summary: Rate
-      description: Rate the node with identifier **nodeId**
-      operationId: rate
+      summary: Create a rating
+      description: Create a rating for the node with identifier **nodeId**
+      operationId: createRating
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: ratingBody
+          name: ratingBodyCreate
           description: |
             For "myRating" the type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar.
 
             For example, to "like" a file the following body would be used:
 
-              ```JSON
-                {
-                  "id": "likes",
-                  "myRating": true
-                }
-              ```
+            ```JSON
+              {
+                "id": "likes",
+                "myRating": true
+              }
+            ```
           required: true
           schema:
-            required:
-              - id
-              - myRating
-            properties:
-              id:
-                type: string
-                description: The rating scheme type. Possible values are likes and fiveStar.
-                default: likes
-                enum:
-                  - likes
-                  - fiveStar
-              myRating:
-                type: string
-                description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar
+            $ref: '#/definitions/RatingBody'
       responses:
         '201':
           description: Successful response
@@ -593,13 +594,14 @@ paths:
             $ref: '#/definitions/RatingEntry'
         '400':
           description: |
-            Invalid parameter: **ratingBody** is invalid
+            Invalid parameter: **ratingBodyCreate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '405':
-          description: If is not possible to rate a node of this type
+          description: Cannot rate a node of this type
         default:
           description: Unexpected error
           schema:
@@ -626,9 +628,10 @@ paths:
           description: |
             Invalid parameter: unknown rating scheme specified
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -637,8 +640,8 @@ paths:
       tags:
         - ratings
       summary: Delete a rating
-      description: Removes rating **ratingId** from node **nodeId**.
-      operationId: removeRating
+      description: Deletes rating **ratingId** from node **nodeId**.
+      operationId: deleteRating
       produces:
         - application/json
       parameters:
@@ -651,9 +654,10 @@ paths:
           description: |
             Invalid parameter: unknown rating scheme specified
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -662,9 +666,9 @@ paths:
     get:
       tags:
         - tags
-      summary: Get tags
-      description: Returns a list of tags for node **nodeId**.
-      operationId: getNodeTags
+      summary: List tags for a node
+      description: Gets a list of tags for node **nodeId**.
+      operationId: listTagsForNode
       produces:
         - application/json
       parameters:
@@ -681,11 +685,12 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to read tags on the node            
+          description: User does not have permission to read tags on the node            
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -693,9 +698,9 @@ paths:
     post:
       tags:
         - tags
-      summary: Add a tag
+      summary: Create a tag for a node
       description: |
-        Adds a tag to the node **nodeId**. You specify the tag in a JSON body like this:
+        Creates a tag on the node **nodeId**. You specify the tag in a JSON body like this:
         
         ```JSON
         {
@@ -743,21 +748,18 @@ paths:
           }
         }
         ```
-      operationId: addTag
+      operationId: createTagForNode
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: tagBody
+          name: tagBodyCreate
           description: The new tag
           required: true
           schema:
-            required:
-              - tag          
-            properties:
-              tag:
-                type: string
+            $ref: '#/definitions/TagBody'
       responses:
         '201':
           description: Successful response
@@ -765,15 +767,16 @@ paths:
             $ref: '#/definitions/TagEntry'
         '400':
           description: |
-            Invalid parameter: **tagBody** is invalid
+            Invalid parameter: **tagBodyCreate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to add tags on the node                      
+          description: User does not have permission to create tags on the node                      
         '404':
-          description: If **nodeId** does not exist       
+          description: |
+            **nodeId** does not exist       
         '405':
-          description: If not possible to tag a node of this type 
+          description: Cannot tag a node of this type 
         default:
           description: Unexpected error
           schema:
@@ -782,9 +785,9 @@ paths:
     delete:
       tags:
         - tags
-      summary: Delete a tag
-      description: Removes tag **tagId** from node **nodeId**.
-      operationId: removeTag
+      summary: Delete a tag from a node
+      description: Deletes tag **tagId** from node **nodeId**.
+      operationId: deleteTagFromNode
       produces:
         - application/json
       parameters:
@@ -794,22 +797,26 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to delete the tag
+          description: User does not have permission to delete the tag
         '404':
-          description: If **nodeId** or **tagId** does not exist
+          description: |
+            **nodeId** or **tagId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Get a node
-      description: Get information for node **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Get information for node **nodeId**.
       operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -833,19 +840,22 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Update a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Updates the node **nodeId**. For example, you can rename a file or folder:
         ```JSON
         {
@@ -866,31 +876,15 @@ paths:
         **Note:** Currently there is no optimistic locking for updates, so they are applied in "last one wins" order.
       operationId: updateNode
       parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: nodeBody
+          name: nodeBodyUpdate
           description: The node information to update.
           required: true
           schema:
-            properties:
-              name:
-                type: string
-                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-                description: |
-                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-                  The character . must not be used at the end of the name.
-              nodeType:
-                type: string
-              aspectNames:
-                type: array
-                items:
-                  type: string
-              properties:
-                type: object
-                additionalProperties:
-                  type: string
+            $ref: '#/definitions/NodeBodyUpdate'
       produces:
         - application/json
       responses:
@@ -900,32 +894,37 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBody** is invalid
+            Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBodyUpdate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If current user does not have permission to update **nodeId**
+          description: Current user does not have permission to update **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If the updated name clashes with an existing node in the current parent folder
+          description: Updated name clashes with an existing node in the current parent folder
         '422':
-          description: Model integrity exception, including file name with invalid characters
+          description: Model integrity exception including a file name containing invalid characters
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Delete a node
       description: |
+         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
          Deletes the node **nodeId**.
+
          If **nodeId** is a folder, then its children are also deleted.
+
          Deleted nodes move to the trashcan unless the **permanent** query parameter is **true** and the current user is the owner of the node or an admin.
          
-         Deleting a node removes it from its primary parent and also from any secondary parents. Peer associations are also removed, where the deleted 
+         Deleting a node deletes it from its primary parent and also from any secondary parents. Peer associations are also deleted, where the deleted 
          node is either a source or target of an association. This applies recursively to any hierarchy of primary children of the deleted node. 
          
          **Note:** If the node is not permanently deleted, and is later successfully restored to its former primary parent, then the primary 
@@ -952,38 +951,43 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the current user does not have permission to delete **nodeId**
+          description: Current user does not have permission to delete **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If **nodeId** is locked and cannot be deleted
+          description: |
+            **nodeId** is locked and cannot be deleted
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/children':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
-      summary: Get node children
+      summary: List node children
       description: |
-        Returns the children of the parent node **nodeId**.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of children of the parent node **nodeId**.
+
         Minimal information for each child is returned by default.
-        You can use the **include** parameter to return addtional information.
+
+        You can use the **include** parameter to return additional information.
         
         The list of child nodes includes primary children and secondary children, if there are any.
         
         You can use the **include** parameter (include=association) to return child association details 
         for each child, including the **assocTyp**e and the **isPrimary** flag.
         
-        
         The default sort order for the returned list is for folders to be sorted before files, and by ascending name
 
         You can override the default using **orderBy** to specify one or more fields to sort by. The default order is always ascending, but
-        you can use an optional *ASC** or **DESC** modifier to specfiy an ascending or descending sort order. 
+        you can use an optional *ASC** or **DESC** modifier to specify an ascending or descending sort order. 
             
         For example, specifying ```orderBy=name DESC``` returns a mixed folder/file list in descending **name** order.
 
@@ -997,7 +1001,7 @@ paths:
         * createdAt
         * modifiedByUser
         * createdByUser
-      operationId: getNodeChildren
+      operationId: listNodeChildren
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - $ref: '#/parameters/skipCountParam'
@@ -1040,25 +1044,28 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodePaging'
+            $ref: '#/definitions/NodeChildAssociationPaging'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or is not a folder
+            Invalid parameter: **nodeId** is not a valid format, **nodeId** is not a folder or **orderBy** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
-      summary: Add a node
+      summary: Create a node
       description: |
-        Add a node as a primary child of node **nodeId**.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Create a node and add it as a primary child of node **nodeId**.
         
         This API method supports file upload using multipart/form-data.
 
@@ -1210,7 +1217,7 @@ paths:
           }
         }
         ```
-      operationId: addNode
+      operationId: createNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
         - name: autoRename
@@ -1221,45 +1228,11 @@ paths:
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: nodeBody
+          name: nodeBodyCreate
           description: The node information to create.
           required: true
           schema:
-            required:
-              - name
-              - nodeType  
-            properties:
-              name:
-                type: string
-                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-                description: |
-                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-                  The character . must not be used at the end of the name.
-              nodeType:
-                type: string
-              aspectNames:
-                type: array
-                items:
-                  type: string
-              properties:
-                type: object
-                additionalProperties:
-                  type: string
-              relativePath:
-                type: string
-              association:
-                type: object
-                properties:
-                  assocType:
-                    type: string
-              secondaryChildren:
-                type: array
-                items:
-                  $ref: '#/definitions/AssocChild'
-              targets:
-                type: array
-                items:
-                  $ref: '#/definitions/AssocTarget'     
+            $ref: '#/definitions/NodeBodyCreate'
       consumes:
         - application/json
         - multipart/form-data
@@ -1272,32 +1245,35 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or **nodeBody** is invalid
+            Invalid parameter: **nodeId** is not a valid format or **nodeBodyCreate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If current user does not have permission to add children to **nodeId**
+          description: Current user does not have permission to create children of **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If new name clashes with an existing node in the current parent folder
+          description: New name clashes with an existing node in the current parent folder
         '413':
-          description: If file content exceeds individual file size limit configured for the network or system
+          description: Content exceeds individual file size limit configured for the network or system
         '422':
-          description: Model integrity exception, including file name with invalid characters
+          description: Model integrity exception including a file name containing invalid characters
         '507':
-          description: If file content exceeds overall storage quota limit configured for the network or system
+          description: Content exceeds overall storage quota limit configured for the network or system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/copy':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Copy a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Copies the node **nodeId** to the parent folder node **targetParentId**. You specify the **targetParentId** in the request body.
 
         The new node has the same name as the source node unless you specify a new **name** in the request body.
@@ -1305,25 +1281,15 @@ paths:
         If the source **nodeId** is a folder, then all of its children are also copied.
       operationId: copyNode
       parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: copyBody
+          name: nodeBodyCopy
           description: The targetParentId and, optionally, a new name which should include the file extension.
           required: true
           schema:
-            required:
-              - targetParentId
-            properties:
-              targetParentId:
-                type: string
-              name:
-                type: string
-                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-                description: |
-                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-                  The character . must not be used at the end of the name.
+            $ref: '#/definitions/NodeBodyCopy'
       consumes:
         - application/json
       produces:
@@ -1335,28 +1301,31 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or **copyBody** is invalid
+            Invalid parameter: **nodeId** is not a valid format or **nodeBodyCopy** is invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission to add children to **nodeId**
+          description: Current user does not have permission to create children of **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If the new name clashes with an existing node in the destination parent folder
+          description: New name clashes with an existing node in the destination parent folder
         '422':
-          description: Model integrity exception, including file name with invalid characters
+          description: Model integrity exception including a file name containing invalid characters
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/lock':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Lock a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Places a lock on node **nodeId**.
         
         **Note:** you can only lock files. More specifically, a node can only be locked if it is
@@ -1388,25 +1357,11 @@ paths:
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: lockBody
+          name: nodeBodyLock
           description: Lock details.
           required: true
           schema:
-            properties:
-              timeToExpire:
-                type: integer
-              type:
-                type: string
-                default: ALLOW_OWNER_CHANGES
-                enum:
-                 - ALLOW_OWNER_CHANGES
-                 - FULL
-              lifetime:
-                type: string
-                default: PERSISTENT
-                enum:
-                 - PERSISTENT
-                 - EPHEMERAL
+            $ref: '#/definitions/NodeBodyLock'
       consumes:
         - application/json
       produces:
@@ -1418,7 +1373,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or **lockBody** is invalid,
+            Invalid parameter: **nodeId** is not a valid format, or **nodeBodyLock** is invalid,
             or a lock was attempted on a node that is not a file
         '401':
           description: Authentication failed          
@@ -1429,19 +1384,22 @@ paths:
           description: |
             **nodeId** does not exist
         '422':
-          description: Lock fails due to a lock exception
+          description: |
+            **nodeId** could not be locked
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/unlock':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary:  Unlock a node
       description: |
-        Removes a lock on node **nodeId**. 
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Deletes a lock on node **nodeId**.
 
         The current user must be the owner of the locks or have admin rights, otherwise an error is returned.
 
@@ -1473,47 +1431,41 @@ paths:
           description: |
             **nodeId** does not exist
         '422':
-          description: Unlock failed due to an unlock exception
+          description: |
+            **nodeId** could not be unlocked
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/move':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
       summary: Move a node
       description: |
-        Move the node **nodeId** to the parent folder node **targetParentId**.  in request body.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Move the node **nodeId** to the parent folder node **targetParentId**.
+
         The **targetParentId** is specified in the in request body.
 
         The moved node retains its name unless you specify a new **name** in the request body.
 
         If the source **nodeId** is a folder, then its children are also moved.
         
-        The move will effectively change the primary parent
+        The move will effectively change the primary parent.
       operationId: moveNode
       parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: moveBody
+          name: nodeBodyMove
           description: The targetParentId and, optionally, a new name which should include the file extension.
           required: true
           schema:
-            required:
-              - targetParentId
-            properties:
-              targetParentId:
-                type: string
-              name:
-                type: string
-                pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-                description: |
-                  The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-                  The character . must not be used at the end of the name.
+            $ref: '#/definitions/NodeBodyMove'
       consumes:
         - application/json
       produces:
@@ -1525,30 +1477,34 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or **targetParentId** is not a folder
-            or **moveBody** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or **targetParentId** is not a folder,
+            or **nodeBodyMove** is invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission to add children to **nodeId**
+          description: Current user does not have permission to create children of **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If the new name clashes with an existing node in the destination parent folder
+          description: New name clashes with an existing node in the destination parent folder
         '422':
-          description: Model integrity exception, including file name with invalid characters
+          description: Model integrity exception including a file name containing invalid characters
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/content':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
-      summary: Get file content
-      description: Returns the file content of the node with identifier **nodeId**.
-      operationId: getFileContent
+      summary: Get node content
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the content of the node with identifier **nodeId**.
+      operationId: getNodeContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/attachmentParam'
@@ -1557,24 +1513,27 @@ paths:
         '200':
           description: Successful response
         '304':
-          description: If the content has not been modified since the date provided in the If-Modified-Since header
+          description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
+      x-alfresco-since: "5.2"
       tags:
         - nodes
-        - 5.2 changes
-      summary: Update file content
+      summary: Update node content
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Updates the content of the node with identifier **nodeId**.
 
         The request body for this endpoint can be any text or binary stream.
@@ -1588,7 +1547,7 @@ paths:
         **Note:** This API method accepts any content type, but for testing with this tool text based content can be provided.
         This is because the OpenAPI Specification does not allow a wildcard to be provided or the ability for
         tooling to accept an arbitrary file.
-      operationId: updateFileContent
+      operationId: updateNodeContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - name: majorVersion
@@ -1618,7 +1577,7 @@ paths:
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: contentBody
+          name: contentBodyUpdate
           description: The binary content
           required: true
           schema:
@@ -1637,31 +1596,35 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission to update **nodeId**
+          description: Current user does not have permission to update **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If optional new name clashes with an existing node in the current parent folder
+          description: Optional new name clashes with an existing node in the current parent folder
         '413':
-          description: If file content exceeds individual file size limit (configured for network/system)          
+          description: Content exceeds individual file size limit (configured for network/system)          
         '422':
-          description: Model integrity exception, including file name with invalid characters
+          description: Model integrity exception including a file name containing invalid characters
         '507':
-          description: If file content exceeds overall storage quota limit (configured for network/system)
+          description: Content exceeds overall storage quota limit configured for the network/system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - renditions
-        - 5.2 changes
       summary: Create rendition
       description: |
-        An asynchronous request to create a rendition for file **nodeId**. 
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        An asynchronous request to create a rendition for file **nodeId**.
+
         The rendition is specified by name **id** in the request body:
         ```JSON
         {
@@ -1670,15 +1633,13 @@ paths:
         ```
       operationId: createRendition
       parameters:
-        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: renditionBody
+          name: renditionBodyCreate
           description: The rendition "id".
           required: true
           schema:
-            properties:
-              id:
-                type: string
+            $ref: '#/definitions/RenditionBodyCreate'
       consumes:
         - application/json
       responses:
@@ -1687,34 +1648,45 @@ paths:
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format or is not a file
-            or **renditionBody** is invalid
+            or **renditionBodyCreate** is invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission for **nodeId**
+          description: Current user does not have permission for **nodeId**
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If the rendition already exists
+          description: Rendition already exists
         '501':
-          description: If rendition/thumbnails are disabled for the system
+          description: Renditions/thumbnails are disabled for the system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
+      x-alfresco-since: "5.2"
       tags:
         - renditions
-        - 5.2 changes
-      summary: List information for renditions
-      description: Returns the rendition information for the file **nodeId**.
+      summary: List renditions
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of the rendition information for each rendition of the the file **nodeId**, including the rendition id.
       
-        This will return rendition information, including the rendition id, for each rendition.
-        The rendition status is CREATED, which means it is available to view or download; or NOT_CREATED, which means the rendition can be requested.
+        Each rendition returned has a **status**: CREATED means it is available to view or download, NOT_CREATED means the rendition can be requested.
+      
+        You can use the **where** parameter to filter the returned renditions by **status**. For example, the following **where** 
+        clause will return just the CREATED renditions:
+          
+        ```
+        (status='CREATED')
+        ```
         
-      operationId: getRenditions
+      operationId: listRenditions
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/whereParam'
       responses:
         '200':
           description: Successful response
@@ -1722,22 +1694,26 @@ paths:
             $ref: '#/definitions/RenditionPaging'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or is not a file
+            Invalid parameter: **nodeId** is not a valid format or is not a file
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - renditions
-        - 5.2 changes
       summary: Get rendition information
-      description: Returns the rendition information for **renditionId** of file **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the rendition information for **renditionId** of file **nodeId**.
       operationId: getRendition
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1751,20 +1727,24 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **nodeId** or **renditionId** does not exist
+          description: |
+            **nodeId** or **renditionId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}/content':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - renditions
-        - 5.2 changes
       summary: Get rendition content
-      description: Returns the rendition content for **renditionId** of file **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the rendition content for **renditionId** of file **nodeId**.
       operationId: getRenditionContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1784,26 +1764,29 @@ paths:
         '200':
           description: Successful response
         '304':
-          description: If the content has not been modified since the date provided in the If-Modified-Since header
+          description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **nodeId** or **renditionId** does not exist
+          description: |
+            **nodeId** or **renditionId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/secondary-children':
     post:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
-      summary: Add secondary child
+      summary: Create secondary child
       description: |
-        Add a secondary child association, with the given association type, between the parent **nodeId** and a child node.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Create a secondary child association, with the given association type, between the parent **nodeId** and a child node.
         
         **Note:** You can create more than one secondary child association by 
         specifying a list of associations in the JSON body like this:
@@ -1847,30 +1830,31 @@ paths:
           }
         }
         ```
-      operationId: addSecondaryChildAssoc
+      operationId: createSecondaryChildAssocation
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeParentIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: assocChildBody
+          name: secondaryChildAssociationBodyCreate
           description: The child node id and assoc type.
           required: true
           schema:
-            $ref: '#/definitions/AssocChild'
+            $ref: '#/definitions/ChildAssociationBody'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeChildAssocEntry'
+            $ref: '#/definitions/ChildAssociationEntry'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
-            or **assocChildBody** invalid
+            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format,
+            or **secondaryChildAssociationBodyCreate** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If parent **nodeId** or **childId** does not exist
+          description: Parent **nodeId** or **childId** does not exist
         '409':
           description: An association of this assoc type already exists between these two nodes
         '422':
@@ -1880,13 +1864,15 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
-      summary: Get secondary children
+      summary: List secondary children
       description: |
-        Returns a list of secondary child nodes that are associated with the current parent **nodeId**, via a secondary child association.
-      operationId: listSecondaryChildAssociations
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of secondary child nodes that are associated with the current parent **nodeId**, via a secondary child association.
+      operationId: listSecondaryChildren
       produces:
         - application/json
       parameters:
@@ -1908,30 +1894,33 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeChildAssocPaging'
+            $ref: '#/definitions/NodeChildAssociationPaging'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
+            Invalid parameter: **assocType** is unknown or the **nodeId** is not a valid format
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If parent **nodeId** does not exist
+          description: Parent **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/secondary-children/{childId}':
     delete:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
-      summary: Remove secondary child or children
+      summary: Delete secondary child or children
       description: |
-        Remove secondary child associations between the parent **nodeId** and child nodes for the given association type. 
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Delete secondary child associations between the parent **nodeId** and child nodes for the given association type.
         
         If the association type is **not** specified, then all secondary child associations, of any type in the direction 
-        from parent to secondary child, will be removed. The child will still have a primary parent and may still be associated as a secondary child with other secondary parents.
-      operationId: removeSecondaryChildAssoc
+        from parent to secondary child, will be deleted. The child will still have a primary parent and may still be
+        associated as a secondary child with other secondary parents.
+      operationId: deleteSecondaryChildAssocation
       produces:
         - application/json
       parameters:
@@ -1951,24 +1940,26 @@ paths:
           description: Successful response
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or you are trying to delete a primary **assocType**. 
+            Invalid parameter: **assocType** is unknown or you are trying to delete a primary **assocType**. 
             Use delete node instead
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If parent **nodeId** or **childId** does not exist (with given assocType, if specified)
+          description: Parent **nodeId** or **childId** does not exist (with given assocType, if specified)
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'              
   '/nodes/{nodeId}/parents':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
       summary: List parents
       description: |
-        Returns a list of parent nodes that are associated with the current child **nodeId**. 
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of parent nodes that are associated with the current child **nodeId**.
         
         The list includes both the primary parent and any secondary parents.
       operationId: listParents
@@ -1997,28 +1988,30 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeAssocPaging'
+            $ref: '#/definitions/NodeAssociationPaging'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
+            Invalid parameter: **assocType** is unknown or the **nodeId** is not a valid format
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If child **nodeId** does not exist
+          description: Child **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'     
   '/nodes/{nodeId}/targets':
     post:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
-      summary: Add node association
+      summary: Create node association
       description: |
-        Add an association, with the given association type, between the source **nodeId** and a target node.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Create an association, with the given association type, between the source **nodeId** and a target node.
         
-        **Note:** You can add more than one association by 
+        **Note:** You can create more than one association by
         specifying a list of associations in the JSON body like this:
         
         ```JSON
@@ -2060,30 +2053,31 @@ paths:
           }
         }
         ```
-      operationId: addAssoc
+      operationId: createAssocation
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeSourceIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: assocTargetBody
+          name: associationBodyCreate
           description: The target node id and assoc type.
           required: true
           schema:
-            $ref: '#/definitions/AssocTarget'
+            $ref: '#/definitions/AssociationBody'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeAssocEntry'
+            $ref: '#/definitions/AssociationEntry'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
-            or **assocTargetBody** invalid
+            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format,
+            or **associationBodyCreate** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If source **nodeId** or **targetId** does not exist
+          description: Source **nodeId** or **targetId** does not exist
         '409':
           description: An association of this assoc type already exists between these two nodes
         '422':
@@ -2093,12 +2087,14 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
-      summary: List node associations
+      summary: List target associations
       description: |
-        Returns a list of target nodes that are associated with the current source **nodeId**.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of target nodes that are associated with the current source **nodeId**.
       operationId: listTargetAssociations
       produces:
         - application/json
@@ -2118,33 +2114,35 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeAssocPaging'
+            $ref: '#/definitions/NodeAssociationPaging'
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format
+            Invalid parameter: **assocType** is unknown or the **nodeId** is not a valid format
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If source **nodeId** does not exist
+          description: Source **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'            
   '/nodes/{nodeId}/targets/{targetId}':
     delete:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
-      summary: Remove node association(s)
+      summary: Delete node association(s)
       description: |
-        Remove an association, or associations, from the source **nodeId* to a target node for the given association type. 
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Delete an association, or associations, from the source **nodeId* to a target node for the given association type.
         
         If the association type is **not** specified, then all peer associations, of any type, in the direction 
-        from source to target, are removed.
+        from source to target, are deleted.
         
         **Note:** After removal of the peer association, or associations, from source to target, the two nodes may still have peer associations
         in the other direction.
-      operationId: removeAssoc
+      operationId: deleteAssocation
       produces:
         - application/json
       parameters:
@@ -2166,22 +2164,24 @@ paths:
           description: |
             Invalid parameter: **assocType** is unknown, or the **nodeId** is not a valid format, or **targetId** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If source **nodeId** or **targetId** does not exist (with given assocType, if specified)
+          description: Source **nodeId** or **targetId** does not exist (with given assocType, if specified)
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/sources':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
         - nodes
-      summary: List node associations
+      summary: List source associations
       description: |
-        Returns a list of source nodes that are associated with the current target **nodeId**.
-      operationId: listSourceNodeAssociations
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of source nodes that are associated with the current target **nodeId**.
+      operationId: listSourceAssociations
       produces:
         - application/json
       parameters:
@@ -2200,26 +2200,28 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeAssocPaging'
+            $ref: '#/definitions/NodeAssociationPaging'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format or **assocType** is unknown
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If target **nodeId** does not exist
+          description: Target **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
-        - nodes
-      summary: Get node version history
+        - versions
+      summary: List version history
       description: |
-        Returns the version history as an ordered list of version nodes for the specified **nodeId**.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the version history as an ordered list of versions for the specified **nodeId**.
         
         The list is ordered in descending modified order. So the most recent version is first and 
         the original version is last in the list. 
@@ -2236,25 +2238,28 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/VersionNodesPaging'
+            $ref: '#/definitions/VersionPaging'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format            
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If target **nodeId** does not exist
+          description: Target **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'  
   '/nodes/{nodeId}/versions/{versionId}':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
-        - nodes
+        - versions
       summary: Get version information
-      description: Returns the version information for **versionId** of file node **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the version information for **versionId** of file node **nodeId**.
       operationId: getVersion
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -2263,25 +2268,28 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/VersionNodeEntry'
+            $ref: '#/definitions/VersionEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or it exists, but does not identify a file, or **versionId** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or it exists but does not identify a file, or **versionId** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** or **versionId** does not exist
+          description: |
+            **nodeId** or **versionId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'     
     delete:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
-        - nodes
-      summary: Delete a version node
+        - versions
+      summary: Delete a version
       description: |
-        Delete the versioned node identified by **versionId** and **nodeId*.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Delete the version identified by **versionId** and **nodeId*.
         
         If the version is successfully deleted then the content and metadata for that versioned node
         will be deleted and will no longer appear in the version history. This operation cannot be undone.
@@ -2292,7 +2300,7 @@ paths:
         can remove the "cm:versionable" aspect (via update node) which will also disable versioning. In this
         case, you can re-enable versioning by adding back the "cm:versionable" aspect or using the version 
         params (majorVersion and comment) on a subsequent file content update.
-      operationId: deleteVersionNode
+      operationId: deleteVersion
       produces:
         - application/json
       parameters:
@@ -2303,26 +2311,30 @@ paths:
           description: Successful response
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or exists, but does not identify a file, or **versionId** is invalid     
+            Invalid parameter: **nodeId** is not a valid format, or exists but does not identify a file, or **versionId** is invalid     
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to delete the versioned node
+          description: User does not have permission to delete the versioned node
         '404':
-          description: If **nodeId** or **versionId** does not exist
+          description: |
+            **nodeId** or **versionId** does not exist
         '422':
-          description: If attempting to delete the last remaining version  
+          description: Cannot delete the last remaining version  
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'        
   '/nodes/{nodeId}/versions/{versionId}/content':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
-        - nodes
+        - versions
       summary: Get version content
-      description: Returns the version content for **versionId** of file node **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the version content for **versionId** of file node **nodeId**.
       operationId: getVersionContent
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -2333,61 +2345,62 @@ paths:
         '200':
           description: Successful response
         '304':
-          description: If the content has not been modified since the date provided in the If-Modified-Since header
+          description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **nodeId** or **versionId** does not exist
+          description: |
+            **nodeId** or **versionId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/revert':
     post:
+      x-alfresco-since: "5.2"
       tags:
-        - 5.2 changes
-        - nodes
-      summary: Revert a version node
+        - versions
+      summary: Revert a version
       description: |
-        Attempts to revert the versioned node identified by **versionId** and **nodeId** to the live node.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Attempts to revert the version identified by **versionId** and **nodeId** to the live node.
         
         If the node is successfully reverted then the content and metadata for that versioned node
         will be promoted to the live node and a new version will appear in the version history.
-      operationId: revertVersionNode
+      operationId: revertVersion
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
           name: revertBody
           description: Optionally, specify a version comment and whether this should be a major version, or not.
           required: true
           schema:
-            properties:
-              majorVersion:
-                type: boolean
-              comment:
-                type: string
+            $ref: '#/definitions/RevertBody'
       responses:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/VersionNodeEntry'
+            $ref: '#/definitions/VersionEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or it exists, 
-            but does not identify a file, or **versionId** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or it exists 
+            but does not identify a file, or **versionId** is invalid,
             or **revertBody** invalid          
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to revert the versioned node
+          description: User does not have permission to revert the versioned node
         '404':
-          description: If **nodeId** or **versionId** does not exist
+          description: |
+            **nodeId** or **versionId** does not exist
         '422':
           description: Model integrity exception trying to revert the node
         default:
@@ -2396,16 +2409,19 @@ paths:
             $ref: '#/definitions/Error'                                           
   '/deleted-nodes':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - trashcan
-        - 5.2 changes
-      summary: Get deleted nodes
+      summary: List deleted nodes
       description: |
-        Returns a list of deleted nodes for the current user.
-        If the current user is an administrator deleted nodes
-        for all users will be returned.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of deleted nodes for the current user.
+
+        If the current user is an administrator deleted nodes for all users will be returned.
+
         The list of deleted nodes will be ordered with the most recently deleted node at the top of the list.
-      operationId: getDeletedNodes
+      operationId: listDeletedNodes
       produces:
         - application/json
       parameters:
@@ -2421,19 +2437,21 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails            
+          description: Authentication failed            
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - trashcan
-        - 5.2 changes
       summary: Get a deleted node
       description: |
-        Returns the specific deleted node **nodeId**.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the specific deleted node **nodeId**.
       operationId: getDeletedNode
       produces:
         - application/json
@@ -2449,23 +2467,26 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to view the deleted node
+          description: User does not have permission to view the deleted node
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
+      x-alfresco-since: "5.2"
       tags:
         - trashcan
-        - 5.2 changes
-      summary: Purge a deleted node
+      summary: Permanently delete a deleted node
       description: |
-        Permanently removes the deleted node **nodeId**.
-      operationId: purgeDeletedNode
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Permanently deletes the deleted node **nodeId**.
+      operationId: deleteDeletedNode
       produces:
         - application/json
       parameters:
@@ -2477,22 +2498,25 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format          
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to purge the deleted node
+          description: User does not have permission to permanently delete the deleted node
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}/restore':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - trashcan
-        - 5.2 changes
       summary: Restore a deleted node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Attempts to restore the deleted node **nodeId** to its original location.
         
         If the node is successfully restored to its former primary parent, then only the 
@@ -2502,13 +2526,14 @@ paths:
         hierarchy of restored nodes, irrespective of whether these associations were to 
         nodes within or outside of the restored hierarchy. 
         
-        Also, any previously shared link will not be restored since it is removed at the time 
+        Also, any previously shared link will not be restored since it is deleted at the time 
         of delete of each node.
-      operationId: restoreNode
+      operationId: restoreDeletedNode
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/fieldsParam'        
       responses:
         '200':
           description: Successful response
@@ -2518,15 +2543,101 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format             
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to restore the deleted node
+          description: User does not have permission to restore the deleted node
         '404':
-          description: If **nodeId** does not exist or if the restore destination parent node no longer exists
+          description: |
+            **nodeId** does not exist or the restore destination parent node no longer exists
         '409':
-          description: If the node name already exists in the restore destination
+          description: Node name already exists in the restore destination
         '422':
           description: Model integrity exception trying to restore the node
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/people':
+    post:
+      x-alfresco-since: "5.2"
+      tags:
+        - people
+      summary: Create person
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Create a person.
+        
+        If applicable, the given person's login access can also be optionally disabled.
+        
+        You must have admin rights to create a person.
+      operationId: createPerson
+      parameters:
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: personBodyCreate
+          description: The person details.
+          required: true
+          schema:
+            $ref: '#/definitions/PersonBodyCreate'
+      consumes:
+        - application/json
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PersonEntry'
+        '400':
+          description: |
+            Invalid parameter: **personBodyCreate** is invalid
+        '401':
+          description: Authentication failed          
+        '403':
+          description: Current user does not have permission to create a person
+        '409':
+          description: Person within given *id* already exists
+        '422':
+          description: Model integrity exception          
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      x-alfresco-since: "5.2"
+      tags:
+        - people
+      summary: List people
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
+        List people.
+        
+        You can use the **include** parameter to return any additional information.
+
+        The default sort order for the returned list is for people to be sorted by ascending id.
+        You can override the default specify one or more fields in the **orderBy** parameter. For example:
+        * id
+        * firstName
+        * lastName
+      operationId: listPeople
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - $ref: '#/parameters/personMinimalEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PersonPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
+        '401':
+          description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -2552,23 +2663,70 @@ paths:
           schema:
             $ref: '#/definitions/PersonEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "5.2"
+      tags:
+        - people
+      summary: Update person
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Update the given person's details.
+        
+        If applicable, the given person's login access can also be optionally be disabled or re-enabled.
+        
+        You must have admin rights to update a person.
+      operationId: updatePerson
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: personBodyUpdate
+          description: The person details.
+          required: true
+          schema:
+            $ref: '#/definitions/PersonBodyUpdate'
+      consumes:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PersonEntry'
+        '400':
+          description: |
+            Invalid parameter: the update request is invalid or **personId** is not a valid format or **personBodyUpdate** is invalid
+        '401':
+          description: Authentication failed          
+        '403':
+          description: Current user does not have permission to update a person
+        '404':
+          description: |
+            **personId** does not exist
+        '422':
+          description: Model integrity exception            
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
   '/people/{personId}/activities':
     get:
       tags:
-        - people
-      summary: Get activities
+        - activities
+      summary: List activities
       description: |
-        Returns a list of activities for person **personId**.
+        Gets a list of activities for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getActivities
+      operationId: listActivitiesForPerson
       produces:
         - application/json
       parameters:
@@ -2596,11 +2754,12 @@ paths:
           description: |
             Invalid parameter: value of **maxItems**, **skipCount**, or **who** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the activities for **personId**
+          description: Current user does not have access to the activities for **personId**
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2609,16 +2768,16 @@ paths:
     get:
       deprecated: true
       tags:
-        - people
-      summary: Get favorite sites
+        - favorites
+      summary: List favorite sites
       description: |
-        Get a person's favorite sites.
-
-        **Note: This method is deprecated and will be removed in the future**.
+        **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
         Use `/people/{personId}/favorites` instead.
+
+        Gets a list of a person's favorite sites.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getFavoriteSites
+      operationId: listFavoriteSitesForPerson
       produces:
         - application/json
       parameters:
@@ -2635,11 +2794,12 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the favorite sites for **personId**
+          description: Current user does not have access to the favorite sites for **personId**
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2647,14 +2807,14 @@ paths:
     post:
       deprecated: true
       tags:
-        - people
-      summary: Favorite a site
+        - favorites
+      summary: Create a site favorite
       description: |
-        Add a favorite site for person **personId**.
-
-        **Note: that this method is deprecated and will be removed in the future**.
+        **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
         Use `/people/{personId}/favorites` instead.
-        
+
+        Create a site favorite for person **personId**.
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
          **Note:** You can favorite more than one site by 
@@ -2697,47 +2857,36 @@ paths:
           }
         }
         ```
-      operationId: favoriteSite
+      operationId: createSiteFavorite
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
-          name: favoriteSiteBody
+          name: favoriteSiteBodyCreate
           description: The id of the site to favorite.
           required: true
           schema:
-            required:
-              - id
-            properties:
-              id:
-                type: string
+            $ref: '#/definitions/FavoriteSiteBodyCreate'
       responses:
         '201':
           description: Successful response
           schema:
-            type: object
-            required:
-              - entry
-            properties:
-              entry:
-                type: object
-                required:
-                - id
-                properties:
-                  id:
-                    type: string
+            $ref: '#/definitions/FavoriteSiteEntry'
         '400':
           description: |
-            Invalid parameter: **favoriteSiteBody** is invalid
+            Invalid parameter: **favoriteSiteBodyCreate** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the favorite sites for **personId**
+          description: Current user does not have access to the favorite sites for **personId**
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         '409':
-          description: If **id** is already a site favorite
+          description: |
+            **id** is already a site favorite
         default:
           description: Unexpected error
           schema:
@@ -2746,14 +2895,14 @@ paths:
     get:
       deprecated: true
       tags:
-        - people
+        - favorites
       summary: Get a favorite site
       description: |
-        Returns information on favorite site **siteId** of person **personId**.
-
-        **Note: This method is deprecated and will be removed in the future.**
+        **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
         Use `/people/{personId}/favorites/{favoriteId}` instead.
-        
+
+        Gets information on favorite site **siteId** of person **personId**.
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getFavoriteSite
       produces:
@@ -2768,11 +2917,12 @@ paths:
           schema:
             $ref: '#/definitions/SiteEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the favorite sites for **personId**
+          description: Current user does not have access to the favorite sites for **personId**
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2780,16 +2930,16 @@ paths:
     delete:
       deprecated: true
       tags:
-        - people
-      summary: Delete favorite site
+        - favorites
+      summary: Delete a site favorite
       description: |
-        Removes site **siteId** from the favorite site list of person **personId**.
-        
-        **Please note that this method is deprecated and will be removed in the future.**
+        **Note:** this endpoint is deprecated as of Alfresco 4.2, and will be removed in the future.
         Use `/people/{personId}/favorites/{favoriteId}` instead.
-        
+
+        Deletes site **siteId** from the favorite site list of person **personId**.
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: deleteFavoriteSite
+      operationId: deleteSiteFavorite
       produces:
         - application/json
       parameters:
@@ -2799,11 +2949,12 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the favorite sites for **personId**
+          description: Current user does not have access to the favorite sites for **personId**
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -2812,10 +2963,9 @@ paths:
     get:
       tags:
         - favorites
-        - people
-      summary: Get favorites
+      summary: List favorites
       description: |
-        Returns a list of favorites for person **personId**.
+        Gets a list of favorites for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
@@ -2842,7 +2992,7 @@ paths:
         ```SQL
         (EXISTS(target/file) OR EXISTS(target/folder))
         ```
-      operationId: getFavorites
+      operationId: listFavorites
       produces:
         - application/json
       parameters:
@@ -2860,9 +3010,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems**, **skipCount**, or **where** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** does not exist, or the current user does not have permission to access the favorites of **personId**
+          description: |
+            **personId** does not exist or the current user does not have permission to access the favorites of **personId**
         default:
           description: Unexpected error
           schema:
@@ -2870,8 +3021,7 @@ paths:
     post:
       tags:
         - favorites
-        - people
-      summary: Add a favorite
+      summary: Create a favorite
       description: |
         Favorite a **site**, **file**, or **folder** in the repository.
         
@@ -2925,13 +3075,14 @@ paths:
           }
         }
         ```
-      operationId: addFavorite
+      operationId: createFavorite
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
-          name: favoriteBody
+          name: favoriteBodyCreate
           description: |      
             An object identifying the entity to be favorited. 
             
@@ -2951,11 +3102,7 @@ paths:
             ```
           required: true
           schema:
-            required:
-              - target
-            properties:
-               target:
-                  type: object
+            $ref: '#/definitions/FavoriteBodyCreate'
       responses:
         '201':
           description: Successful response
@@ -2963,14 +3110,14 @@ paths:
             $ref: '#/definitions/FavoriteEntry'
         '400':
           description: |
-            Invalid parameter: **favoriteBody** invalid
+            Invalid parameter: **favoriteBodyCreate** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
           description: |
-            If **personId** does not exist, or the target entity does not exist,
+            **personId** does not exist, or the target entity does not exist,
             or a favorite already exists with the specified id, or an
-            entity does exist with the id of the posted object,
+            entity exists with the id of the posted object
             but is not of the same type of the posted object
         '409':
           description: The target **guid** has already been favorited            
@@ -2982,10 +3129,9 @@ paths:
     get:
       tags:
         - favorites
-        - people
       summary: Get a favorite
       description: |
-        Returns favorite **favoriteId** for person **personId**.
+        Gets favorite **favoriteId** for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getFavorite
@@ -3001,10 +3147,10 @@ paths:
           schema:
             $ref: '#/definitions/FavoriteEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
           description: |
-            If **personId** or **favoriteId** does not exist
+            **personId** or **favoriteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3012,13 +3158,12 @@ paths:
     delete:
       tags:
         - favorites
-        - people
       summary: Delete a favorite
       description: |
-        Removes **favoriteId** as a favorite of person **personId**.
+        Deletes **favoriteId** as a favorite of person **personId**.
 
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: removeFavorite
+      operationId: deleteFavorite
       produces:
         - application/json
       parameters:
@@ -3028,10 +3173,10 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
           description: |
-            If **personId** or **favoriteId** does not exist
+            **personId** or **favoriteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3039,14 +3184,13 @@ paths:
   '/people/{personId}/networks':
     get:
       tags:
-        - people
         - networks
-      summary: Get network membership
+      summary: List network membership
       description: |
         Gets a list of network memberships for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getPersonNetworks
+      operationId: listNetworksForPerson
       produces:
         - application/json
       parameters:
@@ -3063,9 +3207,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3073,14 +3218,13 @@ paths:
   '/people/{personId}/networks/{networkId}':
     get:
       tags:
-        - people
         - networks
       summary: Get network information
       description: |
-        Returns network information on a single network specified by **networkId** for **personId**.
+        Gets network information on a single network specified by **networkId** for **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getPersonNetwork
+      operationId: getNetworkForPerson
       produces:
         - application/json
       parameters:
@@ -3093,9 +3237,10 @@ paths:
           schema:
             $ref: '#/definitions/PersonNetworkEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **networkId** does not exist
+          description: |
+            **personId** or **networkId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3103,16 +3248,16 @@ paths:
   '/people/{personId}/preferences':
     get:
       tags:
-        - people
-      summary: Get preferences
+        - preferences
+      summary: List preferences
       description: |
-        Returns a list of preferences for person **personId**.
+        Gets a list of preferences for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         Note that each preference consists of an **id** and a **value**. 
 
         The **value** can be of any JSON type.
-      operationId: getPreferences
+      operationId: listPreferences
       produces:
         - application/json
       parameters:
@@ -3129,11 +3274,12 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the preferences for **personId**
+          description: Current user does not have access to the preferences for **personId**
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3141,10 +3287,10 @@ paths:
   '/people/{personId}/preferences/{preferenceName}':
     get:
       tags:
-        - people
+        - preferences
       summary: Get a preference
       description: |
-        Returns a specific preference for person **personId**.
+        Gets a specific preference for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getPreference
@@ -3164,11 +3310,12 @@ paths:
           schema:
             $ref: '#/definitions/PreferenceEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the currently authenticated user does not have access to the preferences for **personId**
+          description: Current user does not have access to the preferences for **personId**
         '404':
-          description: If **personId** or **preferenceName** does not exist
+          description: |
+            **personId** or **preferenceName** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3176,13 +3323,13 @@ paths:
   '/people/{personId}/site-membership-requests':
     get:
       tags:
-        - people
-      summary: Get site membership requests
+        - sites
+      summary: List site membership requests
       description: |
-        Returns the current site membership requests for person **personId**.
+        Gets a list of the current site membership requests for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getSiteMembershipRequests
+      operationId: listSiteMembershipRequestsForPerson
       produces:
         - application/json
       parameters:
@@ -3199,16 +3346,17 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
       tags:
-        - people
+        - sites
       summary: Create a site membership request
       description: |
         Create a site membership request for yourself on the site with the identifier of **id**, specified in the JSON body. 
@@ -3264,25 +3412,18 @@ paths:
           }
         }
         ```
-      operationId: addSiteMembershipRequest
+      operationId: createSiteMembershipRequestForPerson
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
-          name: siteMembershipBody
+          name: siteMembershipRequestBodyCreate
           description: Site membership request details
           required: true
           schema:
-            required:
-              - id
-            properties:
-              message:
-                type: string
-              id:
-                type: string
-              title:
-                type: string
+            $ref: '#/definitions/SiteMembershipRequestBodyCreate'
       responses:
         '201':
           description: Successful response
@@ -3290,12 +3431,13 @@ paths:
             $ref: '#/definitions/SiteMembershipRequestEntry'
         '400':
           description: |
-            Invalid parameter: **id** is invalid or the user is already invited
-            or **siteMembershipBody** invalid
+            Invalid parameter: **id** is invalid, or the user is already invited,
+            or **siteMembershipRequestBodyCreate** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **id** does not exist
+          description: |
+            **personId** or **id** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3303,13 +3445,13 @@ paths:
   '/people/{personId}/site-membership-requests/{siteId}':
     get:
       tags:
-        - people
+        - sites
       summary: Get a site membership request
       description: |
-        Returns the site membership request for site **siteId** for person **personId**, if one exists.
+        Gets the site membership request for site **siteId** for person **personId**, if one exists.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getSiteMembershipRequest
+      operationId: getSiteMembershipRequestForPerson
       produces:
         - application/json
       parameters:
@@ -3322,22 +3464,23 @@ paths:
           schema:
             $ref: '#/definitions/SiteMembershipRequestEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
       tags:
-        - people
+        - sites
       summary: Update a site membership request
       description: |
         Updates the message for the site membership request to site **siteId** for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: updateSiteMembershipRequest
+      operationId: updateSiteMembershipRequestForPerson
       consumes:
         - application/json
       produces:
@@ -3345,14 +3488,13 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: siteMembershipBody
+          name: siteMembershipRequestBodyUpdate
           description: The new message to display
           required: true
           schema:
-            properties:
-              message:
-                type: string
+            $ref: '#/definitions/SiteMembershipRequestBodyUpdate'
       responses:
         '200':
           description: Successful response
@@ -3361,24 +3503,25 @@ paths:
         '400':
           description: |
             Invalid parameter: **id** is invalid
-            or **siteMembershipBody** invalid
+            or **siteMembershipRequestBodyUpdate** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
       tags:
-        - people
-      summary: Cancel a site membership
+        - sites
+      summary: Delete a site membership request
       description: |
-        Cancels the site membership request to site **siteId** for person **personId**.
+        Deletes the site membership request to site **siteId** for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: removeSiteMembershipRequest
+      operationId: deleteSiteMembershipRequestForPerson
       produces:
         - application/json
       parameters:
@@ -3388,9 +3531,10 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3398,24 +3542,35 @@ paths:
   '/people/{personId}/sites':
     get:
       tags:
-        - people
-      summary: Get site membership information
+        - sites
+      summary: List site memberships
       description: |
-        Returns a list of site membership information for person **personId**.
+        Gets a list of site membership information for person **personId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
-        You can sort the list of sites using the **orderBy** parameter.
+        You can use the **where** parameter to filter the returned sites by **visibility** or site **preset**.
 
-        **orderBy** specifies the name of one or more fields.
-        For each field you can optionally specify the order direction. **ASC** or **DESC**.
-        Both of  these **orderBy** examples retrieve sites ordered by ascending name:
+        Example to filter by **visibility**, use any one of:
 
         ```
-        name
-        name ASC
+        (visibility='PRIVATE')
+        (visibility='PUBLIC')
+        (visibility='MODERATED')
         ```
-      operationId: getSiteMembership
+
+        Example to filter by site **preset**:
+
+        ```
+        (preset='site-dashboard')
+        ```
+
+        The default sort order for the returned list is for sites to be sorted by ascending title.
+        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * id
+        * title
+        * role
+      operationId: listSiteMembershipsForPerson
       produces:
         - application/json
       parameters:
@@ -3425,6 +3580,7 @@ paths:
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/relationsParam'
         - $ref: '#/parameters/fieldsParam'
+        - $ref: '#/parameters/whereParam'
       responses:
         '200':
           description: Successful response
@@ -3432,11 +3588,12 @@ paths:
             $ref: '#/definitions/SiteRolePaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** does not exist
+          description: |
+            **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3444,13 +3601,13 @@ paths:
   '/people/{personId}/sites/{siteId}':
     get:
       tags:
-        - people
-      summary: Get site membership for a site
+        - sites
+      summary: Get a site membership
       description: |
-        Returns site membership information for person **personId** on site **siteId**.
+        Gets site membership information for person **personId** on site **siteId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getSiteForMember
+      operationId: getSiteMembershipForPerson
       produces:
         - application/json
       parameters:
@@ -3462,22 +3619,23 @@ paths:
           schema:
             $ref: '#/definitions/SiteRoleEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
       tags:
-        - people
-      summary: Delete a site member
+        - sites
+      summary: Delete a site membership
       description: |
-        Removes person **personId** as a member of site **siteId**.
+        Deletes person **personId** as a member of site **siteId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: removeMemberFromSite
+      operationId: deleteSiteMembershipForPerson
       produces:
         - application/json
       parameters:
@@ -3487,9 +3645,10 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **personId** or **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3498,20 +3657,31 @@ paths:
     get:
       tags:
         - sites
-      summary: Get sites
+      summary: List sites
       description: |
-        Returns a list of sites in this repository. 
-        
-        You can sort the list of sites using the **orderBy** parameter.
+        Gets a list of sites in this repository.
 
-        **orderBy** specifies the name of one or more fields.
-        For each field you can optionally specify the order direction, **ASC** or **DESC**.
-        Both of  these **orderBy** examples retrieve sites ordered by ascending name:
+        You can use the **where** parameter to filter the returned sites by **visibility** or site **preset**.
+
+        Example to filter by **visibility**, use any one of:
 
         ```
-        name
-        name ASC
+        (visibility='PRIVATE')
+        (visibility='PUBLIC')
+        (visibility='MODERATED')
         ```
+
+        Example to filter by site **preset**:
+
+        ```
+        (preset='site-dashboard')
+        ```
+
+        The default sort order for the returned list is for sites to be sorted by ascending title.
+        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * id
+        * title
+        * description
 
         You can use the **relations** parameter to include one or more related
         entities in a single response and so reduce network traffic.
@@ -3524,13 +3694,14 @@ paths:
         ```
         containers,members
         ```
-      operationId: getSites
+      operationId: listSites
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/relationsParam'
         - $ref: '#/parameters/fieldsParam'
+        - $ref: '#/parameters/whereParam'
       produces:
         - application/json
       responses:
@@ -3540,21 +3711,25 @@ paths:
             $ref: '#/definitions/SitePaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
+      x-alfresco-since: "5.2"
       tags:
         - sites
-        - 5.2 changes
       summary: Create a site
       description: |
-        Creates a default site with the given details.  Unless explicitly specified, the site id will be generated from the site title. The site id must be unique and only contain alphanumeric and/or dash
-        characters.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Creates a default site with the given details.  Unless explicitly specified, the site id will be generated
+        from the site title. The site id must be unique and only contain alphanumeric and/or dash characters.
+        
+        Note: the id of a site cannot be updated once the site has been created.
 
         For example, to create a public site called "Marketing" the following body could be used:
         ```JSON
@@ -3566,11 +3741,14 @@ paths:
 
         The creation of the (surf) configuration files required by Share can be skipped via the **skipConfiguration** query parameter.
 
-        **Please note: if skipped then such a site will *not* work within Share.**
+        **Note:** if skipped then such a site will **not** work within Share.
 
         The addition of the site to the user's site favorites can be skipped via the **skipAddToFavorites** query parameter.
 
         The creator will be added as a member with Site Manager role.
+        
+        When you create a site, a container called **documentLibrary** is created for you in the new site. 
+        This container is the root folder for content stored in the site.
 
       operationId: createSite
       produces:
@@ -3586,29 +3764,13 @@ paths:
           description: Flag to indicate whether the site should not be added to the user's site favorites.
           type: boolean
           default: false
+        - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: siteBody
+          name: siteBodyCreate
           description: The site details
           required: true
           schema:
-            type: object
-            required:
-              - title
-              - visibility
-            properties:
-              id:
-                type: string
-              title:
-                type: string
-              description:
-                type: string
-              visibility:
-                type: string
-                default: PUBLIC
-                enum:
-                  - PUBLIC
-                  - PRIVATE
-                  - MODERATED
+            $ref: '#/definitions/SiteBodyCreate'
       responses:
         '201':
           description: Successful response
@@ -3616,12 +3778,12 @@ paths:
             $ref: '#/definitions/SiteEntry'
         '400':
           description: |
-            Invalid parameter: **id**, **title**, or **description** exceed the maximum length 
-            or **id** contains invalid characters or **siteBody** invalid
+            Invalid parameter: **id**, **title**, or **description** exceed the maximum length; 
+            or **id** contains invalid characters; or **siteBodyCreate** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '409':
-          description: If a site with the given identifier already exists
+          description: Site with the given identifier already exists
         default:
           description: Unexpected error
           schema:
@@ -3632,7 +3794,7 @@ paths:
         - sites
       summary: Get a site
       description: |
-        Returns information for site **siteId**.
+        Gets information for site **siteId**.
 
         You can use the **relations** parameter to include one or more related
         entities in a single response and so reduce network traffic.
@@ -3658,19 +3820,67 @@ paths:
           schema:
             $ref: '#/definitions/SiteEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** does not exist
+          description: |
+            **siteId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "5.2"
+      tags:
+        - sites
+      summary: Update a site
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Update the details for the given site **siteId**. Site Manager or otherwise a 
+        (site) admin can update title, description or visibility.
+        
+        Note: the id of a site cannot be updated once the site has been created.
+
+      operationId: updateSite
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: siteBodyUpdate
+          description: The site information to update.
+          required: true
+          schema:
+            $ref: '#/definitions/SiteBodyUpdate'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SiteEntry'
+        '400':
+          description: |
+            Invalid parameter: **siteBodyUpdate** invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to update the site that is visible to them.
+        '404':
+          description: |
+            **siteId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
+      x-alfresco-since: "5.2"
       tags:
         - sites
-        - 5.2 changes
       summary: Delete a site
-      description: Deletes the site with **siteId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Deletes the site with **siteId**.
       operationId: deleteSite
       produces:
         - application/json
@@ -3685,11 +3895,12 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If user does not have permission to delete the site (that is visible to them).
+          description: Current user does not have permission to delete the site that is visible to them.
         '404':
-          description: If **siteId** does not exist or the user does not have permission to view the site.
+          description: |
+            **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3698,9 +3909,9 @@ paths:
     get:
       tags:
         - sites
-      summary: Get containers
-      description: Returns a list of containers information for the site **siteId**.
-      operationId: getSiteContainers
+      summary: List site containers
+      description: Gets a list of containers for the site **siteId**.
+      operationId: listSiteContainers
       produces:
         - application/json
       parameters:
@@ -3717,9 +3928,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** does not exist
+          description: |
+            **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3728,8 +3940,8 @@ paths:
     get:
       tags:
         - sites
-      summary: Get a container
-      description: Returns information on the container **containerId** in site **siteId**.
+      summary: Get a site container
+      description: Gets information on the container **containerId** in site **siteId**.
       operationId: getSiteContainer
       produces:
         - application/json
@@ -3747,9 +3959,10 @@ paths:
           schema:
             $ref: '#/definitions/SiteContainerEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** or **containerId** does not exist
+          description: |
+            **siteId** or **containerId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3758,9 +3971,9 @@ paths:
     get:
       tags:
         - sites
-      summary: Get members
-      description: Returns a list of site memberships for site **siteId**.
-      operationId: getSiteMembers
+      summary: List site memberships
+      description: Gets a list of site memberships for site **siteId**.
+      operationId: listSiteMemberships
       produces:
         - application/json
       parameters:
@@ -3777,9 +3990,10 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** does not exist
+          description: |
+            **siteId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3787,9 +4001,9 @@ paths:
     post:
       tags:
         - sites
-      summary: Add a person
+      summary: Create a site membership
       description: |
-        Adds person **personId** as a member of site **siteId**.
+        Creates a site membership for person **personId** on site **siteId**.
 
         You can set the **role** to one of four types:
 
@@ -3798,7 +4012,7 @@ paths:
         * SiteContributor
         * SiteManager
         
-        **Note:** You can add more than one site member by 
+        **Note:** You can create more than one site membership by 
         specifying a list of people in the JSON body like this:
         
         ```JSON
@@ -3840,29 +4054,18 @@ paths:
           }
         }
         ```
-      operationId: addSiteMember
+      operationId: createSiteMembership
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
-          name: siteMemberBody
+          name: siteMembershipBodyCreate
           description: The person to add and their role
           required: true
           schema:
-            required:
-              - role
-              - id
-            properties:
-              role:
-                type: string
-                enum:
-                - SiteConsumer
-                - SiteCollaborator
-                - SiteContributor
-                - SiteManager
-              id:
-                type: string
+            $ref: '#/definitions/SiteMembershipBodyCreate'
       responses:
         '201':
           description: Successful response
@@ -3871,15 +4074,16 @@ paths:
         '400':
           description: |
             Invalid parameter: value of **role** or **id** is invalid
-            or **siteMemberBody** invalid
+            or **siteMembershipBodyCreate** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '403':
-          description: If the user does not have permission to invite a person
+          description: User does not have permission to invite a person
         '404':
-          description: If **siteId** or **personId** does not exist
+          description: |
+            **siteId** or **personId** does not exist
         '409':
-          description: If the person with this **id** is already a member
+          description: Person with this **id** is already a member
         default:
           description: Unexpected error
           schema:
@@ -3888,12 +4092,12 @@ paths:
     get:
       tags:
         - sites
-      summary: Get a site member
+      summary: Get a site membership
       description: |
-        Returns site membership information for person **personId** on site **siteId**.
+        Gets site membership information for person **personId** on site **siteId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: getSiteMember
+      operationId: getSiteMembership
       produces:
         - application/json
       parameters:
@@ -3906,9 +4110,10 @@ paths:
           schema:
             $ref: '#/definitions/SiteMemberEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** or **personId** does not exist
+          description: |
+            **siteId** or **personId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3916,7 +4121,7 @@ paths:
     put:
       tags:
         - sites
-      summary: Update a site member
+      summary: Update a site membership
       description: |
         Update the membership of person **personId** in site **siteId**.
         
@@ -3928,27 +4133,19 @@ paths:
         * SiteCollaborator
         * SiteContributor
         * SiteManager
-      operationId: updateSiteMember
+      operationId: updateSiteMembership
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
-          name: siteMemberRoleBody
+          name: siteMembershipBodyUpdate
           description: The persons new role
           required: true
           schema:
-            required:
-              - role
-            properties:
-              role:
-                type: string
-                enum:
-                - SiteConsumer
-                - SiteCollaborator
-                - SiteContributor
-                - SiteManager
+            $ref: '#/definitions/SiteMembershipBodyUpdate'
       responses:
         '200':
           description: Successful response
@@ -3957,11 +4154,14 @@ paths:
         '400':
           description: |
             Invalid parameter: **role** does not exist
-            or **siteMemberRoleBody** invalid
+            or **siteMembershipBodyUpdate** invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **siteId** or **personId** does not exist
+          description: |
+            **siteId** or **personId** does not exist
+        '422':
+          description: Integrity exception (eg. last site member must be a site manager) or not allowed to update member          
         default:
           description: Unexpected error
           schema:
@@ -3969,12 +4169,12 @@ paths:
     delete:
       tags:
         - sites
-      summary: Delete a site member
+      summary: Delete a site membership
       description: |
-        Removes person **personId** as a member of site **siteId**.
+        Deletes person **personId** as a member of site **siteId**.
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-      operationId: removeSiteMember
+      operationId: deleteSiteMembership
       produces:
         - application/json
       parameters:
@@ -3984,9 +4184,12 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **personId** or **siteId** does not exist
+          description: |
+            **siteId** or **personId** does not exist
+        '422':
+          description: Integrity exception (eg. last site member must be a site manager) or not allowed to delete member
         default:
           description: Unexpected error
           schema:
@@ -3995,9 +4198,9 @@ paths:
     get:
       tags:
         - tags
-      summary: Get tags
-      description: Returns a list of tags in this repository.
-      operationId: getTags
+      summary: List tags
+      description: Gets a list of tags in this repository.
+      operationId: listTags
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
@@ -4013,7 +4216,7 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: If authentication fails
+          description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -4023,7 +4226,7 @@ paths:
       tags:
         - tags
       summary: Get a tag
-      description: Return a specific tag with **tagId**.
+      description: Get a specific tag with **tagId**.
       produces:
         - application/json
       operationId: getTag
@@ -4040,9 +4243,10 @@ paths:
               id: ed2444b5-d0c1-440b-b5b8-34a53e578091
               tag: test tag 1
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **tagId** does not exist
+          description: |
+            **tagId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -4057,16 +4261,13 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/tagIdParam'
+        - $ref: '#/parameters/fieldsParam'        
         - in: body
-          name: tagBody
+          name: tagBodyUpdate
           description: The updated tag
           required: true
           schema:
-            required:
-              - tag
-            properties:
-              tag:
-                type: string
+            $ref: '#/definitions/TagBody'
       responses:
         '200':
           description: Successful response
@@ -4074,11 +4275,12 @@ paths:
             $ref: '#/definitions/TagEntry'
         '400':
           description: |
-            Invalid parameter: **tagBody** is invalid   
+            Invalid parameter: **tagBodyUpdate** is invalid
         '401':
-          description: If authentication fails         
+          description: Authentication failed         
         '404':
-          description: If **tagId** does not exist
+          description: |
+            **tagId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -4088,7 +4290,7 @@ paths:
       tags:
         - networks
       summary: Get a network
-      description: Returns information for a network **networkId**.
+      description: Gets information for a network **networkId**.
       operationId: getNetwork
       parameters:
         - $ref: '#/parameters/networkIdParam'
@@ -4101,20 +4303,23 @@ paths:
           schema:
             $ref: '#/definitions/PersonNetworkEntry'
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **networkId** does not exist
+          description: |
+            **networkId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
       summary: Create a shared link to a file
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Create a shared link to the file **nodeId** in the request body.
         
         **Note:** You can create shared links to more than one file 
@@ -4157,18 +4362,16 @@ paths:
           }
         }
         ```
-      operationId: addSharedLink
+      operationId: createSharedLink
       parameters:
         - $ref: '#/parameters/sharedLinkEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
-          name: sharedLinkBody
+          name: sharedLinkBodyCreate
           description: The nodeId to create a shared link for.
           required: true
           schema:
-            properties:
-              nodeId:
-                type: string
+            $ref: '#/definitions/SharedLinkBodyCreate'
       consumes:
         - application/json
       produces:
@@ -4177,32 +4380,38 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeSharedLinkEntry'
+            $ref: '#/definitions/SharedLinkEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or does not identify a file
-            or **sharedLinkBody** invalid
+            Invalid parameter: **nodeId** is not a valid format, or does not identify a file,
+            or **sharedLinkBodyCreate** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission to create **sharedId** (eg. no read permission)
+          description: Current user does not have permission to create **sharedId** (for example, no read permission)
         '404':
-          description: If **nodeId** does not exist
+          description: |
+            **nodeId** does not exist
         '409':
-          description: If shared link already exists for **nodeId**
+          description: Shared link already exists for **nodeId**
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
-      summary: Find shared links
-      description: Find (search for) links that current user has read permission on source node.
-      operationId: findSharedLinks
+      summary: List shared links
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Get a list of links that the current user has read permission on source node.
+
+        **Note:** The list of links is eventually consistent so newly created shared links may not appear immediately.
+      operationId: listSharedLinks
       parameters:
         - name: where
           in: query
@@ -4222,23 +4431,25 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeSharedLinkPaging'
+            $ref: '#/definitions/SharedLinkPaging'
         '401':
-          description: If authentication fails            
+          description: Authentication failed            
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
       summary: Get a shared link
       description: |
-        Returns minimal information for the file with shared link identifier **sharedId**.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets minimal information for the file with shared link identifier **sharedId**.
 
         **Note:** No authentication is required to call this endpoint.
       operationId: getSharedLink
@@ -4252,24 +4463,28 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeSharedLinkEntry'
+            $ref: '#/definitions/SharedLinkEntry'
         '400':
           description: |
             Invalid parameter: **sharedId** is not a valid format
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
       summary: Deletes a shared link
-      description: Deletes the shared link with identifier **sharedId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Deletes the shared link with identifier **sharedId**.
       operationId: deleteSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -4282,25 +4497,28 @@ paths:
           description: |
             Invalid parameter: **sharedId** is not a valid format
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '403':
-          description: If current user does not have permission to delete **sharedId**
+          description: Current user does not have permission to delete **sharedId**
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/content':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
-      summary: Get file content
+      summary: Get shared link content
       description: |
-        Returns the content of the file with shared link identifier **sharedId**.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the content of the file with shared link identifier **sharedId**.
 
         **Note:** No authentication is required to call this endpoint.
       operationId: getSharedLinkContent
@@ -4312,32 +4530,35 @@ paths:
         '200':
           description: Successful response
         '304':
-          description: If the content has not been modified since the date provided in the If-Modified-Since header
+          description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: |
             Invalid parameter: **sharedId** is not a valid format
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/renditions':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - renditions
-        - 5.2 changes
-      summary: List information for created renditions
+        - shared-links
+      summary: List renditions for a shared link
       description: |
-        Returns the rendition information for the file with shared link identifier **sharedId**.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of the rendition information for the file with shared link identifier **sharedId**.
         
-        This will only return rendition information, including the rendition id, for each rendition
-        where the rendition status is CREATED (ie. available to view/download).
+        This API method returns rendition information, including the rendition id, for each rendition
+        where the rendition status is CREATED, which means the rendition is available to view/download.
         
         **Note:** No authentication is required to call this endpoint.      
-      operationId: getSharedLinkRenditions
+      operationId: listSharedLinkRenditions
       parameters:
         - $ref: '#/parameters/sharedIdParam'
       responses:
@@ -4349,21 +4570,60 @@ paths:
           description: |
             Invalid parameter: **sharedId** is not a valid format
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system          
+          description: Shared links are disabled for the system          
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/shared-links/{sharedId}/renditions/{renditionId}':
+    get:
+      x-alfresco-since: "5.2"
+      tags:
+        - shared-links
+      summary: Get shared link rendition information
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets rendition information for the file with shared link identifier **sharedId**.
+        
+        This API method returns rendition information where the rendition status is CREATED, 
+        which means the rendition is available to view/download.
+        
+        **Note:** No authentication is required to call this endpoint.      
+      operationId: getSharedLinkRendition
+      parameters:
+        - $ref: '#/parameters/sharedIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RenditionEntry'
+        '400':
+          description: |
+            Invalid parameter: **sharedId** is not a valid format, or **renditionId** is invalid
+        '404':
+          description: |
+            **sharedId**  or **renditionId** does not exist (ie. not CREATED)
+        '501':
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'        
   '/shared-links/{sharedId}/renditions/{renditionId}/content':
     get:
+      x-alfresco-since: "5.2"
       tags:
-        - renditions
-        - 5.2 changes
+        - shared-links
       summary: Get shared link rendition content
       description: |
-        Returns the rendition content for file with shared link identifier **sharedId**.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the rendition content for file with shared link identifier **sharedId**.
 
         **Note:** No authentication is required to call this endpoint.
       operationId: getSharedLinkRenditionContent
@@ -4376,25 +4636,28 @@ paths:
         '200':
           description: Successful response
         '304':
-          description: If the content has not been modified since the date provided in the If-Modified-Since header
+          description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
           description: |
             Invalid parameter: **sharedId** is not a valid format, or **renditionId** is invalid
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/email':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - shared-links
-        - 5.2 changes
       summary: Email shared link
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Sends email with app-specific url including identifier **sharedId**.
 
         The client and recipientEmails properties are mandatory in the request body. For example, to email a shared link with minimum info:
@@ -4420,21 +4683,11 @@ paths:
       parameters:
         - $ref: '#/parameters/sharedIdParam'
         - in: body
-          name: emailSharedLinkBody
+          name: sharedLinkBodyEmail
           description: The shared link email to send.
           required: true
           schema:
-            properties:
-              client:
-                type: string
-              message:
-                type: string
-              locale:
-                type: string
-              recipientEmails:
-                type: array
-                items:
-                  type: string
+            $ref: '#/definitions/SharedLinkBodyEmail'
       consumes:
         - application/json
       responses:
@@ -4443,25 +4696,28 @@ paths:
         '400':
           description: |
             Invalid parameter: **sharedId** is not a valid format
-            or **emailSharedLinkBody** invalid
+            or **sharedLinkBodyEmail** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **sharedId** does not exist
+          description: |
+            **sharedId** does not exist
         '501':
-          description: If shared links are disabled for the system
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/queries/nodes':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - queries
-        - 5.2 changes
       summary: Find nodes
       description: |
-        Returns a list of nodes that match the given search criteria.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of nodes that match the given search criteria.
 
         The search term is used to look for nodes that match against name, title, description, full text content or tags.
 
@@ -4515,27 +4771,31 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **nodeType** unknown, or **orderBy** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         '404':
-          description: If **rootNodeId** does not exist
+          description: |
+            **rootNodeId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/queries/sites':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - queries
-        - 5.2 changes
       summary: Find sites
       description: |
-        Returns a list of sites that match the given search criteria.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of sites that match the given search criteria.
 
         The search term is used to look for sites that match against site id, title or description.
 
         The search term must contain a minimum of 2 alphanumeric characters.
         
-        You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        The default sort order for the returned list is for sites to be sorted by ascending id. 
+        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * id
         * title
         * description
@@ -4561,19 +4821,21 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **orderBy** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'            
   '/queries/people':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - queries
-        - 5.2 changes
       summary: Find people
       description: |
-        Returns a list of people that match the given search criteria.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of people that match the given search criteria.
         
         The search term is used to look for matches against person id, firstname and lastname.
 
@@ -4608,7 +4870,7 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **orderBy** invalid
         '401':
-          description: If authentication fails          
+          description: Authentication failed          
         default:
           description: Unexpected error
           schema:
@@ -4678,6 +4940,25 @@ definitions:
         description: |
           The value of the **maxItems** parameter used to generate this list,
           or if there was no **maxItems** parameter the default value is 100
+  SiteBodyCreate:
+    type: object
+    required:
+      - title
+      - visibility
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      visibility:
+        type: string
+        default: PUBLIC
+        enum:
+          - PUBLIC
+          - PRIVATE
+          - MODERATED
   SitePaging:
     type: object
     required:
@@ -4724,6 +5005,8 @@ definitions:
           - PRIVATE
           - MODERATED
           - PUBLIC
+      preset:
+        type: string
       role:
         type: string
         enum:
@@ -4731,6 +5014,19 @@ definitions:
           - SiteCollaborator
           - SiteContributor
           - SiteManager
+  SiteBodyUpdate:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      visibility:
+        type: string
+        enum:
+          - PRIVATE
+          - MODERATED
+          - PUBLIC
   SiteContainerPaging:
     type: object
     required:
@@ -4765,6 +5061,33 @@ definitions:
         type: string
       folderId:
         type: string
+  SiteMembershipBodyCreate:
+    type: object
+    required:
+      - role
+      - id
+    properties:
+      role:
+        type: string
+        enum:
+        - SiteConsumer
+        - SiteCollaborator
+        - SiteContributor
+        - SiteManager
+      id:
+        type: string
+  SiteMembershipBodyUpdate:
+    type: object
+    required:
+      - role
+    properties:
+      role:
+        type: string
+        enum:
+        - SiteConsumer
+        - SiteCollaborator
+        - SiteContributor
+        - SiteManager
   SiteMemberPaging:
     type: object
     required:
@@ -4852,6 +5175,85 @@ definitions:
           - SiteCollaborator
           - SiteContributor
           - SiteManager
+  PersonBodyCreate:
+    type: object
+    required:
+      - id
+      - firstName
+      - email
+      - enabled
+      - password
+    properties:
+      id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      description:
+        type: string
+      email:
+        type: string
+      skypeId:
+        type: string
+      googleId:
+        type: string
+      instantMessageId:
+        type: string
+      jobTitle:
+        type: string
+      location:
+        type: string
+      company:
+        $ref: '#/definitions/Company'
+      mobile:
+        type: string
+      telephone:
+        type: string
+      userStatus:
+        type: string
+      enabled:
+        type: boolean
+        default: true
+      emailNotificationsEnabled:
+        type: boolean
+      password:
+        type: string
+  PersonBodyUpdate:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      description:
+        type: string
+      email:
+        type: string
+      skypeId:
+        type: string
+      googleId:
+        type: string
+      instantMessageId:
+        type: string
+      jobTitle:
+        type: string
+      location:
+        type: string
+      company:
+        $ref: '#/definitions/Company'
+      mobile:
+        type: string
+      telephone:
+        type: string
+      userStatus:
+        type: string
+      enabled:
+        type: boolean
+      emailNotificationsEnabled:
+        type: boolean
+      password:
+        type: string
   PersonPaging:
     type: object
     properties:
@@ -4936,6 +5338,13 @@ definitions:
         type: string
       email:
         type: string
+  CommentBody:
+    type: object
+    required:
+      - content
+    properties:
+      content:
+        type: string
   CommentPaging:
     type: object
     required:
@@ -4993,6 +5402,13 @@ definitions:
         type: boolean
       canDelete:
         type: boolean
+  TagBody:
+    type: object
+    required:
+      - tag
+    properties:
+      tag:
+        type: string
   TagPaging:
     type: object
     required:
@@ -5103,6 +5519,22 @@ definitions:
       usage:
         type: integer
         format: int64
+  RatingBody:
+    type: object
+    required:
+      - id
+      - myRating
+    properties:
+      id:
+        type: string
+        description: The rating scheme type. Possible values are likes and fiveStar.
+        default: likes
+        enum:
+          - likes
+          - fiveStar
+      myRating:
+        type: string
+        description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar
   RatingPaging:
     type: object
     required:
@@ -5154,6 +5586,13 @@ definitions:
       myRating:
         type: string
         description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar.
+  FavoriteBodyCreate:
+    type: object
+    required:
+      - target
+    properties:
+       target:
+          type: object
   FavoritePaging:
     type: object
     required:
@@ -5196,6 +5635,27 @@ definitions:
         description: The time the object was made a favorite.
       target:
         type: object
+  FavoriteSiteBodyCreate:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+  FavoriteSiteEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/FavoriteSite'
+  FavoriteSite:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
   ActivityPaging:
     type: object
     required:
@@ -5303,6 +5763,22 @@ definitions:
       value:
         type: string        
         description: The value of the preference. Note that this can be of any JSON type.
+  SiteMembershipRequestBodyCreate:
+    type: object
+    required:
+      - id
+    properties:
+      message:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+  SiteMembershipRequestBodyUpdate:
+    type: object
+    properties:
+      message:
+        type: string
   SiteMembershipRequestPaging:
     type: object
     required:
@@ -5368,14 +5844,14 @@ definitions:
         type: integer
       encoding:
         type: string
-  AssocInfo:
+  AssociationInfo:
     type: object
     required:
       - assocType
     properties:
       assocType:
         type: string
-  AssocTarget:
+  AssociationBody:
     type: object
     required:
     - targetId
@@ -5384,18 +5860,18 @@ definitions:
       targetId:
         type: string
       assocType:
-        type: string        
-  ChildAssocInfo:
+        type: string
+  ChildAssociationInfo:
     type: object
     required:
       - assocType
       - isPrimary
     properties:
       assocType:
-        type: string 
+        type: string
       isPrimary:
-        type: boolean  
-  AssocChild:
+        type: boolean
+  ChildAssociationBody:
     type: object
     required:
     - childId
@@ -5423,6 +5899,106 @@ definitions:
         type: string
       isComplete:
         type: boolean
+  NodeBodyCreate:
+    type: object
+    required:
+      - name
+      - nodeType
+    properties:
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+      nodeType:
+        type: string
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        additionalProperties:
+          type: string
+      relativePath:
+        type: string
+      association:
+        type: object
+        properties:
+          assocType:
+            type: string
+      secondaryChildren:
+        type: array
+        items:
+          $ref: '#/definitions/ChildAssociationBody'
+      targets:
+        type: array
+        items:
+          $ref: '#/definitions/AssociationBody'
+  NodeBodyUpdate:
+    type: object
+    properties:
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+      nodeType:
+        type: string
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        additionalProperties:
+          type: string
+  NodeBodyCopy:
+    type: object
+    required:
+      - targetParentId
+    properties:
+      targetParentId:
+        type: string
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+  NodeBodyMove:
+    type: object
+    required:
+      - targetParentId
+    properties:
+      targetParentId:
+        type: string
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+  NodeBodyLock:
+    type: object
+    properties:
+      timeToExpire:
+        type: integer
+        minimum: 0
+      type:
+        type: string
+        default: ALLOW_OWNER_CHANGES
+        enum:
+         - ALLOW_OWNER_CHANGES
+         - FULL
+      lifetime:
+        type: string
+        default: PERSISTENT
+        enum:
+         - PERSISTENT
+         - EPHEMERAL
   NodePaging:
     type: object
     properties:
@@ -5434,10 +6010,10 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeMinimalEntry'
+              $ref: '#/definitions/NodeEntry'
           source:
-            $ref: '#/definitions/NodeMinimal'
-  NodeAssocPaging:
+            $ref: '#/definitions/Node'
+  NodeAssociationPaging:
     type: object
     properties:
       list:
@@ -5448,10 +6024,10 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeAssocMinimalEntry'
+              $ref: '#/definitions/NodeAssociationEntry'
           source:
-            $ref: '#/definitions/NodeMinimal'
-  NodeChildAssocPaging:
+            $ref: '#/definitions/Node'
+  NodeChildAssociationPaging:
     type: object
     properties:
       list:
@@ -5462,158 +6038,45 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeChildAssocMinimalEntry'
+              $ref: '#/definitions/NodeChildAssociationEntry'
           source:
-            $ref: '#/definitions/NodeMinimal'                         
-  NodeMinimalEntry:
+            $ref: '#/definitions/Node'
+  NodeAssociationEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeMinimal'
-  NodeMinimal:
-    type: object
-    properties:
-      id:
-        type: string
-      parentId:
-        type: string
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      isLocked:
-        type: boolean
-        default: false
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
-      path:
-        $ref: '#/definitions/PathInfo'
-  NodeAssocMinimalEntry:
+        $ref: '#/definitions/NodeAssociation'
+  NodeAssociation:
+    allOf:
+      - $ref: '#/definitions/Node'
+      - type: object
+        properties:
+          association:
+            $ref: '#/definitions/AssociationInfo'
+  NodeChildAssociationEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeAssocMinimal'        
-  NodeAssocMinimal:
-    type: object
-    required:
-      - id
-      - parentId
-      - name
-      - nodeType
-      - isFolder
-      - isFile
-      - modifiedAt
-      - modifiedByUser
-      - createdAt
-      - createdByUser
-      - association
-    properties:
-      id:
-        type: string
-      parentId:
-        type: string
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      isLocked:
-        type: boolean
-        default: false
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
-      association:
-        $ref: '#/definitions/AssocInfo' 
-  NodeChildAssocMinimalEntry:
+        $ref: '#/definitions/NodeChildAssociation'
+  NodeChildAssociation:
+    allOf:
+      - $ref: '#/definitions/Node'
+      - type: object
+        properties:
+          association:
+            $ref: '#/definitions/ChildAssociationInfo'
+  AssociationEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeChildAssocMinimal'
-  NodeChildAssocMinimal:
-    type: object
-    properties:
-      id:
-        type: string
-      parentId:
-        type: string
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      isLocked:
-        type: boolean
-        default: false
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
-      association:
-        $ref: '#/definitions/ChildAssocInfo'                         
-  NodeAssocEntry:
-    type: object
-    required:
-      - entry
-    properties:
-      entry:
-        $ref: '#/definitions/NodeAssoc'
-  NodeAssoc:
+        $ref: '#/definitions/Association'
+  Association:
     type: object
     required:
       - targetId
@@ -5623,14 +6086,14 @@ definitions:
         type: string
       assocType:
         type: string
-  NodeChildAssocEntry:
+  ChildAssociationEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeChildAssoc'
-  NodeChildAssoc:
+        $ref: '#/definitions/ChildAssociation'
+  ChildAssociation:
     type: object
     required:
       - childId
@@ -5646,26 +6109,27 @@ definitions:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeFull'
-  NodeFull:
+        $ref: '#/definitions/Node'
+  Node:
     type: object
     required:
     - id
+    - name
     - nodeType
     - isFolder
     - isFile
     - createdAt
     - createdByUser
+    - modifiedAt
+    - modifiedByUser
     properties:
       id:
-        type: string
-      parentId:
         type: string
       name:
         type: string
         pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
         description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
           The character . must not be used at the end of the name.
       nodeType:
         type: string
@@ -5673,7 +6137,6 @@ definitions:
         type: boolean
       isFile:
         type: boolean
-        default: false
       isLocked:
         type: boolean
         default: false
@@ -5687,6 +6150,10 @@ definitions:
         format: date-time
       createdByUser:
         $ref: '#/definitions/UserInfo'
+      parentId:
+        type: string
+      isLink:
+        type: boolean
       content:
         $ref: '#/definitions/ContentInfo'
       aspectNames:
@@ -5699,7 +6166,29 @@ definitions:
         type: array
         items:
           type: string
-  NodeSharedLinkPaging:
+      path:
+        $ref: '#/definitions/PathInfo'
+  SharedLinkBodyCreate:
+    type: object
+    required:
+      - nodeId
+    properties:
+      nodeId:
+        type: string
+  SharedLinkBodyEmail:
+    type: object
+    properties:
+      client:
+        type: string
+      message:
+        type: string
+      locale:
+        type: string
+      recipientEmails:
+        type: array
+        items:
+          type: string
+  SharedLinkPaging:
     type: object
     required:
       - list
@@ -5715,15 +6204,15 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/NodeSharedLinkEntry'
-  NodeSharedLinkEntry:
+              $ref: '#/definitions/SharedLinkEntry'
+  SharedLinkEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeSharedLink'
-  NodeSharedLink:
+        $ref: '#/definitions/SharedLink'
+  SharedLink:
     type: object
     properties:
       id:
@@ -5749,6 +6238,13 @@ definitions:
         type: array
         items:
           type: string
+  RenditionBodyCreate:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
   RenditionEntry:
     type: object
     required:
@@ -5765,6 +6261,9 @@ definitions:
         $ref: '#/definitions/ContentInfo'
       status:
         type: string
+        enum:
+          - CREATED
+          - NOT_CREATED
   RenditionPaging:
     type: object
     properties:
@@ -5788,98 +6287,33 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/DeletedNodeMinimalEntry'
-  DeletedNodeMinimalEntry:
-    type: object
-    properties:
-      entry:
-        $ref: '#/definitions/DeletedNodeMinimal'
-  DeletedNodeMinimal:
-    type: object
-    properties:
-      id:
-        type: string
-      archivedByUser:
-        $ref: '#/definitions/UserInfo'
-      archivedAt:
-        type: string
-        format: date-time
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
+              $ref: '#/definitions/DeletedNodeEntry'
   DeletedNodeEntry:
     type: object
     properties:
       entry:
         $ref: '#/definitions/DeletedNode'
   DeletedNode:
+    allOf:
+      - $ref: '#/definitions/Node'
+      - type: object
+        required:
+          - archivedByUser
+          - archivedAt
+        properties:
+          archivedByUser:
+            $ref: '#/definitions/UserInfo'
+          archivedAt:
+            type: string
+            format: date-time
+  RevertBody:
     type: object
     properties:
-      id:
-        type: string
-      archivedByUser:
-        $ref: '#/definitions/UserInfo'
-      archivedAt:
-        type: string
-        format: date-time
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
+      majorVersion:
         type: boolean
-      isFile:
-        type: boolean
-      modifiedAt:
+      comment:
         type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      createdAt:
-        type: string
-        format: date-time
-      createdByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
-      aspectNames:
-        type: array
-        items:
-          type: string
-      properties:
-        type: object
-        additionalProperties:
-          type: string
-      allowableOperations:
-        type: array
-        items:
-          type: string
-  VersionNodesPaging:
+  VersionPaging:
     type: object
     properties:
       list:
@@ -5890,45 +6324,22 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/VersionNodeMinimalEntry'
-  VersionNodeMinimalEntry:
+              $ref: '#/definitions/VersionEntry'
+  VersionEntry:
     type: object
     properties:
       entry:
-        $ref: '#/definitions/VersionNodeMinimal'
-  VersionNodeMinimal:
+        $ref: '#/definitions/Version'
+  Version:
     type: object
-    properties:
-      id:
-        type: string
-      versionComment:
-        type: string        
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      isFolder:
-        type: boolean
-      isFile:
-        type: boolean
-      modifiedAt:
-        type: string
-        format: date-time
-      modifiedByUser:
-        $ref: '#/definitions/UserInfo'
-      content:
-        $ref: '#/definitions/ContentInfo'
-  VersionNodeEntry:
-    type: object
-    properties:
-      entry:
-        $ref: '#/definitions/VersionNode'
-  VersionNode:
-    type: object
+    required:
+      - id
+      - name
+      - nodeType
+      - isFolder
+      - isFile
+      - modifiedAt
+      - modifiedByUser
     properties:
       id:
         type: string

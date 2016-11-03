@@ -17,11 +17,15 @@ produces:
 paths:
   '/tickets':
     post:
+      x-alfresco-since: "5.2"
       tags:
         - authentication
       summary: Create ticket (login)
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Logs in and returns the new authentication ticket.
+
         The userId and password properties are mandatory in the request body. For example:
         ```JSON
         {
@@ -37,15 +41,11 @@ paths:
       operationId: createTicket
       parameters:
         - in: body
-          name: loginRequest
+          name: ticketBodyCreate
           description: The user credential.
           required: true
           schema:
-            properties:
-              userId:
-                type: string
-              password:
-                type: string
+            $ref: '#/definitions/TicketBody'
       consumes:
         - application/json
       produces:
@@ -54,21 +54,25 @@ paths:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/LoginTicketEntry'
+            $ref: '#/definitions/TicketEntry'
         '400':
-          description: If the **userId** and/or **password** are/is not provided
+          description: |
+            **userId** or **password** is not provided
         '403':
-          description: If the login fails
+          description: Login failed
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   '/tickets/-me-':
     get:
+      x-alfresco-since: "5.2"
       tags:
         - authentication
       summary: Validate ticket
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Validates the specified ticket (derived from Authorization header) is still valid.
 
         For example, you can pass the Authorization request header using Javascript:
@@ -82,29 +86,32 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/ValidateTicketEntry'
+            $ref: '#/definitions/ValidTicketEntry'
         '400':
-          description: If the URL path does not include **-me-** or the ticket is not provided by the Authorization header
+          description: URL path does not include **-me-** or the ticket is not provided by the Authorization header
         '404':
-          description: If the status of the user has changed (e.g. The user is locked or the account is disabled) or the ticket has expired
+          description: Status of the user has changed (for example, the user is locked or the account is disabled) or the ticket has expired
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
+      x-alfresco-since: "5.2"
       tags:
         - authentication
       summary: Delete ticket (logout)
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
         Deletes logged in ticket (logout).
       operationId: deleteTicket
       responses:
         '204':
           description: Successful response
         '400':
-          description: If the URL path does not include **-me-** or the ticket is not provided by the Authorization header
+          description: URL path does not include **-me-** or the ticket is not provided by the Authorization header
         '404':
-          description: If the status of the user has changed (e.g. The user is locked or the account is disabled) or the ticket has expired
+          description: Status of the user has changed (for example, the user is locked or the account is disabled) or the ticket has expired
         default:
           description: Unexpected error
           schema:
@@ -136,21 +143,36 @@ definitions:
             type: string
           logId:
             type: string
-  LoginTicketEntry:
+  TicketBody:
     type: object
     properties:
-      entry:
-        type: object
-        properties:
-          id:
-            type: string
-          userId:
-            type: string
-  ValidateTicketEntry:
+      userId:
+        type: string
+      password:
+        type: string
+  TicketEntry:
     type: object
+    required:
+      - entry
     properties:
       entry:
-        type: object
-        properties:
-          id:
-            type: string
+        $ref: '#/definitions/Ticket'
+  Ticket:
+    type: object
+    properties:
+      id:
+        type: string
+      userId:
+        type: string
+  ValidTicketEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ValidTicket'
+  ValidTicket:
+    type: object
+    properties:
+      id:
+        type: string

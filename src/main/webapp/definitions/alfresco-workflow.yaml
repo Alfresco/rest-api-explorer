@@ -25,17 +25,17 @@ tags:
     description: Retrieve and manage tasks
 parameters:
   processIdParam:
-    name: "processId"
-    in: "path"
+    name: processId
+    in: path
     description:  The identifier of a process.
     required: true
-    type: "string"
+    type: string
   processDefinitionIdParam:
-    name: "processDefinitionId"
-    in: "path"
+    name: processDefinitionId
+    in: path
     description: The identifier of a process definition.
     required: true
-    type: "string"
+    type: string
   taskIdParam:
     name: taskId
     in: path
@@ -43,17 +43,19 @@ parameters:
     required: true
     type: string
   skipCountParam:
-    name: "skipCount"
-    in: "query"
+    name: skipCount
+    in: query
     description: The number of entities that  exist in the collection before those included in this list.
     required: false
-    type: "integer"
+    type: integer
+    minimum: 0
   maxItemsParam:
-    name: "maxItems"
-    in: "query"
+    name: maxItems
+    in: query
     description: The maximum number of items to return in the list.
     required: false
-    type: "integer"
+    type: integer
+    minimum: 1
   propertiesParam:
     name: properties
     in: query
@@ -64,23 +66,23 @@ parameters:
       type: string
     collectionFormat: csv
   variableNameParam:
-    name: "variableName"
+    name: variableName
     in: path
     description:  The name of a variable.
     required: true
-    type: "string"
+    type: string
   itemIdParam:
-    name: "itemId"
-    in: "path"
+    name: itemId
+    in: path
     description: The identifier of an item.
     required: true
-    type: "string"
+    type: string
   selectParam:
-    name: "select"
-    in: "query"
+    name: select
+    in: query
     description: A string specifying a required subset of properties to be returned for an entity or list of entities. Properties are separated by commas.
     required: false
-    type: "integer"
+    type: integer
   orderByParam:
     name: orderBy
     in: query
@@ -98,26 +100,26 @@ parameters:
       type: string
     collectionFormat: csv
   whereParam:
-    name: "where"
-    in: "query"
+    name: where
+    in: query
     description: A string to restrict the returned objects by using a predicate.
     required: false
-    type: "string"
+    type: string
 paths:
   /deployments:
     get:
       tags:
         - deployments
-      summary: Get deployments
+      summary: List deployments
       description: |
-        Returns a list of deployments.
+        Gets a list of deployments.
 
         The authenticated user must have role admin (non-network deployments) or
         network admin (networks enabled).
 
         If networks are enabled, the network admin can only see the deployments
         in the given network.
-      operationId: getDeployments
+      operationId: listDeployments
       parameters:
         - $ref: "#/parameters/skipCountParam"
         - $ref: "#/parameters/maxItemsParam"
@@ -133,7 +135,7 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -144,7 +146,7 @@ paths:
         - deployments
       summary: Get a deployment
       description: |
-        Returns a specified deployment defined by **deploymentId**.
+        Gets a specified deployment defined by **deploymentId**.
 
         The authenticated user must have role admin (non-network deployments) or
         network admin (networks enabled).
@@ -167,9 +169,10 @@ paths:
           schema:
             $ref: '#/definitions/DeploymentEntry'
         '401':
-            description: If authentication fails
+          description: Authentication failed
         '404':
-          description: If **deploymentId** does not exist
+          description: |
+            **deploymentId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -182,7 +185,7 @@ paths:
         This request will delete the deployment including the tasks, process definitions contained in the deployment.
 
         The request will also delete processes and history information associated with the deployment.
-      operationId: removeDeployment
+      operationId: deleteDeployment
       produces:
         - application/json
       parameters:
@@ -195,7 +198,7 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -204,16 +207,16 @@ paths:
     get:
       tags:
         - process-definitions
-      summary: Get process definitions
+      summary: List process definitions
       description: |
-        Returns a list of process definitions.
+        Gets a list of process definitions.
 
         In non-network deployments, any authenticated user will see all the
         process definitions.
 
         If networks are enabled, the network admin can only see the deployments
         in the given network.
-      operationId: getProcessDefinitions
+      operationId: listProcessDefinitions
       parameters:
         - $ref: "#/parameters/skipCountParam"
         - $ref: "#/parameters/maxItemsParam"
@@ -231,7 +234,7 @@ paths:
             description: |
               Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -242,7 +245,7 @@ paths:
         - process-definitions
       summary: Get a process definition
       description: |
-        Returns a process definition identified by **processDefinitionId**.
+        Gets a process definition identified by **processDefinitionId**.
 
         In non-network deployments, any authenticated user will see all the
         process definitions. If networks are enabled, the network admin can only
@@ -259,9 +262,10 @@ paths:
           schema:
             $ref: '#/definitions/ProcessDefinitionEntry'
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processDefinitionId** does not exist
+          description: |
+            **processDefinitionId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -272,7 +276,7 @@ paths:
         - process-definitions
       summary: Get a process definition image
       description: |
-        Returns an image that represents a single process definition identified by **processDefinitionId**.
+        Gets an image that represents a single process definition identified by **processDefinitionId**.
 
         In non-network deployments, any authenticated user will see all the
         process definitions.
@@ -291,9 +295,10 @@ paths:
           schema:
             type: file
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processDefinitionId** does not exist
+          description: |
+            **processDefinitionId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -304,7 +309,7 @@ paths:
         - process-definitions
       summary: Get a start form model
       description: |
-        Returns a model of the start form type definition.
+        Gets a model of the start form type definition.
 
         An authenticated user will have access to all start form models.
         In a network, only start form models that are inside the given network are returned.
@@ -320,9 +325,10 @@ paths:
           schema:
             $ref: '#/definitions/ProcessDefinitionEntry'
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processDefinitionId** does not exist
+          description: |
+            **processDefinitionId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -331,9 +337,9 @@ paths:
     get:
       tags:
         - processes
-      summary: Get processes
+      summary: List processes
       description: |
-        Returns a  list of processes.
+        Gets a  list of processes.
 
         An authenticated user will have access to a processes if the user has
         started the process or if the user is involved in any of the process’s
@@ -345,7 +351,7 @@ paths:
 
         If networks are enabled, the network admin can only see the deployments
         in the given network.
-      operationId: getProcesses
+      operationId: listProcesses
       parameters:
         - $ref: "#/parameters/skipCountParam"
         - $ref: "#/parameters/maxItemsParam"
@@ -363,7 +369,7 @@ paths:
             description: |
               Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -371,9 +377,9 @@ paths:
     post:
       tags:
         - processes
-      summary: Start a process
+      summary: Create a process
       description: |
-        Starts a new process.
+        Creates a new process.
 
         In non-network deployments, any authenticated user can start a new process for
         any process definition.
@@ -426,7 +432,7 @@ paths:
           }
         }
         ```
-      operationId: addProcess
+      operationId: createProcess
       produces:
         - application/json
       parameters:
@@ -445,7 +451,7 @@ paths:
             description: |
               Invalid parameter: **processBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -456,7 +462,7 @@ paths:
         - processes
       summary: Get a process
       description: |
-        Returns the process identified by **processId**.
+        Gets the process identified by **processId**.
 
         An authenticated user will have access to a process if the user has
         started the process or if the user is involved in any of the process’s
@@ -479,9 +485,10 @@ paths:
           schema:
             $ref: '#/definitions/ProcessEntry'
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -491,7 +498,7 @@ paths:
         - processes
       summary: Delete a process
       description: Deletes the process with the specified **processId**.
-      operationId: removeProcess
+      operationId: deleteProcess
       produces:
         - application/json
       parameters:
@@ -500,7 +507,7 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
           description: The processId does not exist
         default:
@@ -511,9 +518,9 @@ paths:
     get:
       tags:
         - processes
-      summary: Get variables
+      summary: List variables
       description: |
-        Returns a paged list of variables for the process **processId**.
+        Gets a list of variables for the process **processId**.
 
         An authenticated user will have access to a processes variables if the
         user has started  the process or if the user is involved in any of the
@@ -524,7 +531,7 @@ paths:
         perform all operations  on those variable. In network deployments,
         network administrators can see all variables in  their network and
         perform all operations on variables in their network.
-      operationId: getProcessVariables
+      operationId: listProcessVariables
       produces:
         - application/json
       parameters:
@@ -541,9 +548,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -551,7 +559,7 @@ paths:
     post:
       tags:
         - processes
-      summary: Add variable
+      summary: Create or update variables
       description: |
         Create or update a variable for a given process.
         If the variable does not exist yet, it will be created.        
@@ -601,7 +609,7 @@ paths:
           }
         }
         ```
-      operationId: addProcessVariables
+      operationId: createProcessVariables
       produces:
         - application/json
       parameters:
@@ -621,9 +629,10 @@ paths:
             description: |
               Invalid parameter: **variableBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -632,10 +641,10 @@ paths:
     put:
       tags:
         - processes
-      summary: Add a variable
+      summary: Create or update a variable
       description: |
         Creates or updates a specific variable **variableName** for process **processId**.
-      operationId: addProcessVariable
+      operationId: createProcessVariable
       produces:
         - application/json
       parameters:
@@ -656,9 +665,10 @@ paths:
             description: |
               Invalid parameter: **variableBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -668,7 +678,7 @@ paths:
         - processes
       summary: Delete a variable
       description: Deletes the variable **variableName** from the process with the specified **processId**.
-      operationId: removeProcessVariable
+      operationId: deleteProcessVariable
       produces:
         - application/json
       parameters:
@@ -678,9 +688,9 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: The **processId** does not exist, or the **variableName** does not exist
+          description: The **processId** does not exist or the **variableName** does not exist
         default:
           description: Unexpected error
           schema:
@@ -689,9 +699,9 @@ paths:
     get:
       tags:
         - processes
-      summary: Get items
+      summary: List items
       description: |
-        Returns a list of items for the specified process **processId**.
+        Gets a list of items for the specified process **processId**.
 
         An authenticated user will have access to a processes items if the
         user has started the process or if the user is involved in any of the
@@ -702,7 +712,7 @@ paths:
         perform all operations  on those items. In network deployments,
         network administrators can see all items in their network and
         perform all operations on items in their network.
-      operationId: getProcessItems
+      operationId: listProcessItems
       produces:
         - application/json
       parameters:
@@ -719,9 +729,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -729,13 +740,13 @@ paths:
     post:
       tags:
         - processes
-      summary: Add an item
+      summary: Create an item
       description: |
         Creates an item for process **processId**".
 
         If the item  already is part of that process the request will have no effect.
 
-        **Note:** You can add more than one item by
+        **Note:** You can create more than one item by
         specifying a list of items in the JSON body like this:
 
         ```JSON
@@ -775,7 +786,7 @@ paths:
           }
         }
         ```
-      operationId: addProcessItem
+      operationId: createProcessItem
       produces:
         - application/json
       parameters:
@@ -785,9 +796,7 @@ paths:
           description: The **nodeId** of the item
           required: true
           schema:
-            properties:
-              id:
-                type: string
+            $ref: '#/definitions/ItemBody'
       responses:
         '201':
           description: Successful response
@@ -797,9 +806,10 @@ paths:
             description: |
               Invalid parameter: **itemBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -811,7 +821,7 @@ paths:
       summary: Delete an item
       description: |
         Deletes the item with the specified **itemId** from the process with the specified **processId**.
-      operationId: removeProcessItem
+      operationId: deleteProcessItem
       produces:
         - application/json
       parameters:
@@ -821,9 +831,9 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: The **processId** does not exist, or the **itemId** does not exist
+          description: The **processId** does not exist or the **itemId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -831,11 +841,10 @@ paths:
   '/processes/{processId}/tasks':
     get:
       tags:
-        - processes
         - tasks
-      summary: Get tasks
+      summary: List tasks for a process
       description: |
-        Returns a list of tasks for the specified process **processId**.
+        Gets a list of tasks for the specified process **processId**.
 
         An authenticated user will have access to a processes tasks if the
         user has started the process or if the user is involved in any of the
@@ -846,7 +855,7 @@ paths:
         perform all operations  on those tasks. In network deployments,
         network administrators can see all tasks in their network and
         perform all operations on tasks in their network.
-      operationId: getProcessTasks
+      operationId: listTasksForProcess
       produces:
         - application/json
       parameters:
@@ -864,9 +873,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems**, **skipCount**, or **orderBy** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **processId** does not exist
+          description: |
+            **processId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -875,9 +885,9 @@ paths:
     get:
       tags:
         - tasks
-      summary: Get all tasks
+      summary: List tasks
       description: |
-        Returns a paged list of tasks visible to the authenticated user.
+        Gets a list of tasks visible to the authenticated user.
 
         Tasks are returned for which the authenticated user is the assignee  or
         a candidate. If networks are enabled, the only tasks that are inside
@@ -887,7 +897,7 @@ paths:
         perform all operations on tasks. In network deployments, network
         administrators can see all processes in their network and perform all
         operations on tasks in their network.
-      operationId: getTasks
+      operationId: listTasks
       parameters:
         - $ref: "#/parameters/skipCountParam"
         - $ref: "#/parameters/maxItemsParam"
@@ -905,7 +915,7 @@ paths:
             description: |
               Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -916,7 +926,7 @@ paths:
         - tasks
       summary: Get a task
       description: |
-        Returns the task identified by **taskId**.
+        Gets the task identified by **taskId**.
 
         An authenticated user will have access to a task if the user has
         started the process or if the user is involved in any of the process’s
@@ -939,9 +949,10 @@ paths:
           schema:
             $ref: '#/definitions/TaskEntry'
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1126,7 +1137,7 @@ paths:
             description: |
               Invalid parameter: **taskBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -1137,7 +1148,7 @@ paths:
         - tasks
       summary: Get a task form model
       description: |
-        Returns the model of the task form type definition.
+        Gets the model of the task form type definition.
 
         An authenticated user will have access to  access to all task form models.
         In a network, only task form models that are inside the given network
@@ -1159,9 +1170,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1170,9 +1182,9 @@ paths:
     get:
       tags:
         - tasks
-      summary: Get variables
+      summary: List variables
       description: |
-        Returns a  list of variables for the specified task **taskId**.
+        Gets a list of variables for the specified task **taskId**.
 
         An authenticated user will have access to a tasks variables if the
         user has started the process or if the user is involved in any of the
@@ -1183,7 +1195,7 @@ paths:
         perform all operations  on those variable. In network deployments,
         network administrators can see all variables in  their network and
         perform all operations on variables in their network.
-      operationId: getTaskVariables
+      operationId: listTaskVariables
       produces:
         - application/json
       parameters:
@@ -1201,9 +1213,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems**, **skipCount**, or **where** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1211,7 +1224,7 @@ paths:
     post:
       tags:
         - tasks
-      summary: Add variable
+      summary: Create or update variables
       description: |
         Create or update a variable for the task **taskId**.
         If the variable does not exist yet, it will be created.      
@@ -1261,7 +1274,7 @@ paths:
           }
         }
         ```
-      operationId: addTaskVariables
+      operationId: createTaskVariables
       produces:
         - application/json
       parameters:
@@ -1278,9 +1291,10 @@ paths:
           schema:
             $ref: '#/definitions/VariableBody'
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1289,7 +1303,7 @@ paths:
     put:
       tags:
         - tasks
-      summary: Add a variable
+      summary: Create or update a variable
       description: |
         Creates or updates a specific variable **variableName** for a given task **taskId**.
       operationId: updateTaskVariable
@@ -1313,9 +1327,10 @@ paths:
             description: |
               Invalid parameter: **variableBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1326,7 +1341,7 @@ paths:
       summary: Delete a variable
       description: |
         Deletes the variable with the specified **variableName** from the task with the specified **taskId**.
-      operationId: removeTaskVariable
+      operationId: deleteTaskVariable
       produces:
         - application/json
       parameters:
@@ -1336,9 +1351,9 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: The **taskId** does not exist, or the **variableName** does not exist
+          description: The **taskId** does not exist or the **variableName** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1347,9 +1362,9 @@ paths:
     get:
       tags:
         - tasks
-      summary: Get items
+      summary: List items
       description: |
-        Returns a list of items for the specified task **taskId**.
+        Gets a list of items for the specified task **taskId**.
 
         An authenticated user will have access to a task's items if the
         user has started the process or if the user is involved in any of the
@@ -1360,7 +1375,7 @@ paths:
         perform all operations  on those items. In network deployments,
         network administrators can see all items in their network and
         perform all operations on items in their network.
-      operationId: getTaskItems
+      operationId: listTaskItems
       produces:
         - application/json
       parameters:
@@ -1377,9 +1392,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1387,13 +1403,13 @@ paths:
     post:
       tags:
         - tasks
-      summary: Add an item
+      summary: Create an item
       description: |
         Creates an item for a given task **taskId**.
 
         If the item  already is part of that task the request will have no effect.
 
-        **Note:** You can add more than one item by
+        **Note:** You can create more than one item by
         specifying a list of items in the JSON body like this:
 
         ```JSON
@@ -1433,7 +1449,7 @@ paths:
           }
         }
         ```
-      operationId: addTaskItem
+      operationId: createTaskItem
       produces:
         - application/json
       parameters:
@@ -1443,9 +1459,7 @@ paths:
           description: The nodeId of the item
           required: true
           schema:
-            properties:
-              id:
-                type: string
+            $ref: '#/definitions/ItemBody'
       responses:
         '201':
           description: Successful response
@@ -1455,9 +1469,10 @@ paths:
             description: |
               Invalid parameter: **itemBody** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1469,7 +1484,7 @@ paths:
       summary: Delete an item
       description: |
         Deletes the item with the specified **itemId** from the task with the specified **taskId**.
-      operationId: removeTaskItem
+      operationId: deleteTaskItem
       produces:
         - application/json
       parameters:
@@ -1479,9 +1494,9 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: If authentication fails
+          description: Authentication failed
         '404':
-          description: The **taskId** does not exist, or the **itemId** does not exist
+          description: The **taskId** does not exist or the **itemId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1490,10 +1505,10 @@ paths:
     get:
       tags:
         - tasks
-      summary: Get task candidates
+      summary: List task candidates
       description: |
-        Returns a list of candidate users and groups for the specified task **taskId**.
-      operationId: getTaskCandidates
+        Gets a list of candidate users and groups for the specified task **taskId**.
+      operationId: listTaskCandidates
       produces:
         - application/json
       parameters:
@@ -1510,9 +1525,10 @@ paths:
             description: |
               Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-            description: If authentication fails
+            description: Authentication failed
         '404':
-          description: If **taskId** does not exist
+          description: |
+            **taskId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -1891,6 +1907,13 @@ definitions:
         type: boolean
       bpm_workflowPriority:
         type: integer
+  ItemBody:
+    type: object
+    description: |
+      The **nodeId** of the item
+    properties:
+      id:
+        type: string
   ItemPaging:
     type: object
     properties:
