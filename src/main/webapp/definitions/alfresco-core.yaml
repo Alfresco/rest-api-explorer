@@ -120,7 +120,7 @@ parameters:
       * isLocked
       * path
       * properties
-      * nodePermissions
+      * permissions
     required: false
     type: array
     items:
@@ -151,7 +151,7 @@ parameters:
       * isLink
       * isLocked
       * path
-      * nodePermissions
+      * permissions
     required: false
     type: array
     items:
@@ -863,13 +863,14 @@ paths:
         ```
         **Note:** if you want to add or remove aspects, then you must use **GET /nodes/{nodeId}** first to get the complete set of *aspectNames*.
         
-        You can set/update direct permissions and disable (or re-enable) inherited permissions:
+        You can add (or remove) *locallySet* permissions, if any, in addition to any inherited permissions.
+        You can also optionally disable (or re-enable) inherited permissions via *isInheritanceEnabled* flag:
         ```JSON
         {
-          "nodePermissions":
+          "permissions":
             {
-              "inherit":true,
-              "directPermissions":
+              "isInheritanceEnabled": false,
+              "locallySet":
                 [
                   {"authorityId": "GROUP_special", "name": "Read", "accessStatus":"DENIED"},
                   {"authorityId": "testuser", "name": "Contributor", "accessStatus":"ALLOWED"}
@@ -877,7 +878,7 @@ paths:
             }
         }
         ```
-        **Note:** if you want to add or remove diredct permissions, then you must use **GET /nodes/{nodeId}** first to get the complete set of *directPermissions*.
+        **Note:** if you want to add or remove locally set permissions then you must use **GET /nodes/{nodeId}** first to get the complete set of *locallySet* permissions.
 
         **Note:** Currently there is no optimistic locking for updates, so they are applied in "last one wins" order.
       operationId: updateNode
@@ -5686,23 +5687,38 @@ definitions:
   PermissionElement:
     type: object
     properties:
-      id:
+      authorityId:
         type: string
       name:
         type: string
+      accessStatus:
+        type: string
+        default: ALLOWED
+        enum:
+         - ALLOWED
+         - DENIED
   PermissionsInfo:
     type: object
     properties:
-      inheritedPermissions:
+      isInheritanceEnabled:
+        type: boolean 
+      inherited:
         type: array
         items:
           $ref: '#/definitions/PermissionElement'
-      directPermissions:
+      locallySet:
         type: array
         items:
-          $ref: '#/definitions/PermissionElement'    
-      inherit:
-        type: boolean        
+          $ref: '#/definitions/PermissionElement'
+  PermissionsBodyUpdate:
+    type: object
+    properties:
+      isInheritanceEnabled:
+        type: boolean 
+      locallySet:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionElement'          
   NodeBodyCreate:
     type: object
     required:
@@ -5759,6 +5775,8 @@ definitions:
         type: object
         additionalProperties:
           type: string
+      permissions:
+        $ref: '#/definitions/PermissionsBodyUpdate'
   NodeBodyCopy:
     type: object
     required:
@@ -5972,7 +5990,7 @@ definitions:
           type: string
       path:
         $ref: '#/definitions/PathInfo'
-      nodePermissions:
+      permissions:
         $ref: '#/definitions/PermissionsInfo' 
   SharedLinkBodyCreate:
     type: object
