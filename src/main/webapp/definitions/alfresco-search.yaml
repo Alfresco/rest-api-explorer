@@ -220,6 +220,57 @@ paths:
            ]
         },
         ```
+        An example query for **search highlighting** could look like this:
+        ```JSON
+        {
+          "query": {
+            "query": "description:workflow",
+            "userQuery":"workflow"
+          },
+          "highlight": {
+            "prefix": "¿",
+            "postfix": "?",
+            "mergeContiguous": true,
+            "fields": [
+              {
+                "field": "cm:title"
+              },
+              {
+                "field": "description",
+                "prefix": "(",
+                "postfix": ")"
+              }
+
+            ]
+          }
+        }
+        ```
+        The example above changes the highlighting prefix and postfix from the
+         default <em> for all fields to ¿? and just for the "description" field to ().
+         The hightlight information is added in each node entry response; here is
+         an example partial response:
+        ```
+        "entry": {
+                "createdAt": "2016-10-12T15:24:31.202+0000",
+                "isFolder": true,
+                "search": {
+                  "score": 1,
+                  "highlight": [
+                    {
+                      "field": "cm:title",
+                      "snippets": [
+                        "Customized ¿Workflow? Process Definitions"
+                      ]
+                    },
+                    {
+                      "field": "description",
+                      "snippets": [
+                        "Customized (Workflow) Process Definitions"
+                      ]
+                    }
+                  ]
+              },
+        ```
       parameters:
         - in: body
           name: queryBody
@@ -256,6 +307,8 @@ paths:
                   $ref: '#/definitions/RequestScope'
                 limits:
                   $ref: '#/definitions/RequestLimits'
+                highlight:
+                  $ref: '#/definitions/RequestHighlight'
       operationId: search
       produces:
         - application/json
@@ -411,6 +464,9 @@ definitions:
                   count:
                     description: The count for the bucket
                     type: number
+                  display:
+                    description: An optional field for additional display information
+                    type: object
       spellcheck:
         description: |
           Suggested corrections
@@ -441,23 +497,71 @@ definitions:
     properties:
       ## Standard response structure
       entry:
-        $ref: '#/definitions/NodeFull'
-  ## Standard definition with Search added
-  NodeFull:
+        $ref: '#/definitions/ResultNode'
+
+  ResultNode:
+    allOf:
+      - $ref: '#/definitions/Node'
+      - type: object
+        properties:
+          search:
+            $ref: '#/definitions/SearchEntry'
+
+  SearchEntry:
     type: object
+    properties:
+      score:
+        description: The score for this row
+        type: number
+        format: float
+      highlight:
+        description: |
+          Highlight fragments if requested and available. A match can happen in any of the requested field.
+        type: array
+        items:
+          type: object
+          properties:
+            field:
+              description: The field where a match occured (one of the fields defined on the request)
+              type: string
+            snippets:
+              description: Any number of snippets for the specified field highlighting the matching text
+              type: array
+              items:
+                description: The highlighted fragment for the field.
+                type: string
+
+  ## Standard definition
+  Node:
+    type: object
+    required:
+    - id
+    - name
+    - nodeType
+    - isFolder
+    - isFile
+    - createdAt
+    - createdByUser
+    - modifiedAt
+    - modifiedByUser
     properties:
       id:
         type: string
-      parentId:
-        type: string
       name:
         type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
       nodeType:
         type: string
       isFolder:
         type: boolean
       isFile:
         type: boolean
+      isLocked:
+        type: boolean
+        default: false
       modifiedAt:
         type: string
         format: date-time
@@ -468,10 +572,12 @@ definitions:
         format: date-time
       createdByUser:
         $ref: '#/definitions/UserInfo'
+      parentId:
+        type: string
+      isLink:
+        type: boolean
       content:
         $ref: '#/definitions/ContentInfo'
-      search:
-        $ref: '#/definitions/SearchEntry'
       aspectNames:
         type: array
         items:
@@ -482,13 +588,9 @@ definitions:
         type: array
         items:
           type: string
-  SearchEntry:
-    type: object
-    properties:
-      score:
-        description: The score for this row
-        type: number
-        format: float
+      path:
+        $ref: '#/definitions/PathInfo'
+
   ## Standard definition
   UserInfo:
     type: object
@@ -519,6 +621,29 @@ definitions:
         type: string
       mimeTypeGroup:
         type: string
+
+  ## Standard definition
+  PathElement:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+
+  ## Standard definition
+  PathInfo:
+    type: object
+    properties:
+      elements:
+        type: array
+        items:
+          $ref: '#/definitions/PathElement'
+      name:
+        type: string
+      isComplete:
+        type: boolean
+
   RequestDefaults:
     description: Common query defaults
     type: object
@@ -687,14 +812,27 @@ definitions:
               enum:
                 - ENUM
                 - FC
+            missing:
+              description: When true, count results that match the query but which have no facet value for the field (in addition to the Term-based constraints).
+              type: boolean
+              default: false
             limit:
               type: integer
             offset:
               type: integer
             mincount:
               type: integer
+              description:  The minimum count required for a facet field to be included in the response.
+              default: 1
             facetEnumCacheMinDf:
                type: integer
+            excludeFilters:
+              description: |
+                Filter Queries with tags listed here will not be included in facet counts.
+                This is used for multi-select facetting.
+              type: array
+              items:
+                type: string
   RequestLimits:
     description: Limit the time and resources used for query execution
     type: object
@@ -719,7 +857,11 @@ definitions:
             The filter query expression.
             For multi-select facets selected facets must be order together
           type: string
-
+        tags:
+          description: Tags used exclude the filters from facet evaluation for multi-select facet support
+          type: array
+          items:
+            type: string
   RequestSortDefinition:
     description: How to sort the rows? An array of sort specifications. The array order defines the ordering precedence.
     type: array
@@ -741,11 +883,59 @@ definitions:
           description: The sort order. (The ordering of nulls is determined by the SOLR configuration)
           type: boolean
           default: false
+
   RequestSpellcheck:
     description: |
-      Request that highlight fragements to be added to result set rows
+      Request that spellcheck fragments to be added to result set rows
       The properties reflect SOLR spellcheck parameters.
     type: object
     properties:
       query:
         type: string
+
+  RequestHighlight:
+    description: |
+      Request that highlight fragments to be added to result set rows
+      The properties reflect SOLR highlighting parameters.
+    type: object
+    properties:
+      prefix:
+        description: The string used to mark the start of a highlight in a fragment.
+        type: string
+      postfix:
+        description: The string used to mark the end of a highlight in a fragment.
+        type: string
+      snippetCount:
+        description:  The maximum number of distinct highlight snippets to return for each highlight field.
+        type: number
+      fragmentSize:
+        description: The character length of each snippet.
+        type: number
+      maxAnalyzedChars:
+        description: The number of characters to be considered for highlighting. Matches after this count will not be shown.
+        type: number
+      mergeContiguous:
+        description: If fragments over lap they can be  merged into one larger fragment
+        type: boolean
+      usePhraseHighlighter:
+        description: Should phrases be identified.
+        type: boolean
+      fields:
+        description: The fields to highlight and field specific configuration properties for each field
+        type: array
+        items:
+          type: object
+          properties:
+            field:
+              description: The name of the field to highlight.
+              type: string
+            snippetCount:
+              type: number
+            fragmentSize:
+              type: number
+            mergeContiguous:
+             type: boolean
+            prefix:
+              type: string
+            postfix:
+              type: string

@@ -31,6 +31,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DiscoveryEntry'
+        '501':
+          description: Discovery is disabled for the system
         default:
           description: Unexpected error
           schema:
@@ -93,13 +95,16 @@ definitions:
     - isReadOnly
     - isAuditEnabled
     - isQuickShareEnabled
+    - isThumbnailGenerationEnabled
     properties:
       isReadOnly:
         type: boolean
         default: false
-      isAuditEnable:
+      isAuditEnabled:
         type: boolean
       isQuickShareEnabled:
+        type: boolean
+      isThumbnailGenerationEnabled:
         type: boolean
   EntitlementsInfo:
     type: object
