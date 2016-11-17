@@ -164,6 +164,7 @@ parameters:
     description: |
       Returns additional information about the group. The following optional fields can be requested:
       * parentIds
+      * zones
     required: false
     type: array
     items:
@@ -4946,6 +4947,8 @@ paths:
       
         Gets a list of groups. 
         
+        You can use the **include** parameter to return additional information.
+        
         You can use the **where** parameter to filter the returned groups by **isRoot**. For example, the following **where** 
         clause will return just the root groups:
           
@@ -4963,6 +4966,7 @@ paths:
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/groupEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -4987,6 +4991,8 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
       
         Get details for group **groupId**.
+        
+        You can use the **include** parameter to return additional information.
       operationId: getGroup
       produces:
         - application/json
@@ -5553,6 +5559,10 @@ definitions:
         type: boolean
         default: true
       parentIds:
+        type: array
+        items:
+          type: string
+      zones:
         type: array
         items:
           type: string
