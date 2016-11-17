@@ -4967,6 +4967,7 @@ paths:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/groupEntryIncludeParam'
+        - $ref: '#/parameters/whereParam'        
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -4975,7 +4976,7 @@ paths:
             $ref: '#/definitions/GroupPaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+            Invalid parameter: value of **maxItems** or **skipCount**, or **where** is invalid
         '401':
           description: Authentication failed
         default:
