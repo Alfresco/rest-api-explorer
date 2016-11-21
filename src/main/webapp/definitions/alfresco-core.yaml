@@ -2685,8 +2685,8 @@ paths:
         
         You must have admin rights to update a person — unless updating your own details.
         
-        If updating yourself as a non-admin user, the existing password must be supplied (using the oldPassword
-        field) in addition to the new password value.
+        If you are changing your password, as a non-admin user, then the existing password must also
+        be supplied (using the oldPassword field in addition to the new password value).
         
         Admin users cannot be disabled by setting enabled to false.
         
