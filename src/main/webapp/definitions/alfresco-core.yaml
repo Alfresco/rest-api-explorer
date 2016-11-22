@@ -2683,7 +2683,14 @@ paths:
         
         If applicable, the given person's login access can also be optionally be disabled or re-enabled.
         
-        You must have admin rights to update a person.
+        You must have admin rights to update a person — unless updating your own details.
+        
+        If you are changing your password, as a non-admin user, then the existing password must also
+        be supplied (using the oldPassword field in addition to the new password value).
+        
+        Admin users cannot be disabled by setting enabled to false.
+        
+        Non-admin users may not disable themselves.
       operationId: updatePerson
       parameters:
         - $ref: '#/parameters/personIdParam'
@@ -5260,6 +5267,8 @@ definitions:
       emailNotificationsEnabled:
         type: boolean
       password:
+        type: string
+      oldPassword:
         type: string
       aspectNames:
         type: array
