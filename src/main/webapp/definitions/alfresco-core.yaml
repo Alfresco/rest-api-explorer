@@ -5225,6 +5225,14 @@ definitions:
         type: boolean
       password:
         type: string
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        additionalProperties:
+          type: string
   PersonBodyUpdate:
     type: object
     properties:
@@ -5262,6 +5270,14 @@ definitions:
         type: string
       oldPassword:
         type: string
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        additionalProperties:
+          type: string
   PersonPaging:
     type: object
     properties:
@@ -5327,6 +5343,14 @@ definitions:
         default: true
       emailNotificationsEnabled:
         type: boolean
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+        additionalProperties:
+          type: string
   Company:
     type: object
     properties:
