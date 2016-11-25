@@ -864,12 +864,12 @@ paths:
         **Note:** if you want to add or remove aspects, then you must use **GET /nodes/{nodeId}** first to get the complete set of *aspectNames*.
         
         You can add (or remove) *locallySet* permissions, if any, in addition to any inherited permissions.
-        You can also optionally disable (or re-enable) inherited permissions via *isInheritanceEnabled* flag:
+        You can also optionally disable (or re-enable) inherited permissions via *inheritanceEnabled* flag:
         ```JSON
         {
           "permissions":
             {
-              "isInheritanceEnabled": false,
+              "inheritanceEnabled": false,
               "locallySet":
                 [
                   {"authorityId": "GROUP_special", "name": "Read", "accessStatus":"DENIED"},
@@ -5700,7 +5700,7 @@ definitions:
   PermissionsInfo:
     type: object
     properties:
-      isInheritanceEnabled:
+      inheritanceEnabled:
         type: boolean 
       inherited:
         type: array
@@ -5717,7 +5717,7 @@ definitions:
   PermissionsBodyUpdate:
     type: object
     properties:
-      isInheritanceEnabled:
+      inheritanceEnabled:
         type: boolean 
       locallySet:
         type: array
