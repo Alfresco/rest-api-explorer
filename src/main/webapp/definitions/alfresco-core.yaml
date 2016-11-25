@@ -120,6 +120,7 @@ parameters:
       * isLocked
       * path
       * properties
+      * permissions
     required: false
     type: array
     items:
@@ -150,6 +151,7 @@ parameters:
       * isLink
       * isLocked
       * path
+      * permissions
     required: false
     type: array
     items:
@@ -817,6 +819,8 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Get information for node **nodeId**.
+        
+        You can use the **include** parameter to return additional information.
       operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
@@ -872,6 +876,23 @@ paths:
         }
         ```
         **Note:** if you want to add or remove aspects, then you must use **GET /nodes/{nodeId}** first to get the complete set of *aspectNames*.
+        
+        You can add (or remove) *locallySet* permissions, if any, in addition to any inherited permissions.
+        You can also optionally disable (or re-enable) inherited permissions via *isInheritanceEnabled* flag:
+        ```JSON
+        {
+          "permissions":
+            {
+              "isInheritanceEnabled": false,
+              "locallySet":
+                [
+                  {"authorityId": "GROUP_special", "name": "Read", "accessStatus":"DENIED"},
+                  {"authorityId": "testuser", "name": "Contributor", "accessStatus":"ALLOWED"}
+                ]
+            }
+        }
+        ```
+        **Note:** if you want to add or remove locally set permissions then you must use **GET /nodes/{nodeId}** first to get the complete set of *locallySet* permissions.
 
         **Note:** Currently there is no optimistic locking for updates, so they are applied in "last one wins" order.
       operationId: updateNode
@@ -5931,6 +5952,45 @@ definitions:
         type: string
       isComplete:
         type: boolean
+  PermissionElement:
+    type: object
+    properties:
+      authorityId:
+        type: string
+      name:
+        type: string
+      accessStatus:
+        type: string
+        default: ALLOWED
+        enum:
+         - ALLOWED
+         - DENIED
+  PermissionsInfo:
+    type: object
+    properties:
+      isInheritanceEnabled:
+        type: boolean 
+      inherited:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionElement'
+      locallySet:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionElement'
+      settable:
+        type: array
+        items:
+          type: string     
+  PermissionsBodyUpdate:
+    type: object
+    properties:
+      isInheritanceEnabled:
+        type: boolean 
+      locallySet:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionElement'          
   NodeBodyCreate:
     type: object
     required:
@@ -5987,6 +6047,8 @@ definitions:
         type: object
         additionalProperties:
           type: string
+      permissions:
+        $ref: '#/definitions/PermissionsBodyUpdate'
   NodeBodyCopy:
     type: object
     required:
@@ -6200,6 +6262,8 @@ definitions:
           type: string
       path:
         $ref: '#/definitions/PathInfo'
+      permissions:
+        $ref: '#/definitions/PermissionsInfo' 
   SharedLinkBodyCreate:
     type: object
     required:
