@@ -148,6 +148,7 @@ parameters:
     description: |
       Returns additional information about the node. The following optional fields can be requested:
       * allowableOperations
+      * association
       * isLink
       * isLocked
       * path
