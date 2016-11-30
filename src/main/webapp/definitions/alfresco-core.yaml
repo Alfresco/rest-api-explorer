@@ -4420,7 +4420,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or does not identify a file,
-            or **sharedLinkBodyCreate** invalid. Also, if the specified expiry date is invalid. E.g. the expiry date
+            or **sharedLinkBodyCreate** invalid, or the specified expiry date is invalid. E.g. the expiry date
             has already passed
         '401':
           description: Authentication failed          
