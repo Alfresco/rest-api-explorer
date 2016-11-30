@@ -4853,7 +4853,9 @@ paths:
 
         The search term is used to look for sites that match against site id, title or description.
 
-        The search term must contain a minimum of 2 alphanumeric characters.
+        The search term:
+        - must contain a minimum of 2 alphanumeric characters
+        - can optionally use '*' for wildcard matching within the term
         
         The default sort order for the returned list is for sites to be sorted by ascending id. 
         You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
@@ -4902,7 +4904,7 @@ paths:
 
         The search term:
         - must contain a minimum of 2 alphanumeric characters
-        - can optionally use '*' for wildcard matching
+        - can optionally use '*' for wildcard matching within the term
         
         You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * id
