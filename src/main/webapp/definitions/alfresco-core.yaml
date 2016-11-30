@@ -4381,8 +4381,16 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Create a shared link to the file **nodeId** in the request body.
-        
+        Create a shared link to the file **nodeId** in the request body. Also, an optional expiry date could be set,
+        so the shared link would become invalid when the expiry date is reached. For example:
+
+        ```JSON
+          {
+            "nodeId": "1ff9da1a-ee2f-4b9c-8c34-3333333333",
+            "expiresAt": "2017-03-23T23:00:00.000+0000"
+          }
+        ```
+
         **Note:** You can create shared links to more than one file 
         specifying a list of **nodeId**s in the JSON body like this:
         
@@ -4445,7 +4453,8 @@ paths:
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or does not identify a file,
-            or **sharedLinkBodyCreate** invalid
+            or **sharedLinkBodyCreate** invalid, or the specified expiry date is invalid. E.g. the expiry date
+            has already passed
         '401':
           description: Authentication failed          
         '403':
@@ -6306,6 +6315,9 @@ definitions:
     properties:
       nodeId:
         type: string
+      expiresAt:
+        type: string
+        format: date-time
   SharedLinkBodyEmail:
     type: object
     properties:
@@ -6348,6 +6360,9 @@ definitions:
     properties:
       id:
         type: string
+      expiresAt:
+        type: string
+        format: date-time
       nodeId:
         type: string
       name:
