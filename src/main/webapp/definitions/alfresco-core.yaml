@@ -1091,12 +1091,20 @@ paths:
 
         Create a node and add it as a primary child of node **nodeId**.
         
-        This API method supports file upload using multipart/form-data.
+        This endpoint supports both JSON and multipart/form-data (file upload).
 
-        Use the **filedata** field to represent the content to upload.
-        You can use a **name** field to give an alternative name for the new file.
+        **Using multipart/form-data**
 
-        For multipart/form-data upload you can use the **renditions** field to create renditions (e.g. doclib) asynchronously upon upload.
+        Use the **filedata** field to represent the content to upload, for example, the following curl command will
+        create a node with the contents of test.txt in the test user's home folder.
+
+        ```curl -utest:test -X POST host:port/alfresco/api/-default-/public/alfresco/versions/1/nodes/-my-/children -F filedata=@test.txt```
+
+        You can use the **name** field to give an alternative name for the new file.
+
+        You can use the **nodeType** field to create a specific type. The default is cm:content.
+
+        You can use the **renditions** field to create renditions (e.g. doclib) asynchronously upon upload.
         Note that currently only one rendition can be requested. Also, as requesting rendition is a background process,
         any rendition failure (e.g. No transformer is currently available) will not fail the whole upload and has the potential to silently fail.
 
@@ -1111,12 +1119,16 @@ paths:
         version history. This also enables versioning of this node, if it is not already versioned.
 
         You can set the **autoRename** boolean field to automatically resolve name clashes. If there is a name clash, then
-        the API method tries to create
-        a unique name using an integer suffix.
-           
-        Any field in the JSON body defined below can also be passed as a form-data field.
-        
-        This API method also supports node creation using application/json.
+        the API method tries to create a unique name using an integer suffix.
+
+        You can use the **relativePath** field to specify the folder structure to create relative to the node **nodeId**.
+        Folders in the **relativePath** that do not exist are created before the node is created.
+
+        Any other field provided will be treated as a property to set on the newly created node.
+
+        **Note:** setting properties of type d:content and d:category are not supported.
+
+        **Using JSON**
 
         You must specify at least a **name** and **nodeType**. For example, to create a folder:
         ```JSON
