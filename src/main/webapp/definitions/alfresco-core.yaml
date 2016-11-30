@@ -1048,6 +1048,7 @@ paths:
             
             *   ```where=(assocType='my:specialAssocType')```
 
+            *   ```where=(isPrimary=false and assocType='my:specialAssocType')```
           required: false
           type: string
         - $ref: '#/parameters/nodeMinimalEntryIncludeParam'
