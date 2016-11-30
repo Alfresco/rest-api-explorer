@@ -871,13 +871,15 @@ paths:
         ```JSON
         {
           "properties":
-            {
-              "cm:title":"Folder title"
-            }
+          {
+            "cm:title":"Folder title"
+          }
         }
         ```
+        **Note:** setting properties of type d:content and d:category are not supported.
+
         **Note:** if you want to add or remove aspects, then you must use **GET /nodes/{nodeId}** first to get the complete set of *aspectNames*.
-        
+
         You can add (or remove) *locallySet* permissions, if any, in addition to any inherited permissions.
         You can also optionally disable (or re-enable) inherited permissions via *isInheritanceEnabled* flag:
         ```JSON
@@ -1150,14 +1152,16 @@ paths:
           "name":"My Other Folder",
           "nodeType":"cm:folder",
           "properties":
-            {
-              "cm:title":"Folder title",
-              "cm:description":"This is an important folder"
-            }
+          {
+            "cm:title":"Folder title",
+            "cm:description":"This is an important folder"
+          }
         }
         ```
         Any missing aspects are applied automatically. For example, **cm:titled** in the JSON shown above. You can set aspects
         explicitly, if needed, using an **aspectNames** field.
+
+        **Note:** setting properties of type d:content and d:category are not supported.
         
         Typically, for files and folders, the primary children are created within the parent folder using the default "cm:contains" assocType. 
         If the content model allows then it is also possible to create primary children with a different assoc type. For example:
@@ -1166,9 +1170,9 @@ paths:
           "name":"My Node",
           "nodeType":"my:specialNodeType",
           "association":
-            {
-              "assocType":"my:specialAssocType"
-            }
+          {
+            "assocType":"my:specialAssocType"
+          }
         }
         ``` 
         
@@ -2593,6 +2597,22 @@ paths:
         If applicable, the given person's login access can also be optionally disabled.
         
         You must have admin rights to create a person.
+
+        You can set properties when you create a person:
+        ```JSON
+        {
+          "id": "abeecher",
+          "firstName": "Alice",
+          "lastName": "Beecher",
+          "email": "abeecher@example.com",
+          "password": "secret",
+          "properties":
+          {
+            "cm:title": "A title"
+          }
+        }
+        ```
+        **Note:** setting properties of type d:content and d:category are not supported.
       operationId: createPerson
       parameters:
         - $ref: '#/parameters/fieldsParam'
@@ -2703,7 +2723,7 @@ paths:
 
         Update the given person's details.
         
-        If applicable, the given person's login access can also be optionally be disabled or re-enabled.
+        If applicable, the given person's login access can also be optionally disabled or re-enabled.
         
         You must have admin rights to update a person — unless updating your own details.
         
@@ -2713,6 +2733,18 @@ paths:
         Admin users cannot be disabled by setting enabled to false.
         
         Non-admin users may not disable themselves.
+
+        You can set properties when you update a person:
+        ```JSON
+        {
+          "firstName": "Alice",
+          "properties":
+          {
+            "cm:title": "A title"
+          }
+        }
+        ```
+        **Note:** setting properties of type d:content and d:category are not supported.
       operationId: updatePerson
       parameters:
         - $ref: '#/parameters/personIdParam'
