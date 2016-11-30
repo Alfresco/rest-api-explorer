@@ -1318,6 +1318,8 @@ paths:
         The new node has the same name as the source node unless you specify a new **name** in the request body.
 
         If the source **nodeId** is a folder, then all of its children are also copied.
+
+        If the source **nodeId** is a file, it's properties, aspects and tags are copied, it's ratings, comments and locks are not.
       operationId: copyNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
