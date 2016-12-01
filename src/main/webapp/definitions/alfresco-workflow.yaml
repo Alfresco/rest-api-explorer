@@ -290,7 +290,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/ProcessDefinitionEntry'
+            $ref: '#/definitions/TaskFormModelPaging'
         '404':
           description: If **processDefinitionId** does not exist
         default:
