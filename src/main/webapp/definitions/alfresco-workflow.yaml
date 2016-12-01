@@ -477,7 +477,7 @@ paths:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/VariablePaging'
+            $ref: '#/definitions/VariableEntry'
         '404':
           description: If **processId** does not exist
         default:
@@ -507,7 +507,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/VariablePaging'
+            $ref: '#/definitions/VariableEntry'
         '404':
           description: If **processId** does not exist
         default:
@@ -980,7 +980,7 @@ paths:
     post:
       tags:
         - tasks
-      summary: Add variables"
+      summary: Add variables
       description: |
         Creates or updates variables for the task **taskId**. 
         If one of the variables does not exist yet, it will be created.
@@ -1001,7 +1001,7 @@ paths:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/VariablePaging'
+            $ref: '#/definitions/VariableEntry'
         '404':
           description: If **taskId** does not exist
         default:
@@ -1031,7 +1031,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/VariablePaging'
+            $ref: '#/definitions/VariableEntry'
         '404':
           description: If **taskId** does not exist
         default:
