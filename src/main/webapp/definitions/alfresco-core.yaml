@@ -2489,17 +2489,8 @@ definitions:
       activitySummary:
         type: object
         description: An object summarizing the activity
-        properties:
-          firstName:
-            type: string
-          lastName:
-            type: string
-          parentObjectId:
-            type: string
-          title:
-            type: string
-          objectId:
-            type: string
+        additionalProperties:
+          type: string
       activityType:
         description: The type of the activity posted
         type: string
