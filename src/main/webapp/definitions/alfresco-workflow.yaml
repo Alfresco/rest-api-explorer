@@ -504,7 +504,7 @@ paths:
           schema:
             $ref: '#/definitions/VariableBody'
       responses:
-        '201':
+        '200':
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
@@ -1028,7 +1028,7 @@ paths:
           schema:
             $ref: '#/definitions/VariableBody'
       responses:
-        '201':
+        '200':
           description: Successful response
           schema:
             $ref: '#/definitions/VariablePaging'
