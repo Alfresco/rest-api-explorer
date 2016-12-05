@@ -5303,6 +5303,7 @@ definitions:
         default: true
       emailNotificationsEnabled:
         type: boolean
+        default: true                
       password:
         type: string
       aspectNames:
@@ -5423,6 +5424,7 @@ definitions:
         default: true
       emailNotificationsEnabled:
         type: boolean
+        default: true        
       aspectNames:
         type: array
         items:
