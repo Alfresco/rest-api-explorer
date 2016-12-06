@@ -37,9 +37,21 @@ public class YamlToJson {
     public static final String CORE_JSON_DEFINITION = JSON_DESTINATION + "alfresco-core.json";
     public static final String CORE_DEFINITION_TITLE = "Alfresco Core REST API";
 
+    public static final String AUTH_DEFINITION = "/src/main/webapp/definitions/alfresco-auth.yaml";
+    public static final String AUTH_JSON_DEFINITION = JSON_DESTINATION + "alfresco-auth.json";
+    public static final String AUTH_DEFINITION_TITLE = "Alfresco Authentication REST API";
+
     public static final String WORKFLOW_DEFINITION = "/src/main/webapp/definitions/alfresco-workflow.yaml";
     public static final String WORKFLOW_JSON_DEFINITION = JSON_DESTINATION + "alfresco-workflow.json";
     public static final String WORKFLOW_DEFINITION_TITLE = "Alfresco Workflow REST API";
+
+    public static final String SEARCH_DEFINITION = "/src/main/webapp/definitions/alfresco-search.yaml";
+    public static final String SEARCH_JSON_DEFINITION = JSON_DESTINATION + "alfresco-search.json";
+    public static final String SEARCH_DEFINITION_TITLE = "Alfresco Search REST API";
+
+    public static final String DISCOVERY_DEFINITION = "/src/main/webapp/definitions/alfresco-discovery.yaml";
+    public static final String DISCOVERY_JSON_DEFINITION = JSON_DESTINATION + "alfresco-discovery.json";
+    public static final String DISCOVERY_DEFINITION_TITLE = "Alfresco Discovery REST API";
 
     public static void main(String[] args) {
 
@@ -54,9 +66,21 @@ public class YamlToJson {
             Swagger swagger = parseSwaggerDef(new File(rootPath + CORE_DEFINITION), CORE_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + CORE_JSON_DEFINITION), swagger);
 
+            //Authentication
+            swagger = parseSwaggerDef(new File(rootPath + AUTH_DEFINITION), AUTH_DEFINITION_TITLE);
+            Json.mapper().writeValue(new File(rootPath + AUTH_JSON_DEFINITION), swagger);
+
             //Workflow
             swagger = parseSwaggerDef(new File(rootPath + WORKFLOW_DEFINITION), WORKFLOW_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + WORKFLOW_JSON_DEFINITION), swagger);
+
+            //Search
+            swagger = parseSwaggerDef(new File(rootPath + SEARCH_DEFINITION), SEARCH_DEFINITION_TITLE);
+            Json.mapper().writeValue(new File(rootPath + SEARCH_JSON_DEFINITION), swagger);
+
+            //Discovery
+            swagger = parseSwaggerDef(new File(rootPath + DISCOVERY_DEFINITION), DISCOVERY_DEFINITION_TITLE);
+            Json.mapper().writeValue(new File(rootPath + DISCOVERY_JSON_DEFINITION), swagger);
 
         } catch (IOException e) {
             System.err.println("Failed to create a json definitions: " + e.getLocalizedMessage());

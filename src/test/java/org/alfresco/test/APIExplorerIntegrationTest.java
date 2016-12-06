@@ -80,8 +80,14 @@ public class APIExplorerIntegrationTest
         int swaggerIndex = coreDefinitionContent.indexOf("swagger:");
         assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
         
+        int nodeInfoEndpointIndex = coreDefinitionContent.indexOf("'/nodes/{nodeId}':");
+        assertTrue("Expected to find '/nodes/{nodeId}':", nodeInfoEndpointIndex != -1);
+        
         int commentsEndpointIndex = coreDefinitionContent.indexOf("'/nodes/{nodeId}/comments':");
         assertTrue("Expected to find '/nodes/{nodeId}/comments':", commentsEndpointIndex != -1);
+        
+        int sharedLinksEndpointIndex = coreDefinitionContent.indexOf("'/shared-links':");
+        assertTrue("Expected to find '/shared-links':", sharedLinksEndpointIndex != -1);
         
         // ensure the core API definition can be read and parsed
         validateCoreDefn(coreDefinitionUrl+YAML);
@@ -89,13 +95,34 @@ public class APIExplorerIntegrationTest
     }
 
     private void validateCoreDefn(String coreDefinitionUrl) {
-        Swagger swagger = new SwaggerParser().read(coreDefinitionUrl);
-        assertNotNull("Expected the core API definition to parse successfully: "+coreDefinitionUrl, swagger);
-        assertEquals("Incorrect title", "Alfresco Core REST API", swagger.getInfo().getTitle());
-        assertEquals("Incorrect version", "1", swagger.getInfo().getVersion());
+        Swagger swagger = validateSwaggerDef(coreDefinitionUrl, "Alfresco Core REST API", "1");
         Map<String, Path> paths = swagger.getPaths();
         assertNotNull("Expected to retrieve a map of paths", paths);
-        assertTrue("Expected to find /nodes/{nodeId}/comments path", paths.containsKey("/nodes/{nodeId}/comments"));     
+        assertTrue("Expected to find /nodes/{nodeId} path", paths.containsKey("/nodes/{nodeId}"));
+        assertTrue("Expected to find /nodes/{nodeId}/comments path", paths.containsKey("/nodes/{nodeId}/comments"));
+        assertTrue("Expected to find /shared-links path", paths.containsKey("/shared-links"));
+    }
+
+
+    @Test
+    public void testAuthAPIDefinition() throws Exception {
+        String definitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-auth";
+
+        // get definition content
+        String definitionContent = this.retrievePageContent(definitionUrl + YAML, 200);
+        // make sure the content is correct
+        int swaggerIndex = definitionContent.indexOf("swagger:");
+        assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
+
+        validateAuthDefn(definitionUrl + YAML);
+        validateAuthDefn(definitionUrl + JSON);
+    }
+
+    private void validateAuthDefn(String definitionUrl) {
+        Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Authentication REST API", "1");
+        Map<String, Path> paths = swagger.getPaths();
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /tickets path", paths.containsKey("/tickets"));
     }
 
     @Test
@@ -119,13 +146,18 @@ public class APIExplorerIntegrationTest
     }
 
     private void validateWorkflow(String workflowDefinitionUrl) {
-        Swagger swagger = new SwaggerParser().read(workflowDefinitionUrl);
-        assertNotNull("Expected the workflow API definition to parse successfully: "+workflowDefinitionUrl, swagger);
-        assertEquals("Incorrect title", "Alfresco Workflow REST API", swagger.getInfo().getTitle());
-        assertEquals("Incorrect version", "1", swagger.getInfo().getVersion());
+        Swagger swagger = validateSwaggerDef(workflowDefinitionUrl, "Alfresco Workflow REST API", "1");
         Map<String, Path> paths = swagger.getPaths();
         assertNotNull("Expected to retrieve a map of paths", paths);
         assertTrue("Expected to find /deployments/{deploymentId} path", paths.containsKey("/deployments/{deploymentId}"));
+    }
+
+    private Swagger validateSwaggerDef(String definitionUrl, String title, String version) {
+        Swagger swagger = new SwaggerParser().read(definitionUrl);
+        assertNotNull("Expected the API definition to parse successfully: "+ definitionUrl, swagger);
+        assertEquals("Incorrect title", title, swagger.getInfo().getTitle());
+        assertEquals("Incorrect version", version, swagger.getInfo().getVersion());
+        return swagger;
     }
 
     @Test
@@ -134,7 +166,7 @@ public class APIExplorerIntegrationTest
         String defs = this.retrievePageContent("http://localhost:8085/api-explorer/definitions/index.jsp", 200);
         List<String> definitions = Json.mapper().readValue(defs, new TypeReference<List<String>>(){});
         assertNotNull(definitions);
-        assertEquals("2 definitions in 2 formats should be 4.", 4, definitions.size());
+        assertEquals("5 definitions in 2 formats should be 10.", 10, definitions.size());
     }
 
     public String retrievePageContent(String url, int expectedStatus) throws Exception
