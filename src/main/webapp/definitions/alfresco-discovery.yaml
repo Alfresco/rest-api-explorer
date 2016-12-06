@@ -100,7 +100,7 @@ definitions:
       isReadOnly:
         type: boolean
         default: false
-      isAuditEnable:
+      isAuditEnabled:
         type: boolean
       isQuickShareEnabled:
         type: boolean
