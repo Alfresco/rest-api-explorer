@@ -69,13 +69,6 @@ paths:
         }
         ```
 
-        The **default search uses workspace://SpacesStore**.  To change the scope
-        to a particular store you can use the **scope JSON body parameter**. For example,
-        ```JSON
-        "scope": {
-            "stores": ["archive://SpacesStore", "workspace://SpacesStore"]
-        }
-        ```
         You can use the **include JSON body parameter** to return additional information.
         This works in the same way as in the /nodes/{nodeId}/children method in the core API. For example:
         ```JSON
@@ -94,6 +87,13 @@ paths:
         ```
         **Note:** the **sort** parameter is not supported for CMIS queries.
 
+        By default, search uses the **"nodes" location**, which is the **content store known as workspace://SpacesStore**.
+        To change the scope to another location you can use the **locations JSON body parameter**. You can specify either **nodes** (the default), **versions** or **deleted-nodes**.  For example,
+        ```JSON
+        "scope": {
+            "locations": "deleted-nodes"
+        }
+        ```
         You can specify templates using the **templates JSON body parameter**, for example:
         ```JSON
         "templates": [{"name": "_PERSON","template": "|%firstName OR |%lastName OR |%userName"},
@@ -506,7 +506,15 @@ definitions:
         properties:
           search:
             $ref: '#/definitions/SearchEntry'
-
+          archivedByUser:
+            $ref: '#/definitions/UserInfo'
+          archivedAt:
+            type: string
+            format: date-time
+          versionLabel:
+            type: string
+          versionComment:
+            type: string
   SearchEntry:
     type: object
     properties:
@@ -590,7 +598,6 @@ definitions:
           type: string
       path:
         $ref: '#/definitions/PathInfo'
-
   ## Standard definition
   UserInfo:
     type: object
@@ -705,12 +712,14 @@ definitions:
     description: Scope
     type: object
     properties:
-        stores:
+        locations:
           description: |
-            The stores to include in the query
-          type: array
-          items:
-              type: string
+            The locations to include in the query
+          type: string
+          enum:
+              - nodes
+              - versions
+              - deleted-nodes
   RequestPagination:
     type: object
     properties:
