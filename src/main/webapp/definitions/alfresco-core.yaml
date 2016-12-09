@@ -164,6 +164,7 @@ parameters:
     description: |
       Returns additional information about the person. The following optional fields can be requested:
       * properties
+      * aspectNames
     required: false
     type: array
     items:
