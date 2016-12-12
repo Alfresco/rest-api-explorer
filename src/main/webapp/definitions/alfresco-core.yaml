@@ -4966,6 +4966,7 @@ paths:
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/groupEntryIncludeParam'
         - $ref: '#/parameters/whereParam'        
         - $ref: '#/parameters/fieldsParam'
@@ -5045,6 +5046,7 @@ paths:
         - $ref: '#/parameters/groupIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/whereParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
