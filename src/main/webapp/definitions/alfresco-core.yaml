@@ -2648,7 +2648,7 @@ paths:
         
         You must have admin rights to create a person.
 
-        You can set properties when you create a person:
+        You can set custom properties when you create a person:
         ```JSON
         {
           "id": "abeecher",
@@ -2658,7 +2658,7 @@ paths:
           "password": "secret",
           "properties":
           {
-            "cm:title": "A title"
+            "my:property": "The value"
           }
         }
         ```
@@ -2784,13 +2784,13 @@ paths:
         
         Non-admin users may not disable themselves.
 
-        You can set properties when you update a person:
+        You can set custom properties when you update a person:
         ```JSON
         {
           "firstName": "Alice",
           "properties":
           {
-            "cm:title": "A title"
+            "my:property": "The value"
           }
         }
         ```
