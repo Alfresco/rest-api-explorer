@@ -91,7 +91,7 @@ paths:
         To change the scope to another location you can use the **locations JSON body parameter**. You can specify either **nodes** (the default), **versions** or **deleted-nodes**.  For example,
         ```JSON
         "scope": {
-            "locations": "deleted-nodes"
+            "locations": ["deleted-nodes"]
         }
         ```
         You can specify templates using the **templates JSON body parameter**, for example:
