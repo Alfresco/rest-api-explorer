@@ -4963,7 +4963,7 @@ paths:
         ```
         
         The default sort order for the returned list is for groups to be sorted by ascending displayName.
-        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        You can override the default by using the **orderBy** parameter. You can specify one of the following fields in the **orderBy** parameter:
         * id
         * displayName
       operationId: listGroups
@@ -4972,6 +4972,7 @@ paths:
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/groupEntryIncludeParam'
         - $ref: '#/parameters/whereParam'        
         - $ref: '#/parameters/fieldsParam'
@@ -5213,7 +5214,7 @@ paths:
         ```
         
         The default sort order for the returned list is for group members to be sorted by ascending displayName.
-        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        You can override the default by using the **orderBy** parameter. You can specify one of the following fields in the **orderBy** parameter:
         * id
         * displayName
       operationId: listGroupMemberships
@@ -5223,6 +5224,7 @@ paths:
         - $ref: '#/parameters/groupIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/whereParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
