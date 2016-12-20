@@ -3682,11 +3682,12 @@ paths:
             $ref: '#/definitions/Error'
   '/people/{personId}/groups':
     get:
+      x-alfresco-since: "5.2.1"
       tags:
         - groups
       summary: List group memberships
       description: |
-       **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+       **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
                 
         Gets a list of group membership information for person **personId**.
         
@@ -3711,7 +3712,7 @@ paths:
             $ref: '#/definitions/GroupPaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems**, **skipCount** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy** or **personId** is invalid
         '401':
           description: Authentication failed
         '404':
@@ -4945,11 +4946,12 @@ paths:
             $ref: '#/definitions/Error'
   '/groups':
     get:
+      x-alfresco-since: "5.2.1"
       tags:
         - groups
       summary: List groups
       description: |
-        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
       
         Gets a list of groups. 
         
@@ -4983,7 +4985,7 @@ paths:
             $ref: '#/definitions/GroupPaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems** or **skipCount**, or **where** is invalid
+            Invalid parameter: value of **maxItems** or **skipCount**, or **orderBy**, or **where** is invalid
         '401':
           description: Authentication failed
         default:
@@ -4991,11 +4993,12 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     post:
+      x-alfresco-since: "5.2.1"
       tags:
         - groups
       summary: Create a group
       description: |
-        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
         
         Create a group. 
         
@@ -5003,12 +5006,15 @@ paths:
         of each of the specified parent groups.
         
         If no parentIds are specified then the group will be created as a root group.
+
+        The group will be created in the **APP.DEFAULT** and **AUTH.ALF** zones.
         
         You must have admin rights to create a group. 
       operationId: createRootGroup
       produces:
         - application/json
       parameters:
+        - $ref: '#/parameters/groupEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: groupBodyCreate
@@ -5037,11 +5043,12 @@ paths:
             $ref: '#/definitions/Error'            
   '/groups/{groupId}':
     get:
+      x-alfresco-since: "5.2.1"
       tags:
         - groups
       summary: Get group details
       description: |
-        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
       
         Get details for group **groupId**.
         
@@ -5058,6 +5065,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/GroupEntry'
+        '400':
+          description: |
+            Invalid parameter: invalid **groupId**
         '401':
           description: Authentication failed        
         '404':
@@ -5068,11 +5078,12 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     put:
+      x-alfresco-since: "5.2.1"
       tags:
         - groups
       summary: Update group details
       description: |
-        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
       
         Update details (displayName) for group **groupId**.
         
@@ -5082,6 +5093,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/groupIdParam'
+        - $ref: '#/parameters/groupEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: groupBodyUpdate
@@ -5094,6 +5106,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/GroupEntry'
+        '400':
+          description: |
+            Invalid parameter: **groupId** or **groupBodyCreate** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -5106,11 +5121,12 @@ paths:
           schema:
             $ref: '#/definitions/Error'            
     delete:
+      x-alfresco-since: "5.2.1"
       tags:
         - groups
       summary: Delete a group
       description: |
-        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
         
         Delete group **groupId**. 
         
@@ -5128,37 +5144,34 @@ paths:
       responses:
         '204':
           description: Successful response
+        '400':
+          description: |
+            Invalid parameter: **groupId** is invalid
         '401':
           description: Authentication failed
         '403':
           description: User does not have permission to delete a group member
         '404':
           description: |
-            **groupId** or **groupMemberId** does not exist
+            **groupId** does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'                          
   '/groups/{groupId}/members':
     post:
+      x-alfresco-since: "5.2.1"
       tags:
         - groups
       summary: Create a group membership
       description: |
-        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
         
-        Create a group membership (for a person or a sub-group) within a group **groupId**.
+        Create a group membership (for an existing person or group) within a group **groupId**.
         
-        If the added sub-group was previously a root group then it becomes a non-root 
-        group since it now has a parent.
+        If the added group was previously a root group then it becomes a non-root group since it now has a parent.
         
-        If the added sub-group does not exist then it will be created as a member, with specified
-        the **id** and **displayName**.
-        
-        It is an error to specify a **displayName** for a person or a sub-group that already exists.
-        
-        It is an error to specify an *id** that does not exist (unless creating a new sub-group
-        with a specified **displayName**).
+        It is an error to specify an **id** that does not exist.
         
         You must have admin rights to create a group membership.
       operationId: createGroupMembership
@@ -5180,29 +5193,27 @@ paths:
             $ref: '#/definitions/GroupMemberEntry'
         '400':
           description: |
-            Invalid parameter: value of **maxItems**, **skipCount** or **groupMembershipBodyCreate** is invalid
+            Invalid parameter: **groupId** or **groupMembershipBodyCreate** is invalid
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to create a group membeship
+          description: User does not have permission to create a group membership
         '404':
           description: |
-            **groupId** or *id* (of a person) does not exist
-        '409':
-          description: |
-            **id** clashes with an existing group            
+            **groupId** or *id* (of group or person) does not exist
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     get:
+      x-alfresco-since: "5.2.1"
       tags:
         - groups
       summary: List memberships of a group
       description: |
-        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
         
-        Gets a list of memberships (persons or sub-groups) with a group **groupId**.
+        Gets a list of the group memberships for the group **groupId**.
         
         You can use the **where** parameter to filter the returned groups by **memberType**.
 
@@ -5234,7 +5245,7 @@ paths:
             $ref: '#/definitions/GroupMemberPaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems**, **skipCount**, or **where** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
           description: Authentication failed
         '404':
@@ -5246,11 +5257,12 @@ paths:
             $ref: '#/definitions/Error'
   '/groups/{groupId}/members/{groupMemberId}':            
     delete:
+      x-alfresco-since: "5.2.1"
       tags:
         - groups
       summary: Delete a group membership
       description: |
-        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
         
         Delete group member **groupMemberId** (person or sub-group) from group **groupId**.
         
@@ -5268,6 +5280,9 @@ paths:
       responses:
         '204':
           description: Successful response
+        '400':
+          description: |
+            Invalid parameter: value of **groupId**, or **groupMemberId** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -5824,8 +5839,6 @@ definitions:
       - memberType
     properties:
       id:
-        type: string
-      displayName:
         type: string
       memberType:
         type: string
