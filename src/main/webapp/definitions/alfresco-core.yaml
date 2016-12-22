@@ -2738,6 +2738,8 @@ paths:
 
         Update the given person's details.
         
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+        
         If applicable, the given person's login access can also be optionally disabled or re-enabled.
         
         You must have admin rights to update a person — unless updating your own details.
