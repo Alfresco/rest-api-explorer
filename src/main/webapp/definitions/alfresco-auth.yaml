@@ -93,7 +93,7 @@ paths:
           description: Authentication failed
         '404':
           description: The request is authorized correctly but the status of the user (of the supplied ticket) has
-          changed (for example, the user is locked or the account is disabled) or the ticket has expired
+            changed (for example, the user is locked or the account is disabled) or the ticket has expired
         default:
           description: Unexpected error
           schema:
