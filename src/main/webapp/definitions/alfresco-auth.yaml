@@ -89,8 +89,11 @@ paths:
             $ref: '#/definitions/ValidTicketEntry'
         '400':
           description: URL path does not include **-me-** or the ticket is not provided by the Authorization header
+        '401':
+          description: Authentication failed
         '404':
-          description: Status of the user has changed (for example, the user is locked or the account is disabled) or the ticket has expired
+          description: The request is authorized correctly but the status of the user (of the supplied ticket) has
+          changed (for example, the user is locked or the account is disabled) or the ticket has expired
         default:
           description: Unexpected error
           schema:
