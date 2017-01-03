@@ -996,7 +996,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/VariableBody'
+              $ref: '#/definitions/Variable'
       responses:
         '201':
           description: Successful response
@@ -1026,7 +1026,7 @@ paths:
           description: A variable
           required: true
           schema:
-            $ref: '#/definitions/VariableBody'
+            $ref: '#/definitions/Variable'
       responses:
         '200':
           description: Successful response
