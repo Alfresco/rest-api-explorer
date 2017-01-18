@@ -27,6 +27,8 @@ tags:
     description: Retrieve and manage activities
   - name: comments
     description: Retrieve and manage comments
+  - name: downloads
+    description: Create and manage downloads
   - name: favorites
     description: Retrieve and manage favorites
   - name: networks
@@ -349,6 +351,12 @@ parameters:
     required: false
     type: string
     format: date-time
+  downloadIdParam:
+    name: downloadId
+    in: path
+    description: The identifier of a download node.
+    required: true
+    type: string
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -2629,6 +2637,126 @@ paths:
           description: Node name already exists in the restore destination
         '422':
           description: Model integrity exception trying to restore the node
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/downloads':
+    post:
+      x-alfresco-since: "5.2.1"
+      tags:
+        - downloads
+      summary: Create a new download
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
+        
+        Creates a new download node asynchronously, the content of which will be the zipped content of the **nodeIds** specified in the JSON body like this:
+        
+        ```JSON
+        {
+            "nodeIds":
+             [
+               "c8bb482a-ff3c-4704-a3a3-de1c83ccd84c",
+               "cffa62db-aa01-493d-9594-058bc058eeb1"
+             ]
+        }
+        ```
+        
+        **Note:** The content of the download node can be obtained using the **GET /nodes/{downloadId}/content** endpoint
+        
+        **Note:** The download node can be deleted using the **DELETE /nodes/{downloadId}** endpoint
+        
+        By default, if the download node is not deleted it will be picked up by a cleaner job which removes download nodes older than a configurable amount of time(default is 1 hour)
+        
+      operationId: createDownload
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: DownloadBodyCreate
+          description: The nodeIds the content of which will be zipped, which zip will be set as the content of our download node.
+          required: true
+          schema:
+            $ref: '#/definitions/DownloadBodyCreate'
+      responses:
+        '202':
+          description: The request to create a download node was accepted
+          schema:
+            $ref: '#/definitions/DownloadEntry'
+        '400':
+          description: |
+            Invalid parameter: **DownloadBodyCreate** is invalid due to incorrect syntax, or **nodeIds** is empty, or **nodeIds** contains a duplicate **nodeId**
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to add a certain **nodeId** to the zip
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  '/downloads/{downloadId}':
+    get:
+      x-alfresco-since: "5.2.1"
+      tags:
+        - downloads
+      summary: Get a download
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
+        
+        Retrieve status information for download node **downloadId**
+        
+      operationId: getDownload
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/downloadIdParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Download node information
+          schema:
+            $ref: '#/definitions/DownloadEntry'
+        '400':
+          description: |
+            Invalid parameter: **downloadId** is invalid, or **downloadId** does not point to a node of download type
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to get information about **downloadId** node
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "5.2.1"
+      tags:
+        - downloads
+      summary: Cancel a download
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
+        
+        This signals the download node that the zip is not needed anymore. Thus any archiving going on is stopped in its tracks. 
+        
+        Information about the existing progress at the time of cancelling can be retrieved by calling the
+        **GET /downloads/{downloadId}** endpoint
+        
+        The cancel operation is done asynchronously.
+        
+      operationId: cancelDownload
+      parameters:
+        - $ref: '#/parameters/downloadIdParam'
+      responses:
+        '202':
+          description: The request to cancel a download was accepted
+        '400':
+          description: |
+            Invalid parameter: **downloadId** is invalid, or **downloadId** does not point to a node of download type
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission cancel the **downloadId** node
         default:
           description: Unexpected error
           schema:
@@ -6563,3 +6691,53 @@ definitions:
         type: object
         additionalProperties:
             type: string
+  DownloadBodyCreate:
+    type: object
+    required:
+      - nodeIds
+    properties:
+      nodeIds:
+        type: array
+        items:
+          type: string
+          default: "278187d5-bf87-44ce-ab9a-3b4e6db932d1"
+  DownloadEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Download'
+  Download:
+    type: object
+    properties:
+      filesAdded:
+        type: integer
+        default: 0
+        description: number of files added so far in the zip
+      done:
+        type: integer
+        default: 0
+        description: number of bytes added so far in the zip
+      downloadId:
+        type: string
+        default: "278187d5-bf87-44ce-ab9a-3b4e6db932d1"
+        description: the id of the download node
+      totalFiles:
+        type: integer
+        default: 0
+        description: the total number of files to be added in the zip
+      total:
+        type: integer
+        default: 0
+        description: the total number of bytes to be added in the zip
+      status:
+        type: string
+        enum:
+          - PENDING
+          - CANCELLED
+          - IN_PROGRESS
+          - DONE
+          - MAX_CONTENT_SIZE_EXCEEDED
+        default: PENDING
+        description: the current status of the download node creation
