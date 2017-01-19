@@ -2666,7 +2666,7 @@ paths:
         
         **Note:** The download node can be deleted using the **DELETE /nodes/{downloadId}** endpoint
         
-        By default, if the download node is not deleted it will be picked up by a cleaner job which removes download nodes older than a configurable amount of time(default is 1 hour)
+        By default, if the download node is not deleted it will be picked up by a cleaner job which removes download nodes older than a configurable amount of time (default is 1 hour)
         
       operationId: createDownload
       produces:
