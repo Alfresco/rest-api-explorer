@@ -3704,6 +3704,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
