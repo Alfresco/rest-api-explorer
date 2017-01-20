@@ -2662,12 +2662,7 @@ paths:
         }
         ```
         
-        **Note:** The content of the download node can be obtained using the **GET /nodes/{downloadId}/content** endpoint
-        
-        **Note:** The download node can be deleted using the **DELETE /nodes/{downloadId}** endpoint
-        
-        By default, if the download node is not deleted it will be picked up by a cleaner job which removes download nodes older than a configurable amount of time (default is 1 hour)
-        
+        **Note:** The content of the download node can be obtained using the **GET /nodes/{downloadId}/content** endpoint        
       operationId: createDownload
       produces:
         - application/json
@@ -2737,10 +2732,13 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
         
-        This signals the download node that the zip is not needed anymore. Thus any archiving going on is stopped in its tracks. 
+        Cancels the creation of a download request.
         
-        Information about the existing progress at the time of cancelling can be retrieved by calling the
-        **GET /downloads/{downloadId}** endpoint
+        **Note:** The download node can be deleted using the **DELETE /nodes/{downloadId}** endpoint
+         
+        By default, if the download node is not deleted it will be picked up by a cleaner job which removes download nodes older than a configurable amount of time (default is 1 hour)
+        
+        Information about the existing progress at the time of cancelling can be retrieved by calling the **GET /downloads/{downloadId}** endpoint
         
         The cancel operation is done asynchronously.
         
@@ -6700,7 +6698,6 @@ definitions:
         type: array
         items:
           type: string
-          default: "278187d5-bf87-44ce-ab9a-3b4e6db932d1"
   DownloadEntry:
     type: object
     required:
@@ -6715,19 +6712,18 @@ definitions:
         type: integer
         default: 0
         description: number of files added so far in the zip
-      done:
+      bytesAdded:
         type: integer
         default: 0
         description: number of bytes added so far in the zip
-      downloadId:
+      id:
         type: string
-        default: "278187d5-bf87-44ce-ab9a-3b4e6db932d1"
         description: the id of the download node
       totalFiles:
         type: integer
         default: 0
         description: the total number of files to be added in the zip
-      total:
+      totalBytes:
         type: integer
         default: 0
         description: the total number of bytes to be added in the zip
