@@ -5381,8 +5381,8 @@ paths:
         
         Delete group **groupId**. 
         
-        The option to cascade delete applies this recursively to any hierarchy of group members. In this case, removing a group member does not delete the person or sub-group itself.
-        
+        The option to cascade delete applies this recursively to any hierarchy of group members.
+        In this case, removing a group member does not delete the person or sub-group itself.
         If a removed sub-group no longer has any parent groups then it becomes a root group.
         
         You must have admin rights to delete a group.
@@ -5394,7 +5394,7 @@ paths:
         - name: cascade
           in: query
           description: |
-            If **true** then the delete will be applied in cascade to child authorities of the same type.
+            If **true** then the delete will be applied in cascade to child group members.
           required: false
           type: boolean
           default: false
@@ -5413,7 +5413,7 @@ paths:
             **groupId** does not exist
         '409':
           description: |
-            Trying to modify a fixed authority
+            Trying to delete a fixed group.
         default:
           description: Unexpected error
           schema:
