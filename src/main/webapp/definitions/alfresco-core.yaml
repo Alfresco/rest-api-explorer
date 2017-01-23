@@ -5384,9 +5384,8 @@ paths:
         
         Delete group **groupId**. 
         
-        This applies recursively to any hierarchy of group members. In this case, removing 
-        a group member does not delete the person or sub-group itself.
-        
+        The option to cascade delete applies this recursively to any hierarchy of group members.
+        In this case, removing a group member does not delete the person or sub-group itself.
         If a removed sub-group no longer has any parent groups then it becomes a root group.
         
         You must have admin rights to delete a group.
@@ -5395,6 +5394,13 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/groupIdParam'
+        - name: cascade
+          in: query
+          description: |
+            If **true** then the delete will be applied in cascade to sub-groups.
+          required: false
+          type: boolean
+          default: false
       responses:
         '204':
           description: Successful response
@@ -5408,6 +5414,9 @@ paths:
         '404':
           description: |
             **groupId** does not exist
+        '409':
+          description: |
+            Trying to delete a pre-defined system group, such as GROUP_EVERYONE.
         default:
           description: Unexpected error
           schema:
