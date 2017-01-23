@@ -5285,6 +5285,9 @@ paths:
           description: Authentication failed
         '403':
           description: User does not have permission to create a group
+        '404':
+          description: |
+            **parentIds** does not exist
         '409':
           description: |
             **id** clashes with an existing group
