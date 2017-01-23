@@ -5405,6 +5405,9 @@ paths:
         '404':
           description: |
             **groupId** does not exist
+        '409':
+          description: |
+            Trying to modify a fixed authority
         default:
           description: Unexpected error
           schema:
