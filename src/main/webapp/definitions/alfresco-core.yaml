@@ -2860,7 +2860,9 @@ paths:
         You can use the **include** parameter to return any additional information.
 
         The default sort order for the returned list is for people to be sorted by ascending id.
-        You can override the default specify one or more fields in the **orderBy** parameter. For example:
+        You can override the default by using the **orderBy** parameter.
+
+        You can use any of the following fields to order the results:
         * id
         * firstName
         * lastName
