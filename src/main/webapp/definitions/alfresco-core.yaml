@@ -6,10 +6,10 @@ info:
     This API uses the term **entity** to refer to an object in an Alfresco repository.
     An **entity** is of a specific **type**, and has a unique **id**.
 
-    * The **id** of an entity of type **node** is the **NodeRef** with the `workspace://SpacesStore` prefix removed.
-    * The **id** of an entity of type **site** is the site's short name.
+    * The **id** for an entity of type **node** is the **NodeRef** with the `workspace://SpacesStore` prefix removed.
+    * The **id** for an entity of type **site** is the site's short name.
     * The **id** for an entity of type **person** is the person's username.
-    * The **id** for an entity of type **group** is the group's short name.
+    * The **id** for an entity of type **group** is the group's full name.
   version: '1'
   title: Alfresco Core REST API
 basePath: /alfresco/api/-default-/public/alfresco/versions/1
