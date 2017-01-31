@@ -5426,6 +5426,9 @@ paths:
         '404':
           description: |
             **groupId** does not exist
+        '409':
+          description: |
+            Trying to modify a pre-defined system group, such as GROUP_EVERYONE
         default:
           description: Unexpected error
           schema:
@@ -5520,6 +5523,9 @@ paths:
         '404':
           description: |
             **groupId** or *id* (of group or person) does not exist
+        '409':
+          description: |
+            Trying to modify a pre-defined system group, such as GROUP_EVERYONE.
         default:
           description: Unexpected error
           schema:
@@ -5570,6 +5576,9 @@ paths:
         '404':
           description: |
             **groupId** does not exist
+        '405':
+          description: |
+            Trying to list all members of a pre-defined system group, such as GROUP_EVERYONE
         default:
           description: Unexpected error
           schema:
@@ -5609,6 +5618,9 @@ paths:
         '404':
           description: |
             **groupId** or **groupMemberId** does not exist
+        '409':
+          description: |
+            Trying to delete a member of a pre-defined system group, such as GROUP_EVERYONE
         default:
           description: Unexpected error
           schema:
