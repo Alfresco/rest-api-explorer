@@ -5305,9 +5305,9 @@ paths:
         
         Create a group.
 
-        The group id must start with "GROUP_". If this is omitted it will be added automatically.
+        The group id must start with "GROUP\_". If this is omitted it will be added automatically.
         This format is also returned when listing groups or group memberships. It should be noted
-        that the other group-related operations also expect the id to start with "GROUP_".
+        that the other group-related operations also expect the id to start with "GROUP\_".
         
         If one or more parentIds are specified then the group will be created and become a member
         of each of the specified parent groups.
