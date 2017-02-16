@@ -23,6 +23,7 @@ paths:
       summary: Create ticket (login)
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        **Note:** external authentication systems like SAML can change the response.
 
         Logs in and returns the new authentication ticket.
 
@@ -60,6 +61,8 @@ paths:
             **userId** or **password** is not provided
         '403':
           description: Login failed
+        '404':
+          description: Login via REST API is not possible. External authentication is in use.
         default:
           description: Unexpected error
           schema:
