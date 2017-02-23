@@ -442,7 +442,7 @@ definitions:
              label:
                type: string
              count:
-               type: number
+               type: integer
       facetFields:
         description: The counts from field facets
         type: array
@@ -463,7 +463,7 @@ definitions:
                     type: string
                   count:
                     description: The count for the bucket
-                    type: number
+                    type: integer
                   display:
                     description: An optional field for additional display information
                     type: object
@@ -916,13 +916,13 @@ definitions:
         type: string
       snippetCount:
         description:  The maximum number of distinct highlight snippets to return for each highlight field.
-        type: number
+        type: integer
       fragmentSize:
         description: The character length of each snippet.
-        type: number
+        type: integer
       maxAnalyzedChars:
         description: The number of characters to be considered for highlighting. Matches after this count will not be shown.
-        type: number
+        type: integer
       mergeContiguous:
         description: If fragments over lap they can be  merged into one larger fragment
         type: boolean
@@ -939,9 +939,9 @@ definitions:
               description: The name of the field to highlight.
               type: string
             snippetCount:
-              type: number
+              type: integer
             fragmentSize:
-              type: number
+              type: integer
             mergeContiguous:
              type: boolean
             prefix:
