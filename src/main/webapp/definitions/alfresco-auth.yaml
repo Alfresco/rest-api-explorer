@@ -1,8 +1,11 @@
 swagger: '2.0'
 info:
-  description: Provides access to the Authentication features of Alfresco
+  description: |
+    **Authentication API**
+
+    Provides access to the authentication features of Alfresco Content Services.
   version: '1'
-  title: Alfresco Authentication REST API
+  title: Alfresco Content Services REST API
 basePath: /alfresco/api/-default-/public/authentication/versions/1
 securityDefinitions:
   basicAuth:
