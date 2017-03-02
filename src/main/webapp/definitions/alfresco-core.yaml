@@ -5009,21 +5009,28 @@ paths:
         ```JSON
         {
             "client": "myClient",
-            "recipientEmails": ["john.doe@acme.com", joe.bloggs@acme.com]
+            "recipientEmails": ["john.doe@acme.com", "joe.bloggs@acme.com"]
         }
         ```
         A plain text message property can be optionally provided in the request body to customise the sent email.
-        Also, a locale property can be optionally provided in the request body to send the emails in a particular language.
+        Also, a locale property can be optionally provided in the request body to send the emails in a particular language (if the locale is supported by Alfresco).
         For example, to email a shared link with a messages and a locale:
         ```JSON
         {
             "client": "myClient",
-            "recipientEmails": ["john.doe@acme.com", joe.bloggs@acme.com],
+            "recipientEmails": ["john.doe@acme.com", "joe.bloggs@acme.com"],
             "message": "myMessage",
             "locale":"en-GB"
         }
         ```
-        **Note:** The client must be registered before you can send a shared link email. See [server documentation]
+        **Note:** The client must be registered before you can send a shared link email. See [server documentation]. However, out-of-the-box
+         share is registered as a default client, so you could pass **share** as the client name:
+        ```JSON
+        {
+            "client": "share",
+            "recipientEmails": ["john.doe@acme.com"]
+        }
+        ```
       operationId: emailSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -5043,10 +5050,10 @@ paths:
             Invalid parameter: **sharedId** is not a valid format
             or **sharedLinkBodyEmail** invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '404':
           description: |
-            **sharedId** does not exist
+            **sharedId** does not exist or **client** is not registered
         '501':
           description: Shared links are disabled for the system
         default:
