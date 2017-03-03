@@ -301,6 +301,8 @@ paths:
                   $ref: '#/definitions/RequestFacetQueries'
                 facetFields:
                   $ref: '#/definitions/RequestFacetFields'
+                facetIntervals:
+                  $ref: '#/definitions/RequestFacetIntervals'
                 spellcheck:
                   $ref: '#/definitions/RequestSpellcheck'
                 scope:
@@ -441,32 +443,21 @@ definitions:
           properties:
              label:
                type: string
+             filterQuery:
+              description: The filter query you can use to apply this facet
+              type: string
              count:
                type: integer
       facetFields:
         description: The counts from field facets
         type: array
         items:
-          type: object
-          properties:
-            label:
-              description: The field name or its explicit label, if provided on the request
-              type: string
-            buckets:
-              description: An array of buckets and values
-              type: array
-              items:
-                type: object
-                properties:
-                  label:
-                    description: The bucket label
-                    type: string
-                  count:
-                    description: The count for the bucket
-                    type: integer
-                  display:
-                    description: An optional field for additional display information
-                    type: object
+          $ref: '#/definitions/ResultBuckets'
+      facetIntervals:
+        description: The counts from facet intervals
+        type: array
+        items:
+          $ref: '#/definitions/ResultBuckets'
       spellcheck:
         description: |
           Suggested corrections
@@ -488,7 +479,30 @@ definitions:
                type: array
                items:
                  type: string
-
+  ResultBuckets:
+    type: object
+    properties:
+      label:
+        description: The field name or its explicit label, if provided on the request
+        type: string
+      buckets:
+        description: An array of buckets and values
+        type: array
+        items:
+          type: object
+          properties:
+            label:
+              description: The bucket label
+              type: string
+            filterQuery:
+              description: The filter query you can use to apply this facet
+              type: string
+            count:
+              description: The count for the bucket
+              type: integer
+            display:
+              description: An optional field for additional display information
+              type: object
   ResultSetRowEntry:
     description: A row in the result set
     type: object
@@ -854,7 +868,53 @@ definitions:
         description:  Maximum count of post query permission evaluations
         type: integer
         default: 2000
-
+  RequestFacetIntervals:
+    description: Facet Intervals
+    type: object
+    properties:
+      sets:
+        description: Sets the intervals for all fields.
+        type: array
+        items:
+          $ref: '#/definitions/RequestFacetSet'
+      intervals:
+        description:  Specifies the fields to facet by interval.
+        type : array
+        items:
+          type: object
+          properties:
+            field:
+              description: The field to facet on
+              type: string
+            label:
+              description: A label to use to identify the field facet
+              type: string
+            sets:
+              description: Sets the intervals for all fields.
+              type: array
+              items:
+                $ref: '#/definitions/RequestFacetSet'
+  RequestFacetSet:
+    description: The interval to Set
+    type: object
+    properties:
+      label:
+        description: A label to use to identify the set
+        type: string
+      start:
+        description: The start of the range
+        type: string
+      end:
+        description: The end of the range
+        type: string
+      startInclusive:
+        description: When true, the set will include values greater or equal to "start"
+        type: boolean
+        default: true
+      endInclusive:
+        description: When true, the set will include values less than or equal to "end"
+        type: boolean
+        default: true
   RequestFilterQueries:
     description: Filter Queries. Constraints that apply to the results set but do not affect the score of each entry.
     type: array
