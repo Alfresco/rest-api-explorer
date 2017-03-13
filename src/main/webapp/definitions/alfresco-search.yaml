@@ -220,6 +220,37 @@ paths:
            ]
         },
         ```
+
+        Interval Faceting is supported by the **facetIntervals JSON body parameter**,, for example:
+        ```JSON
+          "facetIntervals": {
+            "intervals": [
+              {
+                "label" : "TheCreated",
+                "field": "cm:created",
+                  "sets": [
+                    {
+                      "label": "lastYear",
+                      "start": "2016",
+                      "end": "2017",
+                      "endInclusive" : false
+                    },
+                    {
+                      "label": "currentYear",
+                      "start": "NOW/YEAR",
+                      "end": "NOW/YEAR+1YEAR"
+                    },
+                  {
+                    "label": "earlier",
+                    "start": "*",
+                    "end": "2016",
+                    "endInclusive" : false
+                  }
+                ]
+              }
+            ]
+          }
+        ```
         An example query for **search highlighting** could look like this:
         ```JSON
         {
