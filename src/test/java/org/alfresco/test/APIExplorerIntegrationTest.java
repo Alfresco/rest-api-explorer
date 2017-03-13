@@ -118,6 +118,23 @@ public class APIExplorerIntegrationTest
         validateAuthDefn(definitionUrl + JSON);
     }
 
+    @Test
+    public void testSearchAPIDefinition() throws Exception {
+        String definitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-search";
+
+        // get definition content
+        String definitionContent = this.retrievePageContent(definitionUrl + YAML, 200);
+        // make sure the content is correct
+        int swaggerIndex = definitionContent.indexOf("swagger:");
+        assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
+
+        Swagger swagger = validateSwaggerDef(definitionUrl+ JSON, "Alfresco Search REST API", "1");
+        Map<String, Path> paths = swagger.getPaths();
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /search path", paths.containsKey("/search"));
+    }
+
+
     private void validateAuthDefn(String definitionUrl) {
         Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Authentication REST API", "1");
         Map<String, Path> paths = swagger.getPaths();
