@@ -100,12 +100,13 @@ paths:
                       {"name": "mytemplate","template": "%cm:content"}]
         ```
 
+        **Note: Spell checking only works on Search Services (Solr 6) if you have already enabled suggestions.**
+
         For **spell checking** you can use a query like this:
         ```JSON
         {
           "query": {
-            "query": "cm:title:alfrezco",
-            "language": "afts"
+            "query": "cm:title:alfrezco"
           },
           "spellcheck": {"query": "alfrezco"}
         }
@@ -117,8 +118,7 @@ paths:
         {
           "query": {
             "query": "cm:title:alfrezco",
-            "userQuery": "alfrezco",
-            "language": "afts"
+            "userQuery": "alfrezco"
           },
           "spellcheck": {}
         }
