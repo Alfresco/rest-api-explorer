@@ -7433,12 +7433,18 @@ definitions:
         description: the current status of the download node creation
   ClientBody:
     type: object
+    required:
+      - client
     properties:
       client:
         type: string
         description: the client name
   PasswordResetBody:
     type: object
+    required:
+      - password
+      - id
+      - key
     properties:
       password:
         type: string
