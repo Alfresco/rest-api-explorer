@@ -309,39 +309,7 @@ paths:
             Generic query API
           required: true
           schema:
-             required:
-               - query
-             properties:
-                query:
-                  $ref: '#/definitions/RequestQuery'
-                paging:
-                   $ref: '#/definitions/RequestPagination'
-                include:
-                  $ref: '#/definitions/RequestInclude'
-                fields:
-                  $ref: '#/definitions/RequestFields'
-                sort:
-                  $ref: '#/definitions/RequestSortDefinition'
-                templates:
-                  $ref: '#/definitions/RequestTemplates'
-                defaults:
-                  $ref: '#/definitions/RequestDefaults'
-                filterQueries:
-                  $ref: '#/definitions/RequestFilterQueries'
-                facetQueries:
-                  $ref: '#/definitions/RequestFacetQueries'
-                facetFields:
-                  $ref: '#/definitions/RequestFacetFields'
-                facetIntervals:
-                  $ref: '#/definitions/RequestFacetIntervals'
-                spellcheck:
-                  $ref: '#/definitions/RequestSpellcheck'
-                scope:
-                  $ref: '#/definitions/RequestScope'
-                limits:
-                  $ref: '#/definitions/RequestLimits'
-                highlight:
-                  $ref: '#/definitions/RequestHighlight'
+            $ref: '#/definitions/SearchRequest'
       operationId: search
       produces:
         - application/json
@@ -355,8 +323,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
-
 
 definitions:
 
@@ -387,6 +353,46 @@ definitions:
             type: string
           logId:
             type: string
+  SearchRequest:
+    type: object
+    required:
+      - query
+    properties:
+      query:
+        $ref: '#/definitions/RequestQuery'
+      paging:
+         $ref: '#/definitions/RequestPagination'
+      include:
+        $ref: '#/definitions/RequestInclude'
+      includeRequest:
+        description: "When true, include the original request in the response"
+        type: boolean
+        default: false
+      fields:
+        $ref: '#/definitions/RequestFields'
+      sort:
+        $ref: '#/definitions/RequestSortDefinition'
+      templates:
+        $ref: '#/definitions/RequestTemplates'
+      defaults:
+        $ref: '#/definitions/RequestDefaults'
+      filterQueries:
+        $ref: '#/definitions/RequestFilterQueries'
+      facetQueries:
+        $ref: '#/definitions/RequestFacetQueries'
+      facetFields:
+        $ref: '#/definitions/RequestFacetFields'
+      facetIntervals:
+        $ref: '#/definitions/RequestFacetIntervals'
+      spellcheck:
+        $ref: '#/definitions/RequestSpellcheck'
+      scope:
+        $ref: '#/definitions/RequestScope'
+      limits:
+        $ref: '#/definitions/RequestLimits'
+      highlight:
+        $ref: '#/definitions/RequestHighlight'
+
   RequestInclude:
     description: |
          Returns additional information about the node. The following optional fields can be requested:
@@ -466,6 +472,8 @@ definitions:
     properties:
       consistency:
         $ref: '#/definitions/ResponseConsistency'
+      request:
+        $ref: '#/definitions/SearchRequest'  
       facetQueries:
         description: The counts from facet queries
         type: array
