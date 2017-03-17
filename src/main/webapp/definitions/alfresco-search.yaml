@@ -580,17 +580,30 @@ definitions:
         filterQuery:
           description: The filter query you can use to apply this facet
           type: string
-        count:
-          description: The count for the bucket
-          type: integer
         display:
           description: An optional field for additional display information
           type: object
+        metrics:
+          description: An array of buckets and values
+          type: array
+          items:
+            $ref: '#/definitions/GenericMetric'
         facets:
-          description: Additional list of embedded GenericFacetResponse
+          description: Additional list of nested facets
           type: array
           items:
             type: object
+  GenericMetric:
+    description: A metric used in faceting
+    type: object
+    properties:
+      type:
+          description: The type of metric, e.g. count
+          type: string
+      value:
+          description:  |
+            The metric value, e.g. {"count": 34}
+          type: object
   ResultBuckets:
     type: object
     properties:
