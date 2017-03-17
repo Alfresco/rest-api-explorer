@@ -251,6 +251,44 @@ paths:
             ]
           }
         ```
+        Grouping facet queries that go together can be done by specifying the group label in the fact queries as follow:
+        ```JSON
+            {
+                "query": {
+                    "query": "presentation"
+                },
+                "facetQueries": [
+                    {"query": "content.size:[0 TO 102400]", "label": "small", "group":"foo"},
+                    {"query": "content.size:[102400 TO 1048576]", "label": "medium","group":"foo"},
+                    {"query": "content.size:[1048576 TO 16777216]", "label": "large","group":"foo"}
+                ]
+            }
+        ```
+        The above query returns the results a faceted field grouped under the label foo:
+        ```JSON
+        {
+            "context": {"facetsFields": [{
+                "label": "foo",
+                "buckets": [
+                    {
+                        "count": 109,
+                        "label": "small",
+                        "filterQuery": "content.size:[0 TO 102400]"
+                    },
+                    {
+                        "count": 0,
+                        "label": "large",
+                        "filterQuery": "content.size:[1048576 TO 16777216]"
+                    },
+                    {
+                        "count": 0,
+                        "label": "medium",
+                        "filterQuery": "content.size:[102400 TO 1048576]"
+                    }
+                ]
+            }]
+        }
+        ```
         An example query for **search highlighting** could look like this:
         ```JSON
         {
@@ -473,7 +511,7 @@ definitions:
       consistency:
         $ref: '#/definitions/ResponseConsistency'
       request:
-        $ref: '#/definitions/SearchRequest'  
+        $ref: '#/definitions/SearchRequest'
       facetQueries:
         description: The counts from facet queries
         type: array
@@ -518,7 +556,7 @@ definitions:
                type: array
                items:
                  type: string
-  GenericFacetResponse:              
+  GenericFacetResponse:
     type: object
     properties:
       type:
@@ -531,7 +569,7 @@ definitions:
         description: An array of buckets and values
         type: array
         items:
-          $ref: '#/definitions/GenericBucket'        
+          $ref: '#/definitions/GenericBucket'
   GenericBucket:
     description: A bucket of facet results
     type: object
