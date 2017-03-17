@@ -492,11 +492,11 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ResultBuckets'
-      facetIntervals:
-        description: The counts from facet intervals
+      facets:
+        description: The faceted response
         type: array
         items:
-          $ref: '#/definitions/ResultBuckets'
+          $ref: '#/definitions/GenericFacetResponse'
       spellcheck:
         description: |
           Suggested corrections
@@ -518,6 +518,41 @@ definitions:
                type: array
                items:
                  type: string
+  GenericFacetResponse:              
+    type: object
+    properties:
+      type:
+        description: The facet type, eg. interval, range, field, query1
+        type: string
+      label:
+        description: The field name or its explicit label, if provided on the request
+        type: string
+      buckets:
+        description: An array of buckets and values
+        type: array
+        items:
+          $ref: '#/definitions/GenericBucket'        
+  GenericBucket:
+    description: A bucket of facet results
+    type: object
+    properties:
+        label:
+          description: The bucket label
+          type: string
+        filterQuery:
+          description: The filter query you can use to apply this facet
+          type: string
+        count:
+          description: The count for the bucket
+          type: integer
+        display:
+          description: An optional field for additional display information
+          type: object
+        facets:
+          description: Additional list of embedded GenericFacetResponse
+          type: array
+          items:
+            type: object
   ResultBuckets:
     type: object
     properties:
