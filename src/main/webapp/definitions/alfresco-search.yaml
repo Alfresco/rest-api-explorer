@@ -422,6 +422,8 @@ definitions:
         $ref: '#/definitions/RequestFacetFields'
       facetIntervals:
         $ref: '#/definitions/RequestFacetIntervals'
+      pivots:
+        $ref: '#/definitions/RequestPivot'
       spellcheck:
         $ref: '#/definitions/RequestSpellcheck'
       scope:
@@ -465,6 +467,13 @@ definitions:
     type: array
     items:
      type: string
+  RequestPivot:
+    description: A list of pivot keys.
+    type: object
+    properties:
+     key:
+       description: A key corresponding to a matching field facet label.
+       type: string
   RequestQuery:
     description: Query.
     type: object
@@ -942,45 +951,51 @@ definitions:
           Define specifc fields on which to facet (adds SOLR facet.field and f.<field>.facet.* options)
         type: array
         items:
-          type: object
-          properties:
-            field:
-              description: The facet field
-              type: string
-            prefix:
-              description: Restricts the possible constraints to only indexed values with a specified prefix.
-              type: string
-            sort:
-              type: string
-              enum:
-                - COUNT
-                - INDEX
-            method:
-              type: string
-              enum:
-                - ENUM
-                - FC
-            missing:
-              description: When true, count results that match the query but which have no facet value for the field (in addition to the Term-based constraints).
-              type: boolean
-              default: false
-            limit:
-              type: integer
-            offset:
-              type: integer
-            mincount:
-              type: integer
-              description:  The minimum count required for a facet field to be included in the response.
-              default: 1
-            facetEnumCacheMinDf:
-               type: integer
-            excludeFilters:
-              description: |
-                Filter Queries with tags listed here will not be included in facet counts.
-                This is used for multi-select facetting.
-              type: array
-              items:
-                type: string
+          $ref: '#/definitions/RequestFacetField'
+  RequestFacetField:
+    description: A simple facet field
+    type: object
+    properties:
+      field:
+        description: The facet field
+        type: string
+      label:
+        description: A label to include in place of the facet field
+        type: string
+      prefix:
+        description: Restricts the possible constraints to only indexed values with a specified prefix.
+        type: string
+      sort:
+        type: string
+        enum:
+          - COUNT
+          - INDEX
+      method:
+        type: string
+        enum:
+          - ENUM
+          - FC
+      missing:
+        description: When true, count results that match the query but which have no facet value for the field (in addition to the Term-based constraints).
+        type: boolean
+        default: false
+      limit:
+        type: integer
+      offset:
+        type: integer
+      mincount:
+        type: integer
+        description:  The minimum count required for a facet field to be included in the response.
+        default: 1
+      facetEnumCacheMinDf:
+        type: integer
+      excludeFilters:
+        description: |
+          Filter Queries with tags listed here will not be included in facet counts.
+          This is used for multi-select facetting.
+        type: array
+        items:
+          type: string
   RequestLimits:
     description: Limit the time and resources used for query execution
     type: object
