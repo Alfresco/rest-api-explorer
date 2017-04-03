@@ -426,7 +426,9 @@ definitions:
       facetIntervals:
         $ref: '#/definitions/RequestFacetIntervals'
       pivots:
-        $ref: '#/definitions/RequestPivot'
+        type: array
+        items:
+          $ref: '#/definitions/RequestPivot'
       spellcheck:
         $ref: '#/definitions/RequestSpellcheck'
       scope:
