@@ -1074,7 +1074,7 @@ paths:
 
             *   ```where=(nodeType='my:specialNodeType')```
 
-            *   ```where=(nodeType='my:specialNodeType' INCLUDESUBTYPES)```
+            *   ```where=(nodeType='my:specialNodeType INCLUDESUBTYPES')```
             
             *   ```where=(isPrimary=true)```
             
