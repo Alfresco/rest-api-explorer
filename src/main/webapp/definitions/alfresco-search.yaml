@@ -539,7 +539,7 @@ definitions:
               type: string
              count:
                type: integer
-      facetFields:
+      facetsFields:
         description: The counts from field facets
         type: array
         items:
