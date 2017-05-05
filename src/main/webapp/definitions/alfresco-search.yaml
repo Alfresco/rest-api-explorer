@@ -526,14 +526,12 @@ definitions:
         type: boolean
         default: true
       distinctValues:
-        description: >-
-          The set of all distinct values for the field (This can be very
+        description: The set of all distinct values for the field (This can be very
           expensive to calculate)
         type: boolean
         default: false
       countDistinct:
-        description: >-
-          The exact number of distinct values  (This can be very expensive to
+        description: The number of distinct values  (This can be very expensive to
           calculate)
         type: boolean
         default: false
@@ -542,8 +540,7 @@ definitions:
         type: boolean
         default: false
       cardinalityAccuracy:
-        description: >-
-          Number between 0.0 and 1.0 indicating how aggressively the algorithm
+        description: Number between 0.0 and 1.0 indicating how aggressively the algorithm
           should try to be accurate. Used with boolean cardinality flag.
         type: number
         format: float
@@ -554,7 +551,7 @@ definitions:
         items:
           type: string
       percentiles:
-        description: 'A list of percentile values, e.g. 1,99,99.9'
+        description: A list of percentile values, e.g. "1,99,99.9"
         type: array
         items:
           type: number
