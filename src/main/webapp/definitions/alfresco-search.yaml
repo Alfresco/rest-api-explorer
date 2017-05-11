@@ -417,6 +417,9 @@ definitions:
         $ref: '#/definitions/RequestTemplates'
       defaults:
         $ref: '#/definitions/RequestDefaults'
+      timezone:
+        description: A valid timezone id supported by @see java.time.ZoneId        
+        type: string
       filterQueries:
         $ref: '#/definitions/RequestFilterQueries'
       facetQueries:
