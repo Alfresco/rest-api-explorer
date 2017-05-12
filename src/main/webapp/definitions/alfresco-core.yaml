@@ -193,6 +193,7 @@ parameters:
     description: |
       Returns additional information about the shared link, the following optional fields can be requested:
       * allowableOperations
+      * path
     required: false
     type: array
     items:
@@ -4883,7 +4884,6 @@ paths:
       operationId: getSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
-        - $ref: '#/parameters/sharedLinkEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
