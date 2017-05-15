@@ -1,17 +1,11 @@
 swagger: '2.0'
 info:
   description: |
-    Provides access to the core features of Alfresco.
+    **Core API**
 
-    This API uses the term **entity** to refer to an object in an Alfresco repository.
-    An **entity** is of a specific **type**, and has a unique **id**.
-
-    * The **id** for an entity of type **node** is the **NodeRef** with the `workspace://SpacesStore` prefix removed.
-    * The **id** for an entity of type **site** is the site's short name.
-    * The **id** for an entity of type **person** is the person's username.
-    * The **id** for an entity of type **group** is the group's full name.
+    Provides access to the core features of Alfresco Content Services.
   version: '1'
-  title: Alfresco Core REST API
+  title: Alfresco Content Services REST API
 basePath: /alfresco/api/-default-/public/alfresco/versions/1
 securityDefinitions:
   basicAuth:
@@ -199,6 +193,7 @@ parameters:
     description: |
       Returns additional information about the shared link, the following optional fields can be requested:
       * allowableOperations
+      * path
     required: false
     type: array
     items:
@@ -1080,7 +1075,7 @@ paths:
 
             *   ```where=(nodeType='my:specialNodeType')```
 
-            *   ```where=(nodeType='my:specialNodeType' INCLUDESUBTYPES)```
+            *   ```where=(nodeType='my:specialNodeType INCLUDESUBTYPES')```
             
             *   ```where=(isPrimary=true)```
             
@@ -3995,6 +3990,89 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/people/{personId}/request-password-reset':
+    post:
+      x-alfresco-since: "5.2.1"
+      tags:
+        - people
+      summary: Request password reset
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
+
+        Initiates the reset password workflow to send an email with reset password instruction to the user's registered email.
+
+        The client is mandatory in the request body. For example:
+        ```JSON
+        {
+          "client": "myClient"
+        }
+        ```
+        **Note:** The client must be registered before this API can send an email. See [server documentation]. However, out-of-the-box
+        share is registered as a default client, so you could pass **share** as the client name:
+        ```JSON
+        {
+          "client": "share"
+        }
+        ```
+        **Note:** No authentication is required to call this endpoint.
+      operationId: requestPasswordReset
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - in: body
+          name: clientBody
+          description: The client name to send email with app-specific url.
+          required: true
+          schema:
+            $ref: '#/definitions/ClientBody'
+      consumes:
+        - application/json
+      responses:
+        '202':
+          description: |
+            Successful response or even when the **personId** does not exist or the user is disabled by an Administrator
+        '404':
+          description: |
+            **client** is not registered
+  '/people/{personId}/reset-password':
+    post:
+      x-alfresco-since: "5.2.1"
+      tags:
+        - people
+      summary: Reset password
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
+
+        Resets user's password
+
+        The password, id and key properties are mandatory in the request body. For example:
+        ```JSON
+        {
+          "password":"newPassword",
+          "id":"activiti$10",
+          "key":"4dad6d00-0daf-413a-b200-f64af4e12345"
+        }
+        ```
+        **Note:** No authentication is required to call this endpoint.
+      operationId: resetPassword
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - in: body
+          name: passwordResetBody
+          description: The reset password details
+          required: true
+          schema:
+            $ref: '#/definitions/PasswordResetBody'
+      consumes:
+        - application/json
+      responses:
+        '202':
+          description: |
+            Successful response or even when no workflow instance is found with the given **id** or the workflow instance is
+            invalid (already been used or expired) or the given **personId** does not match the person's id requesting
+            the password reset or the given workflow **key** does not match the recovered key.
+        '400':
+          description: |
+            Invalid parameter: Value of **password**, **id** or **key** is invalid
   /sites:
     get:
       tags:
@@ -4806,7 +4884,6 @@ paths:
       operationId: getSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
-        - $ref: '#/parameters/sharedLinkEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       produces:
         - application/json
@@ -5015,21 +5092,28 @@ paths:
         ```JSON
         {
             "client": "myClient",
-            "recipientEmails": ["john.doe@acme.com", joe.bloggs@acme.com]
+            "recipientEmails": ["john.doe@acme.com", "joe.bloggs@acme.com"]
         }
         ```
         A plain text message property can be optionally provided in the request body to customise the sent email.
-        Also, a locale property can be optionally provided in the request body to send the emails in a particular language.
+        Also, a locale property can be optionally provided in the request body to send the emails in a particular language (if the locale is supported by Alfresco).
         For example, to email a shared link with a messages and a locale:
         ```JSON
         {
             "client": "myClient",
-            "recipientEmails": ["john.doe@acme.com", joe.bloggs@acme.com],
+            "recipientEmails": ["john.doe@acme.com", "joe.bloggs@acme.com"],
             "message": "myMessage",
             "locale":"en-GB"
         }
         ```
-        **Note:** The client must be registered before you can send a shared link email. See [server documentation]
+        **Note:** The client must be registered before you can send a shared link email. See [server documentation]. However, out-of-the-box
+         share is registered as a default client, so you could pass **share** as the client name:
+        ```JSON
+        {
+            "client": "share",
+            "recipientEmails": ["john.doe@acme.com"]
+        }
+        ```
       operationId: emailSharedLink
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -5049,10 +5133,10 @@ paths:
             Invalid parameter: **sharedId** is not a valid format
             or **sharedLinkBodyEmail** invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '404':
           description: |
-            **sharedId** does not exist
+            **sharedId** does not exist or **client** is not registered
         '501':
           description: Shared links are disabled for the system
         default:
@@ -7347,3 +7431,27 @@ definitions:
           - MAX_CONTENT_SIZE_EXCEEDED
         default: PENDING
         description: the current status of the download node creation
+  ClientBody:
+    type: object
+    required:
+      - client
+    properties:
+      client:
+        type: string
+        description: the client name
+  PasswordResetBody:
+    type: object
+    required:
+      - password
+      - id
+      - key
+    properties:
+      password:
+        type: string
+        description: the new password
+      id:
+        type: string
+        description: the workflow id provided in the reset password email
+      key:
+        type: string
+        description: the workflow key provided in the reset password email

@@ -1,8 +1,11 @@
 swagger: '2.0'
 info:
-  description: Provides access to the search features of Alfresco
+  description: |
+    **Search API**
+
+    Provides access to the search features of Alfresco Content Services.
   version: '1'
-  title: Alfresco Search REST API
+  title: Alfresco Content Services REST API
 basePath: /alfresco/api/-default-/public/search/versions/1
 securityDefinitions:
   basicAuth:
@@ -435,6 +438,9 @@ definitions:
         $ref: '#/definitions/RequestTemplates'
       defaults:
         $ref: '#/definitions/RequestDefaults'
+      timezone:
+        description: A valid timezone id supported by @see java.time.ZoneId        
+        type: string
       filterQueries:
         $ref: '#/definitions/RequestFilterQueries'
       facetQueries:
@@ -444,7 +450,13 @@ definitions:
       facetIntervals:
         $ref: '#/definitions/RequestFacetIntervals'
       pivots:
-        $ref: '#/definitions/RequestPivot'
+        type: array
+        items:
+          $ref: '#/definitions/RequestPivot'
+      stats:
+        type: array
+        items:
+          $ref: '#/definitions/RequestStats'
       spellcheck:
         $ref: '#/definitions/RequestSpellcheck'
       scope:
@@ -498,6 +510,79 @@ definitions:
      key:
        description: A key corresponding to a matching field facet label.
        type: string
+  RequestStats:
+    description: A list of stats request.
+    type: object
+    properties:
+      field:
+        description: The stats field
+        type: string
+      label:
+        description: A label to include for reference the stats field
+        type: string
+      min:
+        description: The minimum value of the field
+        type: boolean
+        default: true
+      max:
+        description: The maximum value of the field
+        type: boolean
+        default: true
+      sum:
+        description: The sum of all values of the field
+        type: boolean
+        default: true
+      count:
+        description: The number of values found
+        type: boolean
+        default: true
+      missing:
+        description: The number which do not have a value for this field
+        type: boolean
+        default: true
+      mean:
+        description: The average
+        type: boolean
+        default: true
+      stddev:
+        description: Standard deviation
+        type: boolean
+        default: true
+      sumOfSquares:
+        description: Sum of all values squared
+        type: boolean
+        default: true
+      distinctValues:
+        description: The set of all distinct values for the field (This can be very
+          expensive to calculate)
+        type: boolean
+        default: false
+      countDistinct:
+        description: The number of distinct values  (This can be very expensive to
+          calculate)
+        type: boolean
+        default: false
+      cardinality:
+        description: A statistical approximation of the number of distinct values
+        type: boolean
+        default: false
+      cardinalityAccuracy:
+        description: Number between 0.0 and 1.0 indicating how aggressively the algorithm
+          should try to be accurate. Used with boolean cardinality flag.
+        type: number
+        format: float
+        default: 0.3
+      excludeFilters:
+        description: A list of filters to exclude
+        type: array
+        items:
+          type: string
+      percentiles:
+        description: A list of percentile values, e.g. "1,99,99.9"
+        type: array
+        items:
+          type: number
+          format: float
   RequestQuery:
     description: Query.
     type: object
@@ -558,7 +643,7 @@ definitions:
               type: string
              count:
                type: integer
-      facetFields:
+      facetsFields:
         description: The counts from field facets
         type: array
         items:
@@ -593,7 +678,7 @@ definitions:
     type: object
     properties:
       type:
-        description: The facet type, eg. interval, range, field, query1
+        description: The facet type, eg. interval, range, pivot, stats
         type: string
       label:
         description: The field name or its explicit label, if provided on the request

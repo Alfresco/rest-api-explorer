@@ -58,7 +58,7 @@ public class APIExplorerIntegrationTest
         String indexPageContent = this.retrievePageContent("http://localhost:8085/api-explorer", 200);
         
         // make sure the content is correct
-        int titleIndex = indexPageContent.indexOf("<title>Alfresco API Explorer</title>");
+        int titleIndex = indexPageContent.indexOf("<title>Alfresco Content Services REST API Explorer</title>");
         assertTrue("Expected to find page title", titleIndex != -1);
         
         int coreAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-core.yaml\">Core API</option>");
@@ -66,6 +66,15 @@ public class APIExplorerIntegrationTest
         
         int workflowAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-workflow.yaml\">Workflow API</option>");
         assertTrue("Expected to find Workflow API option", workflowAPIIndex != -1);
+
+        int authAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-auth.yaml\">Authentication API</option>");
+        assertTrue("Expected to find Authentication API option", authAPIIndex != -1);
+
+        int searchAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-search.yaml\">Search API</option>");
+        assertTrue("Expected to find Search API option", searchAPIIndex != -1);
+
+        int discoveryAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-discovery.yaml\">Discovery API</option>");
+        assertTrue("Expected to find Discovery API option", discoveryAPIIndex != -1);
     }
     
     @Test
@@ -95,7 +104,7 @@ public class APIExplorerIntegrationTest
     }
 
     private void validateCoreDefn(String coreDefinitionUrl) {
-        Swagger swagger = validateSwaggerDef(coreDefinitionUrl, "Alfresco Core REST API", "1");
+        Swagger swagger = validateSwaggerDef(coreDefinitionUrl, "Alfresco Content Services REST API", "Core API", "1");
         Map<String, Path> paths = swagger.getPaths();
         assertNotNull("Expected to retrieve a map of paths", paths);
         assertTrue("Expected to find /nodes/{nodeId} path", paths.containsKey("/nodes/{nodeId}"));
@@ -124,19 +133,17 @@ public class APIExplorerIntegrationTest
 
         // get definition content
         String definitionContent = this.retrievePageContent(definitionUrl + YAML, 200);
+
         // make sure the content is correct
         int swaggerIndex = definitionContent.indexOf("swagger:");
         assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
 
-        Swagger swagger = validateSwaggerDef(definitionUrl+ JSON, "Alfresco Search REST API", "1");
-        Map<String, Path> paths = swagger.getPaths();
-        assertNotNull("Expected to retrieve a map of paths", paths);
-        assertTrue("Expected to find /search path", paths.containsKey("/search"));
+        validateSearchDefn(definitionUrl + YAML);
+        validateSearchDefn(definitionUrl + JSON);
     }
 
-
     private void validateAuthDefn(String definitionUrl) {
-        Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Authentication REST API", "1");
+        Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Content Services REST API", "Authentication API", "1");
         Map<String, Path> paths = swagger.getPaths();
         assertNotNull("Expected to retrieve a map of paths", paths);
         assertTrue("Expected to find /tickets path", paths.containsKey("/tickets"));
@@ -163,16 +170,46 @@ public class APIExplorerIntegrationTest
     }
 
     private void validateWorkflow(String workflowDefinitionUrl) {
-        Swagger swagger = validateSwaggerDef(workflowDefinitionUrl, "Alfresco Workflow REST API", "1");
+        Swagger swagger = validateSwaggerDef(workflowDefinitionUrl, "Alfresco Content Services REST API", "Workflow API", "1");
         Map<String, Path> paths = swagger.getPaths();
         assertNotNull("Expected to retrieve a map of paths", paths);
         assertTrue("Expected to find /deployments/{deploymentId} path", paths.containsKey("/deployments/{deploymentId}"));
     }
 
-    private Swagger validateSwaggerDef(String definitionUrl, String title, String version) {
+    private void validateSearchDefn(String definitionUrl) {
+        Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Content Services REST API", "Search API", "1");
+        Map<String, Path> paths = swagger.getPaths();
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /search path", paths.containsKey("/search"));
+    }
+
+    @Test
+    public void testDiscoveryAPIDefinition() throws Exception {
+        String definitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-discovery";
+
+        // get definition content
+        String definitionContent = this.retrievePageContent(definitionUrl + YAML, 200);
+
+        // make sure the content is correct
+        int swaggerIndex = definitionContent.indexOf("swagger:");
+        assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
+
+        validateDiscoveryDefn(definitionUrl + YAML);
+        validateDiscoveryDefn(definitionUrl + JSON);
+    }
+
+    private void validateDiscoveryDefn(String definitionUrl) {
+        Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Content Services REST API", "Discovery API", "1");
+        Map<String, Path> paths = swagger.getPaths();
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /discovery path", paths.containsKey("/discovery"));
+    }
+
+    private Swagger validateSwaggerDef(String definitionUrl, String title, String description, String version) {
         Swagger swagger = new SwaggerParser().read(definitionUrl);
         assertNotNull("Expected the API definition to parse successfully: "+ definitionUrl, swagger);
         assertEquals("Incorrect title", title, swagger.getInfo().getTitle());
+        assertTrue("Expected description to contain: " + description, swagger.getInfo().getDescription().indexOf(description) != -1);
         assertEquals("Incorrect version", version, swagger.getInfo().getVersion());
         return swagger;
     }
