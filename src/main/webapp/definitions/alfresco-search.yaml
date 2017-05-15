@@ -626,6 +626,19 @@ definitions:
           type: array
           items:
             type: object
+        facetInfo:
+          description: Additional information of nested facet
+          type: object
+          properties:
+              count:
+                description: The bucket count
+                type: integer
+              from:
+                description: The start of range
+                type: string
+              to:
+                description: The end of range
+                type: string
   GenericMetric:
     description: A metric used in faceting
     type: object
