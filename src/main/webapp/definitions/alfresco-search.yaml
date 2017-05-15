@@ -1172,38 +1172,38 @@ definitions:
               type: string
             postfix:
               type: string
-    RequestRange:
-      description: Facet range
-      type: object
-      properties:
-        field:
-          description: The name of the field to perform range
+  RequestRange:
+    description: Facet range
+    type: object
+    properties:
+      field:
+        description: The name of the field to perform range
+        type: string
+      start:
+        description: The start of the range
+        type: string
+      end:
+        description: The end of the range
+        type: string
+      gap:
+        description: Bucket size
+        type: integer
+      hardend:
+        description:  If true means that the last bucket will end at “end” even if it is less than “gap” wide.
+        type: boolean
+      other:
+        description: before, after, between, non, all
+        type: string
+      include:
+        description: lower, upper, edge, outer, all
+        type: string
+      tags:
+        description: Tags used exclude the filters from facet evaluation for multi-select facet support
+        type: array
+        items:
           type: string
-        start:
-          description: The start of the range
+      excludeFilters:
+        description: Filter queries to exclude when calculating statistics
+        type: array
+        items:
           type: string
-        end:
-          description: The end of the range
-          type: string
-        gap:
-          description: Bucket size
-          type: integer
-        hardend:
-          description:  If true means that the last bucket will end at “end” even if it is less than “gap” wide.
-          type: boolean
-        other:
-          description: before, after, between, non, all
-          type: string
-        include:
-          description: lower, upper, edge, outer, all
-          type: string
-        tags:
-          description: Tags used exclude the filters from facet evaluation for multi-select facet support
-          type: array
-          items:
-            type: string
-        excludeFilters:
-          description: Filter queries to exclude when calculating statistics
-          type: array
-          items:
-            type: string
