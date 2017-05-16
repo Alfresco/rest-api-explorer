@@ -307,6 +307,21 @@ paths:
                 }
             }
         ```
+        Date base range is also accepted, as seen in the example below:
+        ```JSON
+            {
+                "query": {
+                    "query": "name:A*"
+                },
+                "range": {
+                    "field": "created",
+                    "start": "2015-09-29T10:45:15.729Z",
+                    "end": "2016-09-29T10:45:15.729Z",
+                    "gap": "+100DAY"
+                }
+            }
+        ```
+
         An example query for **search highlighting** could look like this:
         ```JSON
         {
@@ -434,7 +449,7 @@ definitions:
       defaults:
         $ref: '#/definitions/RequestDefaults'
       timezone:
-        description: A valid timezone id supported by @see java.time.ZoneId        
+        description: A valid timezone id supported by @see java.time.ZoneId
         type: string
       filterQueries:
         $ref: '#/definitions/RequestFilterQueries'
