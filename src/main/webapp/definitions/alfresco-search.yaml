@@ -300,15 +300,10 @@ paths:
                 },
                 "range": {
                     "field": "content.size",
-                     "minCount": 1,
                      "start": "0",
                      "end": "100",
                      "gap": "20",
-                     "hardend": true,
-                     "other": "before",
-                     "include": "lower",
-                     "tags": [],
-                     "excludeFilters": []
+                     "hardend": true
                 }
             }
         ```
