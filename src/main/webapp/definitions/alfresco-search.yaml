@@ -721,7 +721,7 @@ definitions:
           type: array
           items:
             type: object
-        facetInfo:
+        bucketInfo:
           description: Additional information of nested facet
           type: object
           properties:
