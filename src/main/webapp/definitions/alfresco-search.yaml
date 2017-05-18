@@ -725,15 +725,18 @@ definitions:
           description: Additional information of nested facet
           type: object
           properties:
-              count:
-                description: The bucket count
-                type: integer
-              from:
+              start:
                 description: The start of range
                 type: string
-              to:
+              startInclusive:
+                description: Includes values greater or equal to "start"
+                type: boolean
+              end:
                 description: The end of range
                 type: string
+              endInclusive:
+                description: Includes values less than or equal to "end"
+                type: boolean
   GenericMetric:
     description: A metric used in faceting
     type: object
