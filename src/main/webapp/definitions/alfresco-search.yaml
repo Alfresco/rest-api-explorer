@@ -298,30 +298,22 @@ paths:
                 "query": {
                     "query": "presentation"
                 },
-                "ranges": {
+                "ranges": [
+                {
                     "field": "content.size",
                      "start": "0",
                      "end": "100",
                      "gap": "20",
                      "hardend": true
-                }
-            }
-        ```
-        Date base range is also accepted, as seen in the example below:
-        ```JSON
-            {
-                "query": {
-                    "query": "name:A*"
                 },
-                "ranges": {
+                {
                     "field": "created",
                     "start": "2015-09-29T10:45:15.729Z",
                     "end": "2016-09-29T10:45:15.729Z",
                     "gap": "+100DAY"
-                }
+                }]
             }
         ```
-
         An example query for **search highlighting** could look like this:
         ```JSON
         {
