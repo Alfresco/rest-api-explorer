@@ -379,6 +379,17 @@ parameters:
     description: The identifier of a download node.
     required: true
     type: string
+  favoriteEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about favorites, the following optional fields can be requested:
+      * path (note, this only applies to files and folders)  
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -3263,6 +3274,7 @@ paths:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/whereParam'
+        - $ref: '#/parameters/favoriteEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -3343,6 +3355,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/favoriteEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'        
         - in: body
           name: favoriteBodyCreate
@@ -3403,6 +3416,7 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/favoriteIdParam'
+        - $ref: '#/parameters/favoriteEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
