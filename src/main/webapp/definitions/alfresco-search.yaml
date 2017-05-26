@@ -505,12 +505,16 @@ definitions:
     items:
      type: string
   RequestPivot:
-    description: A list of pivot keys.
+    description: A list of pivots.
     type: object
     properties:
       key:
-        description: A key corresponding to a matching field facet label.
+        description: A key corresponding to a matching field facet label or stats.
         type: string
+      pivots:
+        type: array
+        items:
+          $ref: '#/definitions/RequestPivot'        
   RequestLocalization:
     description: Localization settings
     type: object
