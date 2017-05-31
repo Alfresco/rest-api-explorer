@@ -1317,11 +1317,9 @@ definitions:
       include:
         description: lower, upper, edge, outer, all
         type: string
-      tags:
-        description: Tags used exclude the filters from facet evaluation for multi-select facet support
-        type: array
-        items:
-          type: string
+      label:
+        description: A label to include as a pivot reference
+        type: string
       excludeFilters:
         description: Filter queries to exclude when calculating statistics
         type: array
