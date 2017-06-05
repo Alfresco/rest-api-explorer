@@ -292,7 +292,7 @@ paths:
             }]
         }
         ```
-        Range Faceting is supported by the **range JSON body parameter**, for example:
+        Range Faceting is supported by the **ranges JSON body parameter**, for example:
         ```JSON
             {
                 "query": {
@@ -466,9 +466,10 @@ definitions:
         $ref: '#/definitions/RequestLimits'
       highlight:
         $ref: '#/definitions/RequestHighlight'
-      range:
-        $ref: '#/definitions/RequestRange'
-
+      ranges:
+          type: array
+          items:
+            $ref: '#/definitions/RequestRange'
 
   RequestInclude:
     description: |
@@ -514,7 +515,7 @@ definitions:
       pivots:
         type: array
         items:
-          $ref: '#/definitions/RequestPivot'        
+          $ref: '#/definitions/RequestPivot'
   RequestLocalization:
     description: Localization settings
     type: object
