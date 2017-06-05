@@ -1314,10 +1314,14 @@ definitions:
         type: boolean
       other:
         description: before, after, between, non, all
-        type: string
+        type: array
+        items:
+          type: string
       include:
         description: lower, upper, edge, outer, all
-        type: string
+        type: array
+        items:
+          type: string
       label:
         description: A label to include as a pivot reference
         type: string
