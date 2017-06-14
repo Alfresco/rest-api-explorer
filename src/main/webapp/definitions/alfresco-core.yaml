@@ -18,6 +18,8 @@ consumes:
 produces:
   - application/json
 tags:
+  - name: aduit
+    description: Retrieve and clear audit entries
   - name: activities
     description: Retrieve and manage activities
   - name: comments
@@ -390,6 +392,29 @@ parameters:
     items:
       type: string
     collectionFormat: csv
+  auditApplicationIdParam:
+    name: auditApplicationId
+    in: path
+    description: The identifier of an audit application.
+    required: true
+    type: string
+  auditEntryIdParam:
+    name: auditEntryId
+    in: path
+    description: The identifier of an audit entry.
+    required: true
+    type: string
+  auditMinimalEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the audit entry. The following optional fields can be requested:
+      * values
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv    
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -1055,7 +1080,7 @@ paths:
         The default sort order for the returned list is for folders to be sorted before files, and by ascending name
 
         You can override the default using **orderBy** to specify one or more fields to sort by. The default order is always ascending, but
-        you can use an optional *ASC** or **DESC** modifier to specify an ascending or descending sort order. 
+        you can use an optional **ASC** or **DESC** modifier to specify an ascending or descending sort order. 
             
         For example, specifying ```orderBy=name DESC``` returns a mixed folder/file list in descending **name** order.
 
@@ -5723,6 +5748,468 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/audit-applications':
+    get:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - audit
+      summary: List audit applications
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Gets a list of audit applications in this repository.
+        
+        This list may include pre-configured audit applications, if enabled, such as:
+        
+        * Alfresco Tagging Service
+        * alfresco-access
+        * CMISChangeLog
+        * Alfresco Sync Service (used by Enterprise Cloud Sync)
+        
+        You must have admin rights to retrieve audit information.
+      operationId: listAuditApps
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AuditAppPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid            
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to retrieve audit information
+        '501':
+          description: Audit is disabled for the system         
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/audit-applications/{auditApplicationId}':
+    get:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - audit
+      summary: Get audit application info
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Get status of an audit application **auditApplicationId**.
+        
+        You must have admin rights to retrieve audit information.
+      operationId: getAuditApp
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/auditApplicationIdParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AuditApp'
+        '400':
+          description: |
+            Invalid parameter: invalid **auditApplicationId**
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to retrieve audit information        
+        '404':
+          description: |
+            **applicationId** does not exist
+        '501':
+          description: Audit is disabled for the system                
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - audit
+      summary: Update audit application info
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Disable or re-enable the audit application **auditApplicationId**. 
+        
+        You must have admin rights to update audit application.
+      operationId: updateAuditApp
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/auditApplicationIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: auditAppBodyUpdate
+          description: The audit application to update.
+          required: true
+          schema:
+            $ref: '#/definitions/AuditBodyUpdate'        
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AuditApp'
+        '400':
+          description: |
+            Invalid parameter: **auditApplicationId** is not a valid format or **auditAppUpdate** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to update audit application
+        '404':
+          description: |
+            **auditApplicationId** does not exist
+        '501':
+          description: Audit is disabled for the system       
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/audit-applications/{auditApplicationId}/audit-entries':
+    get:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - audit
+      summary: List audit entries for an audit application
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Gets a list of audit entries for audit application **auditApplicationId**.
+        
+        You can use the **include** parameter to return additional information.
+        
+        The list can be further filtered by **createdByUser** and for a given time period.
+        
+        The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC** 
+        modifier to specify an ascending or descending sort order. 
+            
+        For example, specifying ```orderBy=createdAt DESC``` returns audit entries in descending **createdAt** order.
+        
+        You must have admin rights to retrieve audit information.
+      operationId: listAuditEntriesForApp
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/auditApplicationIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/orderByParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - name: where
+          in: query
+          description: |
+            Optionally filter the list. Here are some examples:
+
+            *   ```where=(createdByUser='-me-')```
+
+            *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+          required: false
+          type: string
+        - $ref: '#/parameters/auditMinimalEntryIncludeParam'          
+        - $ref: '#/parameters/fieldsParam'          
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AuditEntryPaging'
+        '400':
+          description: |
+            Invalid parameter: *auditApplicationId** is not a valid format, value of **maxItems** or **skipCount** is invalid            
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to retrieve audit information
+        '404':
+          description: |
+            **applicationId** does not exist          
+        '501':
+          description: Audit is disabled for the system or application    
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - audit
+      summary: Delete audit entries for an audit application
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Delete audit entries for an audit applicaton **auditApplicationId** and specified time period, for example:
+        
+        *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+        
+        You must have admin rights to delete audit information.
+      operationId: deleteAuditEntriesForApp
+      produces:
+        - application/json
+      parameters:       
+        - $ref: '#/parameters/auditApplicationIdParam'
+        - name: where
+          in: query
+          description: |
+            Time period for entries to delete. For example:
+
+            *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+          required: true
+          type: string       
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: |
+            Invalid parameter: **auditApplicationId** is not a valid format or invalid **where**
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to delete audit information
+        '404':
+          description: |
+            **auditApplicationId** does not exist
+        '501':
+          description: Audit is disabled for the system or application       
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'  
+  '/audit-entries':
+    get:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - audit
+      summary: List audit entries
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Gets a list of audit entries in this repository.
+        
+        You can use the **include** parameter to return additional information.
+        
+        The list can be filtered by **auditApplicationId**, **createdByUser** and for a given time period.
+        
+        The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC** 
+        modifier to specify an ascending or descending sort order. 
+            
+        For example, specifying ```orderBy=createdAt DESC``` returns audit entries in descending **createdAt** order.
+        
+        You must have admin rights to retrieve audit information.
+      operationId: listAuditEntries
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - name: where
+          in: query
+          description: |
+            Optionally filter the list. Here are some examples:
+
+            *   ```where=(auditApplicationId='alfresco-access')```
+            
+            *   ```where=(auditApplicationId='alfresco-access' and createdByUser='jbloggs')```
+            
+            *   ```where=(auditApplicationId='alfresco-access' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+          required: false
+          type: string
+        - $ref: '#/parameters/auditMinimalEntryIncludeParam'          
+        - $ref: '#/parameters/fieldsParam'          
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AuditEntryPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid            
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to retrieve audit information
+        '501':
+          description: Audit is disabled for the system         
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - audit
+      summary: Delete audit entries
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Delete set of audit entries, as specified by the **where** parameter.
+        
+        You must have admin rights to delete audit information.
+      operationId: deleteAuditEntries
+      produces:
+        - application/json
+      parameters:       
+        - name: where
+          in: query
+          description: |
+            Set of audit entries to delete. For example:
+
+            *   ```where=(id IN (123, 456, 789)```
+          required: true
+          type: string      
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to delete audit information
+        '404':
+          description: |
+            **auditEntryId** does not exist
+        '501':
+          description: Audit is disabled for the system      
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'              
+  '/audit-entries/{auditEntryId}':
+    get:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - audit
+      summary: Get audit entry
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Gets audit entry **auditEntryId**.
+        
+        You must have admin rights to access audit information.
+      operationId: getAuditEntry
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/auditEntryIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AuditEntry'
+        '400':
+          description: |
+            Invalid parameter: **auditEntryId** is not a valid format            
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to retrieve audit information
+        '404':
+          description: |
+            **auditEntryId** does not exist          
+        '501':
+          description: Audit is disabled for the system       
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - audit
+      summary: Delete audit entry
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Delete single audit entry **auditEntryId**.
+        
+        You must have admin rights to delete audit information.
+      operationId: deleteAuditEntry
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/auditEntryIdParam'        
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: |
+            Invalid parameter: **auditEntryId** is not a valid format
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to delete audit information
+        '404':
+          description: |
+            **auditEntryId** does not exist
+        '501':
+          description: Audit is disabled for the system       
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/audit-entries':
+    get:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - audit
+      summary: List audit entries for an node
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Gets a list of audit entries for node **nodeId**. 
+        
+        This relies on the pre-configured 'alfresco-access' audit application.
+      operationId: listAuditEntriesForNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/orderByParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - name: where
+          in: query
+          description: |
+            Optionally filter the list. Here are some examples:
+
+            *   ```where=(createdByUser='-me-')```
+
+            *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+          required: false
+          type: string
+        - $ref: '#/parameters/auditMinimalEntryIncludeParam'          
+        - $ref: '#/parameters/fieldsParam'          
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AuditEntryPaging'
+        '400':
+          description: |
+            Invalid parameter: *nodeId** is not a valid format, value of **maxItems** or **skipCount** is invalid            
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to retrieve audit information
+        '404':
+          description: |
+            **nodeId** does not exist          
+        '501':
+          description: Audit is disabled for the system or 'alfresco-access' application    
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'                       
 definitions:
   Error:
     type: object
@@ -7469,3 +7956,73 @@ definitions:
       key:
         type: string
         description: the workflow key provided in the reset password email
+  AuditAppPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/AuditAppEntry'
+  AuditAppEntry:
+    type: object
+    properties:
+      entry:
+        $ref: '#/definitions/AuditApp'
+  AuditApp:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string      
+      isEnabled:
+        type: boolean
+        default: true
+  AuditBodyUpdate:
+    type: object
+    properties:
+      isEnabled:
+        type: boolean
+  AuditEntryPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/AuditEntryEntry'
+  AuditEntryEntry:
+    type: object
+    properties:
+      entry:
+        $ref: '#/definitions/AuditEntry'
+  AuditEntry:
+    type: object
+    required:
+      - id
+      - auditApplicationId
+      - createdByUser
+      - createdAt
+    properties:
+      id:
+        type: string
+      auditApplicationId:
+        type: string          
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+         type: string
+         format: date-time
+      values:
+        type: object
+        additionalProperties:
+          type: string         
