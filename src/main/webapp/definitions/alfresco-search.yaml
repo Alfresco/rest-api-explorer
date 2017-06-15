@@ -522,8 +522,8 @@ definitions:
         description: The sum of all values of the field
         type: boolean
         default: true
-      count:
-        description: The number of values found
+      countValues:
+        description: The number which have a value for this field
         type: boolean
         default: true
       missing:
