@@ -5861,7 +5861,7 @@ paths:
             $ref: '#/definitions/AuditApp'
         '400':
           description: |
-            Invalid parameter: **auditApplicationId** is not a valid format or **auditAppUpdate** is invalid
+            Invalid parameter: **auditApplicationId** is not a valid format or **auditAppBodyUpdate** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -5888,7 +5888,7 @@ paths:
         
         You can use the **include** parameter to return additional information.
         
-        The list can be further filtered by **createdByUser** and for a given time period.
+        The list can be filtered by **createdByUser** and for a given time period.
         
         The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC** 
         modifier to specify an ascending or descending sort order. 
@@ -5908,10 +5908,12 @@ paths:
           in: query
           description: |
             Optionally filter the list. Here are some examples:
-
-            *   ```where=(createdByUser='-me-')```
-
+            
+            *   ```where=(createdByUser='jbloggs')```
+            
             *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+            
+            *   ```where=(createdByUser='jbloggs' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
           required: false
           type: string
         - $ref: '#/parameters/auditMinimalEntryIncludeParam'          
@@ -6074,7 +6076,7 @@ paths:
           description: Current user does not have permission to delete audit information
         '404':
           description: |
-            **auditEntryId** does not exist
+            A provided audit entry id does not not exist
         '501':
           description: Audit is disabled for the system      
         default:
@@ -6098,8 +6100,6 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/auditEntryIdParam'
-        - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -6166,7 +6166,12 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
         
-        Gets a list of audit entries for node **nodeId**. 
+        Gets a list of audit entries for node **nodeId**.
+        
+        The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC** 
+        modifier to specify an ascending or descending sort order. 
+            
+        For example, specifying ```orderBy=createdAt DESC``` returns audit entries in descending **createdAt** order.
         
         This relies on the pre-configured 'alfresco-access' audit application.
       operationId: listAuditEntriesForNode
