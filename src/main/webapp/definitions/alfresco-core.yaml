@@ -5845,7 +5845,7 @@ paths:
         it is re-enabled (and system-wide auditing is also enabled). 
         
         Note, it is still possible to query &/or delete any existing audit entries even
-        if the related auditing is disabled for the related audit application.
+        if auditing is disabled for the audit application.
         
         You must have admin rights to update audit application.
       operationId: updateAuditApp
@@ -5894,7 +5894,11 @@ paths:
         
         You can use the **include** parameter to return additional information.
         
-        The list can be filtered by **createdByUser** and for a given inclusive time period.
+        The list can be filtered by one or more of:           
+            * **createdByUser** 
+            * **createdAt** inclusive time period (using BETWEEN)
+            * **valuesKey** audit entry values contains the exact matching key
+            * **valuesValue** audit entry values contains the exact matching value
         
         The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC** 
         modifier to specify an ascending or descending sort order. 
@@ -5917,12 +5921,16 @@ paths:
             
             *   ```where=(createdByUser='jbloggs')```
             
+            *   ```where=(valuesKey='/alfresco-access/login/user')```
+            
+            *   ```where=(valuesKey='/alfresco-access/transaction/action' and valuesValue='DELETE')```
+            
             *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
             
             *   ```where=(createdByUser='jbloggs' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
           required: false
           type: string
-        - $ref: '#/parameters/auditMinimalEntryIncludeParam'          
+        - $ref: '#/parameters/auditMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'          
       responses:
         '200':
@@ -6006,11 +6014,16 @@ paths:
         
         You can use the **include** parameter to return additional information.
         
-        The list can be filtered by **auditApplicationId**, **createdByUser** and for a given inclusive time period.
+        The list can be filtered by one or more of:
+            * **auditAppId**
+            * **createdByUser** 
+            * **createdAt** inclusive time period (using BETWEEN)
+            * **valuesKey** audit entry values contains the exact matching key
+            * **valuesValue** audit entry values contains the exact matching value
         
         The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC** 
         modifier to specify an ascending or descending sort order. 
-            
+        
         For example, specifying ```orderBy=createdAt DESC``` returns audit entries in descending **createdAt** order.
         
         You must have admin rights to retrieve audit information.
@@ -6028,12 +6041,16 @@ paths:
 
             *   ```where=(auditApplicationId='alfresco-access')```
             
-            *   ```where=(auditApplicationId='alfresco-access' and createdByUser='jbloggs')```
+            *   ```where=(auditApplicationId='alfresco-access' and valuesKey='/alfresco-access/login/user')```
+            
+            *   ```where=(valuesKey='/alfresco-access/transaction/action' and valuesValue='DELETE')```
+            
+            *   ```where=(createdByUser='jbloggs')```
             
             *   ```where=(auditApplicationId='alfresco-access' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
           required: false
           type: string
-        - $ref: '#/parameters/auditMinimalEntryIncludeParam'          
+        - $ref: '#/parameters/auditMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'          
       responses:
         '200':
