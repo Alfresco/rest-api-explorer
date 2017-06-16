@@ -1287,7 +1287,7 @@ paths:
           description: A variable
           required: true
           schema:
-            $ref: '#/definitions/Variable'
+              $ref: '#/definitions/Variable'
       responses:
         '201':
           description: Successful response
