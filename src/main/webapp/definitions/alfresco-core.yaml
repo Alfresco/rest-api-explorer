@@ -5906,7 +5906,7 @@ paths:
         For example, specifying ```orderBy=createdAt DESC``` returns audit entries in descending **createdAt** order.
         
         You must have admin rights to retrieve audit information.
-      operationId: listAuditEntriesForApp
+      operationId: listAuditEntriesForAuditApp
       produces:
         - application/json
       parameters:
@@ -5957,19 +5957,19 @@ paths:
       x-alfresco-since: "5.2.2"
       tags:
         - audit
-      summary: Delete audit entries for an audit application
+      summary: Permanently delete audit entries for an audit application
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
         
-        Delete audit entries for an audit application **auditApplicationId** and for a given inclusive time period, which must be
-        specified.
+        Permanently delete audit entries for an audit application **auditApplicationId** and 
+        for a given inclusive time period, which must be specified.
         
         For example:
         
         *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
         
         You must have admin rights to delete audit information.
-      operationId: deleteAuditEntriesForApp
+      operationId: deleteAuditEntriesForAuditApp
       produces:
         - application/json
       parameters:       
@@ -6074,11 +6074,12 @@ paths:
       x-alfresco-since: "5.2.2"
       tags:
         - audit
-      summary: Delete audit entries
+      summary: Permanently delete audit entries
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
         
-        Delete set of audit entries, as specified by the **where** parameter.
+        Permanently delete a set of audit entries. The list of audit entry ids must be specified 
+        using the **where** parameter.
         
         You must have admin rights to delete audit information.
       operationId: deleteAuditEntries
@@ -6152,11 +6153,11 @@ paths:
       x-alfresco-since: "5.2.2"
       tags:
         - audit
-      summary: Delete audit entry
+      summary: Permanently delete an audit entry
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
         
-        Delete single audit entry **auditEntryId**.
+        Permanently delete a single audit entry **auditEntryId**.
         
         You must have admin rights to delete audit information.
       operationId: deleteAuditEntry
