@@ -507,6 +507,9 @@ paths:
             **nodeId** does not exist
         '405':
           description: Cannot comment on a node of this type
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
         default:
           description: Unexpected error
           schema:
@@ -545,6 +548,9 @@ paths:
         '404':
           description: |
             **nodeId** or **commentId** does not exist
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
         default:
           description: Unexpected error
           schema:
@@ -570,6 +576,9 @@ paths:
         '404':
           description: |
             **nodeId** or **commentId** does not exist
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
         default:
           description: Unexpected error
           schema:
