@@ -1061,7 +1061,7 @@ paths:
         You can use the **include** parameter (include=association) to return child association details 
         for each child, including the **assocTyp**e and the **isPrimary** flag.
         
-        The default sort order for the returned list is for folders to be sorted before files, and by ascending name
+        The default sort order for the returned list is for folders to be sorted before files, and by ascending name.
 
         You can override the default using **orderBy** to specify one or more fields to sort by. The default order is always ascending, but
         you can use an optional *ASC** or **DESC** modifier to specify an ascending or descending sort order. 
@@ -4862,9 +4862,13 @@ paths:
 
         Get a list of links that the current user has read permission on source node.
 
+        The list is ordered in descending modified order.
+
         **Note:** The list of links is eventually consistent so newly created shared links may not appear immediately.
       operationId: listSharedLinks
       parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - name: where
           in: query
           description: Optionally filter the list by "sharedByUser" userid of person who shared the link (can also use -me-)
@@ -4884,6 +4888,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/SharedLinkPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid         
         '401':
           description: Authentication failed            
         '501':
