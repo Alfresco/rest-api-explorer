@@ -5892,7 +5892,7 @@ paths:
         
         Gets a list of audit entries for audit application **auditApplicationId**.
         
-        You can use the **include** parameter to return additional information.
+        You can use the **include** parameter to return additional **values** information.
         
         The list can be filtered by one or more of:           
             * **createdByUser** 
@@ -5961,12 +5961,15 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
         
-        Permanently delete audit entries for an audit application **auditApplicationId** and 
-        for a given inclusive time period, which must be specified.
+        Permanently delete audit entries for an audit application **auditApplicationId**.
+        
+        The **where** clause must be specified, either with an inclusive time period or for a set 
+        of audit entries that are within the context of the given audit application.
         
         For example:
         
         *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+        *   ```where=(id IN (123, 456, 789)```
         
         You must have admin rights to delete audit information.
       operationId: deleteAuditEntriesForAuditApp
@@ -5977,9 +5980,10 @@ paths:
         - name: where
           in: query
           description: |
-            Inclusive time period for entries to delete. For example:
+            Audit entries to permanently delete for an audit application, given an inclusive time period or set of ids. For example:
 
             *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+            *   ```where=(id IN (123, 456, 789)```
           required: true
           type: string       
       responses:
@@ -6000,117 +6004,8 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'  
-  '/audit-entries':
-    get:
-      x-alfresco-since: "5.2.2"
-      tags:
-        - audit
-      summary: List audit entries
-      description: |
-        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-        
-        Gets a list of audit entries in this repository.
-        
-        You can use the **include** parameter to return additional information.
-        
-        The list can be filtered by one or more of:
-            * **auditAppId**
-            * **createdByUser** 
-            * **createdAt** inclusive time period (using BETWEEN)
-            * **valuesKey** audit entry values contains the exact matching key
-            * **valuesValue** audit entry values contains the exact matching value
-        
-        The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC** 
-        modifier to specify an ascending or descending sort order. 
-        
-        For example, specifying ```orderBy=createdAt DESC``` returns audit entries in descending **createdAt** order.
-        
-        You must have admin rights to retrieve audit information.
-      operationId: listAuditEntries
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/orderByParam'
-        - name: where
-          in: query
-          description: |
-            Optionally filter the list. Here are some examples:
-
-            *   ```where=(auditApplicationId='alfresco-access')```
-            
-            *   ```where=(auditApplicationId='alfresco-access' and valuesKey='/alfresco-access/login/user')```
-            
-            *   ```where=(valuesKey='/alfresco-access/transaction/action' and valuesValue='DELETE')```
-            
-            *   ```where=(createdByUser='jbloggs')```
-            
-            *   ```where=(auditApplicationId='alfresco-access' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
-          required: false
-          type: string
-        - $ref: '#/parameters/auditMinimalEntryIncludeParam'
-        - $ref: '#/parameters/fieldsParam'          
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/AuditEntryPaging'
-        '400':
-          description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid            
-        '401':
-          description: Authentication failed
-        '403':
-          description: User does not have permission to retrieve audit information
-        '501':
-          description: Audit is disabled for the system
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    delete:
-      x-alfresco-since: "5.2.2"
-      tags:
-        - audit
-      summary: Permanently delete audit entries
-      description: |
-        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-        
-        Permanently delete a set of audit entries. The list of audit entry ids must be specified 
-        using the **where** parameter.
-        
-        You must have admin rights to delete audit information.
-      operationId: deleteAuditEntries
-      produces:
-        - application/json
-      parameters:       
-        - name: where
-          in: query
-          description: |
-            Set of audit entries to delete. For example:
-
-            *   ```where=(id IN (123, 456, 789)```
-          required: true
-          type: string      
-      responses:
-        '204':
-          description: Successful response
-        '401':
-          description: Authentication failed
-        '403':
-          description: Current user does not have permission to delete audit information
-        '404':
-          description: |
-            A provided audit entry id does not not exist
-        '501':
-          description: Audit is disabled for the system
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'              
-  '/audit-entries/{auditEntryId}':
+            $ref: '#/definitions/Error'         
+  '/audit-applications/{auditApplicationId}/audit-entries/{auditEntryId}':
     get:
       x-alfresco-since: "5.2.2"
       tags:
@@ -6126,6 +6021,7 @@ paths:
       produces:
         - application/json
       parameters:
+        - $ref: '#/parameters/auditApplicationIdParam'
         - $ref: '#/parameters/auditEntryIdParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
@@ -6135,14 +6031,14 @@ paths:
             $ref: '#/definitions/AuditEntry'
         '400':
           description: |
-            Invalid parameter: **auditEntryId** is not a valid format            
+            Invalid parameter: **auditApplicationId** or **auditEntryId** is not a valid format            
         '401':
           description: Authentication failed
         '403':
           description: User does not have permission to retrieve audit information
         '404':
           description: |
-            **auditEntryId** does not exist          
+            **auditApplicationId** or **auditEntryId** does not exist          
         '501':
           description: Audit is disabled for the system
         default:
@@ -6164,20 +6060,21 @@ paths:
       produces:
         - application/json
       parameters:
+        - $ref: '#/parameters/auditApplicationIdParam'
         - $ref: '#/parameters/auditEntryIdParam'        
       responses:
         '204':
           description: Successful response
         '400':
           description: |
-            Invalid parameter: **auditEntryId** is not a valid format
+            Invalid parameter: **auditApplicationId** or **auditEntryId** is not a valid format
         '401':
           description: Authentication failed
         '403':
           description: Current user does not have permission to delete audit information
         '404':
           description: |
-            **auditEntryId** does not exist
+            **auditApplicationId** or **auditEntryId** does not exist
         '501':
           description: Audit is disabled for the system
         default:
