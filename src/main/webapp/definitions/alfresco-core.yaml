@@ -18,7 +18,7 @@ consumes:
 produces:
   - application/json
 tags:
-  - name: aduit
+  - name: audit
     description: Retrieve and clear audit entries
   - name: activities
     description: Retrieve and manage activities
@@ -2004,7 +2004,7 @@ paths:
           description: |
             Optionally filter the list by assocType. Here's an example:
 
-            *   where=(assocType='my:specialAssocType')
+            *   ```where=(assocType='my:specialAssocType')```
           required: false
           type: string          
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
@@ -4883,12 +4883,12 @@ paths:
       parameters:
         - name: where
           in: query
-          description: Optionally filter the list by "sharedByUser" userid of person who shared the link (can also use -me-)
-
-            *   where=(sharedByUser='jbloggs')
-
-            *   where=(sharedByUser='-me-')
-
+          description: |
+            Optionally filter the list by "sharedByUser" userid of person who shared the link (can also use -me-)
+            
+            *   ```where=(sharedByUser='jbloggs')```
+            
+            *   ```where=(sharedByUser='-me-')```
           required: false
           type: string
         - $ref: '#/parameters/sharedLinkEntryIncludeParam'
@@ -5894,15 +5894,15 @@ paths:
         
         You can use the **include** parameter to return additional **values** information.
         
-        The list can be filtered by one or more of:           
-            * **createdByUser** 
-            * **createdAt** inclusive time period (using BETWEEN)
-            * **valuesKey** audit entry values contains the exact matching key
-            * **valuesValue** audit entry values contains the exact matching value
+        The list can be filtered by one or more of: 
+        * **createdByUser** 
+        * **createdAt** inclusive time period (using BETWEEN)
+        * **valuesKey** audit entry values contains the exact matching key
+        * **valuesValue** audit entry values contains the exact matching value
         
         The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC** 
         modifier to specify an ascending or descending sort order. 
-            
+        
         For example, specifying ```orderBy=createdAt DESC``` returns audit entries in descending **createdAt** order.
         
         You must have admin rights to retrieve audit information.
@@ -6086,7 +6086,7 @@ paths:
       x-alfresco-since: "5.2.2"
       tags:
         - audit
-      summary: List audit entries for an node
+      summary: List audit entries for a node
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
         
