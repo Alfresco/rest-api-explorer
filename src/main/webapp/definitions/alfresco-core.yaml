@@ -5761,9 +5761,9 @@ paths:
         
         This list may include pre-configured audit applications, if enabled, such as:
         
-        * Alfresco Tagging Service
         * alfresco-access
         * CMISChangeLog
+        * Alfresco Tagging Service
         * Alfresco Sync Service (used by Enterprise Cloud Sync)
         
         You must have admin rights to retrieve audit information.
@@ -5894,9 +5894,10 @@ paths:
         
         You can use the **include** parameter to return additional **values** information.
         
-        The list can be filtered by one or more of: 
-        * **createdByUser** 
-        * **createdAt** inclusive time period (using BETWEEN)
+        The list can be filtered by one or more of:
+        * **createdByUser** person id
+        * **createdAt** inclusive time period
+        * **id** inclusive range of ids
         * **valuesKey** audit entry values contains the exact matching key
         * **valuesValue** audit entry values contains the exact matching value
         
@@ -5921,13 +5922,15 @@ paths:
             
             *   ```where=(createdByUser='jbloggs')```
             
-            *   ```where=(valuesKey='/alfresco-access/login/user')```
-            
-            *   ```where=(valuesKey='/alfresco-access/transaction/action' and valuesValue='DELETE')```
+            *   ```where=(id BETWEEN ('1234', '4321')```
             
             *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
             
             *   ```where=(createdByUser='jbloggs' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+            
+            *   ```where=(valuesKey='/alfresco-access/login/user')```
+            
+            *   ```where=(valuesKey='/alfresco-access/transaction/action' and valuesValue='DELETE')```
           required: false
           type: string
         - $ref: '#/parameters/auditMinimalEntryIncludeParam'
@@ -5963,13 +5966,13 @@ paths:
         
         Permanently delete audit entries for an audit application **auditApplicationId**.
         
-        The **where** clause must be specified, either with an inclusive time period or for a set 
-        of audit entries that are within the context of the given audit application.
+        The **where** clause must be specified, either with an inclusive time period or for 
+        an inclusive range of ids. The delete is within the context of the given audit application.
         
         For example:
         
         *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
-        *   ```where=(id IN (123, 456, 789)```
+        *   ```where=(id BETWEEN ('1234', '4321')```
         
         You must have admin rights to delete audit information.
       operationId: deleteAuditEntriesForAuditApp
@@ -5980,10 +5983,10 @@ paths:
         - name: where
           in: query
           description: |
-            Audit entries to permanently delete for an audit application, given an inclusive time period or set of ids. For example:
+            Audit entries to permanently delete for an audit application, given an inclusive time period or range of ids. For example:
 
             *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
-            *   ```where=(id IN (123, 456, 789)```
+            *   ```where=(id BETWEEN ('1234', '4321')```
           required: true
           type: string       
       responses:
