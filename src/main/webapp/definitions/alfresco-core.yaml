@@ -6031,7 +6031,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/AuditEntry'
+            $ref: '#/definitions/AuditEntryEntry'
         '400':
           description: |
             Invalid parameter: **auditApplicationId** or **auditEntryId** is not a valid format            
