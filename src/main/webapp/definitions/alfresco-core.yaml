@@ -20,6 +20,8 @@ produces:
 tags:
   - name: audit
     description: Retrieve and clear audit entries
+  - name: actions
+    description: Retrieve and execute actions
   - name: activities
     description: Retrieve and manage activities
   - name: comments
