@@ -6170,6 +6170,24 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'                       
+  '/action-definitions':
+      get:
+        tags:
+          - actions
+        summary: Retrieve list of available actions
+        description: Gets a list of publicly available actions
+        operationId: listActions
+        produces:
+          - application/json
+        responses:
+          '200':
+            description: Successful response
+            schema:
+              $ref: '#/definitions/ActionDefinitionList'
+          default:
+            description: Unexpected error
+            schema:
+              $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -7988,4 +8006,34 @@ definitions:
       values:
         type: object
         additionalProperties:
-          type: string         
+          type: string
+  ActionDefinitionList:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/ActionDefinition'
+  ActionDefinition:
+    type: object
+    required:
+      - id
+      - applicableTypes
+      - trackStatus
+    properties:
+      id:
+        type: string
+      applicableTypes:
+        type: array
+        description: QNames of the types this action applies to
+        items:
+          type: string
+      trackStatus:
+        description: whether the basic action definition supports action tracking or not
+        type: boolean
+
