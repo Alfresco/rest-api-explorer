@@ -4127,6 +4127,134 @@ paths:
         '400':
           description: |
             Invalid parameter: Value of **password**, **id** or **key** is invalid
+  '/people/{personId}/avatar':
+    get:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - people
+      summary: Get avatar image
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+
+        Gets the avatar image related to the person **personId**. If the person has no related avatar then 
+        the **placeholder** query parameter can be optionally used to request a placeholder image to be returned.
+
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+      operationId: getAvatarImage
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
+        - name: placeholder
+          in: query
+          description: |
+            If **true** and there is no avatar for this **personId** 
+            then the placeholder image is returned, rather than a 404 response.
+          required: false
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: Successful response
+        '304':
+          description: Content has not been modified since the date provided in the If-Modified-Since header
+        '400':
+          description: |
+            Invalid parameter: **personId** is not a valid format
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **personId** does not exist or avatar does not exist (and no placeholder requested)
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - people
+      summary: Update avatar image
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+
+        Updates the avatar image related to the person **personId**.
+
+        The request body should be the binary stream for the avatar image. The content type of the file 
+        should be an image file. This will be used to generate an "avatar" thumbnail rendition.
+
+        You must be the person or have admin rights to update a person's avatar.
+
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+      operationId: updateAvatarImage
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - in: body
+          name: contentBodyUpdate
+          description: The binary content
+          required: true
+          schema:
+            type: string
+            format: binary
+      produces:
+        - application/json
+      consumes:
+        - application/octet-stream
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: |
+            Invalid parameter: **personId** is not a valid format or the avatar cannot be uploaded
+        '401':
+          description: Authentication failed          
+        '403':
+          description: Current user does not have permission to update the avatar image for **personId**
+        '404':
+          description: |
+            **personId** does not exist
+        '413':
+          description: Content exceeds individual file size limit (configured for network/system)
+        '501':
+          description: Renditions/thumbnails are disabled for the system          
+        '507':
+          description: Content exceeds overall storage quota limit configured for the network/system
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - people
+      summary: Delete avatar image
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+
+        Deletes the avatar image related to person **personId**.
+
+        You must be the person or have admin rights to update a person's avatar.
+
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+      operationId: deleteAvatarImage
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed          
+        '403':
+          description: Current user does not have permission to delete the avatar image for **personId**
+        '404':
+          description: |
+            **personId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /sites:
     get:
       tags:
