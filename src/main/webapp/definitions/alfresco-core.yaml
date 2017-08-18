@@ -6172,10 +6172,14 @@ paths:
             $ref: '#/definitions/Error'                       
   '/action-definitions':
       get:
+        x-alfresco-since: "5.2.2"
         tags:
           - actions
         summary: Retrieve list of available actions
-        description: Gets a list of publicly available actions
+        description: |
+          **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+
+          Gets a list of publicly available actions
         operationId: listActions
         produces:
           - application/json
