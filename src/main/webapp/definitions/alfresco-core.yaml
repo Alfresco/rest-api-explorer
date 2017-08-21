@@ -2592,6 +2592,11 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ActionDefinitionList'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed
         '404':
           description: |
             **nodeId** does not exist
@@ -6220,6 +6225,11 @@ paths:
             description: Successful response
             schema:
               $ref: '#/definitions/ActionDefinitionList'
+          '400':
+            description: |
+              Invalid parameter: value of **maxItems** or **skipCount** is invalid
+          '401':
+            description: Authentication failed
           default:
             description: Unexpected error
             schema:
