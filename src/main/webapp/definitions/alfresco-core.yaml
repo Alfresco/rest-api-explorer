@@ -2565,7 +2565,32 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'                                           
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/action-definitions':
+    get:
+      x-alfresco-since: "5.2"
+      tags:
+        - actions
+      summary: Retrieve actions for a node
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Retrieve the list of publicly available actions for the given node.
+      operationId: nodeActions
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ActionDefinitionList'
   '/deleted-nodes':
     get:
       x-alfresco-since: "5.2"
@@ -6183,6 +6208,9 @@ paths:
         operationId: listActions
         produces:
           - application/json
+        parameters:
+          - $ref: '#/parameters/skipCountParam'
+          - $ref: '#/parameters/maxItemsParam'
         responses:
           '200':
             description: Successful response
