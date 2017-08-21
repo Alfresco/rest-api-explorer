@@ -2575,11 +2575,12 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Retrieve the list of publicly available actions for the given node.
+        Retrieve the list of publicly available actions for the given **nodeId**.
       operationId: nodeActions
       produces:
         - application/json
       parameters:
+        - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
       responses:
@@ -2591,6 +2592,9 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ActionDefinitionList'
+        '404':
+          description: |
+            **nodeId** does not exist
   '/deleted-nodes':
     get:
       x-alfresco-since: "5.2"
