@@ -57,6 +57,12 @@ tags:
   - name: versions
     description: Retrieve and manage versions
 parameters:
+  actionIdParam:
+      name: actionId
+      in: path
+      description: The identifier of an action.
+      required: true
+      type: string
   nodeIdParam:
     name: nodeId
     in: path
@@ -6234,6 +6240,35 @@ paths:
             description: Unexpected error
             schema:
               $ref: '#/definitions/Error'
+  '/action-definitions/{actionId}':
+    get:
+      x-alfresco-since: "5.2"
+      tags:
+        - actions
+      summary: Retrieve the details of an action
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Retrieve the details of the action denoted by **actionId**.
+      operationId: actionDetails
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/actionIdParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ActionDefinitionEntry'
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **actionId** does not exist
 definitions:
   Error:
     type: object
@@ -8065,6 +8100,13 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/ActionDefinition'
+  ActionDefinitionEntry:
+      type: object
+      required:
+        - entry
+      properties:
+        entry:
+          $ref: '#/definitions/ActionDefinition'
   ActionDefinition:
     type: object
     required:
