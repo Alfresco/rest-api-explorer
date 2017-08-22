@@ -6269,6 +6269,44 @@ paths:
         '404':
           description: |
             **actionId** does not exist
+  '/action-executions':
+    post:
+      x-alfresco-since: "5.2"
+      tags:
+        - actions
+      summary: Execute an action
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Execute an action against a node.
+      operationId: actionExec
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: actionBodyExec
+          description: Action execution details
+          required: true
+          schema:
+            $ref: '#/definitions/ActionBodyExec'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: |
+            Successful response for a **synchronous** action execution.
+          #schema:
+          #  $ref: '#/definitions/ActionExecResult'
+        '202':
+          description: |
+            **Asynchronous** action execution request accepted and pending execution.
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **actionId** or **nodeId** does not exist
 definitions:
   Error:
     type: object
@@ -8124,4 +8162,23 @@ definitions:
       trackStatus:
         description: whether the basic action definition supports action tracking or not
         type: boolean
-
+  ActionBodyExec:
+    type: object
+    required:
+      - actionId
+      - nodeId
+    properties:
+      actionId:
+        type: string
+      nodeId:
+        type: string
+      async:
+        type: boolean
+        default: false
+      params:
+        type: object
+  #ActionExecResult:
+  #  type: object
+  #  properties:
+  #    actionId:
+  #      type: string
