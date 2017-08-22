@@ -6278,7 +6278,8 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Execute an action against a node.
+        Executes an action against a node, either synchronously (default) or asynchronously
+        (set the `async` property to `true`)
       operationId: actionExec
       produces:
         - application/json
