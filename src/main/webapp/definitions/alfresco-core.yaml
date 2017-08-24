@@ -8150,7 +8150,14 @@ definitions:
       - applicableTypes
       - trackStatus
     properties:
-      id:
+      name:
+        description: name of the action definition, e.g. "move"
+        type: string
+      title:
+        description: title of the action definition, e.g. "Move"
+        type: string
+      description:
+        description: describes the action definition, e.g. "This will move the matched item to another space."
         type: string
       applicableTypes:
         type: array
@@ -8160,6 +8167,24 @@ definitions:
       trackStatus:
         description: whether the basic action definition supports action tracking or not
         type: boolean
+      parameterDefinitions:
+        type: array
+        items:
+          $ref: '#/definitions/ActionParameterDefinition'
+  ActionParameterDefinition:
+    type: object
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+      multiValued:
+        type: boolean
+      mandatory:
+        type: boolean
+      displayLabel:
+        type: string
+
   ActionBodyExec:
     type: object
     required:
