@@ -6278,8 +6278,10 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Executes an action against a node, either synchronously (default) or asynchronously
-        (set the `async` property to `true`)
+        Executes an action against a node.
+
+        The action will be executed **asynchronously** with a `202` HTTP response signifying that
+        the request has been accepted successfully.
       operationId: actionExec
       produces:
         - application/json
@@ -6295,14 +6297,9 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-        '200':
-          description: |
-            Successful response for a **synchronous** action execution.
-          #schema:
-          #  $ref: '#/definitions/ActionExecResult'
         '202':
           description: |
-            **Asynchronous** action execution request accepted and pending execution.
+            Action execution request accepted and pending execution.
         '401':
           description: Authentication failed
         '404':
@@ -8173,9 +8170,6 @@ definitions:
         type: string
       nodeId:
         type: string
-      async:
-        type: boolean
-        default: false
       params:
         type: object
   #ActionExecResult:
