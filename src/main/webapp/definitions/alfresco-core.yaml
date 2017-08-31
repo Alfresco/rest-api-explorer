@@ -6278,10 +6278,24 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Executes an action against a node.
+        Executes an action against a node with the specified identifier. For example:
+
+        ```
+        {
+          "actionId": "copy",
+          "nodeId": "4c4b3c43-f18b-43ff-af84-751f16f1ddfd",
+          "params": {
+          	"destination-folder": "34219f79-66fa-4ebf-b371-118598af898c"
+          }
+        }
+        ```
+
+        Performing a POST with the request body shown above will result in the node identified by ```nodeId```
+        being copied to the destination folder specified in the ```params``` object by the key ```destination-folder```.
 
         The action will be executed **asynchronously** with a `202` HTTP response signifying that
         the request has been accepted successfully.
+
       operationId: actionExec
       produces:
         - application/json
