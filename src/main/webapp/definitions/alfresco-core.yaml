@@ -2582,6 +2582,13 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Retrieve the list of publicly available actions for the given **nodeId**.
+
+        The default sort order for the returned list is for actions to be sorted by ascending name.
+        You can override the default by using the **orderBy** parameter.
+
+        You can use any of the following fields to order the results:
+        * name
+        * title
       operationId: nodeActions
       produces:
         - application/json
@@ -2589,6 +2596,8 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         default:
           description: Unexpected error
@@ -2600,7 +2609,7 @@ paths:
             $ref: '#/definitions/ActionDefinitionList'
         '400':
           description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
         '401':
           description: Authentication failed
         '404':
@@ -6220,12 +6229,21 @@ paths:
           **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
 
           Gets a list of publicly available actions
+
+          The default sort order for the returned list is for actions to be sorted by ascending name.
+          You can override the default by using the **orderBy** parameter.
+
+          You can use any of the following fields to order the results:
+          * name
+          * title
         operationId: listActions
         produces:
           - application/json
         parameters:
           - $ref: '#/parameters/skipCountParam'
           - $ref: '#/parameters/maxItemsParam'
+          - $ref: '#/parameters/orderByParam'
+          - $ref: '#/parameters/fieldsParam'
         responses:
           '200':
             description: Successful response
@@ -6233,7 +6251,7 @@ paths:
               $ref: '#/definitions/ActionDefinitionList'
           '400':
             description: |
-              Invalid parameter: value of **maxItems** or **skipCount** is invalid
+              Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
           '401':
             description: Authentication failed
           default:
