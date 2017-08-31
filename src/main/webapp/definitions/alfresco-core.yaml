@@ -6296,20 +6296,27 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Executes an action against a node with the specified identifier. For example:
+        Executes an action
+
+        An action may be executed against a node specified by **targetId**. For example:
 
         ```
         {
           "actionId": "copy",
-          "nodeId": "4c4b3c43-f18b-43ff-af84-751f16f1ddfd",
+          "targetId": "4c4b3c43-f18b-43ff-af84-751f16f1ddfd",
           "params": {
           	"destination-folder": "34219f79-66fa-4ebf-b371-118598af898c"
           }
         }
         ```
 
-        Performing a POST with the request body shown above will result in the node identified by ```nodeId```
+        Performing a POST with the request body shown above will result in the node identified by ```targetId```
         being copied to the destination folder specified in the ```params``` object by the key ```destination-folder```.
+
+        **targetId** is optional, however, currently **targetId** must be a valid node ID.
+        In the future, actions may be executed against different entity types or
+        executed without the need for the context of an entity.
+
 
         Parameters supplied to the action within the ```params``` object will be converted to the expected type,
         where possible using the DefaultTypeConverter class. In addition:
@@ -6322,7 +6329,7 @@ paths:
         ```
         {
           "actionId": "add-features",
-          "nodeId": "16349e3f-2977-44d1-93f2-73c12b8083b5",
+          "targetId": "16349e3f-2977-44d1-93f2-73c12b8083b5",
           "params": {
           	"aspect-name": "cm:versionable"
           }
@@ -6352,11 +6359,16 @@ paths:
         '202':
           description: |
             Action execution request accepted and pending execution.
+        '400':
+          description: |
+            Invalid parameter: **targetId** exists but does not support the action,
+            or **targetId** missing but required by the action,
+            or the value of **maxItems** is invalid, or the value of **skipCount** is invalid
         '401':
           description: Authentication failed
         '404':
           description: |
-            **actionId** or **nodeId** does not exist
+            **actionId** or **targetId** does not exist
 definitions:
   Error:
     type: object
@@ -8241,12 +8253,12 @@ definitions:
     type: object
     required:
       - actionId
-      - nodeId
     properties:
       actionId:
         type: string
-      nodeId:
+      targetId:
         type: string
+        description: The entity upon which to execute the action, typically a node ID or similar.
       params:
         type: object
   #ActionExecResult:
