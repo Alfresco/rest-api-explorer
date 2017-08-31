@@ -2574,7 +2574,7 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/action-definitions':
     get:
-      x-alfresco-since: "5.2"
+      x-alfresco-since: "5.2.2"
       tags:
         - actions
       summary: Retrieve actions for a node
@@ -6242,7 +6242,7 @@ paths:
               $ref: '#/definitions/Error'
   '/action-definitions/{actionId}':
     get:
-      x-alfresco-since: "5.2"
+      x-alfresco-since: "5.2.2"
       tags:
         - actions
       summary: Retrieve the details of an action
@@ -6271,7 +6271,7 @@ paths:
             **actionId** does not exist
   '/action-executions':
     post:
-      x-alfresco-since: "5.2"
+      x-alfresco-since: "5.2.2"
       tags:
         - actions
       summary: Execute an action
