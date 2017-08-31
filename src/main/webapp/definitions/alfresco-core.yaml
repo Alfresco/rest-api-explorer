@@ -6293,6 +6293,26 @@ paths:
         Performing a POST with the request body shown above will result in the node identified by ```nodeId```
         being copied to the destination folder specified in the ```params``` object by the key ```destination-folder```.
 
+        Parameters supplied to the action within the ```params``` object will be converted to the expected type,
+        where possible using the DefaultTypeConverter class. In addition:
+
+        * Node IDs may be supplied in their short form (implicit workspace://SpacesStore prefix)
+        * Aspect names may be supplied using their short form, e.g. cm:versionable or cm:auditable
+
+        In this example, we add the aspect ```cm:versionable``` to a node using the QName resolution mentioned above:
+
+        ```
+        {
+          "actionId": "add-features",
+          "nodeId": "16349e3f-2977-44d1-93f2-73c12b8083b5",
+          "params": {
+          	"aspect-name": "cm:versionable"
+          }
+        }
+        ```
+
+        The ```actionId``` is the name of an action as returned by the _list actions_ operations (e.g. GET /action-definitions).
+
         The action will be executed **asynchronously** with a `202` HTTP response signifying that
         the request has been accepted successfully.
 
