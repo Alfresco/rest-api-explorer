@@ -2581,7 +2581,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Retrieve the list of publicly available actions for the given **nodeId**.
+        Retrieve the list of actions that may be executed against the given **nodeId**.
 
         The default sort order for the returned list is for actions to be sorted by ascending name.
         You can override the default by using the **orderBy** parameter.
@@ -6228,7 +6228,7 @@ paths:
         description: |
           **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
 
-          Gets a list of publicly available actions
+          Gets a list of all available actions
 
           The default sort order for the returned list is for actions to be sorted by ascending name.
           You can override the default by using the **orderBy** parameter.
