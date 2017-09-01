@@ -57,10 +57,10 @@ tags:
   - name: versions
     description: Retrieve and manage versions
 parameters:
-  actionIdParam:
-      name: actionId
+  actionDefinitionIdParam:
+      name: actionDefinitionId
       in: path
-      description: The identifier of an action.
+      description: The identifier of an action definition.
       required: true
       type: string
   nodeIdParam:
@@ -6258,21 +6258,21 @@ paths:
             description: Unexpected error
             schema:
               $ref: '#/definitions/Error'
-  '/action-definitions/{actionId}':
+  '/action-definitions/{actionDefinitionId}':
     get:
       x-alfresco-since: "5.2.2"
       tags:
         - actions
-      summary: Retrieve the details of an action
+      summary: Retrieve the details of an action definition
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Retrieve the details of the action denoted by **actionId**.
+        Retrieve the details of the action denoted by **actionDefinitionId**.
       operationId: actionDetails
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/actionIdParam'
+        - $ref: '#/parameters/actionDefinitionIdParam'
       responses:
         default:
           description: Unexpected error
@@ -6286,7 +6286,7 @@ paths:
           description: Authentication failed
         '404':
           description: |
-            **actionId** does not exist
+            **actionDefinitionId** does not exist
   '/action-executions':
     post:
       x-alfresco-since: "5.2.2"
@@ -6302,7 +6302,7 @@ paths:
 
         ```
         {
-          "actionId": "copy",
+          "actionDefinitionId": "copy",
           "targetId": "4c4b3c43-f18b-43ff-af84-751f16f1ddfd",
           "params": {
           	"destination-folder": "34219f79-66fa-4ebf-b371-118598af898c"
@@ -6328,7 +6328,7 @@ paths:
 
         ```
         {
-          "actionId": "add-features",
+          "actionDefinitionId": "add-features",
           "targetId": "16349e3f-2977-44d1-93f2-73c12b8083b5",
           "params": {
           	"aspect-name": "cm:versionable"
@@ -6336,7 +6336,8 @@ paths:
         }
         ```
 
-        The ```actionId``` is the name of an action as returned by the _list actions_ operations (e.g. GET /action-definitions).
+        The ```actionDefinitionId``` is the name of an action definition as returned by
+        the _list actions_ operations (e.g. GET /action-definitions).
 
         The action will be executed **asynchronously** with a `202` HTTP response signifying that
         the request has been accepted successfully.
@@ -6368,7 +6369,7 @@ paths:
           description: Authentication failed
         '404':
           description: |
-            **actionId** or **targetId** does not exist
+            **actionDefinitionId** or **targetId** does not exist
 definitions:
   Error:
     type: object
@@ -8252,9 +8253,9 @@ definitions:
   ActionBodyExec:
     type: object
     required:
-      - actionId
+      - actionDefinitionId
     properties:
-      actionId:
+      actionDefinitionId:
         type: string
       targetId:
         type: string
@@ -8264,5 +8265,5 @@ definitions:
   #ActionExecResult:
   #  type: object
   #  properties:
-  #    actionId:
+  #    actionDefinitionId:
   #      type: string
