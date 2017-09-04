@@ -6340,7 +6340,8 @@ paths:
         the _list actions_ operations (e.g. GET /action-definitions).
 
         The action will be executed **asynchronously** with a `202` HTTP response signifying that
-        the request has been accepted successfully.
+        the request has been accepted successfully. The response body contains the unique ID of the action
+        pending execution.
 
       operationId: actionExec
       produces:
@@ -6360,6 +6361,8 @@ paths:
         '202':
           description: |
             Action execution request accepted and pending execution.
+          schema:
+            $ref: '#/definitions/ActionExecResultEntry'
         '400':
           description: |
             Invalid parameter: **targetId** exists but does not support the action,
@@ -8262,8 +8265,18 @@ definitions:
         description: The entity upon which to execute the action, typically a node ID or similar.
       params:
         type: object
-  #ActionExecResult:
-  #  type: object
-  #  properties:
-  #    actionDefinitionId:
-  #      type: string
+  ActionExecResultEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ActionExecResult'
+  ActionExecResult:
+    type: object
+    required:
+      - actionId
+    properties:
+      actionId:
+        type: string
+        description: The unique identifier of the action pending execution
