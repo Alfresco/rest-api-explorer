@@ -6336,7 +6336,7 @@ paths:
         }
         ```
 
-        The ```actionDefinitionId``` is the name of an action definition as returned by
+        The ```actionDefinitionId``` is the ```id``` of an action definition as returned by
         the _list actions_ operations (e.g. GET /action-definitions).
 
         The action will be executed **asynchronously** with a `202` HTTP response signifying that
@@ -8218,6 +8218,9 @@ definitions:
       - applicableTypes
       - trackStatus
     properties:
+      id:
+        description: Identifier of the action definition — used for example when executing an action
+        type: string
       name:
         description: name of the action definition, e.g. "move"
         type: string
