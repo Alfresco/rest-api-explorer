@@ -6341,7 +6341,7 @@ paths:
 
         The action will be executed **asynchronously** with a `202` HTTP response signifying that
         the request has been accepted successfully. The response body contains the unique ID of the action
-        pending execution.
+        pending execution. The ID may be used, for example to correlate an execution with output in the server logs.
 
       operationId: actionExec
       produces:
@@ -8278,8 +8278,8 @@ definitions:
   ActionExecResult:
     type: object
     required:
-      - actionId
+      - id
     properties:
-      actionId:
+      id:
         type: string
         description: The unique identifier of the action pending execution
