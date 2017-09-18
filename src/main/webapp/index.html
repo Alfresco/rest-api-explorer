@@ -85,6 +85,14 @@
         });
       });
 
+
+      $('#input_hostname').change(function() {
+        var host = $('#input_hostname').val();
+        if (host) {
+          window.swaggerUi.api.setHost(host);
+        }
+      });
+
       function log() {
         if ('console' in window) {
           console.log.apply(console, arguments);
@@ -100,9 +108,10 @@
 <!-- End Google Tag Manager (noscript) -->
 <div id='header'>
   <div class="swagger-ui-wrap">
-    <a id="alflogo" href="#"><img src="images/logo.png" height="44px" width="160px" /></a>
+    <a id="alflogo" href="#"><img src="images/logo.png"/></a>
     <form id="api_selector">
       <div class="input" id="select-wrapper">
+        <p>API definition:</p>
         <select id="select_baseUrl" name="select_baseUrl">
           <option value="definitions/alfresco-core.yaml">Core API</option>
           <option value="definitions/alfresco-search.yaml">Search API</option>
@@ -111,8 +120,15 @@
           <option value="definitions/alfresco-workflow.yaml">Workflow API</option>
         </select>
       </div>
-      <div class="input"><input alt="Username" type="text" name="username" id="input_username" placeholder="username" size="10" value="admin"></div>
-      <div class="input"><input alt="Password" type="password" name="password" id="input_password" placeholder="password" size="10" value="admin"></div>
+      <div class="input">
+        <p>Authentication:</p>
+        <input alt="Username" type="text" name="username" id="input_username" placeholder="username" size="10" value="admin">
+        <input alt="Password" type="password" name="password" id="input_password" placeholder="password" size="10" value="admin">
+      </div>
+      <div class="input">
+        <p>Alfresco server host:</p>
+        <input alt="Hostname" type="text" name="hostname" id="input_hostname" size="15">
+      </div>
     </form>
   </div>
 </div>
