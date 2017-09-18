@@ -85,6 +85,7 @@
         });
       });
 
+      $('#input_hostname').val(location.hostname + (location.port ? ':' + location.port : ''));
 
       $('#input_hostname').change(function() {
         var host = $('#input_hostname').val();
