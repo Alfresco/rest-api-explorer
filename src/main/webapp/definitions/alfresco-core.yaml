@@ -7438,6 +7438,12 @@ definitions:
         type: string
       name:
         type: string
+      nodeType:
+        type: string
+      aspectNames:
+        type: array
+        items:
+          type: string
   PathInfo:
     type: object
     properties:
