@@ -7830,6 +7830,10 @@ definitions:
         description: |
           The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
           The character . must not be used at the end of the name.
+      title:
+        type: string
+      description:
+        type: string
       modifiedAt:
         type: string
         format: date-time
@@ -7843,6 +7847,15 @@ definitions:
         type: array
         items:
           type: string
+        description: |
+          The allowable operations for the Quickshare link itself. See targetAllowableOperations for the
+          allowable operations pertaining to the linked content node.
+      allowableOperationsOnTarget:
+        type: array
+        items:
+          type: string
+        description: |
+          The allowable operations for the content node being shared.
   RenditionBodyCreate:
     type: object
     required:
