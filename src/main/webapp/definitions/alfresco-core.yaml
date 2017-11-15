@@ -7848,7 +7848,7 @@ definitions:
         items:
           type: string
         description: |
-          The allowable operations for the Quickshare link itself. See targetAllowableOperations for the
+          The allowable operations for the Quickshare link itself. See allowableOperationsOnTarget for the
           allowable operations pertaining to the linked content node.
       allowableOperationsOnTarget:
         type: array
