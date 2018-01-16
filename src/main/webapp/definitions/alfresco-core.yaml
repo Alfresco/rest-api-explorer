@@ -6365,9 +6365,7 @@ paths:
             $ref: '#/definitions/ActionExecResultEntry'
         '400':
           description: |
-            Invalid parameter: **targetId** exists but does not support the action,
-            or **targetId** missing but required by the action,
-            or the value of **maxItems** is invalid, or the value of **skipCount** is invalid
+            Invalid parameter: **actionDefinitionId** missing but required by the action
         '401':
           description: Authentication failed
         '404':
