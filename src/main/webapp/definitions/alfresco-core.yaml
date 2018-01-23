@@ -2665,6 +2665,40 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/deleted-nodes/{nodeId}/content':
+    get:
+      x-alfresco-since: "5.2"
+      tags:
+        - trashcan
+      summary: Get deleted node content
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the content of the deleted node with identifier **nodeId**.
+      operationId: getDeletedNodeContent
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
+      responses:
+        '200':
+          description: Successful response
+        '304':
+          description: Content has not been modified since the date provided in the If-Modified-Since header
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve content of **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}/restore':
     post:
       x-alfresco-since: "5.2"
@@ -2710,6 +2744,126 @@ paths:
           description: Node name already exists in the restore destination
         '422':
           description: Model integrity exception trying to restore the node
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/deleted-nodes/{nodeId}/renditions':
+    get:
+      x-alfresco-since: "5.2"
+      tags:
+        - trashcan
+      summary: List renditions for a deleted node
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets a list of the rendition information for each rendition of the file **nodeId**, including the rendition id.
+
+        Each rendition returned has a **status**: CREATED means it is available to view or download, NOT_CREATED means the rendition can be requested.
+
+        You can use the **where** parameter to filter the returned renditions by **status**. For example, the following **where**
+        clause will return just the CREATED renditions:
+
+        ```
+        (status='CREATED')
+        ```
+
+      operationId: listDeletedNodeRenditions
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/whereParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RenditionPaging'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, is not a file, or **where** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/deleted-nodes/{nodeId}/renditions/{renditionId}':
+    get:
+      x-alfresco-since: "5.2"
+      tags:
+        - trashcan
+      summary: Get rendition information for a deleted node
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the rendition information for **renditionId** of file **nodeId**.
+      operationId: getArchivedNodeRendition
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RenditionEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **renditionId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/deleted-nodes/{nodeId}/renditions/{renditionId}/content':
+    get:
+      x-alfresco-since: "5.2"
+      tags:
+        - trashcan
+      summary: Get rendition content of a deleted node
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Gets the rendition content for **renditionId** of file **nodeId**.
+      operationId: getArchivedNodeRenditionContent
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
+        - name: placeholder
+          in: query
+          description: |
+            If **true** and there is no rendition for this **nodeId** and **renditionId**,
+            then the placeholder image for the mime type of this rendition is returned, rather
+            than a 404 response.
+          required: false
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Successful response
+        '304':
+          description: Content has not been modified since the date provided in the If-Modified-Since header
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **renditionId** does not exist
         default:
           description: Unexpected error
           schema:
