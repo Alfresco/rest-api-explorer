@@ -170,10 +170,13 @@ definitions:
   RepositoryInfo:
     type: object
     required:
+    - id
     - edition
     - version
     - status
     properties:
+      id:
+        type: string
       edition:
         type: string
       version:
