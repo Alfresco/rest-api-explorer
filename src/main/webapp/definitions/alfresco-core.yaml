@@ -20,6 +20,8 @@ produces:
 tags:
   - name: audit
     description: Retrieve and clear audit entries
+  - name: actions
+    description: Retrieve and execute actions
   - name: activities
     description: Retrieve and manage activities
   - name: comments
@@ -55,6 +57,12 @@ tags:
   - name: versions
     description: Retrieve and manage versions
 parameters:
+  actionDefinitionIdParam:
+      name: actionDefinitionId
+      in: path
+      description: The identifier of an action definition.
+      required: true
+      type: string
   nodeIdParam:
     name: nodeId
     in: path
@@ -2563,7 +2571,50 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'                                           
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/action-definitions':
+    get:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - actions
+      summary: Retrieve actions for a node
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Retrieve the list of actions that may be executed against the given **nodeId**.
+
+        The default sort order for the returned list is for actions to be sorted by ascending name.
+        You can override the default by using the **orderBy** parameter.
+
+        You can use any of the following fields to order the results:
+        * name
+        * title
+      operationId: nodeActions
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ActionDefinitionList'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **nodeId** does not exist
   '/deleted-nodes':
     get:
       x-alfresco-since: "5.2"
@@ -6450,6 +6501,158 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'                       
+  '/action-definitions':
+      get:
+        x-alfresco-since: "5.2.2"
+        tags:
+          - actions
+        summary: Retrieve list of available actions
+        description: |
+          **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+
+          Gets a list of all available actions
+
+          The default sort order for the returned list is for actions to be sorted by ascending name.
+          You can override the default by using the **orderBy** parameter.
+
+          You can use any of the following fields to order the results:
+          * name
+          * title
+        operationId: listActions
+        produces:
+          - application/json
+        parameters:
+          - $ref: '#/parameters/skipCountParam'
+          - $ref: '#/parameters/maxItemsParam'
+          - $ref: '#/parameters/orderByParam'
+          - $ref: '#/parameters/fieldsParam'
+        responses:
+          '200':
+            description: Successful response
+            schema:
+              $ref: '#/definitions/ActionDefinitionList'
+          '400':
+            description: |
+              Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
+          '401':
+            description: Authentication failed
+          default:
+            description: Unexpected error
+            schema:
+              $ref: '#/definitions/Error'
+  '/action-definitions/{actionDefinitionId}':
+    get:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - actions
+      summary: Retrieve the details of an action definition
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Retrieve the details of the action denoted by **actionDefinitionId**.
+      operationId: actionDetails
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/actionDefinitionIdParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ActionDefinitionEntry'
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **actionDefinitionId** does not exist
+  '/action-executions':
+    post:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - actions
+      summary: Execute an action
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+
+        Executes an action
+
+        An action may be executed against a node specified by **targetId**. For example:
+
+        ```
+        {
+          "actionDefinitionId": "copy",
+          "targetId": "4c4b3c43-f18b-43ff-af84-751f16f1ddfd",
+          "params": {
+          	"destination-folder": "34219f79-66fa-4ebf-b371-118598af898c"
+          }
+        }
+        ```
+
+        Performing a POST with the request body shown above will result in the node identified by ```targetId```
+        being copied to the destination folder specified in the ```params``` object by the key ```destination-folder```.
+
+        **targetId** is optional, however, currently **targetId** must be a valid node ID.
+        In the future, actions may be executed against different entity types or
+        executed without the need for the context of an entity.
+
+
+        Parameters supplied to the action within the ```params``` object will be converted to the expected type,
+        where possible using the DefaultTypeConverter class. In addition:
+
+        * Node IDs may be supplied in their short form (implicit workspace://SpacesStore prefix)
+        * Aspect names may be supplied using their short form, e.g. cm:versionable or cm:auditable
+
+        In this example, we add the aspect ```cm:versionable``` to a node using the QName resolution mentioned above:
+
+        ```
+        {
+          "actionDefinitionId": "add-features",
+          "targetId": "16349e3f-2977-44d1-93f2-73c12b8083b5",
+          "params": {
+          	"aspect-name": "cm:versionable"
+          }
+        }
+        ```
+
+        The ```actionDefinitionId``` is the ```id``` of an action definition as returned by
+        the _list actions_ operations (e.g. GET /action-definitions).
+
+        The action will be executed **asynchronously** with a `202` HTTP response signifying that
+        the request has been accepted successfully. The response body contains the unique ID of the action
+        pending execution. The ID may be used, for example to correlate an execution with output in the server logs.
+
+      operationId: actionExec
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: actionBodyExec
+          description: Action execution details
+          required: true
+          schema:
+            $ref: '#/definitions/ActionBodyExec'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '202':
+          description: |
+            Action execution request accepted and pending execution.
+          schema:
+            $ref: '#/definitions/ActionExecResultEntry'
+        '400':
+          description: |
+            Invalid parameter: **actionDefinitionId** missing but required by the action
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **actionDefinitionId** or **targetId** does not exist
 definitions:
   Error:
     type: object
@@ -8287,4 +8490,95 @@ definitions:
       values:
         type: object
         additionalProperties:
-          type: string         
+          type: string
+  ActionDefinitionList:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/ActionDefinition'
+  ActionDefinitionEntry:
+      type: object
+      required:
+        - entry
+      properties:
+        entry:
+          $ref: '#/definitions/ActionDefinition'
+  ActionDefinition:
+    type: object
+    required:
+      - id
+      - applicableTypes
+      - trackStatus
+    properties:
+      id:
+        description: Identifier of the action definition — used for example when executing an action
+        type: string
+      name:
+        description: name of the action definition, e.g. "move"
+        type: string
+      title:
+        description: title of the action definition, e.g. "Move"
+        type: string
+      description:
+        description: describes the action definition, e.g. "This will move the matched item to another space."
+        type: string
+      applicableTypes:
+        type: array
+        description: QNames of the types this action applies to
+        items:
+          type: string
+      trackStatus:
+        description: whether the basic action definition supports action tracking or not
+        type: boolean
+      parameterDefinitions:
+        type: array
+        items:
+          $ref: '#/definitions/ActionParameterDefinition'
+  ActionParameterDefinition:
+    type: object
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+      multiValued:
+        type: boolean
+      mandatory:
+        type: boolean
+      displayLabel:
+        type: string
+
+  ActionBodyExec:
+    type: object
+    required:
+      - actionDefinitionId
+    properties:
+      actionDefinitionId:
+        type: string
+      targetId:
+        type: string
+        description: The entity upon which to execute the action, typically a node ID or similar.
+      params:
+        type: object
+  ActionExecResultEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ActionExecResult'
+  ActionExecResult:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        description: The unique identifier of the action pending execution
