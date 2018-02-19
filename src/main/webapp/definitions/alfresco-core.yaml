@@ -46,6 +46,8 @@ tags:
     description: Retrieve and manage ratings
   - name: renditions
     description: Retrieve and manage file renditions
+  - name: rules
+    description: Retrieve and manage rules
   - name: shared-links
     description: Retrieve and manage public shared links
   - name: sites
@@ -418,6 +420,12 @@ parameters:
     description: The identifier of an audit entry.
     required: true
     type: string
+  ruleIdParam:
+      name: ruleId
+      in: path
+      description: The rule node id.
+      required: true
+      type: string
   auditMinimalEntryIncludeParam:
     name: include
     in: query
@@ -2615,6 +2623,169 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+  '/nodes/{nodeId}/rules':
+    get:
+      x-alfresco-since: "5.2.4"
+      tags:
+        - rules
+      summary: Get all the rules associated with a node
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.4 and newer versions.
+                
+        Get all the rules associated with an actionable node, including those inherited from parents.
+  
+        An exception is raised if the actionable aspect is not present on the passed **nodeId**.
+      operationId: getRules
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RulePaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount** or **nodeId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist            
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      x-alfresco-since: "5.2.4"
+      tags:
+        - rules
+      summary: Create a rule for a node
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.4 and newer versions.
+                
+        Create a rule for the specified node reference.
+        
+        The rule will run in background by default.
+      operationId: createRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: ruleBodyCreate
+          description: The rule details
+          required: true
+          schema:
+            $ref: '#/definitions/RuleBodyCreate'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is invalid
+        '401':
+          description: Authentication failed 
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist             
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/rules/{ruleId}':
+    put:
+      x-alfresco-since: "5.2.4"
+      tags:
+        - rules
+      summary: Update rule details
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.4 and newer versions.
+        
+        Updates details (**ruleDisabled** and/or **isAppliedToChildren**) for an existing rule **ruleId** on node **nodeId**.
+        
+        This provides the ability to enable/disable a rule entirely and/or enable/disable the inheritance of a rule.
+      operationId: updateRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: ruleBodyUpdate
+          description: The JSON representing the comment to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RuleBodyUpdate'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleEntry'
+        '400':
+          description: |
+            Invalid parameter: value of **nodeId** or **ruleId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **ruleId** does not exist
+        '409':
+          description: |
+            Can not edit rules as they are linked to another rule set
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "5.2.4"
+      tags:
+        - rules
+      summary: Delete a rule for a node
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.4 and newer versions.
+        
+        Removes a rule from the given rule actionable node.
+      operationId: deleteRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: |
+            Invalid parameter: value of **nodeId** or **ruleId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId** or to remove a rule
+        '404':
+          description: |
+            **nodeId** or **ruleId** does not exist
+        '409':
+          description: |
+            Can not edit rules as they are linked to another rule set
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/deleted-nodes':
     get:
       x-alfresco-since: "5.2"
@@ -8582,3 +8753,90 @@ definitions:
       id:
         type: string
         description: The unique identifier of the action pending execution
+  Action:
+    type: object
+    required:
+      - actionDefinitionId
+    properties:
+      actionDefinitionId:
+        type: string
+      targetId:
+        type: string
+        description: The entity upon which to execute the action, typically a node ID or similar.
+      params:
+        type: object
+  RuleBodyCreate:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      ruleTypes:
+        type: array
+        items:
+          type: string
+      actions:
+        type: array
+        items:
+          $ref: '#/definitions/Action'
+      ruleDisabled:
+        type: boolean
+        default: false
+      isAppliedToChildren:
+        type: boolean
+        default: false
+  RuleBodyUpdate:
+    type: object
+    properties:
+      ruleDisabled:
+        type: boolean
+        default: false
+      isAppliedToChildren:
+        type: boolean
+        default: false
+  RuleEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Rule'
+  Rule:
+    type: object
+    properties:
+      nodeRefId:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      ruleTypes:
+        type: array
+        items:
+          type: string
+      actions:
+        type: array
+        items:
+          $ref: '#/definitions/Action'
+      executeAsynchronously:
+        type: boolean
+        default: true
+      ruleDisabled:
+        type: boolean
+        default: false
+      isAppliedToChildren:
+        type: boolean
+        default: false
+  RulePaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/RuleEntry'
