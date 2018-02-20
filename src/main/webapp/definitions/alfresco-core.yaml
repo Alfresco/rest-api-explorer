@@ -2786,6 +2786,37 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/rule-types':
+    get:
+      x-alfresco-since: "5.2.4"
+      tags:
+        - rules
+      summary: Get the types of rules that can be defined
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.4 and newer versions.
+                
+        Get the types of rules that can be defined.
+      operationId: getRuleTypes
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleTypePaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed        
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/deleted-nodes':
     get:
       x-alfresco-since: "5.2"
@@ -8840,3 +8871,29 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/RuleEntry'
+  RuleType:
+    type: object
+    properties:
+      name:
+        type: string
+      displayLabel:
+        type: string
+  RuleTypeEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/RuleType'
+  RuleTypePaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/RuleTypeEntry'
