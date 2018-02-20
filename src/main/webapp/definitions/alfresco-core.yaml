@@ -8805,7 +8805,7 @@ definitions:
   Rule:
     type: object
     properties:
-      nodeId:
+      ruleId:
         type: string
       title:
         type: string
