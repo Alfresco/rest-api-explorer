@@ -126,6 +126,7 @@ parameters:
       * aspectNames
       * association
       * isLink
+      * isFavorite
       * isLocked
       * path
       * properties
@@ -143,6 +144,7 @@ parameters:
       * allowableOperations
       * aspectNames
       * isLink
+      * isFavorite
       * isLocked
       * path
       * properties
@@ -159,6 +161,7 @@ parameters:
       * allowableOperations
       * association
       * isLink
+      * isFavorite
       * isLocked
       * path
       * permissions
@@ -7954,6 +7957,8 @@ definitions:
         type: string
       isLink:
         type: boolean
+      isFavorite:
+      	type: boolean
       content:
         $ref: '#/definitions/ContentInfo'
       aspectNames:
