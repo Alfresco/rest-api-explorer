@@ -186,6 +186,7 @@ parameters:
       Returns additional information about the person. The following optional fields can be requested:
       * properties
       * aspectNames
+      * capabilities
     required: false
     type: array
     items:
@@ -7125,6 +7126,20 @@ definitions:
         type: object
         additionalProperties:
           type: string
+      capabilities:
+        $ref: '#/definitions/Capabilities'
+  Capabilities:
+    type: object
+    properties:
+      isAdmin:
+        type: boolean
+        default: true
+      isGuest:
+        type: boolean
+        default: false
+      isMutable:
+        type: boolean
+        default: true
   Company:
     type: object
     properties:
