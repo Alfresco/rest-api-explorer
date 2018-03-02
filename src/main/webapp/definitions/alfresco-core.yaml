@@ -8356,7 +8356,8 @@ definitions:
       values:
         type: object
         additionalProperties:
-          type: string           ActionDefinitionList:
+          type: string           
+  ActionDefinitionList:
     type: object
     properties:
       list:
