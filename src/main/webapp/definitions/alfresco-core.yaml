@@ -4876,7 +4876,7 @@ paths:
       summary: Reject a site membership request
       description: |
         Reject a site membership request.
-      operationId: approveSiteMembershipRequest
+      operationId: rejectSiteMembershipRequest
       produces:
         - application/json
       parameters:
