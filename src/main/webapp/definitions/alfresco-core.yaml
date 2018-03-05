@@ -258,6 +258,12 @@ parameters:
     description: The identifier of a site.
     required: true
     type: string
+  inviteeIdParam:
+    name: inviteeId
+    in: path
+    description: The invitee user name.
+    required: true
+    type: string
   tagIdParam:
     name: tagId
     in: path
@@ -4775,6 +4781,136 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/site-membership-requests':
+    get:
+      tags:
+        - sites
+      summary: Get site membership requests
+      description: |
+        Get the list of site membership requests the user can action.
+
+        You can use the **where** parameter to filter the returned site membership requests by **siteId**. For example:
+
+        ```
+        (siteId=mySite)
+        ```
+
+        The **where** parameter can also be used to filter by ***personId***. For example:
+
+        ```
+        where=(personId=person)
+        ```
+
+        This may be combined with the siteId filter, as shown below:
+
+        ```
+        where=(siteId=mySite AND personId=person))
+        ```
+      operationId: getSiteMembershipRequests
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/whereParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMembershipRequestPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: |
+            Current user does not have permission
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/sites/{siteId}/site-membership-requests/{invitationId}/approve':
+      post:
+        tags:
+          - sites
+        summary: Approve a site membership request
+        description: |
+          Approve a site membership request.
+        operationId: approveSiteMembershipRequest
+        produces:
+          - application/json
+        parameters:
+          - $ref: '#/parameters/siteIdParam'
+          - $ref: '#/parameters/inviteeIdParam'
+          - in: body
+            name: siteMembershipApprovalBody
+            description: |
+              Accepting a request to join, optionally, allows assignment of a role to the user.
+            required: false
+            schema:
+              $ref: '#/definitions/SiteMembershipApprovalBody'
+        responses:
+          '200':
+            description: Successful response
+            schema:
+              $ref: '#/definitions/SiteMembershipRequestPaging'
+          '400':
+            description: |
+              Invalid parameter: value of **siteId** or **inviteeId** is invalid
+          '401':
+            description: Authentication failed
+          '403':
+            description: |
+              Current user does not have permission to approve the request
+          '404':
+            description: |
+              **siteId** does not exist
+          default:
+            description: Unexpected error
+            schema:
+              $ref: '#/definitions/Error'
+  '/sites/{siteId}/site-membership-requests/{invitationId}/reject':
+    post:
+      tags:
+        - sites
+      summary: Reject a site membership request
+      description: |
+        Reject a site membership request.
+      operationId: approveSiteMembershipRequest
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/inviteeIdParam'
+        - in: body
+          name: siteMembershipRejectionBody
+          description: |
+            Rejecting a request to join, optionally, allows the inclusion of comment.
+          required: false
+          schema:
+            $ref: '#/definitions/SiteMembershipRejectionBody'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMembershipRequestPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **siteId** or **inviteeId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: |
+            Current user does not have permission to reject the request
+        '404':
+          description: |
+            **siteId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/sites/{siteId}/members':
     get:
       tags:
@@ -7740,6 +7876,16 @@ definitions:
       site:
         $ref: '#/definitions/Site'
       message:
+        type: string
+  SiteMembershipApprovalBody:
+    type: object
+    properties:
+      role:
+        type: string
+  SiteMembershipRejectionBody:
+    type: object
+    properties:
+      comment:
         type: string
   UserInfo:
     type: object
