@@ -7973,7 +7973,7 @@ definitions:
       isLink:
         type: boolean
       isFavorite:
-      ..type: boolean
+        type: boolean
       content:
         $ref: '#/definitions/ContentInfo'
       aspectNames:
