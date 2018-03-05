@@ -4831,7 +4831,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/sites/{siteId}/site-membership-requests/{invitationId}/approve':
+  '/sites/{siteId}/site-membership-requests/{inviteeId}/approve':
       post:
         tags:
           - sites
@@ -4869,7 +4869,7 @@ paths:
             description: Unexpected error
             schema:
               $ref: '#/definitions/Error'
-  '/sites/{siteId}/site-membership-requests/{invitationId}/reject':
+  '/sites/{siteId}/site-membership-requests/{inviteeId}/reject':
     post:
       tags:
         - sites
