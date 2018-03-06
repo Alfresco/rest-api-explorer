@@ -2760,7 +2760,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Attempts to restore the deleted node **nodeId** to its original location.
+        Attempts to restore the deleted node **nodeId** to its original location or to a new location.
         
         If the node is successfully restored to its former primary parent, then only the 
         primary child association will be restored, including recursively for any primary 
@@ -2777,6 +2777,12 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/fieldsParam'        
+        - in: body
+          name: deletedNodeBodyRestore
+          description: The targetParentId if the node is restored to a new location.
+          required: false
+          schema:
+            $ref: '#/definitions/DeletedNodeBodyRestore'
       responses:
         '200':
           description: Successful response
@@ -2784,14 +2790,14 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format             
+            Invalid parameter: **nodeId** or **targetNodeId** is not a valid format             
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to restore the deleted node
+          description: User does not have permission to restore the deleted node or user does not have permission to the target node
         '404':
           description: |
-            **nodeId** does not exist or the restore destination parent node no longer exists
+            **nodeId** does not exist or the restore destination parent node does not exists
         '409':
           description: Node name already exists in the restore destination
         '422':
@@ -8296,6 +8302,13 @@ definitions:
           archivedAt:
             type: string
             format: date-time
+  DeletedNodeBodyRestore:
+    type: object
+    properties:
+      targetParentId:
+        type: string
+      assocType:
+        type: string
   RevertBody:
     type: object
     properties:
