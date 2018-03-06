@@ -390,6 +390,15 @@ parameters:
     required: false
     type: string
     format: date-time
+  RangeHeader:
+    name: Range
+    in: header
+    description: |
+      The Range header indicates the part of a document that the server should return.
+      Single part request supported, for example: bytes=1-10.
+    required: false
+    type: string
+    format: bytes
   downloadIdParam:
     name: downloadId
     in: path
@@ -1645,9 +1654,12 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
+        - $ref: '#/parameters/RangeHeader'
       responses:
         '200':
           description: Successful response
+        '206':
+          description: Partial Content
         '304':
           description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
@@ -1660,6 +1672,9 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '416':
+          description: |
+            Range Not Satisfiable
         default:
           description: Unexpected error
           schema:
@@ -1893,6 +1908,7 @@ paths:
         - $ref: '#/parameters/renditionIdParam'
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
+        - $ref: '#/parameters/RangeHeader'
         - name: placeholder
           in: query
           description: |
@@ -1905,6 +1921,8 @@ paths:
       responses:
         '200':
           description: Successful response
+        '206':
+          description: Partial Content
         '304':
           description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
@@ -1917,6 +1935,8 @@ paths:
         '404':
           description: |
             **nodeId** or **renditionId** does not exist
+        '416':
+          description: Range Not Satisfiable
         default:
           description: Unexpected error
           schema:
@@ -2505,9 +2525,12 @@ paths:
         - $ref: '#/parameters/versionIdParam'
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
+        - $ref: '#/parameters/RangeHeader'
       responses:
         '200':
           description: Successful response
+        '206':
+          description: Partial Content
         '304':
           description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
@@ -2520,6 +2543,8 @@ paths:
         '404':
           description: |
             **nodeId** or **versionId** does not exist
+        '416':
+          description: Range Not Satisfiable
         default:
           description: Unexpected error
           schema:
@@ -2732,9 +2757,12 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
+        - $ref: '#/parameters/RangeHeader'
       responses:
         '200':
           description: Successful response
+        '206':
+          description: Partial Content
         '304':
           description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
@@ -2747,6 +2775,8 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '416':
+          description: Range Not Satisfiable
         default:
           description: Unexpected error
           schema:
@@ -2892,6 +2922,7 @@ paths:
         - $ref: '#/parameters/renditionIdParam'
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
+        - $ref: '#/parameters/RangeHeader'
         - name: placeholder
           in: query
           description: |
@@ -2904,6 +2935,8 @@ paths:
       responses:
         '200':
           description: Successful response
+        '206':
+          description: Partial Content
         '304':
           description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
@@ -2916,6 +2949,8 @@ paths:
         '404':
           description: |
             **nodeId** or **renditionId** does not exist
+        '416':
+          description: Range Not Satisfiable
         default:
           description: Unexpected error
           schema:
@@ -5349,9 +5384,12 @@ paths:
         - $ref: '#/parameters/sharedIdParam'
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
+        - $ref: '#/parameters/RangeHeader'
       responses:
         '200':
           description: Successful response
+        '206':
+          description: Partial Content
         '304':
           description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
@@ -5360,6 +5398,8 @@ paths:
         '404':
           description: |
             **sharedId** does not exist
+        '416':
+          description: Range Not Satisfiable
         '501':
           description: Shared links are disabled for the system
         default:
@@ -5455,9 +5495,12 @@ paths:
         - $ref: '#/parameters/renditionIdParam'
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
+        - $ref: '#/parameters/RangeHeader'
       responses:
         '200':
           description: Successful response
+        '206':
+          description: Partial Content
         '304':
           description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
@@ -5466,6 +5509,8 @@ paths:
         '404':
           description: |
             **sharedId** does not exist
+        '416':
+          description: Range Not Satisfiable
         '501':
           description: Shared links are disabled for the system
         default:
