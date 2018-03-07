@@ -4818,15 +4818,12 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/SiteMembershipRequestPaging'
+            $ref: '#/definitions/SiteMembershipRequestWithPersonPaging'
         '400':
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: Authentication failed
-        '403':
-          description: |
-            Current user does not have permission
         default:
           description: Unexpected error
           schema:
@@ -4859,12 +4856,12 @@ paths:
               Invalid parameter: value of **siteId** or **inviteeId** is invalid
           '401':
             description: Authentication failed
-          '403':
-            description: |
-              Current user does not have permission to approve the request
           '404':
             description: |
-              **siteId** does not exist
+              **siteId** or **inviteeId** does not exist
+          '422':
+            description: |
+              Integrity exception or not allowed to approve membership request.
           default:
             description: Unexpected error
             schema:
@@ -4897,12 +4894,12 @@ paths:
             Invalid parameter: value of **siteId** or **inviteeId** is invalid
         '401':
           description: Authentication failed
-        '403':
+        '422':
           description: |
-            Current user does not have permission to reject the request
+            Integrity exception or not allowed to approve membership request.
         '404':
           description: |
-            **siteId** does not exist
+            **siteId** or **inviteeId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -7871,6 +7868,49 @@ definitions:
         format: date-time
       site:
         $ref: '#/definitions/Site'
+      message:
+        type: string
+  SiteMembershipRequestWithPersonPaging:
+    type: object
+    required:
+      - list
+    properties:
+      list:
+        type: object
+        required:
+          - pagination
+          - entries
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/SiteMembershipRequestWithPersonEntry'
+  SiteMembershipRequestWithPersonEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/SiteMembershipRequestWithPerson'
+  SiteMembershipRequestWithPerson:
+    type: object
+    required:
+      - id
+      - createdAt
+      - site
+      - person
+    properties:
+      id:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      site:
+        $ref: '#/definitions/Site'
+      person:
+        $ref: '#/definitions/Person'
       message:
         type: string
   SiteMembershipApprovalBody:
