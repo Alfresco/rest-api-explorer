@@ -4911,6 +4911,8 @@ paths:
               Invalid parameter: value of **siteId** or **inviteeId** is invalid
           '401':
             description: Authentication failed
+          '403':
+            description: Current user does not have permission to approve membership request
           '404':
             description: |
               **siteId** or **inviteeId** does not exist
@@ -4949,9 +4951,11 @@ paths:
             Invalid parameter: value of **siteId** or **inviteeId** is invalid
         '401':
           description: Authentication failed
+        '403':
+          description: Current user does not have permission to reject membership request
         '422':
           description: |
-            Integrity exception or not allowed to approve membership request.
+            Integrity exception or not allowed to reject membership request.
         '404':
           description: |
             **siteId** or **inviteeId** does not exist
