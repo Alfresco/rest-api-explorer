@@ -195,6 +195,17 @@ parameters:
     items:
       type: string
     collectionFormat: csv    
+  tagEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the tag. The following optional fields can be requested:
+      * count
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv    
   sharedIdParam:
     name: sharedId
     in: path
@@ -5184,12 +5195,16 @@ paths:
       tags:
         - tags
       summary: List tags
-      description: Gets a list of tags in this repository.
+      description: |
+        Gets a list of tags in this repository.
+        
+        You can use the **include** parameter to return additional **values** information.
       operationId: listTags
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
+        - $ref: '#/parameters/tagEntryIncludeParam'
       produces:
         - application/json
       responses:
