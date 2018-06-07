@@ -40,6 +40,8 @@ tags:
     description: Retrieve and manage groups
   - name: preferences
     description: Retrieve and manage preferences
+  - name: probes
+    description: Check readiness and liveness of the repository
   - name: queries
     description: Find nodes, sites, and people using a simple search term
   - name: ratings
@@ -5740,6 +5742,48 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/probes/{probeId}':
+    get:
+      x-alfresco-since: "6.0"
+      tags:
+        - probes
+      summary: Check readiness and liveness of the repository
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.0 and newer versions.
+
+        Returns a status of 200 to indicate success and 503 for failure.
+
+        The readiness probe is normally only used to check repository startup.
+
+        The liveness probe should then be used to check the repository is still responding to requests.
+
+        **Note:** No authentication is required to call this endpoint.
+      operationId: getProbe
+      parameters:
+        - name: probeId
+          in: path
+          description: |
+            The name of the probe:
+            * -ready-
+            * -live-
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ProbeEntry'
+        '404':
+          description: |
+            **probeId** does not exist
+        '503':
+          description: Service Unavailable - Probe failure status.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/queries/nodes':
     get:
       x-alfresco-since: "5.2"
@@ -8396,6 +8440,18 @@ definitions:
         $ref: '#/definitions/PathInfo'
       permissions:
         $ref: '#/definitions/PermissionsInfo' 
+  ProbeEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        type: object
+        required:
+          - message
+        properties:
+          message:
+            type: string
   SharedLinkBodyCreate:
     type: object
     required:
