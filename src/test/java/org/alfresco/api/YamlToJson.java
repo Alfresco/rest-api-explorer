@@ -48,6 +48,9 @@ public class YamlToJson {
     public static final String SEARCH_DEFINITION = "/src/main/webapp/definitions/alfresco-search.yaml";
     public static final String SEARCH_JSON_DEFINITION = JSON_DESTINATION + "alfresco-search.json";
     public static final String SEARCH_DEFINITION_TITLE = "Alfresco Search REST API";
+    public static final String SEARCH_SQL_DEFINITION = "/src/main/webapp/definitions/alfresco-search-sql.yaml";
+    public static final String SEARCH_SQL_JSON_DEFINITION = JSON_DESTINATION + "alfresco-search-sql.json";
+    public static final String SEARCH_SQL_DEFINITION_TITLE = "Alfresco SQL Search REST API";
 
     public static final String DISCOVERY_DEFINITION = "/src/main/webapp/definitions/alfresco-discovery.yaml";
     public static final String DISCOVERY_JSON_DEFINITION = JSON_DESTINATION + "alfresco-discovery.json";
@@ -78,6 +81,10 @@ public class YamlToJson {
             swagger = parseSwaggerDef(new File(rootPath + SEARCH_DEFINITION), SEARCH_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + SEARCH_JSON_DEFINITION), swagger);
 
+          //Search
+            swagger = parseSwaggerDef(new File(rootPath + SEARCH_SQL_DEFINITION), SEARCH_SQL_DEFINITION_TITLE);
+            Json.mapper().writeValue(new File(rootPath + SEARCH_SQL_JSON_DEFINITION), swagger);
+            
             //Discovery
             swagger = parseSwaggerDef(new File(rootPath + DISCOVERY_DEFINITION), DISCOVERY_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + DISCOVERY_JSON_DEFINITION), swagger);
