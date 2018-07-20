@@ -72,6 +72,9 @@ public class APIExplorerIntegrationTest
 
         int searchAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-search.yaml\">Search API</option>");
         assertTrue("Expected to find Search API option", searchAPIIndex != -1);
+        
+        int searchSQLAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-search-sql.yaml\">Search SQL API</option>");
+        assertTrue("Expected to find Search SQL API option", searchSQLAPIIndex != -1);
 
         int discoveryAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-discovery.yaml\">Discovery API</option>");
         assertTrue("Expected to find Discovery API option", discoveryAPIIndex != -1);
@@ -141,6 +144,20 @@ public class APIExplorerIntegrationTest
         validateSearchDefn(definitionUrl + YAML);
         validateSearchDefn(definitionUrl + JSON);
     }
+    @Test
+    public void testSearchSQLAPIDefinition() throws Exception {
+        String definitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-search-sql";
+        
+        // get definition content
+        String definitionContent = this.retrievePageContent(definitionUrl + YAML, 200);
+        
+        // make sure the content is correct
+        int swaggerIndex = definitionContent.indexOf("swagger:");
+        assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
+        
+        validateSearchSQLDefn(definitionUrl + YAML);
+        validateSearchSQLDefn(definitionUrl + JSON);
+    }
 
     private void validateAuthDefn(String definitionUrl) {
         Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Content Services REST API", "Authentication API", "1");
@@ -182,6 +199,14 @@ public class APIExplorerIntegrationTest
         assertNotNull("Expected to retrieve a map of paths", paths);
         assertTrue("Expected to find /search path", paths.containsKey("/search"));
     }
+    
+    private void validateSearchSQLDefn(String definitionUrl) {
+        Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Insight Engine REST API", "Search SQL API", "1");
+        Map<String, Path> paths = swagger.getPaths();
+        System.out.println(paths);
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /sql path", paths.containsKey("/sql"));
+    }
 
     @Test
     public void testDiscoveryAPIDefinition() throws Exception {
@@ -220,7 +245,7 @@ public class APIExplorerIntegrationTest
         String defs = this.retrievePageContent("http://localhost:8085/api-explorer/definitions/index.jsp", 200);
         List<String> definitions = Json.mapper().readValue(defs, new TypeReference<List<String>>(){});
         assertNotNull(definitions);
-        assertEquals("5 definitions in 2 formats should be 10.", 10, definitions.size());
+        assertEquals("6 definitions in 2 formats should be 12.", 12, definitions.size());
     }
 
     public String retrievePageContent(String url, int expectedStatus) throws Exception

@@ -1,0 +1,317 @@
+swagger: '2.0'
+info:
+  description: |
+    **Search SQL API**
+    A Solr SQL passthrough, this feature provides the ability to use SQL to query Solr.
+  version: '1'
+  title: Alfresco Insight Engine REST API
+basePath: /alfresco/api/-default-/public/search/versions/1/sql
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication
+security:
+  - basicAuth: []
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  '/sql':
+    post:
+      x-alfresco-since: "6.0"
+      tags:
+        - sql
+      summary: Alfresco Insight Engine SQL Passthrough
+      description: |
+        **Note**: this endpoint is available in Alfresco 6.0 and newer versions.
+        This will require Insight Engine and will not work with Alfresco Search Services.
+
+        **You specify all the parameters in this API in a JSON body**,
+        A basic query looks like this:
+
+        ```JSON
+        {
+          "stmt": "select * from alfresco",
+          "locales": ["en_UK"]
+          "timezone": "Europe/London"
+          "includeMetadata":true
+        }
+        ```
+
+        **Note:** the minimum possible query parameter required.
+        ```JSON
+        {
+          "stmt":
+        }
+        ```
+        The expected reponse will appear in the Alfresco format as seen below.
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 1,
+              "hasMoreItems": false,
+              "totalItems": 1,
+              "skipCount": 0,
+              "maxItems": 100
+          },
+          "entries": [{
+            "entry": [
+              {
+                "label": "aliases",
+                "value": "{\"SITE\":\"site\"}"
+              },
+              {
+                "label": "isMetadata",
+                "value": "true"
+              },
+              {
+                "label": "fields",
+                "value": "[\"SITE\"]"
+              }
+            ]
+          }]}}
+          ```
+          To override the default format set the format to solr.
+          ```JSON
+          {
+            "stmt": "select * from alfresco",
+            "format": "solr"
+          }
+        ```
+        This will return Solr's output response.
+        ```JSON
+        {
+          "result-set": {
+          "docs": [
+            {
+              "aliases": {
+              "SITE": "site"
+            },
+              "isMetadata": true,
+              "fields": [ "SITE"]
+            },
+            {
+                "RESPONSE_TIME": 23,
+                "EOF": true
+            }
+          ]}
+        }
+        ```
+
+
+        You can use the **locales parameter** to filter results based on locale.
+        ```JSON
+        "locales": ["en_UK", "en_US"]
+        ```
+
+        To include timezone in the query add the **timezone parameter**.
+        ```JSON
+        "timezone": "Japan"
+        ```
+
+        You can use the **includeMetadata parameter** to include addtional  information, this is by default set to false.
+
+        ```JSON
+        "includeMetadata": "false"
+        ```
+        Please note that if its set to true the first entry will represent the metdata requested
+
+         ```JSON
+         {
+           "stmt": "select site from alfresco limit 2",
+           "includeMetadata":true
+         }
+        ```
+        The expected response:
+        ```JSON
+        "entries": [
+          {
+            #First entry holds the Metadata infromation as set by {includeMetadata:true}
+            "entry": [
+              {
+                "label": "aliases",
+                "value": "{\"SITE\":\"site\"}"
+
+              },
+              {
+                "label": "isMetadata",
+                "value": "true"
+              },
+              {
+                "label": "fields",
+                "value": "[\"SITE\"]"
+              }
+            ]
+            #end of Metadata
+          },
+          {
+            #Query result entry value.
+            "entry": [
+              {
+                "label": "site",
+                "value": "[\"test\"]"
+              }
+            ]
+          },
+          {
+            "entry": [
+            {
+              "label": "site",
+              "value": "[\"test\"]"
+            }
+            ]
+          }
+        ]
+        ```
+
+      parameters:
+        - in: body
+          name: queryBody
+          description: |
+            Generic query API
+          required: true
+          schema:
+            $ref: '#/definitions/SQLSearchRequest'
+      operationId: search
+      produces:
+        - application/json
+
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SQLResultSetPaging'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+
+definitions:
+
+  ## Standard definition
+  Error:
+    type: object
+    required:
+      - error
+    properties:
+      error:
+        type: object
+        required:
+          - statusCode
+          - briefSummary
+          - stackTrace
+          - descriptionURL
+        properties:
+          errorKey:
+            type: string
+          statusCode:
+            type: integer
+            format: int32
+          briefSummary:
+            type: string
+          stackTrace:
+            type: string
+          descriptionURL:
+            type: string
+          logId:
+            type: string
+
+  SQLSearchRequest:
+    type: object
+    properties:
+      stmt:
+        type: string
+      format:
+        type: string
+      locales:
+        type: array
+        items:
+          type: string
+      timezone:
+        type: string
+      includeMetadata:
+        type: boolean
+
+
+  # ReponseQuery
+
+  SQLResultSetPaging:
+    description: Query results
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/SQLResultSetRowEntry'
+  Pagination:
+    type: object
+    required:
+      - count
+      - hasMoreItems
+      - skipCount
+      - maxItems
+    properties:
+      count:
+        type: integer
+        format: int64
+        description: |
+          The number of objects in the entries array.
+      hasMoreItems:
+        type: boolean
+        description: |
+          A boolean value which is **true** if there are more entities in the collection
+          beyond those in this response. A true value means a request with a larger value
+          for the **skipCount** or the **maxItems** parameter will return more entities.
+      totalItems:
+        type: integer
+        format: int64
+        description: |
+          An integer describing the total number of entities in the collection.
+          The API might not be able to determine this value,
+          in which case this property will not be present.
+      skipCount:
+        type: integer
+        format: int64
+        description: |
+          An integer describing how many entities exist in the collection before
+          those included in this list.
+      maxItems:
+        type: integer
+        format: int64
+        description: |
+          The value of the **maxItems** parameter used to generate this list,
+          or if there was no **maxItems** parameter the default value is 100
+
+  SQLResultSetRowEntry:
+    type: object
+    properties:
+      label:
+        type: string
+      value:
+        type: string
+
+  SolrResultSet:
+    description: SQL results in Solr formatting
+    type: object
+    properties:
+      result-set:
+        type: object
+        $ref: '#/definitions/docs'
+  docs:
+    description: Array of documents returned by the query, note that this is a Solr convention.
+    type: array
+    items:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          type: string
