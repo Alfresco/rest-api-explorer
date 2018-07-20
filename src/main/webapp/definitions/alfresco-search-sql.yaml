@@ -80,7 +80,7 @@ paths:
             "format": "solr"
           }
         ```
-        This will return solr's output response.
+        This will return Solr's output response.
         ```JSON
         {
           "result-set": {
@@ -299,13 +299,14 @@ definitions:
         type: string
 
   SolrResultSet:
-    description: SQL results in solr formatting
+    description: SQL results in Solr formatting
     type: object
     properties:
       result-set:
         type: object
         $ref: '#/definitions/docs'
   docs:
+    description: Array of documents returned by the query, note that this is a Solr convention.
     type: array
     items:
       type: object
