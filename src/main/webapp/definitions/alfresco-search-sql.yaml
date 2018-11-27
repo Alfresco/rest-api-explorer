@@ -5,7 +5,7 @@ info:
     A Solr SQL passthrough, this feature provides the ability to use SQL to query Solr.
   version: '1'
   title: Alfresco Insight Engine REST API
-basePath: /alfresco/api/-default-/public/search/versions/1/sql
+basePath: /alfresco/api/-default-/public/search/versions/1
 securityDefinitions:
   basicAuth:
     type: basic
