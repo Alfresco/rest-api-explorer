@@ -7252,7 +7252,7 @@ definitions:
       properties:
         type: object
         additionalProperties:
-          type: string
+          type: object
   PersonBodyUpdate:
     type: object
     properties:
@@ -7297,7 +7297,7 @@ definitions:
       properties:
         type: object
         additionalProperties:
-          type: string
+          type: object
   PersonPaging:
     type: object
     properties:
@@ -7371,21 +7371,11 @@ definitions:
       properties:
         type: object
         additionalProperties:
-          type: string
+          type: object
       capabilities:
-        $ref: '#/definitions/Capabilities'
-  Capabilities:
-    type: object
-    properties:
-      isAdmin:
-        type: boolean
-        default: true
-      isGuest:
-        type: boolean
-        default: false
-      isMutable:
-        type: boolean
-        default: true
+        type: object
+        additionalProperties:
+          type: boolean
   Company:
     type: object
     properties:
@@ -7550,6 +7540,7 @@ definitions:
     type: object
     required:
       - id
+      - title
       - content
       - createdBy
       - createdAt
@@ -7560,6 +7551,8 @@ definitions:
       - canDelete
     properties:
       id:
+        type: string
+      title:
         type: string
       content:
         type: string
@@ -7890,7 +7883,7 @@ definitions:
         type: object
         description: An object summarizing the activity
         additionalProperties:
-          type: string
+          type: object
       activityType:
         description: The type of the activity posted
         type: string
@@ -8186,7 +8179,7 @@ definitions:
       properties:
         type: object
         additionalProperties:
-          type: string
+          type: object
       relativePath:
         type: string
       association:
@@ -8220,7 +8213,7 @@ definitions:
       properties:
         type: object
         additionalProperties:
-          type: string
+          type: object
       permissions:
         $ref: '#/definitions/PermissionsBodyUpdate'
   NodeBodyCopy:
@@ -8432,6 +8425,8 @@ definitions:
           type: string
       properties:
         type: object
+        additionalProperties:
+          type: object
       allowableOperations:
         type: array
         items:
@@ -8681,7 +8676,7 @@ definitions:
       properties:
         type: object
         additionalProperties:
-            type: string
+          type: object
   DownloadBodyCreate:
     type: object
     required:
@@ -8825,7 +8820,7 @@ definitions:
       values:
         type: object
         additionalProperties:
-          type: string
+          type: object
   ActionDefinitionList:
     type: object
     properties:
