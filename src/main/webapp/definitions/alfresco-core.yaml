@@ -1232,7 +1232,7 @@ paths:
         You can use the **nodeType** field to create a specific type. The default is cm:content.
 
         You can use the **renditions** field to create renditions (e.g. doclib) asynchronously upon upload.
-        Note that currently only one rendition can be requested. Also, as requesting rendition is a background process,
+        Also, as requesting rendition is a background process,
         any rendition failure (e.g. No transformer is currently available) will not fail the whole upload and has the potential to silently fail.
 
         Use **overwrite** to overwrite an existing file, matched by name. If the file is versionable,
@@ -1417,7 +1417,7 @@ paths:
           description: Current user does not have permission to create children of **nodeId**
         '404':
           description: |
-            **nodeId** does not exist
+            **nodeId** or **renditionId** does not exist
         '409':
           description: New name clashes with an existing node in the current parent folder
         '413':
@@ -1800,7 +1800,7 @@ paths:
 
         An asynchronous request to create a rendition for file **nodeId**.
 
-        The rendition is specified by name **id** in the request body:
+        The rendition is specified by name **id** in the request body. Multiple names may be specified in a comma separated list:
         ```JSON
         {
           "id":"doclib"
@@ -1830,9 +1830,9 @@ paths:
           description: Current user does not have permission for **nodeId**
         '404':
           description: |
-            **nodeId** does not exist
+            **nodeId** or **renditionId** does not exist
         '409':
-          description: Rendition already exists
+          description: All requested renditions already exist
         '501':
           description: Renditions/thumbnails are disabled for the system
         default:
