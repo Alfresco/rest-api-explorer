@@ -1800,11 +1800,22 @@ paths:
 
         An asynchronous request to create a rendition for file **nodeId**.
 
-        The rendition is specified by name **id** in the request body. Multiple names may be specified in a comma separated list:
+        The rendition is specified by name **id** in the request body:
         ```JSON
         {
           "id":"doclib"
         }
+        ```
+         Multiple names may be specified as a comma separated list or using a list format:
+        ```JSON
+        [
+          {
+             "id": "doclib"
+          },
+          {
+             "id": "avatar"
+          }
+        ]
         ```
       operationId: createRendition
       parameters:
