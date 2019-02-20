@@ -1297,10 +1297,25 @@ paths:
           }
         }
         ```
-        Any missing aspects are applied automatically. For example, **cm:titled** in the JSON shown above. You can set aspects
+        Any missing aspects are applied automatically. For example, **cm:title** in the JSON shown above. You can set aspects
         explicitly, if needed, using an **aspectNames** field.
 
         **Note:** setting properties of type d:content and d:category are not supported.
+
+        You can also optionally disable (or enable) inherited permissions via *isInheritanceEnabled* flag:
+        ```JSON
+        {
+          "permissions":
+            {
+              "isInheritanceEnabled": false,
+              "locallySet":
+                [
+                  {"authorityId": "GROUP_special", "name": "Read", "accessStatus":"DENIED"},
+                  {"authorityId": "testuser", "name": "Contributor", "accessStatus":"ALLOWED"}
+                ]
+            }
+        }
+        ```
         
         Typically, for files and folders, the primary children are created within the parent folder using the default "cm:contains" assocType. 
         If the content model allows then it is also possible to create primary children with a different assoc type. For example:
@@ -8160,7 +8175,7 @@ definitions:
         type: array
         items:
           type: string     
-  PermissionsBodyUpdate:
+  PermissionsBody:
     type: object
     properties:
       isInheritanceEnabled:
@@ -8191,6 +8206,8 @@ definitions:
         type: object
         additionalProperties:
           type: object
+      permissions:
+        $ref: '#/definitions/PermissionsBody'
       relativePath:
         type: string
       association:
@@ -8226,7 +8243,7 @@ definitions:
         additionalProperties:
           type: object
       permissions:
-        $ref: '#/definitions/PermissionsBodyUpdate'
+        $ref: '#/definitions/PermissionsBody'
   NodeBodyCopy:
     type: object
     required:
