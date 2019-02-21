@@ -1297,7 +1297,7 @@ paths:
           }
         }
         ```
-        Any missing aspects are applied automatically. For example, **cm:title** in the JSON shown above. You can set aspects
+        Any missing aspects are applied automatically. For example, **cm:titled** in the JSON shown above. You can set aspects
         explicitly, if needed, using an **aspectNames** field.
 
         **Note:** setting properties of type d:content and d:category are not supported.
