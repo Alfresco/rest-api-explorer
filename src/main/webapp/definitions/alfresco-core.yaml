@@ -1692,9 +1692,13 @@ paths:
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
         - $ref: '#/parameters/RangeHeader'
+      produces:
+        - application/octet-stream
       responses:
         '200':
           description: Successful response
+          schema:
+            type: file
         '206':
           description: Partial Content
         '304':
@@ -1966,9 +1970,13 @@ paths:
           required: false
           type: boolean
           default: false
+      produces:
+        - application/octet-stream
       responses:
         '200':
           description: Successful response
+          schema:
+            type: file
         '206':
           description: Partial Content
         '304':
@@ -2574,9 +2582,13 @@ paths:
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
         - $ref: '#/parameters/RangeHeader'
+      produces:
+        - application/octet-stream
       responses:
         '200':
           description: Successful response
+          schema:
+            type: file
         '206':
           description: Partial Content
         '304':
@@ -2806,9 +2818,13 @@ paths:
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
         - $ref: '#/parameters/RangeHeader'
+      produces:
+        - application/octet-stream
       responses:
         '200':
           description: Successful response
+          schema:
+            type: file
         '206':
           description: Partial Content
         '304':
@@ -2986,9 +3002,13 @@ paths:
           required: false
           type: boolean
           default: false
+      produces:
+        - application/octet-stream
       responses:
         '200':
           description: Successful response
+          schema:
+            type: file
         '206':
           description: Partial Content
         '304':
@@ -4448,9 +4468,13 @@ paths:
           required: false
           type: boolean
           default: true
+      produces:
+        - application/octet-stream
       responses:
         '200':
           description: Successful response
+          schema:
+            type: file
         '304':
           description: Content has not been modified since the date provided in the If-Modified-Since header
         '400':
@@ -5570,9 +5594,13 @@ paths:
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
         - $ref: '#/parameters/RangeHeader'
+      produces:
+        - application/octet-stream
       responses:
         '200':
           description: Successful response
+          schema:
+            type: file
         '206':
           description: Partial Content
         '304':
@@ -5681,9 +5709,13 @@ paths:
         - $ref: '#/parameters/attachmentParam'
         - $ref: '#/parameters/ifModifiedSinceHeader'
         - $ref: '#/parameters/RangeHeader'
+      produces:
+        - application/octet-stream
       responses:
         '200':
           description: Successful response
+          schema:
+            type: file
         '206':
           description: Partial Content
         '304':
