@@ -3598,6 +3598,14 @@ paths:
         
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
         
+        The default sort order for the returned list of favorites is type ascending, createdAt descending.
+        You can override the default by using the **orderBy** parameter.
+
+        You can use any of the following fields to order the results:
+        *   `type`
+        *   `createdAt`
+        *   `title`
+        
         You can use the **where** parameter to restrict the list in the response
         to entries of a specific kind. The **where** parameter takes a value.
         The value is a single predicate that can include one or more **EXISTS**
@@ -3628,6 +3636,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/whereParam'
         - $ref: '#/parameters/favoriteEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
@@ -3638,7 +3647,7 @@ paths:
             $ref: '#/definitions/FavoritePaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems**, **skipCount**, or **where** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, or **where** is invalid
         '401':
           description: Authentication failed
         '404':
