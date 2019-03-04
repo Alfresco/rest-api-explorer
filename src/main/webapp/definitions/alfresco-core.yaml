@@ -221,6 +221,8 @@ parameters:
       Returns additional information about the shared link, the following optional fields can be requested:
       * allowableOperations
       * path
+      * properties
+      * isFavorite
     required: false
     type: array
     items:
@@ -8608,6 +8610,15 @@ definitions:
           type: string
         description: |
           The allowable operations for the content node being shared.
+      isFavorite:
+        type: boolean
+      properties:
+        type: object
+        additionalProperties:
+          type: object
+        description: |
+          A subset of the target node's properties.
+
   RenditionBodyCreate:
     type: object
     required:
