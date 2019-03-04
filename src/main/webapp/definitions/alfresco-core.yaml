@@ -3168,6 +3168,7 @@ paths:
           "id": "abeecher",
           "firstName": "Alice",
           "lastName": "Beecher",
+          "displayName": "Alice Beecher",
           "email": "abeecher@example.com",
           "password": "secret",
           "properties":
@@ -7397,6 +7398,8 @@ definitions:
       firstName:
         type: string
       lastName:
+        type: string
+      displayName:
         type: string
       description:
         type: string
