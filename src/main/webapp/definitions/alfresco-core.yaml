@@ -8617,7 +8617,7 @@ definitions:
         additionalProperties:
           type: object
         description: |
-          A subset of the target node's properties.
+          A subset of the target node's properties, system properties and properties already available in the SharedLink are excluded.
 
   RenditionBodyCreate:
     type: object
