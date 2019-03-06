@@ -223,6 +223,7 @@ parameters:
       * path
       * properties
       * isFavorite
+      * aspectNames
     required: false
     type: array
     items:
@@ -8618,6 +8619,10 @@ definitions:
           type: object
         description: |
           A subset of the target node's properties, system properties and properties already available in the SharedLink are excluded.
+      aspectNames:
+        type: array
+        items:
+          type: string
 
   RenditionBodyCreate:
     type: object
