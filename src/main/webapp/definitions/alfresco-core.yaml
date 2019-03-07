@@ -1437,6 +1437,8 @@ paths:
           description: New name clashes with an existing node in the current parent folder
         '413':
           description: Content exceeds individual file size limit configured for the network or system
+        '415':
+          description: Content Type is not supported
         '422':
           description: Model integrity exception including a file name containing invalid characters
         '507':
