@@ -111,6 +111,11 @@ paths:
         "timezone": "Japan"
         ```
 
+        To include custom filter queries add the **filterQueries parameter**.
+        ```JSON
+        "filterQueries": ["-SITE:swsdp"]
+        ```
+
         You can use the **includeMetadata parameter** to include addtional  information, this is by default set to false.
 
         ```JSON
@@ -232,6 +237,10 @@ definitions:
           type: string
       timezone:
         type: string
+      filterQueries:
+        type: array
+        items:
+          type: string
       includeMetadata:
         type: boolean
 
