@@ -507,9 +507,11 @@ paths:
         Creates a comment on node **nodeId**. You specify the comment in a JSON body like this:
         
         ```JSON
-        {
-          "content": "This is a comment"
-        }
+        [
+          {
+            "content": "This is a comment"
+          }
+        ]
         ```
         
         **Note:** You can create more than one comment by 
@@ -560,7 +562,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: commentBodyCreate
-          description: The comment text. Note that you can also provide a list of comments.
+          description: The comment text. Note that you can also provide multiple comments.
           required: true
           schema:
             $ref: '#/definitions/CommentBody'
@@ -831,9 +833,11 @@ paths:
         Creates a tag on the node **nodeId**. You specify the tag in a JSON body like this:
         
         ```JSON
-        {
-          "tag":"test-tag-1"
-        }
+        [
+          {
+            "tag":"test-tag-1"
+          }
+        ]
         ```
         
         **Note:** You can create more than one tag by 
@@ -1262,43 +1266,51 @@ paths:
 
         You must specify at least a **name** and **nodeType**. For example, to create a folder:
         ```JSON
-        {
-          "name":"My Folder",
-          "nodeType":"cm:folder"
-        }
+        [
+          {
+            "name":"My Folder",
+            "nodeType":"cm:folder"
+          }
+        ]
         ```
 
         You can create an empty file like this:
         ```JSON
-        {
-          "name":"My text file.txt",
-          "nodeType":"cm:content"
-        }
+        [
+          {
+            "name":"My text file.txt",
+            "nodeType":"cm:content"
+          }
+        ]
         ```
         You can update binary content using the ```PUT /nodes/{nodeId}``` API method.
 
         You can create a folder, or other node, inside a folder hierarchy:
         ```JSON
-        {
-          "name":"My Special Folder",
-          "nodeType":"cm:folder",
-          "relativePath":"X/Y/Z"
-        }
+        [
+          {
+            "name":"My Special Folder",
+            "nodeType":"cm:folder",
+            "relativePath":"X/Y/Z"
+          }
+        ]
         ```
         The **relativePath** specifies the folder structure to create relative to the node **nodeId**. Folders in the
         **relativePath** that do not exist are created before the node is created.
 
         You can set properties when you create a new node:
         ```JSON
-        {
-          "name":"My Other Folder",
-          "nodeType":"cm:folder",
-          "properties":
+        [
           {
-            "cm:title":"Folder title",
-            "cm:description":"This is an important folder"
+            "name":"My Other Folder",
+            "nodeType":"cm:folder",
+            "properties":
+            {
+              "cm:title":"Folder title",
+              "cm:description":"This is an important folder"
+            }
           }
-        }
+        ]
         ```
         Any missing aspects are applied automatically. For example, **cm:titled** in the JSON shown above. You can set aspects
         explicitly, if needed, using an **aspectNames** field.
@@ -1307,30 +1319,34 @@ paths:
 
         You can also optionally disable (or enable) inherited permissions via *isInheritanceEnabled* flag:
         ```JSON
-        {
-          "permissions":
-            {
-              "isInheritanceEnabled": false,
-              "locallySet":
-                [
-                  {"authorityId": "GROUP_special", "name": "Read", "accessStatus":"DENIED"},
-                  {"authorityId": "testuser", "name": "Contributor", "accessStatus":"ALLOWED"}
-                ]
-            }
-        }
+        [
+          {
+            "permissions":
+              {
+                "isInheritanceEnabled": false,
+                "locallySet":
+                  [
+                    {"authorityId": "GROUP_special", "name": "Read", "accessStatus":"DENIED"},
+                    {"authorityId": "testuser", "name": "Contributor", "accessStatus":"ALLOWED"}
+                  ]
+              }
+          }
+        ]
         ```
         
         Typically, for files and folders, the primary children are created within the parent folder using the default "cm:contains" assocType. 
         If the content model allows then it is also possible to create primary children with a different assoc type. For example:
         ```JSON
-        {
-          "name":"My Node",
-          "nodeType":"my:specialNodeType",
-          "association":
+        [
           {
-            "assocType":"my:specialAssocType"
+            "name":"My Node",
+            "nodeType":"my:specialNodeType",
+            "association":
+            {
+              "assocType":"my:specialAssocType"
+            }
           }
-        }
+        ]
         ``` 
         
         Additional associations can be added after creating a node. You can also add associations at the time the node is created. This is 
@@ -1339,21 +1355,25 @@ paths:
         You can optionally specify an array of **targets** to create one or more peer associations such that the newly created node acts as a source node. 
         For example, to associate one or more secondary children at time of creation:
         ```JSON
-        {
-          "name":"My Folder",
-          "nodeType":"cm:folder",
-          "secondaryChildren":
-            [ {"childId":"abcde-01234-...", "assocType":"my:specialChildAssocType"} ]
-        }
+        [
+          {
+            "name":"My Folder",
+            "nodeType":"cm:folder",
+            "secondaryChildren":
+              [ {"childId":"abcde-01234-...", "assocType":"my:specialChildAssocType"} ]
+          }
+        ]
         ``` 
         For example, to associate one or more targets at time of creation:
         ```JSON
-        {
-          "name":"My Folder",
-          "nodeType":"cm:folder",
-          "targets":
-            [ {"targetId":"abcde-01234-...", "assocType":"my:specialPeerAssocType"} ]
-        }
+        [
+          {
+            "name":"My Folder",
+            "nodeType":"cm:folder",
+            "targets":
+              [ {"targetId":"abcde-01234-...", "assocType":"my:specialPeerAssocType"} ]
+          }
+        ]
         ```
         
         **Note:** You can create more than one child by 
@@ -1826,9 +1846,11 @@ paths:
 
         The rendition is specified by name **id** in the request body:
         ```JSON
-        {
-          "id":"doclib"
-        }
+        [
+          {
+            "id":"doclib"
+          }
+        ]
         ```
          Multiple names may be specified as a comma separated list or using a list format:
         ```JSON
@@ -3738,13 +3760,15 @@ paths:
             For example, to favorite a file the following body would be used:
             
             ```JSON
-            {
-               "target": {
-                  "file": {
-                     "guid": "abcde-01234-...."
-                  }
-               }
-            }
+            [
+              {
+                 "target": {
+                    "file": {
+                       "guid": "abcde-01234-...."
+                    }
+                 }
+              }
+            ]
             ```
           required: true
           schema:
@@ -5391,10 +5415,12 @@ paths:
         so the shared link would become invalid when the expiry date is reached. For example:
 
         ```JSON
+        [
           {
             "nodeId": "1ff9da1a-ee2f-4b9c-8c34-3333333333",
             "expiresAt": "2017-03-23T23:00:00.000+0000"
           }
+        ]
         ```
 
         **Note:** You can create shared links to more than one file 
@@ -7581,12 +7607,14 @@ definitions:
       displayName:
         type: string
   CommentBody:
-    type: object
-    required:
-      - content
-    properties:
-      content:
-        type: string
+    type: array
+    items:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
   CommentPaging:
     type: object
     required:
@@ -7648,12 +7676,14 @@ definitions:
       canDelete:
         type: boolean
   TagBody:
-    type: object
-    required:
-      - tag
-    properties:
-      tag:
-        type: string
+    type: array
+    items:
+      type: object
+      required:
+        - tag
+      properties:
+        tag:
+          type: string
   TagPaging:
     type: object
     required:
@@ -7832,11 +7862,13 @@ definitions:
         type: string
         description: The rating. The type is specific to the rating scheme, boolean for the likes and an integer for the fiveStar.
   FavoriteBodyCreate:
-    type: object
-    required:
-      - target
-    properties:
-       target:
+    type: array
+    items:
+      type: object
+      required:
+        - target
+      properties:
+        target:
           type: object
   FavoritePaging:
     type: object
@@ -7881,12 +7913,14 @@ definitions:
       target:
         type: object
   FavoriteSiteBodyCreate:
-    type: object
-    required:
-      - id
-    properties:
-      id:
-        type: string
+    type: array
+    items:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
   FavoriteSiteEntry:
     type: object
     required:
@@ -8000,16 +8034,18 @@ definitions:
         type: string        
         description: The value of the preference. Note that this can be of any JSON type.
   SiteMembershipRequestBodyCreate:
-    type: object
-    required:
-      - id
-    properties:
-      message:
-        type: string
-      id:
-        type: string
-      title:
-        type: string
+    type: array
+    items:
+      type: object
+      required:
+        - id
+      properties:
+        message:
+          type: string
+        id:
+          type: string
+        title:
+          type: string
   SiteMembershipRequestBodyUpdate:
     type: object
     properties:
@@ -8141,15 +8177,17 @@ definitions:
       assocType:
         type: string
   AssociationBody:
-    type: object
-    required:
-    - targetId
-    - assocType
-    properties:
-      targetId:
-        type: string
-      assocType:
-        type: string
+    type: array
+    items:
+      type: object
+      required:
+      - targetId
+      - assocType
+      properties:
+        targetId:
+          type: string
+        assocType:
+          type: string
   ChildAssociationInfo:
     type: object
     required:
@@ -8161,15 +8199,17 @@ definitions:
       isPrimary:
         type: boolean
   ChildAssociationBody:
-    type: object
-    required:
-    - childId
-    - assocType
-    properties:
-      childId:
-        type: string
-      assocType:
-        type: string
+    type: array
+    items:
+      type: object
+      required:
+      - childId
+      - assocType
+      properties:
+        childId:
+          type: string
+        assocType:
+          type: string
   PathElement:
     type: object
     properties:
@@ -8234,44 +8274,46 @@ definitions:
         items:
           $ref: '#/definitions/PermissionElement'          
   NodeBodyCreate:
-    type: object
-    required:
-      - name
-      - nodeType
-    properties:
-      name:
-        type: string
-        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
-        description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
-          The character . must not be used at the end of the name.
-      nodeType:
-        type: string
-      aspectNames:
-        type: array
-        items:
-          type: string
+    type: array
+    items:
+      type: object
+      required:
+        - name
+        - nodeType
       properties:
-        type: object
-        additionalProperties:
-          type: object
-      permissions:
-        $ref: '#/definitions/PermissionsBody'
-      relativePath:
-        type: string
-      association:
-        type: object
-        properties:
-          assocType:
+        name:
+          type: string
+          pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+          description: |
+            The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+            The character . must not be used at the end of the name.
+        nodeType:
+          type: string
+        aspectNames:
+          type: array
+          items:
             type: string
-      secondaryChildren:
-        type: array
-        items:
-          $ref: '#/definitions/ChildAssociationBody'
-      targets:
-        type: array
-        items:
-          $ref: '#/definitions/AssociationBody'
+        properties:
+          type: object
+          additionalProperties:
+            type: object
+        permissions:
+          $ref: '#/definitions/PermissionsBody'
+        relativePath:
+          type: string
+        association:
+          type: object
+          properties:
+            assocType:
+              type: string
+        secondaryChildren:
+          type: array
+          items:
+            $ref: '#/definitions/ChildAssociationBody'
+        targets:
+          type: array
+          items:
+            $ref: '#/definitions/AssociationBody'
   NodeBodyUpdate:
     type: object
     properties:
@@ -8525,15 +8567,17 @@ definitions:
           message:
             type: string
   SharedLinkBodyCreate:
-    type: object
-    required:
-      - nodeId
-    properties:
-      nodeId:
-        type: string
-      expiresAt:
-        type: string
-        format: date-time
+    type: array
+    items:
+      type: object
+      required:
+        - nodeId
+      properties:
+        nodeId:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
   SharedLinkBodyEmail:
     type: object
     properties:
@@ -8627,12 +8671,14 @@ definitions:
           type: string
 
   RenditionBodyCreate:
-    type: object
-    required:
-      - id
-    properties:
-      id:
-        type: string
+    type: array
+    items:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
   RenditionEntry:
     type: object
     required:
