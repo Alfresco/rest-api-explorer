@@ -8131,6 +8131,7 @@ definitions:
         type: string
       sizeInBytes:
         type: integer
+        format: int64
       encoding:
         type: string
   AssociationInfo:
