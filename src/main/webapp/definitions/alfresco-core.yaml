@@ -1298,7 +1298,7 @@ paths:
         }
         ```
         
-        You can set multi-value properties when you create a new node which support property of type multi-valued:
+        You can set multi-value properties when you create a new node which supports properties of type multiple.
          ```JSON
         {
           "name":"My Other Folder",
