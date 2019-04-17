@@ -1300,6 +1300,24 @@ paths:
           }
         }
         ```
+        
+        You can set multi-value properties when you create a new node which supports properties of type multiple.
+         ```JSON
+        {
+          "name":"My Other Folder",
+          "nodeType":"custom:destination",
+          "properties":
+          {
+            "cm:title":"Folder title",
+            "cm:description":"This is an important folder",
+            "custom:locations": [
+                                 "location X",
+                                 "location Y"
+                                ]
+          }
+        }
+        ```
+        
         Any missing aspects are applied automatically. For example, **cm:titled** in the JSON shown above. You can set aspects
         explicitly, if needed, using an **aspectNames** field.
 
