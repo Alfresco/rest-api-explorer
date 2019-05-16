@@ -435,7 +435,8 @@ parameters:
     in: query
     description: |
       Returns additional information about favorites, the following optional fields can be requested:
-      * path (note, this only applies to files and folders)  
+      * path (note, this only applies to files and folders)
+      * properties
     required: false
     type: array
     items:
