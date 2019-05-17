@@ -7899,6 +7899,9 @@ definitions:
         description: The time the object was made a favorite.
       target:
         type: object
+      properties:
+        type: object
+        description: A subset of the target favorite properties, system properties and properties already available in the target are excluded.
   FavoriteSiteBodyCreate:
     type: object
     required:
