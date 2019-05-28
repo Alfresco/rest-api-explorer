@@ -435,7 +435,8 @@ parameters:
     in: query
     description: |
       Returns additional information about favorites, the following optional fields can be requested:
-      * path (note, this only applies to files and folders)  
+      * path (note, this only applies to files and folders)
+      * properties
     required: false
     type: array
     items:
@@ -7342,8 +7343,6 @@ definitions:
           type: string
       properties:
         type: object
-        additionalProperties:
-          type: object
   PersonBodyUpdate:
     type: object
     properties:
@@ -7387,8 +7386,6 @@ definitions:
           type: string
       properties:
         type: object
-        additionalProperties:
-          type: object
   PersonPaging:
     type: object
     properties:
@@ -7463,12 +7460,8 @@ definitions:
           type: string
       properties:
         type: object
-        additionalProperties:
-          type: object
       capabilities:
         type: object
-        additionalProperties:
-          type: boolean
   Company:
     type: object
     properties:
@@ -7898,6 +7891,9 @@ definitions:
         description: The time the object was made a favorite.
       target:
         type: object
+      properties:
+        type: object
+        description: A subset of the target favorite properties, system properties and properties already available in the target are excluded.
   FavoriteSiteBodyCreate:
     type: object
     required:
@@ -7975,8 +7971,6 @@ definitions:
       activitySummary:
         type: object
         description: An object summarizing the activity
-        additionalProperties:
-          type: object
       activityType:
         description: The type of the activity posted
         type: string
@@ -8272,8 +8266,6 @@ definitions:
           type: string
       properties:
         type: object
-        additionalProperties:
-          type: object
       permissions:
         $ref: '#/definitions/PermissionsBody'
       relativePath:
@@ -8308,8 +8300,6 @@ definitions:
           type: string
       properties:
         type: object
-        additionalProperties:
-          type: object
       permissions:
         $ref: '#/definitions/PermissionsBody'
   NodeBodyCopy:
@@ -8521,8 +8511,6 @@ definitions:
           type: string
       properties:
         type: object
-        additionalProperties:
-          type: object
       allowableOperations:
         type: array
         items:
@@ -8636,8 +8624,6 @@ definitions:
         type: boolean
       properties:
         type: object
-        additionalProperties:
-          type: object
         description: |
           A subset of the target node's properties, system properties and properties already available in the SharedLink are excluded.
       aspectNames:
@@ -8784,8 +8770,6 @@ definitions:
           type: string
       properties:
         type: object
-        additionalProperties:
-          type: object
   DownloadBodyCreate:
     type: object
     required:
@@ -8928,8 +8912,6 @@ definitions:
          format: date-time
       values:
         type: object
-        additionalProperties:
-          type: object
   ActionDefinitionList:
     type: object
     properties:
