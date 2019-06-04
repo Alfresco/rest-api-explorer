@@ -1004,6 +1004,23 @@ paths:
           }
         }
         ```
+        You can update multi-value properties of a node which supports properties of type multiple.
+         ```JSON
+        {
+          "name":"My Other Folder",
+          "nodeType":"custom:destination",
+          "properties":
+          {
+            "cm:title":"Folder title",
+            "cm:description":"This is an important folder",
+            "custom:locations": [
+                                 "location NewX",
+                                 "location NewY"
+                                ]
+          }
+        }
+        ```
+        
         **Note:** setting properties of type d:content and d:category are not supported.
 
         **Note:** if you want to add or remove aspects, then you must use **GET /nodes/{nodeId}** first to get the complete set of *aspectNames*.
