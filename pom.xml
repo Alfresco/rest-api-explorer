@@ -7,7 +7,7 @@
     <name>Alfresco REST API Explorer</name>
     <description>Produces the API Explorer for all API definitions</description>
     <properties>
-      <swagger-ui.version>2.1.4</swagger-ui.version>
+      <swagger-ui.version>2.2.10</swagger-ui.version>
       <maven.compiler.source>1.7</maven.compiler.source>
       <maven.compiler.target>1.7</maven.compiler.target>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
