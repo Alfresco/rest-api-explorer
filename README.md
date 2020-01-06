@@ -12,7 +12,7 @@ You now have a `target/api-explorer.war`, drop this into your Application server
 You can run the project as a packaged web application using an embedded Tomcat server.  
 This is useful for changing documentation and endpoint descriptions but it means that the "Try it Out!" button will not work.
 
-- ` mvn tomcat7:run-war`
+- `mvn tomcat7:run-war-only`
 
 Now the application is running at [http://localhost:8085/api-explorer](http://localhost:8085/api-explorer/)
 
