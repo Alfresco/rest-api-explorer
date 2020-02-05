@@ -78,6 +78,9 @@ public class APIExplorerIntegrationTest
 
         int discoveryAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-discovery.yaml\">Discovery API</option>");
         assertTrue("Expected to find Discovery API option", discoveryAPIIndex != -1);
+
+        int syncServiceAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-sync-service.yaml\">Sync Service API</option>");
+        assertTrue("Expected to find Sync Service API option", syncServiceAPIIndex != -1);
     }
     
     @Test
@@ -240,12 +243,35 @@ public class APIExplorerIntegrationTest
     }
 
     @Test
+    public void testSyncServiceAPIDefinition() throws Exception {
+        String definitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-sync-service";
+
+        // get definition content
+        String definitionContent = this.retrievePageContent(definitionUrl + YAML, 200);
+
+        // make sure the content is correct
+        int swaggerIndex = definitionContent.indexOf("swagger:");
+        assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
+
+        validateSyncServiceDefinitions(definitionUrl + YAML);
+        validateSyncServiceDefinitions(definitionUrl + JSON);
+    }
+
+    private void validateSyncServiceDefinitions(String definitionUrl) {
+        Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Content Services REST API", "Sync Service API", "1");
+        Map<String, Path> paths = swagger.getPaths();
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /config/syncService path", paths.containsKey("/config/syncService"));
+        assertTrue("Expected to find /subscribers/{subscriberId}/subscriptions/{subscriptionsQuery}/sync path", paths.containsKey("/subscribers/{subscriberId}/subscriptions/{subscriptionsQuery}/sync"));
+    }
+
+    @Test
     public void testAllDefinitions() throws Exception
     {
         String defs = this.retrievePageContent("http://localhost:8085/api-explorer/definitions/index.jsp", 200);
         List<String> definitions = Json.mapper().readValue(defs, new TypeReference<List<String>>(){});
         assertNotNull(definitions);
-        assertEquals("6 definitions in 2 formats should be 12.", 12, definitions.size());
+        assertEquals("7 definitions in 2 formats should be 14.", 14, definitions.size());
     }
 
     public String retrievePageContent(String url, int expectedStatus) throws Exception
