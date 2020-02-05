@@ -56,6 +56,10 @@ public class YamlToJson {
     public static final String DISCOVERY_JSON_DEFINITION = JSON_DESTINATION + "alfresco-discovery.json";
     public static final String DISCOVERY_DEFINITION_TITLE = "Alfresco Discovery REST API";
 
+    public static final String SYNCSERVICE_DEFINITION = "/src/main/webapp/definitions/alfresco-sync-service.yaml";
+    public static final String SYNCSERVICE_JSON_DEFINITION = JSON_DESTINATION + "alfresco-sync-service.json";
+    public static final String SYNCSERVICE_DEFINITION_TITLE = "Alfresco Sync Service API";
+
     public static void main(String[] args) {
 
         String rootPath = args[0];
@@ -88,6 +92,10 @@ public class YamlToJson {
             //Discovery
             swagger = parseSwaggerDef(new File(rootPath + DISCOVERY_DEFINITION), DISCOVERY_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + DISCOVERY_JSON_DEFINITION), swagger);
+
+            //Sync Service
+            swagger = parseSwaggerDef(new File(rootPath + SYNCSERVICE_DEFINITION), SYNCSERVICE_DEFINITION_TITLE);
+            Json.mapper().writeValue(new File(rootPath + SYNCSERVICE_JSON_DEFINITION), swagger);
 
         } catch (IOException e) {
             System.err.println("Failed to create a json definitions: " + e.getLocalizedMessage());

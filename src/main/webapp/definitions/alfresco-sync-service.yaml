@@ -1,0 +1,377 @@
+---
+swagger: "2.0"
+info:
+  description: "**Sync Service API** <br />Provides access to the synchronization\
+    \ service features of Alfresco Content Services."
+  version: "1"
+  title: "Alfresco Content Services REST API"
+host: "localhost:9090"
+basePath: "/alfresco/api/-default-/private/alfresco/versions/1"
+tags:
+- name: "subscribers"
+  description: "Create and retrieve subscriptions"
+- name: "config"
+  description: "Retrieve configuration"
+paths:
+  /config/syncService:
+    get:
+      tags:
+      - "config"
+      summary: "Retrieve Identity Service config"
+      description: "Retrieve Identity Service configuration, **with** authentication,\
+        \ if the Identity Service is configured in Sync Service. <br />Used to retrieve\
+        \ filters for nodes and aspects."
+      operationId: "syncServiceConfig"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successful operation"
+  /config/syncServiceConfiguration:
+    get:
+      tags:
+      - "config"
+      summary: "Retrieve Identity Service config"
+      description: "Retrieve Identity Service configuration, **without** authentication,\
+        \ if the Identity Service is configured in Sync Service.  <br />Used to retrieve\
+        \ filters for nodes and aspects."
+      operationId: "syncServiceConfiguration"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successful operation"
+  /subscribers/{subscriberId}/subscriptions/{subscriptionsQuery}/sync:
+    post:
+      tags:
+      - "subscribers"
+      summary: "Create a new synchronization"
+      description: "Creates a new synchronization based on subscriber id (the device\
+        \ id) and subscription id (the subscriptions which will be synced). <br />\
+        \ The response type from body is a type of events (CREATE_REPOS, UPDATE_REPOS,\
+        \ etc) that is recorded by Sync Service and sent to other components. <br\
+        \ /> It returns a syncId and a URL that can retrieve all the changes done\
+        \ for the current transaction. <br /> The **syncId** is the id for the triggered\
+        \ transaction  used in the **GET** endpoint to see all the modification done\
+        \ by the latest syncronization. <br /> <br /> **subscriberId** = the device\
+        \ id that is starting the synchronization  <br /> **subscriptionQuery** =\
+        \ the subscriptions which will be synced. The request can accept multiple\
+        \ subcriptionIds, separated by comma."
+      operationId: "start"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "subscriberId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "subscriptionsQuery"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "maxItems"
+        in: "query"
+        required: false
+        type: "integer"
+        default: 100
+        format: "int32"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/StartSyncRequest"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/PrincipalImpl"
+      responses:
+        201:
+          description: "Subscription created"
+        400:
+          description: "Bad request"
+        500:
+          description: "Error in processing the request"
+        401:
+          description: "Unauthorized"
+  /subscribers/{subscriberId}/subscriptions/{subscriptionsQuery}/sync/{syncId}:
+    get:
+      tags:
+      - "subscribers"
+      summary: "Retrieve all the changes done for the current transaction"
+      description: "Retrieve details about latest synchronization for a specific set\
+        \ of folders <br /> <br /> **subscriberId** = the device id  <br /> **subscriptionQuery**\
+        \ = the subscriptions which will be synced. The request can accept multiple\
+        \ subcriptionIds, separated by comma. <br /> **syncId** = id for the transaction,\
+        \ used to retrieve the changes that were made for the latest synchronization"
+      operationId: "get"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "subscriberId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "subscriptionsQuery"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "syncId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/PrincipalImpl"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Bad request"
+        500:
+          description: "Internal Server Error"
+        401:
+          description: "Unauthorized"
+        503:
+          description: "Database is down"
+    delete:
+      tags:
+      - "subscribers"
+      summary: "Delete old changes"
+      description: "Delete the old changes done for a synchronization id. <br /> The\
+        \ **POST-GET-DELETE** requests are related, usually executed together. <br\
+        \ /> <br /> **subscriberId** = the device id  <br /> **subscriptionQuery**\
+        \ = the subscriptions which will be synced. The request can accept multiple\
+        \ subcriptionIds, separated by comma. <br /> **syncId** = id for the triggered\
+        \ transaction, used to retrieve the changes that were made for the latest\
+        \ synchronization"
+      operationId: "end"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "subscriberId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "subscriptionsQuery"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "syncId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/PrincipalImpl"
+      responses:
+        400:
+          description: "Bad request"
+        500:
+          description: "Internal Server Error"
+        204:
+          description: "Successful operation"
+        503:
+          description: "Database is down"
+definitions:
+  SyncFilters:
+    type: "object"
+    properties:
+      nodeTypes:
+        type: "array"
+        items:
+          type: "string"
+      nodeAspects:
+        type: "array"
+        items:
+          type: "string"
+      nodeTypesWhitelist:
+        type: "array"
+        items:
+          type: "string"
+  IdentityServiceConfiguration:
+    type: "object"
+    properties:
+      authenticationChain:
+        type: "string"
+      authenticationEnabled:
+        type: "string"
+      enableBasicAuth:
+        type: "string"
+      authServerUrl:
+        type: "string"
+      realm:
+        type: "string"
+      resource:
+        type: "string"
+      publicClient:
+        type: "string"
+      sslRequired:
+        type: "string"
+      enablePkce:
+        type: "string"
+      credentialsSecret:
+        type: "string"
+      credentialsProvider:
+        type: "string"
+  RepositoryInfo:
+    type: "object"
+    properties:
+      versionLabel:
+        type: "string"
+      edition:
+        type: "string"
+      clusterEnabled:
+        type: "boolean"
+        default: false
+  SyncServiceConfiguration:
+    type: "object"
+    properties:
+      version:
+        type: "string"
+      filters:
+        $ref: "#/definitions/SyncFilters"
+      dsyncClientVersionMin:
+        type: "string"
+      repoInfo:
+        $ref: "#/definitions/RepositoryInfo"
+      identityServiceConfig:
+        $ref: "#/definitions/IdentityServiceConfiguration"
+  StartSyncRequest:
+    type: "object"
+    properties:
+      changes:
+        type: "array"
+        items:
+          $ref: "#/definitions/Change"
+      clientVersion:
+        type: "string"
+  Change:
+    type: "object"
+    properties:
+      conflict:
+        type: "boolean"
+        default: false
+      skip:
+        type: "boolean"
+        default: false
+      id:
+        type: "string"
+      username:
+        type: "string"
+      type:
+        type: "string"
+        enum:
+        - "CREATE_REPOS"
+        - "UPDATE_REPOS"
+        - "UPDATE_CONTENT_REPOS"
+        - "UPDATE_METADATA_REPOS"
+        - "DELETE_REPOS"
+        - "MOVE_REPOS"
+        - "RENAME_REPOS"
+        - "RENAME_UPDATE_REPOS"
+        - "AUTHADDEDTOGROUP"
+        - "AUTHREMOVEDFROMGROUP"
+        - "GROUPDELETED"
+        - "INHERITPERMISSIONSDISABLED"
+        - "INHERITPERMISSIONSENABLED"
+        - "LOCALPERMISSIONGRANTED"
+        - "LOCALPERMISSIONREVOKED"
+        - "FILECLASSIFIED"
+        - "FILEUNCLASSIFIED"
+        - "RECORDCREATED"
+        - "RECORDREJECTED"
+        - "CREATE_LOCAL"
+        - "UPDATE_LOCAL"
+        - "DELETE_LOCAL"
+        - "MOVE_LOCAL"
+        - "RENAME_LOCAL"
+        - "RENAME_UPDATE_LOCAL"
+        - "SUBSCRIBE"
+        - "UNSUBSCRIBE"
+        - "ERROR"
+        - "RESET"
+        - "NODECHECKEDOUT"
+        - "NODECHECKOUTCANCELLED"
+        - "NODECHECKEDIN"
+        - "NODELOCKED"
+        - "NODEUNLOCKED"
+      name:
+        type: "string"
+      toName:
+        type: "string"
+      parentNodeIds:
+        type: "array"
+        items:
+          type: "string"
+      toParentNodeIds:
+        type: "array"
+        items:
+          type: "string"
+      path:
+        type: "string"
+      toPath:
+        type: "string"
+      nodeId:
+        type: "string"
+      eventTimestamp:
+        type: "integer"
+        format: "int64"
+      checksum:
+        type: "string"
+      size:
+        type: "integer"
+        format: "int64"
+      nodeType:
+        type: "string"
+      nodeTimestamp:
+        type: "integer"
+        format: "int64"
+      error:
+        type: "boolean"
+        default: false
+      aspects:
+        type: "array"
+        uniqueItems: true
+        items:
+          type: "string"
+      seqNo:
+        type: "integer"
+        format: "int64"
+      parentGroup:
+        type: "string"
+      permission:
+        type: "string"
+      async:
+        type: "boolean"
+        default: false
+      authority:
+        type: "string"
+      numberOfSecondaryAssocs:
+        type: "integer"
+        format: "int32"
+      cascade:
+        type: "boolean"
+        default: false
+      recordFromCollabSite:
+        type: "boolean"
+        default: false
+  PrincipalImpl:
+    type: "object"
+    properties:
+      name:
+        type: "string"
