@@ -448,6 +448,18 @@ parameters:
     description: The identifier of an audit application.
     required: true
     type: string
+  auditApplicationIncludeParam:
+    name: include
+    in: query
+    description: |
+      Also include the current minimum and/or maximum audit entry ids for the application. The following optional fields can be requested:
+      * max
+      * min
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv 
   auditEntryIdParam:
     name: auditEntryId
     in: path
@@ -6515,12 +6527,15 @@ paths:
         Get status of an audit application **auditApplicationId**.
         
         You must have admin rights to retrieve audit information.
+
+        You can use the **include** parameter to return the minimum and/or maximum audit record id for the application. 
       operationId: getAuditApp
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/auditApplicationIdParam'
         - $ref: '#/parameters/fieldsParam'
+        - $ref: '#/parameters/auditApplicationIncludeParam'
       responses:
         '200':
           description: Successful response
@@ -8888,6 +8903,10 @@ definitions:
       isEnabled:
         type: boolean
         default: true
+      maxEntryId:
+        type: integer
+      minEntryId:
+        type: integer
   AuditBodyUpdate:
     type: object
     properties:
