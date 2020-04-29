@@ -14,9 +14,9 @@
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     <scm>
-      <connection>scm:git:ssh://git@github.com:Alfresco/rest-api-explorer.git</connection>
-      <developerConnection>scm:git:ssh://git@github.com:Alfresco/rest-api-explorer.git</developerConnection>
-      <url>scm:git:ssh://git@github.com:Alfresco/rest-api-explorer.git</url>
+      <connection>scm:git:ssh://git@github.com/Alfresco/rest-api-explorer.git</connection>
+      <developerConnection>scm:git:ssh://git@github.com/Alfresco/rest-api-explorer.git</developerConnection>
+      <url>scm:git:ssh://git@github.com/Alfresco/rest-api-explorer.git</url>
       <tag>HEAD</tag>
     </scm>
     <licenses>
