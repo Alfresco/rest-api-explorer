@@ -88,6 +88,11 @@ paths:
         required: false
         schema:
           $ref: "#/definitions/StartSyncRequest"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/PrincipalImpl"
       responses:
         201:
           description: "Subscription created"
