@@ -2711,6 +2711,199 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/renditions':
+    post:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - versions
+      summary: Create rendition for a file version 
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        An asynchronous request to create a rendition for version of file **nodeId** and **versionId**.
+
+        The version rendition is specified by name **id** in the request body:
+        ```JSON
+        {
+          "id":"doclib"
+        }
+        ```
+          Multiple names may be specified as a comma separated list or using a list format:
+        ```JSON
+        [
+          {
+              "id": "doclib"
+          },
+          {
+              "id": "avatar"
+          }
+        ]
+        ```
+      operationId: createVersionRendition
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - in: body
+          name: renditionBodyCreate
+          description: The rendition "id".
+          required: true
+          schema:
+            $ref: '#/definitions/RenditionBodyCreate'
+      consumes:
+        - application/json
+      responses:
+        '202':
+          description: Request accepted
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid,
+            or **renditionBodyCreate** is invalid
+        '401':
+          description: Authentication failed          
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **versionId** or **renditionId** does not exist
+        '409':
+          description: All requested renditions already exist
+        '501':
+          description: Renditions/thumbnails are disabled for the system
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - versions
+      summary: List renditions for a file version
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Gets a list of the rendition information for each rendition of the version of file **nodeId** and **versionId**, including the rendition id.
+      
+        Each rendition returned has a **status**: CREATED means it is available to view or download, NOT_CREATED means the rendition can be requested.
+      
+        You can use the **where** parameter to filter the returned renditions by **status**. For example, the following **where** 
+        clause will return just the CREATED renditions:
+          
+        ```
+        (status='CREATED')
+        ```
+        
+      operationId: listVersionRenditions
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/whereParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RenditionPaging'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid, or **where** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **versionId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - versions
+      summary: Get rendition information for a file version
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Gets the rendition information for **renditionId** of version of file **nodeId** and **versionId**.
+      operationId: getVersionRendition
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RenditionEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid, or **renditionId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **versionId** or **renditionId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}/content':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - versions
+      summary: Get rendition content for a file version
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Gets the rendition content for **renditionId** of version of file **nodeId** and **versionId**.
+      operationId: getVersionRenditionContent
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - $ref: '#/parameters/attachmentParam'
+        - $ref: '#/parameters/ifModifiedSinceHeader'
+        - $ref: '#/parameters/RangeHeader'
+        - name: placeholder
+          in: query
+          description: |
+            If **true** and there is no rendition for this **nodeId** and **renditionId**, 
+            then the placeholder image for the mime type of this rendition is returned, rather 
+            than a 404 response.
+          required: false
+          type: boolean
+          default: false
+      produces:
+        - application/octet-stream
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: file
+        '206':
+          description: Partial Content
+        '304':
+          description: Content has not been modified since the date provided in the If-Modified-Since header
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid, or **renditionId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **versionId** or **renditionId** does not exist
+        '416':
+          description: Range Not Satisfiable
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/action-definitions':
     get:
       x-alfresco-since: "5.2.2"
