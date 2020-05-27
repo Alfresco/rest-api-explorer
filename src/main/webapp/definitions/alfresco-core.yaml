@@ -5392,6 +5392,127 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/sites/{siteId}/groups':
+    get:
+      tags:
+        - sites
+      summary: List site group memberships
+      description: Gets a list of site memberships for site **siteId**.
+      operationId: listSiteMemberships
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMemberPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **siteId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - sites
+      summary: Create a site membership
+      description: |
+        Creates a site membership for person **groupId** on site **siteId**.
+
+        You can set the **role** to one of four types:
+
+        * SiteConsumer
+        * SiteCollaborator
+        * SiteContributor
+        * SiteManager
+
+        **Note:** You can create more than one site membership by
+        specifying a list of people in the JSON body like this:
+
+        ```JSON
+        [
+          {
+            "role": "SiteConsumer",
+            "id": "joe"
+          },
+          {
+            "role": "SiteConsumer",
+            "id": "fred"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
+      operationId: createSiteMembership
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: siteMembershipBodyCreate
+          description: The person to add and their role
+          required: true
+          schema:
+            $ref: '#/definitions/SiteMembershipBodyCreate'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMemberEntry'
+        '400':
+          description: |
+            Invalid parameter: value of **role** or **id** is invalid
+            or **siteMembershipBodyCreate** invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to invite a person
+        '404':
+          description: |
+            **siteId** or **personId** does not exist
+        '409':
+          description: Person with this **id** is already a member
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/sites/{siteId}/members/{personId}':
     get:
       tags:
@@ -5418,6 +5539,35 @@ paths:
         '404':
           description: |
             **siteId** or **personId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/sites/{siteId}/groups/{groupId}':
+    get:
+      tags:
+        - sites
+      summary: Get a site membership
+      description: |
+        Gets site membership information for person **groupId** on site **siteId**.
+
+      operationId: getSiteMembership
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMemberEntry'
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **siteId** or **groupId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -7473,6 +7623,7 @@ definitions:
           - SiteCollaborator
           - SiteContributor
           - SiteManager
+      isMemberOfGroup: boolean
   SiteRolePaging:
     type: object
     required:
