@@ -5547,16 +5547,16 @@ paths:
     get:
       tags:
         - sites
-      summary: Get a site membership
+      summary: Get a site group membership
       description: |
-        Gets site membership information for person **groupId** on site **siteId**.
+        Gets site membership information for group **groupId** on site **siteId**.
 
       operationId: getSiteMembership
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/siteIdParam'
-        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/groupIdParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
