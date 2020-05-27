@@ -5543,6 +5543,82 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    put:
+      tags:
+        - sites
+      summary: Update a site membership
+      description: |
+        Update the membership of person **personId** in site **siteId**.
+
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+
+        You can set the **role** to one of four types:
+
+        * SiteConsumer
+        * SiteCollaborator
+        * SiteContributor
+        * SiteManager
+      operationId: updateSiteMembership
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/personIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: siteMembershipBodyUpdate
+          description: The persons new role
+          required: true
+          schema:
+            $ref: '#/definitions/SiteMembershipBodyUpdate'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SiteMemberEntry'
+        '400':
+          description: |
+            Invalid parameter: **role** does not exist
+            or **siteMembershipBodyUpdate** invalid
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **siteId** or **personId** does not exist
+        '422':
+          description: Integrity exception (eg. last site member must be a site manager) or not allowed to update member
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - sites
+      summary: Delete a site membership
+      description: |
+        Deletes person **personId** as a member of site **siteId**.
+
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+      operationId: deleteSiteMembership
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/personIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **siteId** or **personId** does not exist
+        '422':
+          description: Integrity exception (eg. last site member must be a site manager) or not allowed to delete member
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/sites/{siteId}/groups/{groupId}':
     get:
       tags:
@@ -5577,10 +5653,8 @@ paths:
         - sites
       summary: Update a site membership
       description: |
-        Update the membership of person **personId** in site **siteId**.
-        
-        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-        
+        Update the membership of person **groupId** in site **siteId**.
+
         You can set the **role** to one of four types:
 
         * SiteConsumer
@@ -5593,10 +5667,10 @@ paths:
       parameters:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/personIdParam'
-        - $ref: '#/parameters/fieldsParam'        
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: siteMembershipBodyUpdate
-          description: The persons new role
+          description: The groupId new role
           required: true
           schema:
             $ref: '#/definitions/SiteMembershipBodyUpdate'
@@ -5613,9 +5687,9 @@ paths:
           description: Authentication failed
         '404':
           description: |
-            **siteId** or **personId** does not exist
+            **siteId** or **groupId** does not exist
         '422':
-          description: Integrity exception (eg. last site member must be a site manager) or not allowed to update member          
+          description: Integrity exception (eg. last site member must be a site manager) or not allowed to update group
         default:
           description: Unexpected error
           schema:
@@ -5625,9 +5699,8 @@ paths:
         - sites
       summary: Delete a site membership
       description: |
-        Deletes person **personId** as a member of site **siteId**.
-        
-        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+        Deletes group **groupId** as a member of site **siteId**.
+
       operationId: deleteSiteMembership
       produces:
         - application/json
@@ -5641,9 +5714,9 @@ paths:
           description: Authentication failed
         '404':
           description: |
-            **siteId** or **personId** does not exist
+            **siteId** or **groupId** does not exist
         '422':
-          description: Integrity exception (eg. last site member must be a site manager) or not allowed to delete member
+          description: Integrity exception (eg. last site member must be a site manager) or not allowed to delete groupId
         default:
           description: Unexpected error
           schema:
