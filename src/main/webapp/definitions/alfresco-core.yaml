@@ -5397,8 +5397,8 @@ paths:
       tags:
         - sites
       summary: List site group memberships
-      description: Gets a list of site memberships for site **siteId**.
-      operationId: listSiteMemberships
+      description: Gets a list of site group memberships for site **siteId**.
+      operationId: listGroups
       produces:
         - application/json
       parameters:
@@ -5410,7 +5410,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/SiteMemberPaging'
+            $ref: '#/definitions/GroupPaging'
         '400':
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
@@ -5438,17 +5438,17 @@ paths:
         * SiteManager
 
         **Note:** You can create more than one site membership by
-        specifying a list of people in the JSON body like this:
+        specifying a list of group in the JSON body like this:
 
         ```JSON
         [
           {
             "role": "SiteConsumer",
-            "id": "joe"
+            "id": "authorityId"
           },
           {
             "role": "SiteConsumer",
-            "id": "fred"
+            "id": "authorityId"
           }
         ]
         ```
@@ -5487,7 +5487,7 @@ paths:
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: siteMembershipBodyCreate
-          description: The person to add and their role
+          description: The group to add and their role
           required: true
           schema:
             $ref: '#/definitions/SiteMembershipBodyCreate'
@@ -5503,12 +5503,12 @@ paths:
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to invite a person
+          description: User does not have permission to invite a Group
         '404':
           description: |
-            **siteId** or **personId** does not exist
+            **siteId** or **groupId** does not exist
         '409':
-          description: Person with this **id** is already a member
+          description: Group with this **id** is already a member
         default:
           description: Unexpected error
           schema:
