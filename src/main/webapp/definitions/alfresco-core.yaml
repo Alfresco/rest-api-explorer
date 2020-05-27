@@ -7623,7 +7623,8 @@ definitions:
           - SiteCollaborator
           - SiteContributor
           - SiteManager
-      isMemberOfGroup: boolean
+      isMemberOfGroup:
+        type: boolean
   SiteRolePaging:
     type: object
     required:
