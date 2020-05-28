@@ -5392,7 +5392,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/sites/{siteId}/groups':
+  '/sites/{siteId}/group-members':
     get:
       tags:
         - sites
@@ -5428,7 +5428,7 @@ paths:
         - sites
       summary: Create a site membership
       description: |
-        Creates a site membership for person **groupId** on site **siteId**.
+        Creates a site membership for group **groupId** on site **siteId**.
 
         You can set the **role** to one of four types:
 
@@ -5619,7 +5619,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/sites/{siteId}/groups/{groupId}':
+  '/sites/{siteId}/group-members/{groupId}':
     get:
       tags:
         - sites
@@ -5638,7 +5638,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/SiteMemberEntry'
+            $ref: '#/definitions/SiteGroupMemberEntry'
         '401':
           description: Authentication failed
         '404':
@@ -5678,7 +5678,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/SiteMemberEntry'
+            $ref: '#/definitions/SiteGroupMemberEntry'
         '400':
           description: |
             Invalid parameter: **role** does not exist
@@ -7678,6 +7678,20 @@ definitions:
     properties:
       entry:
         $ref: '#/definitions/SiteMember'
+  SiteGroupMemberEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/GroupMember'
+      role:
+        type: string
+        enum:
+          - SiteConsumer
+          - SiteCollaborator
+          - SiteContributor
+          - SiteManager
   SiteMember:
     type: object
     required:
