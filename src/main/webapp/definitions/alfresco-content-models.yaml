@@ -1,0 +1,738 @@
+swagger: '2.0'
+info:
+  description: |
+    **Content Models API**
+
+    Provides access to information about Alfresco Content Models.
+  version: '1'
+  title: Alfresco Content Models REST API
+basePath: /alfresco/api/-default-/public/alfresco/versions/1
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication
+security:
+  - basicAuth: []
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: models
+    description: Retrieve and manage content models
+parameters:
+  skipCountParam:
+    name: skipCount
+    in: query
+    description: |
+      The number of entities that exist in the collection before those included in this list. 
+      If not supplied then the default value is 0.
+    required: false
+    type: integer
+    minimum: 0
+    default: 0
+  maxItemsParam:
+    name: maxItems
+    in: query
+    description: |
+      The maximum number of items to return in the list. 
+      If not supplied then the default value is 100.
+    required: false
+    type: integer
+    minimum: 1
+    default: 100
+  orderByParam:
+    name: orderBy
+    in: query
+    description: |
+      A string to control the order of the entities returned in a list. You can use the **orderBy** parameter to
+      sort the list by one or more fields.
+
+      Each field has a default sort order, which is normally ascending order. Read the API method implementation notes
+      above to check if any fields used in this method have a descending default search order.
+
+      To sort the entities in a specific order, you can use the **ASC** and **DESC** keywords for any field.
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  modelIdParam:
+    name: modelId
+    in: path
+    description: The namespace prefix identifier of the model.
+    required: true
+    type: string
+  typeNameParam:
+    name: typeName
+    in: path
+    description: The name identifier of a type.
+    required: true
+    type: string
+  aspectNameParam:
+    name: aspectName
+    in: path
+    description: The name identifier of an aspect.
+    required: true
+    type: string
+  constraintNameParam:
+    name: constraintName
+    in: path
+    description: The name identifier of a constraint.
+    required: true
+    type: string
+  propertyEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      A filter to include the constraints of the properties
+
+      The following optional fields can be requested:
+      * constrints
+    required: false
+    type: string
+
+
+paths:
+  '/models':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - models
+      summary: List content models
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Retrieve a list of all active content models.
+
+        The default sort order is **name** ascending, but you can use an optional **ASC** or **DESC** 
+        modifier to specify an ascending or descending sort order. 
+
+        For example, specifying ```orderBy=name DESC``` returns QName entries in descending **name** order.
+        You can specify one or more of the following fields in the **orderBy** parameter:
+        * name
+        * namespaceUri
+        * namespacePrefix       
+      operationId: listModels
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/QNamePaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** or **orderBy** is invalid
+        '401':
+          description: Authentication failed
+  '/models/{modelId}':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - models
+      summary: Get a model
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Get information about the model **modelId**.
+
+        For example, we can get information about the IMAP model that has namespace prefix **"imap"** with the API call:
+        ```GET models/imap```
+
+        The result is the model identified by the prefix:
+        ```JSON
+            {
+              "entry": {
+                "namespacePrefix": "imap",
+                "namespaceUri": "http://www.alfresco.org/model/imap/1.0",
+                "name": "imapmodel",
+                "version": "1.0",
+                "author": "Alfresco",
+                "description": "IMAP Content Model"
+              }
+            }
+        ```
+      operationId: getModel
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/modelIdParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ModelEntry'
+        '400':
+          description: |
+            Invalid parameter: **modelId** is not a valid format
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve **modelId**
+        '404':
+          description: |
+            **modelId** does not exist
+  '/models/{modelId}/types':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - models
+      summary: List types for the model
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Get the list of types defined in the model **modelId**.
+
+        The default sort order is **name** ascending, but you can use an optional **ASC** or **DESC** 
+        modifier to specify an ascending or descending sort order. 
+
+        For example, specifying ```orderBy=name DESC``` returns QName entries in descending **name** order.
+        You can specify one or more of the following fields in the **orderBy** parameter:
+        * name
+        * namespaceUri
+        * namespacePrefix  
+      operationId: listModelTypes
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/modelIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/QNameEntry'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy** is invalid or **modelId** is not a valid format
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve **modelId**
+        '404':
+          description: |
+            **modelId** does not exist
+  '/models/{modelId}/types/{typeName}':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - models
+      summary: Get a type
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Get information about the type **typeName** defined in **modelId**
+      operationId: getType
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/modelIdParam'
+        - $ref: '#/parameters/typeNameParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/TypeEntry'
+        '400':
+          description: |
+            Invalid parameter: **modelName** or **typeName** is not a valid format
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve **modelName**
+        '404':
+          description: |
+            **modelName** or **typeName** does not exist
+  '/models/{modelId}/types/{typeName}/properties':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - models
+      summary: List properties for the type
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Get the list of properties defined for the type **typeName**.
+
+        You can use the **include** parameter (include=constraints) to return constraint association details 
+        for each properties.
+
+        The default sort order is **name** ascending, but you can use an optional **ASC** or **DESC** 
+        modifier to specify an ascending or descending sort order. 
+
+        For example, specifying ```orderBy=name DESC``` returns properties entries in descending **name** order.
+
+        You can specify one or more of the following fields in the **orderBy** parameter:
+        * name
+        * namespaceUri
+        * namespacePrefix 
+      operationId: listTypeProperties
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/modelIdParam'
+        - $ref: '#/parameters/typeNameParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/propertyEntryIncludeParam'
+        - $ref: '#/parameters/orderByParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PropertyPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, **modelId** or **typeName** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve **modelId**
+        '404':
+          description: |
+            **modelId** or **typeName** does not exist
+
+  '/models/{modelId}/aspects':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - models
+      summary: List aspects for the model
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Get the list of aspcts defined in the model **modelId**.
+
+        The default sort order is **name** ascending, but you can use an optional **ASC** or **DESC** 
+        modifier to specify an ascending or descending sort order. 
+
+        For example, specifying ```orderBy=name DESC``` returns QName entries in descending **name** order.
+
+        You can specify one or more of the following fields in the **orderBy** parameter:
+        * name
+        * namespaceUri
+        * namespacePrefix 
+      operationId: listModelAspects
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/modelIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/QNamePaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy** or **modelId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve **modelId**
+        '404':
+          description: |
+            **modelId** does not exist
+  '/models/{modelId}/aspects/{aspectName}':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - models
+      summary: Get an aspect
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Get information about the aspect **aspectName** defined in **modelId**
+      operationId: getAspect
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/modelIdParam'
+        - $ref: '#/parameters/aspectNameParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AspectEntry'
+        '400':
+          description: |
+            Invalid parameter: value of **modelId** or **aspectName** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve **modelName**
+        '404':
+          description: |
+            **modelName** or **aspectName** does not exist
+  '/models/{modelId}/aspects/{aspectName}/properties':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - models
+      summary: List properties for the aspect
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Get the list of properties defined in the aspect **aspectName**.
+
+        You can use the **include** parameter (include=constraints) to return constraint association details 
+        for each aspect.
+
+        The default sort order is **name** ascending, but you can use an optional **ASC** or **DESC** 
+        modifier to specify an ascending or descending sort order. 
+
+        For example, specifying ```orderBy=name DESC``` returns properties entries in descending **name** order.
+
+        You can specify one or more of the following fields in the **orderBy** parameter:
+        * name
+        * namespaceUri
+        * namespacePrefix 
+      operationId: listAspectProperties
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/modelIdParam'
+        - $ref: '#/parameters/aspectNameParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/propertyEntryIncludeParam'
+        - $ref: '#/parameters/orderByParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PropertyPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, **modelId** or **aspectName** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve **modelId**
+        '404':
+          description: |
+            **modelId** or **aspectName** does not exist
+  '/models/{modelId}/constraints':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - models
+      summary: List constraints for the model
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Get the list of constraints defined in the model **modelId**.
+
+        The default sort order is **name** ascending, but you can use an optional **ASC** or **DESC** 
+        modifier to specify an ascending or descending sort order. 
+
+        For example, specifying ```orderBy=name DESC``` returns QName entries in descending **name** order.
+        You can specify one or more of the following fields in the **orderBy** parameter:
+        * name
+        * namespaceUri
+        * namespacePrefix 
+      operationId: listCostraints
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/modelIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/QNamePaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy** or **modelId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve **modelId**
+        '404':
+          description: |
+            **modelId** does not exist
+  '/models/{modelId}/constraints/{constraintName}':
+    get:
+      x-alfresco-since: "6.2.2"
+      tags:
+        - models
+      summary: Get a constraint
+      description: |
+        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+
+        Get information about the constraint **constraintName**
+      operationId: getConstraint
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/modelIdParam'
+        - $ref: '#/parameters/constraintNameParam'
+      responses:
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ConstraintEntry'
+        '400':
+          description: |
+            Invalid parameter: value of **modelId** or **constraintName** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve **modelName**
+        '404':
+          description: |
+            **modelName** or **constraintName** does not exist
+definitions:
+  Error:
+    type: object
+    required:
+      - error
+    properties:
+      error:
+        type: object
+        required:
+          - statusCode
+          - briefSummary
+          - stackTrace
+          - descriptionURL
+        properties:
+          errorKey:
+            type: string
+          statusCode:
+            type: integer
+            format: int32
+          briefSummary:
+            type: string
+          stackTrace:
+            type: string
+          descriptionURL:
+            type: string
+          logId:
+            type: string
+  Pagination:
+    type: object
+    required:
+      - count
+      - hasMoreItems
+      - skipCount
+      - maxItems
+    properties:
+      count:
+        type: integer
+        format: int64
+        description: |
+          The number of objects in the entries array.
+      hasMoreItems:
+        type: boolean
+        description: |
+          A boolean value which is **true** if there are more entities in the collection
+          beyond those in this response. A true value means a request with a larger value
+          for the **skipCount** or the **maxItems** parameter will return more entities.
+      totalItems:
+        type: integer
+        format: int64
+        description: |
+          An integer describing the total number of entities in the collection.
+          The API might not be able to determine this value,
+          in which case this property will not be present.
+      skipCount:
+        type: integer
+        format: int64
+        description: |
+          An integer describing how many entities exist in the collection before
+          those included in this list. If there was no **skipCount** parameter then the 
+          default value is 0.
+      maxItems:
+        type: integer
+        format: int64
+        description: |
+          The value of the **maxItems** parameter used to generate this list.
+          If there was no **maxItems** parameter then the default value is 100.
+  QNamePaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/QNameEntry'
+          source:
+            $ref: '#/definitions/QName'
+  QNameEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/QName'
+  QName:
+    type: object
+    required:
+      - namespacePrefix
+      - namespaceUri
+      - name
+    properties:
+      namespacePrefix:
+        type: string
+      namespaceUri:
+        type: string
+      name:
+        type: string
+  ModelEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Model'
+  Model:
+    allOf:
+      - $ref: '#/definitions/QName'
+      - properties:
+          version:
+            description: the model version
+            type: string
+          author:
+            description: author of the model
+            type: string
+          description:
+            description: the model description
+            type: string
+  TypeEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Type'
+  Type:
+    allOf:
+      - $ref: '#/definitions/QName'
+      - properties:
+          title:
+            description: the human-readable type title
+            type: string
+          parent:
+            description: parent type defination
+            $ref: '#/definitions/Type'
+          description:
+            description: description of the type
+            type: string
+          archive:
+            description: define if the type is archived on delete
+            type: boolean
+  AspectEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Aspect'
+  Aspect:
+    allOf:
+      - $ref: '#/definitions/QName'
+  ConstraintEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Constraint'
+  Constraint:
+    allOf:
+      - $ref: '#/definitions/QName'
+      - properties:
+          constraint:
+            description: implementation details about the constrait
+            type: object
+            additionalProperties:
+              type: object
+  PropertyPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/PropertyEntry'
+          source:
+            $ref: '#/definitions/Property'
+  PropertyEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Property'
+  Property:
+    type: object
+    required:
+      - mandatory
+    allOf:
+      - $ref: '#/definitions/QName'
+    properties:
+      constraints:
+        description: list of constraints defined in the property
+        type: array
+        items:
+          $ref: '#/definitions/QName'

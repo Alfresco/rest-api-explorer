@@ -78,6 +78,9 @@ public class APIExplorerIntegrationTest
 
         int discoveryAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-discovery.yaml\">Discovery API</option>");
         assertTrue("Expected to find Discovery API option", discoveryAPIIndex != -1);
+        
+        int contentModelsAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-content-models.yaml\">Content Models API</option>");
+        assertTrue("Expected to find Content Models API option", contentModelsAPIIndex != -1);
     }
     
     @Test
@@ -230,6 +233,29 @@ public class APIExplorerIntegrationTest
         assertTrue("Expected to find /discovery path", paths.containsKey("/discovery"));
     }
 
+    @Test
+    public void testContentModelsAPIDefinition() throws Exception
+    {
+        String contentModelsDefinitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-content-models";
+
+        // get content models definition
+        String contentModelsDefinitionContent = this.retrievePageContent(contentModelsDefinitionUrl+YAML, 200);
+
+        // make sure the content is correct
+        int swaggerIndex = contentModelsDefinitionContent.indexOf("swagger:");
+        assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
+
+        validateContentModelsDefn(contentModelsDefinitionUrl+YAML);
+        validateContentModelsDefn(contentModelsDefinitionUrl+JSON);
+    }
+
+    private void validateContentModelsDefn(String contentModelsDefinitionUrl) {
+        Swagger swagger = validateSwaggerDef(contentModelsDefinitionUrl, "Alfresco Content Models REST API", "Content Models API", "1");
+        Map<String, Path> paths = swagger.getPaths();
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /models path", paths.containsKey("/models"));
+    }
+
     private Swagger validateSwaggerDef(String definitionUrl, String title, String description, String version) {
         Swagger swagger = new SwaggerParser().read(definitionUrl);
         assertNotNull("Expected the API definition to parse successfully: "+ definitionUrl, swagger);
@@ -245,7 +271,7 @@ public class APIExplorerIntegrationTest
         String defs = this.retrievePageContent("http://localhost:8085/api-explorer/definitions/index.jsp", 200);
         List<String> definitions = Json.mapper().readValue(defs, new TypeReference<List<String>>(){});
         assertNotNull(definitions);
-        assertEquals("6 definitions in 2 formats should be 12.", 12, definitions.size());
+        assertEquals("7 definitions in 2 formats should be 14.", 14, definitions.size());
     }
 
     public String retrievePageContent(String url, int expectedStatus) throws Exception
