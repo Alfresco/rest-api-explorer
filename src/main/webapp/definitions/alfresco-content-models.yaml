@@ -6,7 +6,7 @@ info:
     Provides access to information about Alfresco Content Models.
   version: '1'
   title: Alfresco Content Models REST API
-basePath: /alfresco/api/-default-/public/alfresco/versions/1
+basePath: /alfresco/api/-default-/public/model/versions/1
 securityDefinitions:
   basicAuth:
     type: basic
@@ -481,7 +481,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/QNamePaging'
+            $ref: '#/definitions/ConstraintPaging'
         '400':
           description: |
             Invalid parameter: value of **maxItems**, **skipCount**, **orderBy** or **modelId** is invalid
@@ -624,6 +624,7 @@ definitions:
       - namespacePrefix
       - namespaceUri
       - name
+      - id
     properties:
       namespacePrefix:
         type: string
@@ -665,9 +666,9 @@ definitions:
           title:
             description: the human-readable type title
             type: string
-          parent:
-            description: parent type definition
-            $ref: '#/definitions/Type'
+          parentId:
+            description: id of the parent type
+            type: string
           description:
             description: description of the type
             type: string
@@ -684,6 +685,20 @@ definitions:
   Aspect:
     allOf:
       - $ref: '#/definitions/QName'
+  ConstraintPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/ConstraintEntry'
+          source:
+            $ref: '#/definitions/Constraint'
   ConstraintEntry:
     type: object
     required:
@@ -695,6 +710,12 @@ definitions:
     allOf:
       - $ref: '#/definitions/QName'
       - properties:
+          title:
+            description: the human-readable constraint title
+            type: string
+          description:
+            description: description of the constraint
+            type: string
           constraint:
             description: implementation details about the constrait
             type: object
@@ -728,8 +749,38 @@ definitions:
     allOf:
       - $ref: '#/definitions/QName'
     properties:
+      title:
+        description: the human-readable property title
+        type: string
+      description:
+        description: the human-readable property description
+        type: string
+      dataType:
+        description: the name of the property type
+        type: string
+      class:
+        description:  the class of the property
+        type: string
+      defaultValue:
+        description:  the default value
+        type: string 
+      multiValued:
+        description: define if the property is multi-valued
+        type: boolean
+      mandatory:
+        description: define if the property is manadatory
+        type: boolean
+      mandatoryEnforced:
+        description: define if the presence of manatory properties is enforced
+        type: boolean
+      protected:
+        description: define if the propery is system maintained
+        type: boolean
+      indexed:
+        description: define if the property is indexed
+        type: boolean
       constraints:
         description: list of constraints defined in the property
         type: array
         items:
-          $ref: '#/definitions/QName'
+          $ref: '#/definitions/Constraint'
