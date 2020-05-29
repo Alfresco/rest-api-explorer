@@ -60,25 +60,25 @@ parameters:
   modelIdParam:
     name: modelId
     in: path
-    description: The namespace prefix identifier of the model.
+    description: The identifier of a model.
     required: true
     type: string
-  typeNameParam:
-    name: typeName
+  typeIdParam:
+    name: typeId
     in: path
-    description: The name identifier of a type.
+    description: The identifier of a type.
     required: true
     type: string
-  aspectNameParam:
-    name: aspectName
+  aspectIdParam:
+    name: aspectId
     in: path
-    description: The name identifier of an aspect.
+    description: The identifier of an aspect.
     required: true
     type: string
-  constraintNameParam:
-    name: constraintName
+  constraintIdParam:
+    name: constraintId
     in: path
-    description: The name identifier of a constraint.
+    description: The identifier of a constraint.
     required: true
     type: string
   propertyEntryIncludeParam:
@@ -88,11 +88,9 @@ parameters:
       A filter to include the constraints of the properties
 
       The following optional fields can be requested:
-      * constrints
+      * constraints
     required: false
     type: string
-
-
 paths:
   '/models':
     get:
@@ -121,10 +119,6 @@ paths:
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
       responses:
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
         '200':
           description: Successful response
           schema:
@@ -134,6 +128,10 @@ paths:
             Invalid parameter: value of **maxItems** or **skipCount** or **orderBy** is invalid
         '401':
           description: Authentication failed
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/models/{modelId}':
     get:
       x-alfresco-since: "6.2.2"
@@ -167,10 +165,6 @@ paths:
       parameters:
         - $ref: '#/parameters/modelIdParam'
       responses:
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
         '200':
           description: Successful response
           schema:
@@ -185,6 +179,10 @@ paths:
         '404':
           description: |
             **modelId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/models/{modelId}/types':
     get:
       x-alfresco-since: "6.2.2"
@@ -213,10 +211,6 @@ paths:
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
       responses:
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
         '200':
           description: Successful response
           schema:
@@ -231,7 +225,11 @@ paths:
         '404':
           description: |
             **modelId** does not exist
-  '/models/{modelId}/types/{typeName}':
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/models/{modelId}/types/{typeId}':
     get:
       x-alfresco-since: "6.2.2"
       tags:
@@ -240,33 +238,33 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
 
-        Get information about the type **typeName** defined in **modelId**
+        Get information about the type **typeId** defined in **modelId**
       operationId: getType
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/modelIdParam'
-        - $ref: '#/parameters/typeNameParam'
+        - $ref: '#/parameters/typeIdParam'
       responses:
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
         '200':
           description: Successful response
           schema:
             $ref: '#/definitions/TypeEntry'
         '400':
           description: |
-            Invalid parameter: **modelName** or **typeName** is not a valid format
+            Invalid parameter: **modelId** or **typeId** is not a valid format
         '401':
           description: Authentication failed
         '403':
-          description: Current user does not have permission to retrieve **modelName**
+          description: Current user does not have permission to retrieve **modelId**
         '404':
           description: |
-            **modelName** or **typeName** does not exist
-  '/models/{modelId}/types/{typeName}/properties':
+            **modelId** or **typeId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/models/{modelId}/types/{typeId}/properties':
     get:
       x-alfresco-since: "6.2.2"
       tags:
@@ -275,9 +273,9 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
 
-        Get the list of properties defined for the type **typeName**.
+        Get the list of properties defined for the type **typeId**.
 
-        You can use the **include** parameter (include=constraints) to return constraint association details 
+        You can use the **include** parameter (include=constraints) to return constraint details for each property
         for each properties.
 
         The default sort order is **name** ascending, but you can use an optional **ASC** or **DESC** 
@@ -294,31 +292,30 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/modelIdParam'
-        - $ref: '#/parameters/typeNameParam'
+        - $ref: '#/parameters/typeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/propertyEntryIncludeParam'
         - $ref: '#/parameters/orderByParam'
       responses:
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
         '200':
           description: Successful response
           schema:
             $ref: '#/definitions/PropertyPaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, **modelId** or **typeName** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, **modelId** or **typeId** is invalid
         '401':
           description: Authentication failed
         '403':
           description: Current user does not have permission to retrieve **modelId**
         '404':
           description: |
-            **modelId** or **typeName** does not exist
-
+            **modelId** or **typeId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/models/{modelId}/aspects':
     get:
       x-alfresco-since: "6.2.2"
@@ -348,10 +345,6 @@ paths:
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
       responses:
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
         '200':
           description: Successful response
           schema:
@@ -366,7 +359,11 @@ paths:
         '404':
           description: |
             **modelId** does not exist
-  '/models/{modelId}/aspects/{aspectName}':
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/models/{modelId}/aspects/{aspectId}':
     get:
       x-alfresco-since: "6.2.2"
       tags:
@@ -375,33 +372,33 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
 
-        Get information about the aspect **aspectName** defined in **modelId**
+        Get information about the aspect **aspectId** defined in **modelId**
       operationId: getAspect
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/modelIdParam'
-        - $ref: '#/parameters/aspectNameParam'
+        - $ref: '#/parameters/aspectIdParam'
       responses:
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
         '200':
           description: Successful response
           schema:
             $ref: '#/definitions/AspectEntry'
         '400':
           description: |
-            Invalid parameter: value of **modelId** or **aspectName** is invalid
+            Invalid parameter: value of **modelId** or **aspectId** is invalid
         '401':
           description: Authentication failed
         '403':
-          description: Current user does not have permission to retrieve **modelName**
+          description: Current user does not have permission to retrieve **modelId**
         '404':
           description: |
-            **modelName** or **aspectName** does not exist
-  '/models/{modelId}/aspects/{aspectName}/properties':
+            **modelId** or **aspectId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/models/{modelId}/aspects/{aspectId}/properties':
     get:
       x-alfresco-since: "6.2.2"
       tags:
@@ -410,7 +407,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
 
-        Get the list of properties defined in the aspect **aspectName**.
+        Get the list of properties defined in the aspect **aspectId**.
 
         You can use the **include** parameter (include=constraints) to return constraint association details 
         for each aspect.
@@ -429,30 +426,30 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/modelIdParam'
-        - $ref: '#/parameters/aspectNameParam'
+        - $ref: '#/parameters/aspectIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/propertyEntryIncludeParam'
         - $ref: '#/parameters/orderByParam'
       responses:
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
         '200':
           description: Successful response
           schema:
             $ref: '#/definitions/PropertyPaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, **modelId** or **aspectName** is invalid
+            Invalid parameter: value of **maxItems**, **skipCount**, **orderBy**, **modelId** or **aspectId** is invalid
         '401':
           description: Authentication failed
         '403':
           description: Current user does not have permission to retrieve **modelId**
         '404':
           description: |
-            **modelId** or **aspectName** does not exist
+            **modelId** or **aspectId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/models/{modelId}/constraints':
     get:
       x-alfresco-since: "6.2.2"
@@ -481,10 +478,6 @@ paths:
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
       responses:
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
         '200':
           description: Successful response
           schema:
@@ -499,7 +492,11 @@ paths:
         '404':
           description: |
             **modelId** does not exist
-  '/models/{modelId}/constraints/{constraintName}':
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/models/{modelId}/constraints/{constraintId}':
     get:
       x-alfresco-since: "6.2.2"
       tags:
@@ -508,32 +505,32 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
 
-        Get information about the constraint **constraintName**
+        Get information about the constraint **constraintId**
       operationId: getConstraint
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/modelIdParam'
-        - $ref: '#/parameters/constraintNameParam'
+        - $ref: '#/parameters/constraintIdParam'
       responses:
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
         '200':
           description: Successful response
           schema:
             $ref: '#/definitions/ConstraintEntry'
         '400':
           description: |
-            Invalid parameter: value of **modelId** or **constraintName** is invalid
+            Invalid parameter: value of **modelId** or **constraintId** is invalid
         '401':
           description: Authentication failed
         '403':
-          description: Current user does not have permission to retrieve **modelName**
+          description: Current user does not have permission to retrieve **modelId**
         '404':
           description: |
-            **modelName** or **constraintName** does not exist
+            **modelId** or **constraintId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -669,7 +666,7 @@ definitions:
             description: the human-readable type title
             type: string
           parent:
-            description: parent type defination
+            description: parent type definition
             $ref: '#/definitions/Type'
           description:
             description: description of the type
