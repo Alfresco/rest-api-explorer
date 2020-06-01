@@ -2512,9 +2512,10 @@ paths:
         **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
 
         Retrieve the list of definitions for the node **nodeId**.
-        The list aims to give details about all properties and constraints applied to the node **nodeId**.
+        The list aims to give details about all properties and constraints applied to the node **nodeId** based on its type and aspects.
+        The service will return properties referring to the type hierarchy.
 
-        The default sort order for the returned list is for definitions to be sorted by ascending id.
+        The default sort order for the returned list of definitions is id ascending.
         You can override the default by using the **orderBy** parameter.
 
         You can use any of the following fields to order the results:
@@ -9350,6 +9351,9 @@ definitions:
         type: string
       title:
         description: the human-readable constraint title
+        type: string
+      description:
+        description: the human-readable constraint description
         type: string
       description:
         description: the human-readable constraint description
