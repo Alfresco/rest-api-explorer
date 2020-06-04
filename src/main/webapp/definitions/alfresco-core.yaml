@@ -2502,50 +2502,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/definitions':
-    get:
-      x-alfresco-since: "6.2.2"
-      tags:
-        - nodes
-      summary: List definitions
-      description: |
-        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
-
-        Retrieve the list of definitions for the node **nodeId**.
-        The list aims to give details about all properties and constraints applied to the node **nodeId** based on its type and aspects.
-        The service will return properties referring to the type hierarchy.
-
-        The default sort order for the returned list of definitions is id ascending.
-        You can override the default by using the **orderBy** parameter.
-
-        You can use any of the following fields to order the results:
-        * id
-        * title
-      operationId: listNodeDefinitions
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/orderByParam'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/DefinitionPaging'
-        '400':
-          description: |
-            Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
-        '401':
-          description: Authentication failed
-        '404':
-          description: |
-            **nodeId** does not exist
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions':
     get:
       x-alfresco-since: "5.2"
@@ -9351,9 +9307,6 @@ definitions:
         type: string
       title:
         description: the human-readable constraint title
-        type: string
-      description:
-        description: the human-readable constraint description
         type: string
       description:
         description: the human-readable constraint description
