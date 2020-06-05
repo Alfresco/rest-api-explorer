@@ -9245,15 +9245,12 @@ definitions:
       title:
         description: the human-readable class title
         type: string
-      parentName:
-        description: name of the parent class
+      parentTypeId:
+        description: id of the parent type
         type: string
       description:
         description: description of the class
         type: string
-      archive:
-        description: define if the type is archived on delete
-        type: boolean
       properties:
         description: list of properties referring to the type hierarchy
         type: array
@@ -9278,22 +9275,19 @@ definitions:
       dataType:
         description: the name of the property type (i.g. d:text)
         type: string
-      class:
-        description:  the class of the property
-        type: string
-      override:
+      isOverride:
         description: define if it is an override
         type: boolean
-      multiValued:
+      isMultiValued:
         description: define if the property is multi-valued
         type: boolean
-      mandatory:
+      isMandatory:
         description: define if the property is manadatory
         type: boolean
-      mandatoryEnforced:
+      isMandatoryEnforced:
         description: define if the presence of manadatory properties is enforced
         type: boolean
-      protected:
+      isProtected:
         description: define if the property is system maintained
         type: boolean
       constraints:
@@ -9313,9 +9307,6 @@ definitions:
         type: string
       title:
         description: the human-readable constraint title
-        type: string
-      shortName:
-        description: the name of the constraint
         type: string
       description:
         description: the human-readable constraint description
