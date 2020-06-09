@@ -7474,6 +7474,8 @@ definitions:
           - SiteCollaborator
           - SiteContributor
           - SiteManager
+      isMemberOfGroup:
+        type: boolean
   SiteRolePaging:
     type: object
     required:
