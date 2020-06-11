@@ -2714,12 +2714,12 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/renditions':
     post:
-      x-alfresco-since: "6.2.2"
+      x-alfresco-since: "7.0.0"
       tags:
         - versions
       summary: Create rendition for a file version 
       description: |
-        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
 
         An asynchronous request to create a rendition for version of file **nodeId** and **versionId**.
 
@@ -2775,12 +2775,12 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     get:
-      x-alfresco-since: "6.2.2"
+      x-alfresco-since: "7.0.0"
       tags:
         - versions
       summary: List renditions for a file version
       description: |
-        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
 
         Gets a list of the rendition information for each rendition of the version of file **nodeId** and **versionId**, including the rendition id.
       
@@ -2819,12 +2819,12 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}':
     get:
-      x-alfresco-since: "6.2.2"
+      x-alfresco-since: "7.0.0"
       tags:
         - versions
       summary: Get rendition information for a file version
       description: |
-        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
 
         Gets the rendition information for **renditionId** of version of file **nodeId** and **versionId**.
       operationId: getVersionRendition
@@ -2853,12 +2853,12 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}/content':
     get:
-      x-alfresco-since: "6.2.2"
+      x-alfresco-since: "7.0.0"
       tags:
         - versions
       summary: Get rendition content for a file version
       description: |
-        **Note:** this endpoint is available in Alfresco 6.2.2 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
 
         Gets the rendition content for **renditionId** of version of file **nodeId** and **versionId**.
       operationId: getVersionRenditionContent
