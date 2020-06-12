@@ -9236,23 +9236,9 @@ definitions:
         type: string
         description: The unique identifier of the action pending execution
   Definition:
-    required:
-      - typeId
     properties:
-      typeId:
-        description: the id of the type
-        type: string
-      title:
-        description: the human-readable class title
-        type: string
-      parentTypeId:
-        description: id of the parent type
-        type: string
-      description:
-        description: description of the class
-        type: string
       properties:
-        description: list of properties referring to the type hierarchy
+        description: list of properties referring to the aspects and the type hierarchy
         type: array
         items:
           $ref: '#/definitions/Property'
