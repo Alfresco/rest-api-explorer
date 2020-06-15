@@ -9238,7 +9238,7 @@ definitions:
   Definition:
     properties:
       properties:
-        description: list of properties referring to the aspects and the type hierarchy
+        description: List of property definitions effective for this node as the result of combining the type with all aspects.
         type: array
         items:
           $ref: '#/definitions/Property'
@@ -9261,9 +9261,6 @@ definitions:
       dataType:
         description: the name of the property type (i.g. d:text)
         type: string
-      isOverride:
-        description: define if it is an override
-        type: boolean
       isMultiValued:
         description: define if the property is multi-valued
         type: boolean
