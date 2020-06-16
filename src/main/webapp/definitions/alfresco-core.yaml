@@ -1156,7 +1156,7 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/request-content-url':
     post:
-      x-alfresco-since: "7.0"
+      x-alfresco-since: "7.0.0"
       tags:
         - nodes
       summary: Generate a direct access content url
@@ -2048,7 +2048,7 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}/request-content-url':
     post:
-      x-alfresco-since: "7.0"
+      x-alfresco-since: "7.0.0"
       tags:
         - nodes
       summary: Generate a direct access content url
@@ -2709,7 +2709,7 @@ paths:
             $ref: '#/definitions/Error'        
   '/nodes/{nodeId}/versions/{versionId}/request-content-url':
     post:
-      x-alfresco-since: "7.0"
+      x-alfresco-since: "7.0.0"
       tags:
         - nodes
       summary: Generate a direct access content url
@@ -2981,7 +2981,7 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}/request-content-url':
     post:
-      x-alfresco-since: "7.0"
+      x-alfresco-since: "7.0.0"
       tags:
         - nodes
       summary: Generate a direct access content url
