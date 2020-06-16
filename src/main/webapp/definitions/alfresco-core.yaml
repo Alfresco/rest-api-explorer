@@ -1165,7 +1165,7 @@ paths:
 
         Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
 
-        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used.
+        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used (8 hours) if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -1180,7 +1180,7 @@ paths:
             $ref: '#/definitions/NodeDirectAccessEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or **expiryTime** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **expiryTime** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -1189,7 +1189,7 @@ paths:
           description: |
             **nodeId** does not exist
         '501':
-          description: The actual ContentStore implementation can't fulfil this request.
+          description: The actual ContentStore implementation can't fulfil this request
         default:
           description: Unexpected error
           schema:
@@ -2057,7 +2057,7 @@ paths:
 
         Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
 
-        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used.
+        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used (8 hours) if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -2081,7 +2081,7 @@ paths:
           description: |
             **nodeId** or **renditionId** does not exist
         '501':
-          description: The actual ContentStore implementation can't fulfil this request.
+          description: The actual ContentStore implementation can't fulfil this request
         default:
           description: Unexpected error
           schema:
@@ -2718,7 +2718,7 @@ paths:
 
         Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
 
-        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used.
+        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used (8 hours) if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -2742,7 +2742,7 @@ paths:
           description: |
             **nodeId** or **versionId** does not exist
         '501':
-          description: The actual ContentStore implementation can't fulfil this request.
+          description: The actual ContentStore implementation can't fulfil this request
         default:
           description: Unexpected error
           schema:
@@ -2990,7 +2990,7 @@ paths:
 
         Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
 
-        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used.
+        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used (8 hours) if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -3014,7 +3014,7 @@ paths:
           description: |
             **nodeId** or **versionId** or **renditionId** does not exist
         '501':
-          description: The actual ContentStore implementation can't fulfil this request.
+          description: The actual ContentStore implementation can't fulfil this request
         default:
           description: Unexpected error
           schema:
