@@ -173,6 +173,14 @@ parameters:
     items:
       type: string
     collectionFormat: csv
+  nodeDirectAccessExpiryTimeParam:
+    name: expiryTime
+    in: query
+    description: |
+      The length of time in seconds that the link is valid for.
+      Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
+    required: false
+    type: string
   groupEntryIncludeParam:
     name: include
     in: query
@@ -1146,6 +1154,46 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/request-content-url':
+    post:
+      x-alfresco-since: "7.0"
+      tags:
+        - nodes
+      summary: Generate a direct access content url
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+
+        Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
+
+        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used.
+        **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
+      operationId: request-content-url
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeDirectAccessEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format or **expiryTime** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/children':
     get:
       x-alfresco-since: "5.2"
@@ -1998,6 +2046,46 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/renditions/{renditionId}/request-content-url':
+    post:
+      x-alfresco-since: "7.0"
+      tags:
+        - nodes
+      summary: Generate a direct access content url
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+
+        Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
+
+        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used.
+        **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
+      operationId: request-content-url
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeDirectAccessEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid, or **expiryTime** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **renditionId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -2619,6 +2707,46 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'        
+  '/nodes/{nodeId}/versions/{versionId}/request-content-url':
+    post:
+      x-alfresco-since: "7.0"
+      tags:
+        - nodes
+      summary: Generate a direct access content url
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+
+        Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
+
+        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used.
+        **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
+      operationId: request-content-url
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeDirectAccessEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or it exists but does not identify a file, or **versionId** is invalid, or **expiryTime** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **versionId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -2847,6 +2975,46 @@ paths:
         '404':
           description: |
             **nodeId** or **versionId** or **renditionId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}/request-content-url':
+    post:
+      x-alfresco-since: "7.0"
+      tags:
+        - nodes
+      summary: Generate a direct access content url
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+
+        Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
+
+        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used.
+        **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
+      operationId: request-content-url
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NodeDirectAccessEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid, or **renditionId** is invalid, or **expiryTime** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **versionId** or **renditionId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request.
         default:
           description: Unexpected error
           schema:
@@ -9235,6 +9403,21 @@ definitions:
       id:
         type: string
         description: The unique identifier of the action pending execution
+  NodeDirectAccessEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeDirectAccess'
+  NodeDirectAccess:
+    type: object
+    required:
+      - contentUrl
+    properties:
+      contentUrl:
+        type: string
+        description: The direct access URL of a binary content
   Definition:
     required:
       - typeId
