@@ -173,14 +173,6 @@ parameters:
     items:
       type: string
     collectionFormat: csv
-  nodeDirectAccessExpiryTimeParam:
-    name: expiryTime
-    in: query
-    description: |
-      The length of time in seconds that the link is valid for.
-      Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
-    required: false
-    type: string
   groupEntryIncludeParam:
     name: include
     in: query
@@ -1170,7 +1162,14 @@ paths:
       operationId: request-content-url
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
+        - in: body
+          name: requestContentUrlBody
+          description: |
+            Optionally, specify the length of time in seconds that the link is valid for.
+            Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/RequestContentUrlBody'
       produces:
         - application/json
       responses:
@@ -2063,7 +2062,14 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/renditionIdParam'
-        - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
+        - in: body
+          name: requestContentUrlBody
+          description: |
+            Optionally, specify the length of time in seconds that the link is valid for.
+            Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/RequestContentUrlBody'
       produces:
         - application/json
       responses:
@@ -2725,7 +2731,14 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/versionIdParam'
-        - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
+        - in: body
+          name: requestContentUrlBody
+          description: |
+            Optionally, specify the length of time in seconds that the link is valid for.
+            Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/RequestContentUrlBody'
       produces:
         - application/json
       responses:
@@ -2999,7 +3012,14 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/versionIdParam'
         - $ref: '#/parameters/renditionIdParam'
-        - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
+        - in: body
+          name: requestContentUrlBody
+          description: |
+            Optionally, specify the length of time in seconds that the link is valid for.
+            Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/RequestContentUrlBody'
       produces:
         - application/json
       responses:
@@ -8919,6 +8939,11 @@ definitions:
         $ref: '#/definitions/PermissionsInfo' 
       definition:
         $ref: '#/definitions/Definition'
+  RequestContentUrlBody:
+    type: object
+    properties:
+      expiryTime:
+        type: string
   ProbeEntry:
     type: object
     required:
