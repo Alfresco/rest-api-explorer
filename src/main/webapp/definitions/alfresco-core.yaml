@@ -2062,6 +2062,7 @@ paths:
       operationId: request-content-url
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
         - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
       produces:
         - application/json
@@ -2723,6 +2724,7 @@ paths:
       operationId: request-content-url
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
         - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
       produces:
         - application/json
@@ -2995,6 +2997,8 @@ paths:
       operationId: request-content-url
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/renditionIdParam'
         - $ref: '#/parameters/nodeDirectAccessExpiryTimeParam'
       produces:
         - application/json
