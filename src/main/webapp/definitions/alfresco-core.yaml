@@ -1155,21 +1155,28 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
-        Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
+        Generate a direct access content url for the given **nodeId**.  Also, an optional expiry date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
-        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used (8 hours) if not configured otherwise.
+        ```JSON
+         {
+
+           "expiresAt": "2017-03-23T23:00:00.000+0000"
+         }
+        ```
+
+        **Note:** If an expiry date isn't provided then a default of 28800 seconds (8 hours) link validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: requestContentUrlBody
+          name: requestContentUrlBodyCreate
           description: |
             Optionally, specify the length of time in seconds that the link is valid for.
             Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
           required: false
           schema:
-            $ref: '#/definitions/RequestContentUrlBody'
+            $ref: '#/definitions/NodeDirectAccessBodyCreate'
       produces:
         - application/json
       responses:
@@ -1179,7 +1186,7 @@ paths:
             $ref: '#/definitions/NodeDirectAccessEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **expiryTime** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or the specified expiry date is invalid (e.g. the expiry date has already passed)
         '401':
           description: Authentication failed
         '403':
@@ -2054,22 +2061,29 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
-        Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
+        Generate a direct access content url for the given **nodeId**.  Also, an optional expiry date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
-        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used (8 hours) if not configured otherwise.
+        ```JSON
+         {
+
+           "expiresAt": "2017-03-23T23:00:00.000+0000"
+         }
+        ```
+
+        **Note:** If an expiry date isn't provided then a default of 28800 seconds (8 hours) link validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/renditionIdParam'
         - in: body
-          name: requestContentUrlBody
+          name: requestContentUrlBodyCreate
           description: |
             Optionally, specify the length of time in seconds that the link is valid for.
             Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
           required: false
           schema:
-            $ref: '#/definitions/RequestContentUrlBody'
+            $ref: '#/definitions/NodeDirectAccessBodyCreate'
       produces:
         - application/json
       responses:
@@ -2079,7 +2093,7 @@ paths:
             $ref: '#/definitions/NodeDirectAccessEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid, or **expiryTime** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid, or the specified expiry date is invalid (e.g. the expiry date has already passed)
         '401':
           description: Authentication failed
         '403':
@@ -2723,22 +2737,29 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
-        Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
+        Generate a direct access content url for the given **nodeId**.  Also, an optional expiry date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
-        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used (8 hours) if not configured otherwise.
+        ```JSON
+         {
+
+           "expiresAt": "2017-03-23T23:00:00.000+0000"
+         }
+        ```
+
+        **Note:** If an expiry date isn't provided then a default of 28800 seconds (8 hours) link validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/versionIdParam'
         - in: body
-          name: requestContentUrlBody
+          name: requestContentUrlBodyCreate
           description: |
             Optionally, specify the length of time in seconds that the link is valid for.
             Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
           required: false
           schema:
-            $ref: '#/definitions/RequestContentUrlBody'
+            $ref: '#/definitions/NodeDirectAccessBodyCreate'
       produces:
         - application/json
       responses:
@@ -2748,7 +2769,7 @@ paths:
             $ref: '#/definitions/NodeDirectAccessEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or it exists but does not identify a file, or **versionId** is invalid, or **expiryTime** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or it exists but does not identify a file, or **versionId** is invalid, or the specified expiry date is invalid (e.g. the expiry date has already passed)
         '401':
           description: Authentication failed
         '403':
@@ -3003,9 +3024,16 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
-        Generate a direct access content url for the given **nodeId** with the provided **expiryTime**.
+        Generate a direct access content url for the given **nodeId**.  Also, an optional expiry date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
-        **Note:** If an **expiryTime** isn't provided then a default of 28800 seconds is used (8 hours) if not configured otherwise.
+        ```JSON
+         {
+
+           "expiresAt": "2017-03-23T23:00:00.000+0000"
+         }
+        ```
+
+        **Note:** If an expiry date isn't provided then a default of 28800 seconds (8 hours) link validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -3013,13 +3041,13 @@ paths:
         - $ref: '#/parameters/versionIdParam'
         - $ref: '#/parameters/renditionIdParam'
         - in: body
-          name: requestContentUrlBody
+          name: requestContentUrlBodyCreate
           description: |
             Optionally, specify the length of time in seconds that the link is valid for.
             Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
           required: false
           schema:
-            $ref: '#/definitions/RequestContentUrlBody'
+            $ref: '#/definitions/NodeDirectAccessBodyCreate'
       produces:
         - application/json
       responses:
@@ -3029,7 +3057,7 @@ paths:
             $ref: '#/definitions/NodeDirectAccessEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid, or **renditionId** is invalid, or **expiryTime** is invalid
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid, or **renditionId** is invalid, or the specified expiry date is invalid (e.g. the expiry date has already passed)
         '401':
           description: Authentication failed
         '403':
@@ -8939,11 +8967,6 @@ definitions:
         $ref: '#/definitions/PermissionsInfo' 
       definition:
         $ref: '#/definitions/Definition'
-  RequestContentUrlBody:
-    type: object
-    properties:
-      expiryTime:
-        type: string
   ProbeEntry:
     type: object
     required:
@@ -8956,6 +8979,12 @@ definitions:
         properties:
           message:
             type: string
+  NodeDirectAccessBodyCreate:
+  type: object
+  properties:
+    expiresAt:
+      type: string
+      format: date-time
   SharedLinkBodyCreate:
     type: object
     required:
@@ -9447,6 +9476,9 @@ definitions:
       contentUrl:
         type: string
         description: The direct access URL of a binary content
+      expiresAt:
+        type: string
+        format: date-time
   Definition:
     required:
       - typeId
