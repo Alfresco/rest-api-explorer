@@ -167,6 +167,7 @@ parameters:
       * isLocked
       * path
       * permissions
+      * definition
     required: false
     type: array
     items:
@@ -8744,6 +8745,8 @@ definitions:
         $ref: '#/definitions/PathInfo'
       permissions:
         $ref: '#/definitions/PermissionsInfo' 
+      definition:
+        $ref: '#/definitions/Definition'
   ProbeEntry:
     type: object
     required:
@@ -9232,3 +9235,66 @@ definitions:
       id:
         type: string
         description: The unique identifier of the action pending execution
+  Definition:
+    properties:
+      properties:
+        description: List of property definitions effective for this node as the result of combining the type with all aspects.
+        type: array
+        items:
+          $ref: '#/definitions/Property'
+  Property:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+      title:
+        description: the human-readable title
+        type: string
+      description:
+        description: the human-readable description
+        type: string
+      defaultValue:
+        description:  the default value
+        type: string
+      dataType:
+        description: the name of the property type (i.g. d:text)
+        type: string
+      isMultiValued:
+        description: define if the property is multi-valued
+        type: boolean
+      isMandatory:
+        description: define if the property is manadatory
+        type: boolean
+      isMandatoryEnforced:
+        description: define if the presence of manadatory properties is enforced
+        type: boolean
+      isProtected:
+        description: define if the property is system maintained
+        type: boolean
+      constraints:
+        description: list of constraints defined for the property
+        type: array
+        items:
+          $ref: '#/definitions/Constraint'
+  Constraint:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+      type:
+        description: the type of the constraint
+        type: string
+      title:
+        description: the human-readable constraint title
+        type: string
+      description:
+        description: the human-readable constraint description
+        type: string
+      parameters:
+        type: object
+        additionalProperties:
+          type: object
