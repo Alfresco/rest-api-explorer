@@ -1155,15 +1155,23 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
-        Generate a direct access content url for the given **nodeId**.  Also, an optional expiry date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+        Generate a direct access content url for the given **nodeId**.  
+        Optionaly the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
         ```JSON
          {
            "expiresAt": "2017-03-23T23:00:00.000+0000"
          }
         ```
+        Or optionaly the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
 
-        **Note:** If an expiry date isn't provided then a default of 28800 seconds (8 hours) link validity time is used if not configured otherwise.
+        ```JSON
+         {
+           "validFor": "60"
+         }
+        ```
+
+        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -1171,18 +1179,18 @@ paths:
         - in: body
           name: requestContentUrlBodyCreate
           description: |
-            Optionally, specify the length of time in seconds that the link is valid for.
+            Optionally, specify the expiry at date or the length of time in seconds that the link is valid for.
             Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
           required: false
           schema:
-            $ref: '#/definitions/NodeDirectAccessBodyCreate'
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
       produces:
         - application/json
       responses:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeDirectAccessEntry'
+            $ref: '#/definitions/DirectAccessUrlEntry'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file, or the specified expiry date is invalid (e.g. the expiry date has already passed)
@@ -2060,15 +2068,23 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
-        Generate a direct access content url for the given **nodeId**.  Also, an optional expiry date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+        Generate a direct access content url for the given **nodeId**.  
+        Optionaly the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
         ```JSON
          {
            "expiresAt": "2017-03-23T23:00:00.000+0000"
          }
         ```
+        Or optionaly the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
 
-        **Note:** If an expiry date isn't provided then a default of 28800 seconds (8 hours) link validity time is used if not configured otherwise.
+        ```JSON
+         {
+           "validFor": "60"
+         }
+        ```
+
+        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -2077,18 +2093,18 @@ paths:
         - in: body
           name: requestContentUrlBodyCreate
           description: |
-            Optionally, specify the length of time in seconds that the link is valid for.
+            Optionally, specify the expiry at date or the length of time in seconds that the link is valid for.
             Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
           required: false
           schema:
-            $ref: '#/definitions/NodeDirectAccessBodyCreate'
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
       produces:
         - application/json
       responses:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeDirectAccessEntry'
+            $ref: '#/definitions/DirectAccessUrlEntry'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid, or the specified expiry date is invalid (e.g. the expiry date has already passed)
@@ -2735,15 +2751,23 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
-        Generate a direct access content url for the given **nodeId**.  Also, an optional expiry date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+        Generate a direct access content url for the given **nodeId**.  
+        Optionaly the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
         ```JSON
          {
            "expiresAt": "2017-03-23T23:00:00.000+0000"
          }
         ```
+        Or optionaly the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
 
-        **Note:** If an expiry date isn't provided then a default of 28800 seconds (8 hours) link validity time is used if not configured otherwise.
+        ```JSON
+         {
+           "validFor": "60"
+         }
+        ```
+
+        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -2752,18 +2776,18 @@ paths:
         - in: body
           name: requestContentUrlBodyCreate
           description: |
-            Optionally, specify the length of time in seconds that the link is valid for.
+            Optionally, specify the expiry at date or the length of time in seconds that the link is valid for.
             Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
           required: false
           schema:
-            $ref: '#/definitions/NodeDirectAccessBodyCreate'
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
       produces:
         - application/json
       responses:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeDirectAccessEntry'
+            $ref: '#/definitions/DirectAccessUrlEntry'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or it exists but does not identify a file, or **versionId** is invalid, or the specified expiry date is invalid (e.g. the expiry date has already passed)
@@ -3021,15 +3045,23 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
-        Generate a direct access content url for the given **nodeId**.  Also, an optional expiry date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+        Generate a direct access content url for the given **nodeId**.  
+        Optionaly the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
         ```JSON
          {
            "expiresAt": "2017-03-23T23:00:00.000+0000"
          }
         ```
+        Or optionaly the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
 
-        **Note:** If an expiry date isn't provided then a default of 28800 seconds (8 hours) link validity time is used if not configured otherwise.
+        ```JSON
+         {
+           "validFor": "60"
+         }
+        ```
+
+        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -3039,18 +3071,18 @@ paths:
         - in: body
           name: requestContentUrlBodyCreate
           description: |
-            Optionally, specify the length of time in seconds that the link is valid for.
+            Optionally, specify the expiry at date or the length of time in seconds that the link is valid for.
             Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
           required: false
           schema:
-            $ref: '#/definitions/NodeDirectAccessBodyCreate'
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
       produces:
         - application/json
       responses:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeDirectAccessEntry'
+            $ref: '#/definitions/DirectAccessUrlEntry'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid, or **renditionId** is invalid, or the specified expiry date is invalid (e.g. the expiry date has already passed)
@@ -8975,12 +9007,14 @@ definitions:
         properties:
           message:
             type: string
-  NodeDirectAccessBodyCreate:
+  DirectAccessUrlBodyCreate:
   type: object
   properties:
     expiresAt:
       type: string
       format: date-time
+    validFor:
+      type: string
   SharedLinkBodyCreate:
     type: object
     required:
@@ -9457,14 +9491,14 @@ definitions:
       id:
         type: string
         description: The unique identifier of the action pending execution
-  NodeDirectAccessEntry:
+  DirectAccessUrlEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/NodeDirectAccess'
-  NodeDirectAccess:
+        $ref: '#/definitions/DirectAccessUrl'
+  DirectAccessUrl:
     type: object
     required:
       - contentUrl
