@@ -9512,3 +9512,4 @@ definitions:
       expiresAt:
         type: string
         format: date-time
+        description: The direct access URL would become invalid when the expiry date is reached
