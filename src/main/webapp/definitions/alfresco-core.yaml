@@ -167,6 +167,7 @@ parameters:
       * isLocked
       * path
       * permissions
+      * definition
     required: false
     type: array
     items:
@@ -8992,6 +8993,8 @@ definitions:
         $ref: '#/definitions/PathInfo'
       permissions:
         $ref: '#/definitions/PermissionsInfo' 
+      definition:
+        $ref: '#/definitions/Definition'
   ProbeEntry:
     type: object
     required:
