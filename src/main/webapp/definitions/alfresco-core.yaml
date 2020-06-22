@@ -1155,14 +1155,14 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
         Generate a direct access content url for the given **nodeId**.  
-        Optionaly the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+        Optionally the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
         ```JSON
          {
            "expiresAt": "2017-03-23T23:00:00.000+0000"
          }
         ```
-        Or optionaly the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
+        Or optionally the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
 
         ```JSON
          {
@@ -2068,14 +2068,14 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
         Generate a direct access content url for the given **nodeId**.  
-        Optionaly the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+        Optionally the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
         ```JSON
          {
            "expiresAt": "2017-03-23T23:00:00.000+0000"
          }
         ```
-        Or optionaly the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
+        Or optionally the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
 
         ```JSON
          {
@@ -2751,14 +2751,14 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
         Generate a direct access content url for the given **nodeId**.  
-        Optionaly the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+        Optionally the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
         ```JSON
          {
            "expiresAt": "2017-03-23T23:00:00.000+0000"
          }
         ```
-        Or optionaly the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
+        Or optionally the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
 
         ```JSON
          {
@@ -3045,14 +3045,14 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
 
         Generate a direct access content url for the given **nodeId**.  
-        Optionaly the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+        Optionally the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
 
         ```JSON
          {
            "expiresAt": "2017-03-23T23:00:00.000+0000"
          }
         ```
-        Or optionaly the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
+        Or optionally the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
 
         ```JSON
          {
@@ -9011,7 +9011,10 @@ definitions:
       type: string
       format: date-time
     validFor:
-      type: string
+      description: |
+        The length of time in seconds that the url is valid for.
+      type: integer
+      minimum: 1
   SharedLinkBodyCreate:
     type: object
     required:
