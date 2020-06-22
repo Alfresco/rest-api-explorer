@@ -1146,6 +1146,67 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/request-content-url':
+    post:
+      x-alfresco-since: "7.0.0"
+      tags:
+        - nodes
+      summary: Generate a direct access content url
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+
+        Generate a direct access content url for the given **nodeId**.  
+        Optionally the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+
+        ```JSON
+         {
+           "expiresAt": "2017-03-23T23:00:00.000+0000"
+         }
+        ```
+        Or optionally the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
+
+        ```JSON
+         {
+           "validFor": "60"
+         }
+        ```
+
+        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
+        **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
+      operationId: request-content-url
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Optionally, specify the expiry at date or the length of time in seconds that the link is valid for.
+            Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or the specified expiry date is invalid (e.g. the expiry date has already passed)
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/children':
     get:
       x-alfresco-since: "5.2"
@@ -1998,6 +2059,68 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/renditions/{renditionId}/request-content-url':
+    post:
+      x-alfresco-since: "7.0.0"
+      tags:
+        - nodes
+      summary: Generate a direct access content url
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+
+        Generate a direct access content url for the given **nodeId**.  
+        Optionally the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+
+        ```JSON
+         {
+           "expiresAt": "2017-03-23T23:00:00.000+0000"
+         }
+        ```
+        Or optionally the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
+
+        ```JSON
+         {
+           "validFor": "60"
+         }
+        ```
+
+        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
+        **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
+      operationId: request-content-url
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Optionally, specify the expiry at date or the length of time in seconds that the link is valid for.
+            Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid, or the specified expiry date is invalid (e.g. the expiry date has already passed)
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **renditionId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -2619,6 +2742,68 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'        
+  '/nodes/{nodeId}/versions/{versionId}/request-content-url':
+    post:
+      x-alfresco-since: "7.0.0"
+      tags:
+        - nodes
+      summary: Generate a direct access content url
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+
+        Generate a direct access content url for the given **nodeId**.  
+        Optionally the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+
+        ```JSON
+         {
+           "expiresAt": "2017-03-23T23:00:00.000+0000"
+         }
+        ```
+        Or optionally the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
+
+        ```JSON
+         {
+           "validFor": "60"
+         }
+        ```
+
+        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
+        **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
+      operationId: request-content-url
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Optionally, specify the expiry at date or the length of time in seconds that the link is valid for.
+            Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or it exists but does not identify a file, or **versionId** is invalid, or the specified expiry date is invalid (e.g. the expiry date has already passed)
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **versionId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -2847,6 +3032,69 @@ paths:
         '404':
           description: |
             **nodeId** or **versionId** or **renditionId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}/request-content-url':
+    post:
+      x-alfresco-since: "7.0.0"
+      tags:
+        - nodes
+      summary: Generate a direct access content url
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+
+        Generate a direct access content url for the given **nodeId**.  
+        Optionally the expiry at date could be set, so the direct access link would become invalid when the expiry date is reached. For example:
+
+        ```JSON
+         {
+           "expiresAt": "2017-03-23T23:00:00.000+0000"
+         }
+        ```
+        Or optionally the validFor (in seconds) could be set, so the direct access link is valid for that length of time.
+
+        ```JSON
+         {
+           "validFor": "60"
+         }
+        ```
+
+        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
+        **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
+      operationId: request-content-url
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Optionally, specify the expiry at date or the length of time in seconds that the link is valid for.
+            Note: It is up to the actual ContentStore implementation if it can fulfil this request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid, or **renditionId** is invalid, or the specified expiry date is invalid (e.g. the expiry date has already passed)
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **versionId** or **renditionId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
         default:
           description: Unexpected error
           schema:
@@ -8759,6 +9007,17 @@ definitions:
         properties:
           message:
             type: string
+  DirectAccessUrlBodyCreate:
+  type: object
+  properties:
+    expiresAt:
+      type: string
+      format: date-time
+    validFor:
+      description: |
+        The length of time in seconds that the url is valid for.
+      type: integer
+      minimum: 1
   SharedLinkBodyCreate:
     type: object
     required:
@@ -9235,66 +9494,22 @@ definitions:
       id:
         type: string
         description: The unique identifier of the action pending execution
-  Definition:
-    properties:
-      properties:
-        description: List of property definitions effective for this node as the result of combining the type with all aspects.
-        type: array
-        items:
-          $ref: '#/definitions/Property'
-  Property:
+  DirectAccessUrlEntry:
     type: object
     required:
-      - id
+      - entry
     properties:
-      id:
-        type: string
-      title:
-        description: the human-readable title
-        type: string
-      description:
-        description: the human-readable description
-        type: string
-      defaultValue:
-        description:  the default value
-        type: string
-      dataType:
-        description: the name of the property type (i.g. d:text)
-        type: string
-      isMultiValued:
-        description: define if the property is multi-valued
-        type: boolean
-      isMandatory:
-        description: define if the property is manadatory
-        type: boolean
-      isMandatoryEnforced:
-        description: define if the presence of manadatory properties is enforced
-        type: boolean
-      isProtected:
-        description: define if the property is system maintained
-        type: boolean
-      constraints:
-        description: list of constraints defined for the property
-        type: array
-        items:
-          $ref: '#/definitions/Constraint'
-  Constraint:
+      entry:
+        $ref: '#/definitions/DirectAccessUrl'
+  DirectAccessUrl:
     type: object
     required:
-      - id
+      - contentUrl
     properties:
-      id:
+      contentUrl:
         type: string
-      type:
-        description: the type of the constraint
+        description: The direct access URL of a binary content
+      expiresAt:
         type: string
-      title:
-        description: the human-readable constraint title
-        type: string
-      description:
-        description: the human-readable constraint description
-        type: string
-      parameters:
-        type: object
-        additionalProperties:
-          type: object
+        format: date-time
+        description: The direct access URL would become invalid when the expiry date is reached
