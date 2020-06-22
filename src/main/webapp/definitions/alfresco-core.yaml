@@ -167,7 +167,6 @@ parameters:
       * isLocked
       * path
       * permissions
-      * definition
     required: false
     type: array
     items:
@@ -8993,8 +8992,6 @@ definitions:
         $ref: '#/definitions/PathInfo'
       permissions:
         $ref: '#/definitions/PermissionsInfo' 
-      definition:
-        $ref: '#/definitions/Definition'
   ProbeEntry:
     type: object
     required:
@@ -9509,83 +9506,3 @@ definitions:
       expiresAt:
         type: string
         format: date-time
-  Definition:
-    required:
-      - typeId
-    properties:
-      typeId:
-        description: the id of the type
-        type: string
-      title:
-        description: the human-readable class title
-        type: string
-      parentTypeId:
-        description: id of the parent type
-        type: string
-      description:
-        description: description of the class
-        type: string
-      properties:
-        description: list of properties referring to the type hierarchy
-        type: array
-        items:
-          $ref: '#/definitions/Property'
-  Property:
-    type: object
-    required:
-      - id
-    properties:
-      id:
-        type: string
-      title:
-        description: the human-readable title
-        type: string
-      description:
-        description: the human-readable description
-        type: string
-      defaultValue:
-        description:  the default value
-        type: string
-      dataType:
-        description: the name of the property type (i.g. d:text)
-        type: string
-      isOverride:
-        description: define if it is an override
-        type: boolean
-      isMultiValued:
-        description: define if the property is multi-valued
-        type: boolean
-      isMandatory:
-        description: define if the property is manadatory
-        type: boolean
-      isMandatoryEnforced:
-        description: define if the presence of manadatory properties is enforced
-        type: boolean
-      isProtected:
-        description: define if the property is system maintained
-        type: boolean
-      constraints:
-        description: list of constraints defined for the property
-        type: array
-        items:
-          $ref: '#/definitions/Constraint'
-  Constraint:
-    type: object
-    required:
-      - id
-    properties:
-      id:
-        type: string
-      type:
-        description: the type of the constraint
-        type: string
-      title:
-        description: the human-readable constraint title
-        type: string
-      description:
-        description: the human-readable constraint description
-        type: string
-      parameters:
-        type: object
-        additionalProperties:
-          type: object
