@@ -9010,16 +9010,16 @@ definitions:
           message:
             type: string
   DirectAccessUrlBodyCreate:
-  type: object
-  properties:
-    expiresAt:
-      type: string
-      format: date-time
-    validFor:
-      description: |
-        The length of time in seconds that the url is valid for.
-      type: integer
-      minimum: 1
+    type: object
+    properties:
+      expiresAt:
+        type: string
+        format: date-time
+      validFor:
+        description: |
+          The length of time in seconds that the url is valid for.
+        type: integer
+        minimum: 1
   SharedLinkBodyCreate:
     type: object
     required:
