@@ -5758,8 +5758,8 @@ paths:
     get:
       tags:
         - sites
-      summary: List site group memberships
-      description: Gets a list of site group memberships for site **siteId**.
+      summary: List group membership for site
+      description: Gets a list of group membership for site **siteId**.
       operationId: listSiteGroups
       produces:
         - application/json
@@ -5788,7 +5788,7 @@ paths:
     post:
       tags:
         - sites
-      summary: Create a site membership
+      summary: Create a site membership for group
       description: |
         Creates a site membership for group **groupId** on site **siteId**.
         You can set the **role** to one of four types:
@@ -5875,7 +5875,7 @@ paths:
     get:
       tags:
         - sites
-      summary: Get a site group membership
+      summary: Get information about site membership of group
       description: |
         Gets site membership information for group **groupId** on site **siteId**.
       operationId: getSiteGroupMembership
@@ -5902,7 +5902,7 @@ paths:
     put:
       tags:
         - sites
-      summary: Update a site membership
+      summary: Update site membership of group
       description: |
         Update the membership of person **groupId** in site **siteId**.
         You can set the **role** to one of four types:
@@ -5946,7 +5946,7 @@ paths:
     delete:
       tags:
         - sites
-      summary: Delete a site membership
+      summary: Delete a group membership for site
       description: |
         Deletes group **groupId** as a member of site **siteId**.
       operationId: deleteSiteGroupMembership
