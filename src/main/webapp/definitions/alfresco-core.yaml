@@ -8173,6 +8173,8 @@ definitions:
         type: string
       tag:
         type: string
+      count:
+        type: number
   PersonNetworkPaging:
     type: object
     required:
