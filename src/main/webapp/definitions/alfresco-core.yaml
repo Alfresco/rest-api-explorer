@@ -8851,8 +8851,6 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/NodeEntry'
-          source:
-            $ref: '#/definitions/Node'
   NodeAssociationPaging:
     type: object
     properties:
@@ -8865,8 +8863,6 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/NodeAssociationEntry'
-          source:
-            $ref: '#/definitions/Node'
   NodeChildAssociationPaging:
     type: object
     properties:
@@ -8879,8 +8875,6 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/NodeChildAssociationEntry'
-          source:
-            $ref: '#/definitions/Node'
   NodeAssociationEntry:
     type: object
     required:
