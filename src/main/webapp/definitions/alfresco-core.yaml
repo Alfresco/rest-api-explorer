@@ -5759,7 +5759,10 @@ paths:
       tags:
         - sites
       summary: List group membership for site
-      description: Gets a list of group membership for site **siteId**.
+      description: |
+          **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
+
+          Gets a list of group membership for site **siteId**.
       operationId: listSiteGroups
       produces:
         - application/json
@@ -5790,6 +5793,8 @@ paths:
         - sites
       summary: Create a site membership for group
       description: |
+        **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
+
         Creates a site membership for group **groupId** on site **siteId**.
         You can set the **role** to one of four types:
         * SiteConsumer
@@ -5877,6 +5882,8 @@ paths:
         - sites
       summary: Get information about site membership of group
       description: |
+        **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
+
         Gets site membership information for group **groupId** on site **siteId**.
       operationId: getSiteGroupMembership
       produces:
@@ -5904,6 +5911,8 @@ paths:
         - sites
       summary: Update site membership of group
       description: |
+        **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
+
         Update the membership of person **groupId** in site **siteId**.
         You can set the **role** to one of four types:
         * SiteConsumer
@@ -5948,6 +5957,8 @@ paths:
         - sites
       summary: Delete a group membership for site
       description: |
+        **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
+
         Deletes group **groupId** as a member of site **siteId**.
       operationId: deleteSiteGroupMembership
       produces:
