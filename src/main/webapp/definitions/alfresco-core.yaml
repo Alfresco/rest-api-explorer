@@ -6769,9 +6769,9 @@ paths:
         (isRoot=true)
         ```
 
-        The **where** parameter can also be used to filter by ***zone***. This may be combined with isRoot to narrow
-        a result set even further. For example, the following where clause will only return groups belonging to the
-        `MY.ZONE` zone.
+        The **where** parameter can also be used to filter by ***zone*** and ***displayName***.
+        They may be combined with isRoot to narrow a result set even further. 
+        For example, the following where clause will only return groups belonging to the `MY.ZONE` zone.
 
         ```
         where=(zones in ('MY.ZONE'))
@@ -6782,11 +6782,30 @@ paths:
         ```
         where=(isRoot=false AND zones in ('MY.ZONE'))
         ```
+        The following where clause will only return groups with displayName `MY.GROUP.NAME`. 
+        
+        ```
+        where=(displayName in ('MY.GROUP.NAME'))
+        ```
+        This may be combined with the isRoot and zones filter, as shown below:
 
+        ```
+        where=(isRoot=false AND displayName in ('MY.GROUP.NAME'))
+        ```
+       
+        ```
+        where=(zones in ('MY.ZONE') AND displayName in ('MY.GROUP.NAME'))
+        ```
+        
+        ```
+        where=(isRoot=false AND zones in ('MY.ZONE') AND displayName in ('MY.GROUP.NAME'))
+        ```
+        
         ***Note:*** restrictions include
-        * `AND` is the only supported operator when combining `isRoot` and `zones` filters
+        * `AND` is the only supported operator when combining `isRoot`, `zones` and `displayName` filters
         * Only one zone is supported by the filter
-        * The quoted zone name must be placed in parenthesis — a 400 error will result if these are omitted.
+        * Only one displyName is supported by the filter
+        * The quoted zone name and displayName must be placed in parenthesis — a 400 error will result if these are omitted.
 
         The default sort order for the returned list is for groups to be sorted by ascending displayName.
         You can override the default by using the **orderBy** parameter. You can specify one of the following fields in the **orderBy** parameter:
