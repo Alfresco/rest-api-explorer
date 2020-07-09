@@ -5534,6 +5534,13 @@ paths:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
+        - name: where
+          in: query
+          description: |
+            Optionally filter the list.
+            *   ```where=(isMemberOfGroup=false|true)```
+          required: false
+          type: string
       responses:
         '200':
           description: Successful response
@@ -7722,6 +7729,8 @@ definitions:
           - SiteCollaborator
           - SiteContributor
           - SiteManager
+      isMemberOfGroup:
+        type: boolean
   SiteRolePaging:
     type: object
     required:
