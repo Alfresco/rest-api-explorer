@@ -7504,9 +7504,6 @@ definitions:
         type: boolean
   Pagination:
     type: object
-    required:
-      - count
-      - hasMoreItems
     properties:
       count:
         type: integer
