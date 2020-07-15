@@ -6804,7 +6804,7 @@ paths:
         ***Note:*** restrictions include
         * `AND` is the only supported operator when combining `isRoot`, `zones` and `displayName` filters
         * Only one zone is supported by the filter
-        * Only one displyName is supported by the filter
+        * Only one displayName is supported by the filter
         * The quoted zone name and displayName must be placed in parenthesis — a 400 error will result if these are omitted.
 
         The default sort order for the returned list is for groups to be sorted by ascending displayName.
