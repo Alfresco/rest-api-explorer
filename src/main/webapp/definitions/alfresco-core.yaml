@@ -184,7 +184,7 @@ parameters:
     type: array
     items:
       type: string
-    collectionFormat: csv    
+    collectionFormat: csv
   personMinimalEntryIncludeParam:
     name: include
     in: query
@@ -197,7 +197,7 @@ parameters:
     type: array
     items:
       type: string
-    collectionFormat: csv    
+    collectionFormat: csv
   tagEntryIncludeParam:
     name: include
     in: query
@@ -208,7 +208,7 @@ parameters:
     type: array
     items:
       type: string
-    collectionFormat: csv    
+    collectionFormat: csv
   sharedIdParam:
     name: sharedId
     in: path
@@ -271,7 +271,7 @@ parameters:
     in: path
     description: The identifier of a person or group.
     required: true
-    type: string     
+    type: string
   siteIdParam:
     name: siteId
     in: path
@@ -318,7 +318,7 @@ parameters:
     name: skipCount
     in: query
     description: |
-      The number of entities that exist in the collection before those included in this list. 
+      The number of entities that exist in the collection before those included in this list.
       If not supplied then the default value is 0.
     required: false
     type: integer
@@ -328,7 +328,7 @@ parameters:
     name: maxItems
     in: query
     description: |
-      The maximum number of items to return in the list. 
+      The maximum number of items to return in the list.
       If not supplied then the default value is 100.
     required: false
     type: integer
@@ -460,7 +460,7 @@ parameters:
     type: array
     items:
       type: string
-    collectionFormat: csv 
+    collectionFormat: csv
   auditEntryIdParam:
     name: auditEntryId
     in: path
@@ -477,7 +477,7 @@ parameters:
     type: array
     items:
       type: string
-    collectionFormat: csv    
+    collectionFormat: csv
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -500,7 +500,7 @@ paths:
             $ref: '#/definitions/CommentPaging'
         '400':
           description: |
-            Invalid parameter: **nodeId** exists but does not identify a file or a folder, 
+            Invalid parameter: **nodeId** exists but does not identify a file or a folder,
             or the value of **maxItems** is invalid, or the value of **skipCount** is invalid
         '401':
           description: Authentication failed
@@ -519,16 +519,16 @@ paths:
       summary: Create a comment
       description: |
         Creates a comment on node **nodeId**. You specify the comment in a JSON body like this:
-        
+
         ```JSON
         {
           "content": "This is a comment"
         }
         ```
-        
-        **Note:** You can create more than one comment by 
+
+        **Note:** You can create more than one comment by
         specifying a list of comments in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -540,7 +540,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -589,7 +589,7 @@ paths:
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to create a comment           
+          description: User does not have permission to create a comment
         '404':
           description: |
             **nodeId** does not exist
@@ -829,7 +829,7 @@ paths:
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to read tags on the node            
+          description: User does not have permission to read tags on the node
         '404':
           description: |
             **nodeId** does not exist
@@ -843,16 +843,16 @@ paths:
       summary: Create a tag for a node
       description: |
         Creates a tag on the node **nodeId**. You specify the tag in a JSON body like this:
-        
+
         ```JSON
         {
           "tag":"test-tag-1"
         }
         ```
-        
-        **Note:** You can create more than one tag by 
+
+        **Note:** You can create more than one tag by
         specifying a list of tags in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -864,7 +864,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -913,12 +913,12 @@ paths:
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to create tags on the node                      
+          description: User does not have permission to create tags on the node
         '404':
           description: |
-            **nodeId** does not exist       
+            **nodeId** does not exist
         '405':
-          description: Cannot tag a node of this type 
+          description: Cannot tag a node of this type
         default:
           description: Unexpected error
           schema:
@@ -959,7 +959,7 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Get information for node **nodeId**.
-        
+
         You can use the **include** parameter to return additional information.
       operationId: getNode
       parameters:
@@ -968,7 +968,7 @@ paths:
         - name: relativePath
           in: query
           description: |
-            A path relative to the **nodeId**. If you set this, 
+            A path relative to the **nodeId**. If you set this,
             information is returned on the node resolved by this path.
           required: false
           type: string
@@ -984,7 +984,7 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to retrieve **nodeId**
         '404':
@@ -1033,7 +1033,7 @@ paths:
           }
         }
         ```
-        
+
         **Note:** setting properties of type d:content and d:category are not supported.
 
         **Note:** if you want to add or remove aspects, then you must use **GET /nodes/{nodeId}** first to get the complete set of *aspectNames*.
@@ -1105,13 +1105,13 @@ paths:
          If **nodeId** is a folder, then its children are also deleted.
 
          Deleted nodes move to the trashcan unless the **permanent** query parameter is **true** and the current user is the owner of the node or an admin.
-         
-         Deleting a node deletes it from its primary parent and also from any secondary parents. Peer associations are also deleted, where the deleted 
-         node is either a source or target of an association. This applies recursively to any hierarchy of primary children of the deleted node. 
-         
-         **Note:** If the node is not permanently deleted, and is later successfully restored to its former primary parent, then the primary 
-         child association is restored. This applies recursively for any primary children. No other secondary child associations or 
-         peer associations are restored for any of the nodes in the primary parent-child hierarchy of restored nodes, regardless of whether the original 
+
+         Deleting a node deletes it from its primary parent and also from any secondary parents. Peer associations are also deleted, where the deleted
+         node is either a source or target of an association. This applies recursively to any hierarchy of primary children of the deleted node.
+
+         **Note:** If the node is not permanently deleted, and is later successfully restored to its former primary parent, then the primary
+         child association is restored. This applies recursively for any primary children. No other secondary child associations or
+         peer associations are restored for any of the nodes in the primary parent-child hierarchy of restored nodes, regardless of whether the original
          associations were to nodes inside or outside the restored hierarchy.
       operationId: deleteNode
       parameters:
@@ -1171,7 +1171,7 @@ paths:
          }
         ```
 
-        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
+        **Note:** If an expiryAt date or validFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -1221,17 +1221,17 @@ paths:
         Minimal information for each child is returned by default.
 
         You can use the **include** parameter to return additional information.
-        
+
         The list of child nodes includes primary children and secondary children, if there are any.
-        
-        You can use the **include** parameter (include=association) to return child association details 
+
+        You can use the **include** parameter (include=association) to return child association details
         for each child, including the **assocTyp**e and the **isPrimary** flag.
-        
+
         The default sort order for the returned list is for folders to be sorted before files, and by ascending name.
 
         You can override the default using **orderBy** to specify one or more fields to sort by. The default order is always ascending, but
-        you can use an optional **ASC** or **DESC** modifier to specify an ascending or descending sort order. 
-            
+        you can use an optional **ASC** or **DESC** modifier to specify an ascending or descending sort order.
+
         For example, specifying ```orderBy=name DESC``` returns a mixed folder/file list in descending **name** order.
 
         You can use any of the following fields to order the results:
@@ -1262,9 +1262,9 @@ paths:
             *   ```where=(nodeType='my:specialNodeType')```
 
             *   ```where=(nodeType='my:specialNodeType INCLUDESUBTYPES')```
-            
+
             *   ```where=(isPrimary=true)```
-            
+
             *   ```where=(assocType='my:specialAssocType')```
 
             *   ```where=(isPrimary=false and assocType='my:specialAssocType')```
@@ -1312,7 +1312,7 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Create a node and add it as a primary child of node **nodeId**.
-        
+
         This endpoint supports both JSON and multipart/form-data (file upload).
 
         **Using multipart/form-data**
@@ -1392,7 +1392,7 @@ paths:
           }
         }
         ```
-        
+
         You can set multi-value properties when you create a new node which supports properties of type multiple.
          ```JSON
         {
@@ -1409,7 +1409,7 @@ paths:
           }
         }
         ```
-        
+
         Any missing aspects are applied automatically. For example, **cm:titled** in the JSON shown above. You can set aspects
         explicitly, if needed, using an **aspectNames** field.
 
@@ -1429,8 +1429,8 @@ paths:
             }
         }
         ```
-        
-        Typically, for files and folders, the primary children are created within the parent folder using the default "cm:contains" assocType. 
+
+        Typically, for files and folders, the primary children are created within the parent folder using the default "cm:contains" assocType.
         If the content model allows then it is also possible to create primary children with a different assoc type. For example:
         ```JSON
         {
@@ -1441,12 +1441,12 @@ paths:
             "assocType":"my:specialAssocType"
           }
         }
-        ``` 
-        
-        Additional associations can be added after creating a node. You can also add associations at the time the node is created. This is 
-        required, for example, if the content model specifies that a node has mandatory associations to one or more existing nodes. You can optionally 
-        specify an array of **secondaryChildren** to create one or more secondary child associations, such that the newly created node acts as a parent node. 
-        You can optionally specify an array of **targets** to create one or more peer associations such that the newly created node acts as a source node. 
+        ```
+
+        Additional associations can be added after creating a node. You can also add associations at the time the node is created. This is
+        required, for example, if the content model specifies that a node has mandatory associations to one or more existing nodes. You can optionally
+        specify an array of **secondaryChildren** to create one or more secondary child associations, such that the newly created node acts as a parent node.
+        You can optionally specify an array of **targets** to create one or more peer associations such that the newly created node acts as a source node.
         For example, to associate one or more secondary children at time of creation:
         ```JSON
         {
@@ -1455,7 +1455,7 @@ paths:
           "secondaryChildren":
             [ {"childId":"abcde-01234-...", "assocType":"my:specialChildAssocType"} ]
         }
-        ``` 
+        ```
         For example, to associate one or more targets at time of creation:
         ```JSON
         {
@@ -1465,12 +1465,12 @@ paths:
             [ {"targetId":"abcde-01234-...", "assocType":"my:specialPeerAssocType"} ]
         }
         ```
-        
-        **Note:** You can create more than one child by 
+
+        **Note:** You can create more than one child by
         specifying a list of nodes in the JSON body. For example, the following JSON
         body creates two folders inside the specified **nodeId**, if the **nodeId** identifies
         a folder:
-        
+
         ```JSON
         [
           {
@@ -1484,7 +1484,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -1600,7 +1600,7 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format or **nodeBodyCopy** is invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to copy **nodeId**
         '404':
@@ -1624,30 +1624,30 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Places a lock on node **nodeId**.
-        
+
         **Note:** you can only lock files. More specifically, a node can only be locked if it is
         of type `cm:content` or a subtype of `cm:content`.
 
         The lock is owned by the current user, and prevents other users or processes from making updates to the node until the lock is released.
-          
-        If the **timeToExpire** is not set or is zero, then the lock never expires.  Otherwise, the **timeToExpire** is the number of seconds before the lock expires.  
+
+        If the **timeToExpire** is not set or is zero, then the lock never expires.  Otherwise, the **timeToExpire** is the number of seconds before the lock expires.
 
         When a lock expires, the lock is released.
 
-        If the node is already locked, and the user is the lock owner, then the lock is renewed with the new **timeToExpire**.        
+        If the node is already locked, and the user is the lock owner, then the lock is renewed with the new **timeToExpire**.
 
         By default, a lock is applied that allows the owner to update or delete the node.
-        You can use **type** to change the lock type to one of the following: 
+        You can use **type** to change the lock type to one of the following:
         * **ALLOW_OWNER_CHANGES** (default) changes to the node can be made only by the lock owner. This enum is the same value as the deprecated WRITE_LOCK described in `org.alfresco.service.cmr.lock.LockType` in the Alfresco Public Java API. This is the default value.
         * **FULL** no changes by any user are allowed. This enum is the same value as the deprecated READ_ONLY_LOCK described in `org.alfresco.service.cmr.lock.LockType` in the Alfresco Public Java API.
 
         By default, a lock is persisted in the database. You can create a volatile in-memory lock by setting the **lifetime** property to EPHEMERAL.
-        You might choose use EPHEMERAL locks, for example, if you are taking frequent short-term locks that you don't need 
-        to be kept over a restart of the repository. In this case you don't need the 
+        You might choose use EPHEMERAL locks, for example, if you are taking frequent short-term locks that you don't need
+        to be kept over a restart of the repository. In this case you don't need the
         overhead of writing the locks to the database.
-        
+
         If a lock on the node cannot be taken, then an error is returned.
-                
+
       operationId: lockNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -1673,7 +1673,7 @@ paths:
             Invalid parameter: **nodeId** is not a valid format, or **nodeBodyLock** is invalid,
             or a lock was attempted on a node that is not a file
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: |
             Current user does not have permission to lock **nodeId**
@@ -1720,7 +1720,7 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format
         '401':
-          description: Authentication failed         
+          description: Authentication failed
         '403':
           description: |
             Current user does not have permission to unlock **nodeId**
@@ -1750,7 +1750,7 @@ paths:
         The moved node retains its name unless you specify a new **name** in the request body.
 
         If the source **nodeId** is a folder, then its children are also moved.
-        
+
         The move will effectively change the primary parent.
       operationId: moveNode
       parameters:
@@ -1777,7 +1777,7 @@ paths:
             Invalid parameter: **nodeId** is not a valid format, or **targetParentId** is not a folder,
             or **nodeBodyMove** is invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to move **nodeId**
         '404':
@@ -1849,8 +1849,8 @@ paths:
 
         The **majorVersion** and **comment** parameters can be used to control versioning behaviour. If the content is versionable,
         a new minor version is created by default.
-        
-        Optionally a new **name** parameter can also be specified that must be unique within the parent folder. If specified and valid then this 
+
+        Optionally a new **name** parameter can also be specified that must be unique within the parent folder. If specified and valid then this
         will rename the node. If invalid then an error is returned and the content is not updated.
 
         **Note:** This API method accepts any content type, but for testing with this tool text based content can be provided.
@@ -1878,8 +1878,8 @@ paths:
           in: query
           description: |
             Optional new name. This should include the file extension.
-            The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
-            The character `.` must not be used at the end of the name. 
+            The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+            The character `.` must not be used at the end of the name.
           required: false
           type: string
           pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
@@ -1905,7 +1905,7 @@ paths:
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a file
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to update **nodeId**
         '404':
@@ -1914,7 +1914,7 @@ paths:
         '409':
           description: Optional new name clashes with an existing node in the current parent folder
         '413':
-          description: Content exceeds individual file size limit (configured for network/system)          
+          description: Content exceeds individual file size limit (configured for network/system)
         '422':
           description: Model integrity exception including a file name containing invalid characters
         '507':
@@ -1970,7 +1970,7 @@ paths:
             Invalid parameter: **nodeId** is not a valid format or is not a file
             or **renditionBodyCreate** is invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission for **nodeId**
         '404':
@@ -1993,16 +1993,16 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Gets a list of the rendition information for each rendition of the the file **nodeId**, including the rendition id.
-      
+
         Each rendition returned has a **status**: CREATED means it is available to view or download, NOT_CREATED means the rendition can be requested.
-      
-        You can use the **where** parameter to filter the returned renditions by **status**. For example, the following **where** 
+
+        You can use the **where** parameter to filter the returned renditions by **status**. For example, the following **where**
         clause will return just the CREATED renditions:
-          
+
         ```
         (status='CREATED')
         ```
-        
+
       operationId: listRenditions
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -2084,7 +2084,7 @@ paths:
          }
         ```
 
-        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
+        **Note:** If an expiryAt date or validFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -2141,8 +2141,8 @@ paths:
         - name: placeholder
           in: query
           description: |
-            If **true** and there is no rendition for this **nodeId** and **renditionId**, 
-            then the placeholder image for the mime type of this rendition is returned, rather 
+            If **true** and there is no rendition for this **nodeId** and **renditionId**,
+            then the placeholder image for the mime type of this rendition is returned, rather
             than a 404 response.
           required: false
           type: boolean
@@ -2184,10 +2184,10 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Create a secondary child association, with the given association type, between the parent **nodeId** and a child node.
-        
-        **Note:** You can create more than one secondary child association by 
+
+        **Note:** You can create more than one secondary child association by
         specifying a list of associations in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -2201,7 +2201,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -2283,7 +2283,7 @@ paths:
 
             *   ```where=(assocType='my:specialAssocType')```
           required: false
-          type: string          
+          type: string
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
@@ -2317,8 +2317,8 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Delete secondary child associations between the parent **nodeId** and child nodes for the given association type.
-        
-        If the association type is **not** specified, then all secondary child associations, of any type in the direction 
+
+        If the association type is **not** specified, then all secondary child associations, of any type in the direction
         from parent to secondary child, will be deleted. The child will still have a primary parent and may still be
         associated as a secondary child with other secondary parents.
       operationId: deleteSecondaryChildAssociation
@@ -2335,13 +2335,13 @@ paths:
           in: query
           description: Only delete associations of this type.
           type: string
-          required: false 
+          required: false
       responses:
         '204':
           description: Successful response
         '400':
           description: |
-            Invalid parameter: **assocType** is unknown or you are trying to delete a primary **assocType**. 
+            Invalid parameter: **assocType** is unknown or you are trying to delete a primary **assocType**.
             Use delete node instead
         '401':
           description: Authentication failed
@@ -2352,7 +2352,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'              
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/parents':
     get:
       x-alfresco-since: "5.2"
@@ -2363,7 +2363,7 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Gets a list of parent nodes that are associated with the current child **nodeId**.
-        
+
         The list includes both the primary parent and any secondary parents.
       operationId: listParents
       produces:
@@ -2376,12 +2376,12 @@ paths:
             Optionally filter the list by **assocType** and/or **isPrimary**. Here are some example filters:
 
             *   ```where=(assocType='my:specialAssocType')```
-            
+
             *   ```where=(isPrimary=true)```
-            
+
             *   ```where=(isPrimary=false and assocType='my:specialAssocType')```
           required: false
-          type: string 
+          type: string
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
@@ -2404,7 +2404,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'     
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/targets':
     post:
       x-alfresco-since: "5.2"
@@ -2415,10 +2415,10 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Create an association, with the given association type, between the source **nodeId** and a target node.
-        
+
         **Note:** You can create more than one association by
         specifying a list of associations in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -2432,7 +2432,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -2514,7 +2514,7 @@ paths:
 
             *   ```where=(assocType='my:specialAssocType')```
           required: false
-          type: string 
+          type: string
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
@@ -2534,7 +2534,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/targets/{targetId}':
     delete:
       x-alfresco-since: "5.2"
@@ -2545,10 +2545,10 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Delete an association, or associations, from the source **nodeId* to a target node for the given association type.
-        
-        If the association type is **not** specified, then all peer associations, of any type, in the direction 
+
+        If the association type is **not** specified, then all peer associations, of any type, in the direction
         from source to target, are deleted.
-        
+
         **Note:** After removal of the peer association, or associations, from source to target, the two nodes may still have peer associations
         in the other direction.
       operationId: deleteAssociation
@@ -2565,7 +2565,7 @@ paths:
           in: query
           description: Only delete associations of this type.
           type: string
-          required: false 
+          required: false
       responses:
         '204':
           description: Successful response
@@ -2635,9 +2635,9 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Gets the version history as an ordered list of versions for the specified **nodeId**.
-        
-        The list is ordered in descending modified order. So the most recent version is first and 
-        the original version is last in the list. 
+
+        The list is ordered in descending modified order. So the most recent version is first and
+        the original version is last in the list.
       operationId: listVersionHistory
       produces:
         - application/json
@@ -2654,7 +2654,7 @@ paths:
             $ref: '#/definitions/VersionPaging'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format            
+            Invalid parameter: **nodeId** is not a valid format
         '401':
           description: Authentication failed
         '403':
@@ -2664,7 +2664,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'  
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}':
     get:
       x-alfresco-since: "5.2"
@@ -2697,7 +2697,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'     
+            $ref: '#/definitions/Error'
     delete:
       x-alfresco-since: "5.2"
       tags:
@@ -2707,15 +2707,15 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Delete the version identified by **versionId** and **nodeId*.
-        
+
         If the version is successfully deleted then the content and metadata for that versioned node
         will be deleted and will no longer appear in the version history. This operation cannot be undone.
-        
+
         If the most recent version is deleted the live node will revert to the next most recent version.
-        
+
         We currently do not allow the last version to be deleted. If you wish to clear the history then you
         can remove the "cm:versionable" aspect (via update node) which will also disable versioning. In this
-        case, you can re-enable versioning by adding back the "cm:versionable" aspect or using the version 
+        case, you can re-enable versioning by adding back the "cm:versionable" aspect or using the version
         params (majorVersion and comment) on a subsequent file content update.
       operationId: deleteVersion
       produces:
@@ -2728,7 +2728,7 @@ paths:
           description: Successful response
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or exists but does not identify a file, or **versionId** is invalid     
+            Invalid parameter: **nodeId** is not a valid format, or exists but does not identify a file, or **versionId** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -2737,11 +2737,11 @@ paths:
           description: |
             **nodeId** or **versionId** does not exist
         '422':
-          description: Cannot delete the last remaining version  
+          description: Cannot delete the last remaining version
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'        
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/request-content-url':
     post:
       x-alfresco-since: "7.0.0"
@@ -2767,7 +2767,7 @@ paths:
          }
         ```
 
-        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
+        **Note:** If an expiryAt date or validFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -2858,7 +2858,7 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Attempts to revert the version identified by **versionId** and **nodeId** to the live node.
-        
+
         If the node is successfully reverted then the content and metadata for that versioned node
         will be promoted to the live node and a new version will appear in the version history.
       operationId: revertVersion
@@ -2867,7 +2867,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/versionIdParam'
-        - $ref: '#/parameters/fieldsParam'        
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: revertBody
           description: Optionally, specify a version comment and whether this should be a major version, or not.
@@ -2881,9 +2881,9 @@ paths:
             $ref: '#/definitions/VersionEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or it exists 
+            Invalid parameter: **nodeId** is not a valid format, or it exists
             but does not identify a file, or **versionId** is invalid,
-            or **revertBody** invalid          
+            or **revertBody** invalid
         '401':
           description: Authentication failed
         '403':
@@ -2902,7 +2902,7 @@ paths:
       x-alfresco-since: "7.0.0"
       tags:
         - versions
-      summary: Create rendition for a file version 
+      summary: Create rendition for a file version
       description: |
         **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
 
@@ -2945,7 +2945,7 @@ paths:
             Invalid parameter: **nodeId** is not a valid format, or is not a file, or **versionId** is invalid,
             or **renditionBodyCreate** is invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission for **nodeId**
         '404':
@@ -2968,16 +2968,16 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
 
         Gets a list of the rendition information for each rendition of the version of file **nodeId** and **versionId**, including the rendition id.
-      
+
         Each rendition returned has a **status**: CREATED means it is available to view or download, NOT_CREATED means the rendition can be requested.
-      
-        You can use the **where** parameter to filter the returned renditions by **status**. For example, the following **where** 
+
+        You can use the **where** parameter to filter the returned renditions by **status**. For example, the following **where**
         clause will return just the CREATED renditions:
-          
+
         ```
         (status='CREATED')
         ```
-        
+
       operationId: listVersionRenditions
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -3061,7 +3061,7 @@ paths:
          }
         ```
 
-        **Note:** If an expiryAt date or valiFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
+        **Note:** If an expiryAt date or validFor time length isn't provided then a default of 300 seconds (5 minutes) validity time is used if not configured otherwise.
         **Note:** It is up to the actual ContentStore implementation if it can fulfil this request or not.
       operationId: request-content-url
       parameters:
@@ -3120,8 +3120,8 @@ paths:
         - name: placeholder
           in: query
           description: |
-            If **true** and there is no rendition for this **nodeId** and **renditionId**, 
-            then the placeholder image for the mime type of this rendition is returned, rather 
+            If **true** and there is no rendition for this **nodeId** and **renditionId**,
+            then the placeholder image for the mime type of this rendition is returned, rather
             than a 404 response.
           required: false
           type: boolean
@@ -3226,7 +3226,7 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: Authentication failed            
+          description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -3285,7 +3285,7 @@ paths:
           description: Successful response
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format          
+            Invalid parameter: **nodeId** is not a valid format
         '401':
           description: Authentication failed
         '403':
@@ -3350,22 +3350,22 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Attempts to restore the deleted node **nodeId** to its original location or to a new location.
-        
-        If the node is successfully restored to its former primary parent, then only the 
-        primary child association will be restored, including recursively for any primary 
-        children. It should be noted that no other secondary child associations or peer 
-        associations will be restored, for any of the nodes within the primary parent-child 
-        hierarchy of restored nodes, irrespective of whether these associations were to 
-        nodes within or outside of the restored hierarchy. 
-        
-        Also, any previously shared link will not be restored since it is deleted at the time 
+
+        If the node is successfully restored to its former primary parent, then only the
+        primary child association will be restored, including recursively for any primary
+        children. It should be noted that no other secondary child associations or peer
+        associations will be restored, for any of the nodes within the primary parent-child
+        hierarchy of restored nodes, irrespective of whether these associations were to
+        nodes within or outside of the restored hierarchy.
+
+        Also, any previously shared link will not be restored since it is deleted at the time
         of delete of each node.
       operationId: restoreDeletedNode
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/fieldsParam'        
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: deletedNodeBodyRestore
           description: The targetParentId if the node is restored to a new location.
@@ -3379,7 +3379,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** or **targetNodeId** is not a valid format             
+            Invalid parameter: **nodeId** or **targetNodeId** is not a valid format
         '401':
           description: Authentication failed
         '403':
@@ -3532,9 +3532,9 @@ paths:
       summary: Create a new download
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-        
+
         Creates a new download node asynchronously, the content of which will be the zipped content of the **nodeIds** specified in the JSON body like this:
-        
+
         ```JSON
         {
             "nodeIds":
@@ -3544,8 +3544,8 @@ paths:
              ]
         }
         ```
-        
-        **Note:** The content of the download node can be obtained using the **GET /nodes/{downloadId}/content** endpoint        
+
+        **Note:** The content of the download node can be obtained using the **GET /nodes/{downloadId}/content** endpoint
       operationId: createDownload
       produces:
         - application/json
@@ -3573,7 +3573,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-            
+
   '/downloads/{downloadId}':
     get:
       x-alfresco-since: "5.2.1"
@@ -3582,9 +3582,9 @@ paths:
       summary: Get a download
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-        
+
         Retrieve status information for download node **downloadId**
-        
+
       operationId: getDownload
       produces:
         - application/json
@@ -3614,17 +3614,17 @@ paths:
       summary: Cancel a download
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-        
+
         Cancels the creation of a download request.
-        
+
         **Note:** The download node can be deleted using the **DELETE /nodes/{downloadId}** endpoint
-         
+
         By default, if the download node is not deleted it will be picked up by a cleaner job which removes download nodes older than a configurable amount of time (default is 1 hour)
-        
+
         Information about the existing progress at the time of cancelling can be retrieved by calling the **GET /downloads/{downloadId}** endpoint
-        
+
         The cancel operation is done asynchronously.
-        
+
       operationId: cancelDownload
       parameters:
         - $ref: '#/parameters/downloadIdParam'
@@ -3652,9 +3652,9 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Create a person.
-        
+
         If applicable, the given person's login access can also be optionally disabled.
-        
+
         You must have admin rights to create a person.
 
         You can set custom properties when you create a person:
@@ -3693,13 +3693,13 @@ paths:
           description: |
             Invalid parameter: **personBodyCreate** is invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to create a person
         '409':
           description: Person within given *id* already exists
         '422':
-          description: Model integrity exception          
+          description: Model integrity exception
         default:
           description: Unexpected error
           schema:
@@ -3711,9 +3711,9 @@ paths:
       summary: List people
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
-        
+
         List people.
-        
+
         You can use the **include** parameter to return any additional information.
 
         The default sort order for the returned list is for people to be sorted by ascending id.
@@ -3753,7 +3753,7 @@ paths:
       summary: Get a person
       description: |
         Gets information for the person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getPerson
       produces:
@@ -3784,18 +3784,18 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Update the given person's details.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-        
+
         If applicable, the given person's login access can also be optionally disabled or re-enabled.
-        
+
         You must have admin rights to update a person — unless updating your own details.
-        
+
         If you are changing your password, as a non-admin user, then the existing password must also
         be supplied (using the oldPassword field in addition to the new password value).
-        
+
         Admin users cannot be disabled by setting enabled to false.
-        
+
         Non-admin users may not disable themselves.
 
         You can set custom properties when you update a person:
@@ -3830,18 +3830,18 @@ paths:
           description: |
             Invalid parameter: the update request is invalid or **personId** is not a valid format or **personBodyUpdate** is invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to update a person
         '404':
           description: |
             **personId** does not exist
         '422':
-          description: Model integrity exception            
+          description: Model integrity exception
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Error'
   '/people/{personId}/activities':
     get:
       tags:
@@ -3849,7 +3849,7 @@ paths:
       summary: List activities
       description: |
         Gets a list of activities for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: listActivitiesForPerson
       produces:
@@ -3900,7 +3900,7 @@ paths:
         Use `/people/{personId}/favorites` instead.
 
         Gets a list of a person's favorite sites.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: listFavoriteSitesForPerson
       produces:
@@ -3941,10 +3941,10 @@ paths:
         Create a site favorite for person **personId**.
 
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-        
-         **Note:** You can favorite more than one site by 
+
+         **Note:** You can favorite more than one site by
         specifying a list of sites in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -3956,7 +3956,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -3987,7 +3987,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
-        - $ref: '#/parameters/fieldsParam'        
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: favoriteSiteBodyCreate
           description: The id of the site to favorite.
@@ -4091,9 +4091,9 @@ paths:
       summary: List favorites
       description: |
         Gets a list of favorites for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-        
+
         The default sort order for the returned list of favorites is type ascending, createdAt descending.
         You can override the default by using the **orderBy** parameter.
 
@@ -4101,7 +4101,7 @@ paths:
         *   `type`
         *   `createdAt`
         *   `title`
-        
+
         You can use the **where** parameter to restrict the list in the response
         to entries of a specific kind. The **where** parameter takes a value.
         The value is a single predicate that can include one or more **EXISTS**
@@ -4159,12 +4159,12 @@ paths:
       summary: Create a favorite
       description: |
         Favorite a **site**, **file**, or **folder** in the repository.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-        
-        **Note:** You can favorite more than one entity by 
+
+        **Note:** You can favorite more than one entity by
         specifying a list of objects in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -4184,7 +4184,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -4216,17 +4216,17 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/favoriteEntryIncludeParam'
-        - $ref: '#/parameters/fieldsParam'        
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: favoriteBodyCreate
-          description: |      
-            An object identifying the entity to be favorited. 
-            
-            The object consists of a single property which is an object with the name `site`, `file`, or `folder`. 
+          description: |
+            An object identifying the entity to be favorited.
+
+            The object consists of a single property which is an object with the name `site`, `file`, or `folder`.
             The content of that object is the `guid` of the target entity.
-            
+
             For example, to favorite a file the following body would be used:
-            
+
             ```JSON
             {
                "target": {
@@ -4256,7 +4256,7 @@ paths:
             entity exists with the id of the posted object
             but is not of the same type of the posted object
         '409':
-          description: The target **guid** has already been favorited            
+          description: The target **guid** has already been favorited
         default:
           description: Unexpected error
           schema:
@@ -4268,7 +4268,7 @@ paths:
       summary: Get a favorite
       description: |
         Gets favorite **favoriteId** for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getFavorite
       produces:
@@ -4325,7 +4325,7 @@ paths:
       summary: List network membership
       description: |
         Gets a list of network memberships for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: listNetworksForPerson
       produces:
@@ -4359,7 +4359,7 @@ paths:
       summary: Get network information
       description: |
         Gets network information on a single network specified by **networkId** for **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getNetworkForPerson
       produces:
@@ -4389,9 +4389,9 @@ paths:
       summary: List preferences
       description: |
         Gets a list of preferences for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-        Note that each preference consists of an **id** and a **value**. 
+        Note that each preference consists of an **id** and a **value**.
 
         The **value** can be of any JSON type.
       operationId: listPreferences
@@ -4428,7 +4428,7 @@ paths:
       summary: Get a preference
       description: |
         Gets a specific preference for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getPreference
       produces:
@@ -4464,7 +4464,7 @@ paths:
       summary: List site membership requests
       description: |
         Gets a list of the current site membership requests for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: listSiteMembershipRequestsForPerson
       produces:
@@ -4496,18 +4496,18 @@ paths:
         - sites
       summary: Create a site membership request
       description: |
-        Create a site membership request for yourself on the site with the identifier of **id**, specified in the JSON body. 
+        Create a site membership request for yourself on the site with the identifier of **id**, specified in the JSON body.
         The result of the request differs depending on the type of site.
-        
+
         * For a **public** site, you join the site immediately as a SiteConsumer.
         * For a **moderated** site, your request is added to the site membership request list. The request waits for approval from the Site Manager.
         * You cannot request membership of a **private** site. Members are invited by the site administrator.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-        
-         **Note:** You can create site membership requests for more than one site by 
+
+         **Note:** You can create site membership requests for more than one site by
         specifying a list of sites in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -4523,7 +4523,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -4554,7 +4554,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/personIdParam'
-        - $ref: '#/parameters/fieldsParam'        
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: siteMembershipRequestBodyCreate
           description: Site membership request details
@@ -4586,7 +4586,7 @@ paths:
       summary: Get a site membership request
       description: |
         Gets the site membership request for site **siteId** for person **personId**, if one exists.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getSiteMembershipRequestForPerson
       produces:
@@ -4615,7 +4615,7 @@ paths:
       summary: Update a site membership request
       description: |
         Updates the message for the site membership request to site **siteId** for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: updateSiteMembershipRequestForPerson
       consumes:
@@ -4656,7 +4656,7 @@ paths:
       summary: Delete a site membership request
       description: |
         Deletes the site membership request to site **siteId** for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: deleteSiteMembershipRequestForPerson
       produces:
@@ -4683,9 +4683,9 @@ paths:
       summary: List site memberships
       description: |
         Gets a list of site membership information for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-        
+
         You can use the **where** parameter to filter the returned sites by **visibility** or site **preset**.
 
         Example to filter by **visibility**, use any one of:
@@ -4742,7 +4742,7 @@ paths:
       summary: Get a site membership
       description: |
         Gets site membership information for person **personId** on site **siteId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getSiteMembershipForPerson
       produces:
@@ -4770,7 +4770,7 @@ paths:
       summary: Delete a site membership
       description: |
         Deletes person **personId** as a member of site **siteId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: deleteSiteMembershipForPerson
       produces:
@@ -4798,9 +4798,9 @@ paths:
       summary: List group memberships
       description: |
        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-                
+
         Gets a list of group membership information for person **personId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
 
         You can use the **include** parameter to return additional information.
@@ -4956,7 +4956,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
 
-        Gets the avatar image related to the person **personId**. If the person has no related avatar then 
+        Gets the avatar image related to the person **personId**. If the person has no related avatar then
         the **placeholder** query parameter can be optionally used to request a placeholder image to be returned.
 
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
@@ -4968,7 +4968,7 @@ paths:
         - name: placeholder
           in: query
           description: |
-            If **true** and there is no avatar for this **personId** 
+            If **true** and there is no avatar for this **personId**
             then the placeholder image is returned, rather than a 404 response.
           required: false
           type: boolean
@@ -5004,7 +5004,7 @@ paths:
 
         Updates the avatar image related to the person **personId**.
 
-        The request body should be the binary stream for the avatar image. The content type of the file 
+        The request body should be the binary stream for the avatar image. The content type of the file
         should be an image file. This will be used to generate an "avatar" thumbnail rendition.
 
         You must be the person or have admin rights to update a person's avatar.
@@ -5031,7 +5031,7 @@ paths:
           description: |
             Invalid parameter: **personId** is not a valid format or the avatar cannot be uploaded
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to update the avatar image for **personId**
         '404':
@@ -5040,7 +5040,7 @@ paths:
         '413':
           description: Content exceeds individual file size limit (configured for network/system)
         '501':
-          description: Renditions/thumbnails are disabled for the system          
+          description: Renditions/thumbnails are disabled for the system
         '507':
           description: Content exceeds overall storage quota limit configured for the network/system
         default:
@@ -5069,7 +5069,7 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to delete the avatar image for **personId**
         '404':
@@ -5154,7 +5154,7 @@ paths:
 
         Creates a default site with the given details.  Unless explicitly specified, the site id will be generated
         from the site title. The site id must be unique and only contain alphanumeric and/or dash characters.
-        
+
         Note: the id of a site cannot be updated once the site has been created.
 
         For example, to create a public site called "Marketing" the following body could be used:
@@ -5172,8 +5172,8 @@ paths:
         The addition of the site to the user's site favorites can be skipped via the **skipAddToFavorites** query parameter.
 
         The creator will be added as a member with Site Manager role.
-        
-        When you create a site, a container called **documentLibrary** is created for you in the new site. 
+
+        When you create a site, a container called **documentLibrary** is created for you in the new site.
         This container is the root folder for content stored in the site.
 
       operationId: createSite
@@ -5204,7 +5204,7 @@ paths:
             $ref: '#/definitions/SiteEntry'
         '400':
           description: |
-            Invalid parameter: **id**, **title**, or **description** exceed the maximum length; 
+            Invalid parameter: **id**, **title**, or **description** exceed the maximum length;
             or **id** contains invalid characters; or **siteBodyCreate** invalid
         '401':
           description: Authentication failed
@@ -5262,9 +5262,9 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
-        Update the details for the given site **siteId**. Site Manager or otherwise a 
+        Update the details for the given site **siteId**. Site Manager or otherwise a
         (site) admin can update title, description or visibility.
-        
+
         Note: the id of a site cannot be updated once the site has been created.
 
       operationId: updateSite
@@ -5321,7 +5321,7 @@ paths:
         '204':
           description: Successful response
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to delete the site that is visible to them.
         '404':
@@ -5330,7 +5330,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Error'
   '/sites/{siteId}/containers':
     get:
       tags:
@@ -5571,10 +5571,10 @@ paths:
         * SiteCollaborator
         * SiteContributor
         * SiteManager
-        
-        **Note:** You can create more than one site membership by 
+
+        **Note:** You can create more than one site membership by
         specifying a list of people in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -5588,7 +5588,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -5619,7 +5619,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/siteIdParam'
-        - $ref: '#/parameters/fieldsParam'        
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: siteMembershipBodyCreate
           description: The person to add and their role
@@ -5655,7 +5655,7 @@ paths:
       summary: Get a site membership
       description: |
         Gets site membership information for person **personId** on site **siteId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: getSiteMembership
       produces:
@@ -5684,9 +5684,9 @@ paths:
       summary: Update a site membership
       description: |
         Update the membership of person **personId** in site **siteId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-        
+
         You can set the **role** to one of four types:
 
         * SiteConsumer
@@ -5699,7 +5699,7 @@ paths:
       parameters:
         - $ref: '#/parameters/siteIdParam'
         - $ref: '#/parameters/personIdParam'
-        - $ref: '#/parameters/fieldsParam'        
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: siteMembershipBodyUpdate
           description: The persons new role
@@ -5721,7 +5721,7 @@ paths:
           description: |
             **siteId** or **personId** does not exist
         '422':
-          description: Integrity exception (eg. last site member must be a site manager) or not allowed to update member          
+          description: Integrity exception (eg. last site member must be a site manager) or not allowed to update member
         default:
           description: Unexpected error
           schema:
@@ -5732,7 +5732,7 @@ paths:
       summary: Delete a site membership
       description: |
         Deletes person **personId** as a member of site **siteId**.
-        
+
         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
       operationId: deleteSiteMembership
       produces:
@@ -5987,7 +5987,7 @@ paths:
       summary: List tags
       description: |
         Gets a list of tags in this repository.
-        
+
         You can use the **include** parameter to return additional **values** information.
       operationId: listTags
       parameters:
@@ -6051,7 +6051,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/tagIdParam'
-        - $ref: '#/parameters/fieldsParam'        
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: tagBodyUpdate
           description: The updated tag
@@ -6067,7 +6067,7 @@ paths:
           description: |
             Invalid parameter: **tagBodyUpdate** is invalid
         '401':
-          description: Authentication failed         
+          description: Authentication failed
         '404':
           description: |
             **tagId** does not exist
@@ -6120,21 +6120,21 @@ paths:
           }
         ```
 
-        **Note:** You can create shared links to more than one file 
+        **Note:** You can create shared links to more than one file
         specifying a list of **nodeId**s in the JSON body like this:
-        
+
         ```JSON
         [
           {
             "nodeId": "1ff9da1a-ee2f-4b9c-8c34-4444444444"
           },
-          {            
+          {
             "nodeId": "1ff9da1a-ee2f-4b9c-8c34-5555555555"
           }
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -6185,7 +6185,7 @@ paths:
             or **sharedLinkBodyCreate** invalid, or the specified expiry date is invalid. E.g. the expiry date
             has already passed
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to create **sharedId** (for example, no read permission)
         '404':
@@ -6220,9 +6220,9 @@ paths:
           in: query
           description: |
             Optionally filter the list by "sharedByUser" userid of person who shared the link (can also use -me-)
-            
+
             *   ```where=(sharedByUser='jbloggs')```
-            
+
             *   ```where=(sharedByUser='-me-')```
           required: false
           type: string
@@ -6237,9 +6237,9 @@ paths:
             $ref: '#/definitions/SharedLinkPaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid         
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
-          description: Authentication failed            
+          description: Authentication failed
         '501':
           description: Shared links are disabled for the system
         default:
@@ -6302,7 +6302,7 @@ paths:
           description: |
             Invalid parameter: **sharedId** is not a valid format
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '403':
           description: Current user does not have permission to delete **sharedId**
         '404':
@@ -6367,11 +6367,11 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Gets a list of the rendition information for the file with shared link identifier **sharedId**.
-        
+
         This API method returns rendition information, including the rendition id, for each rendition
         where the rendition status is CREATED, which means the rendition is available to view/download.
-        
-        **Note:** No authentication is required to call this endpoint.      
+
+        **Note:** No authentication is required to call this endpoint.
       operationId: listSharedLinkRenditions
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -6387,7 +6387,7 @@ paths:
           description: |
             **sharedId** does not exist
         '501':
-          description: Shared links are disabled for the system          
+          description: Shared links are disabled for the system
         default:
           description: Unexpected error
           schema:
@@ -6402,11 +6402,11 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Gets rendition information for the file with shared link identifier **sharedId**.
-        
-        This API method returns rendition information where the rendition status is CREATED, 
+
+        This API method returns rendition information where the rendition status is CREATED,
         which means the rendition is available to view/download.
-        
-        **Note:** No authentication is required to call this endpoint.      
+
+        **Note:** No authentication is required to call this endpoint.
       operationId: getSharedLinkRendition
       parameters:
         - $ref: '#/parameters/sharedIdParam'
@@ -6427,7 +6427,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'        
+            $ref: '#/definitions/Error'
   '/shared-links/{sharedId}/renditions/{renditionId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -6601,7 +6601,7 @@ paths:
         By default, file and folder types will be searched unless a specific type is provided as a query parameter.
 
         By default, the search will be across the repository unless a specific root node id is provided to start the search from.
-        
+
         You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * name
         * modifiedAt
@@ -6643,7 +6643,7 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **nodeType** unknown, or **orderBy** invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         '404':
           description: |
             **rootNodeId** does not exist
@@ -6667,8 +6667,8 @@ paths:
         The search term:
         - must contain a minimum of 2 alphanumeric characters
         - can optionally use '*' for wildcard matching within the term
-        
-        The default sort order for the returned list is for sites to be sorted by ascending id. 
+
+        The default sort order for the returned list is for sites to be sorted by ascending id.
         You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * id
         * title
@@ -6695,11 +6695,11 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **orderBy** invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Error'
   '/queries/people':
     get:
       x-alfresco-since: "5.2"
@@ -6710,31 +6710,31 @@ paths:
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
 
         Gets a list of people that match the given search criteria.
-        
+
         The search term is used to look for matches against person id, firstname and lastname.
 
         The search term:
         - must contain a minimum of 2 alphanumeric characters
         - can optionally use '*' for wildcard matching within the term
-        
+
         You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
         * id
         * firstName
-        * lastName       
+        * lastName
       operationId: findPeople
       produces:
         - application/json
       parameters:
         - name: term
           in: query
-          description: | 
+          description: |
             The term to search for.
           type: string
           required: true
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
-        - $ref: '#/parameters/orderByParam'        
+        - $ref: '#/parameters/orderByParam'
       responses:
         '200':
           description: Successful response
@@ -6744,7 +6744,7 @@ paths:
           description: |
             Invalid parameter: value of **maxItems** or **skipCount** is invalid, or search **term** too short, or **orderBy** invalid
         '401':
-          description: Authentication failed          
+          description: Authentication failed
         default:
           description: Unexpected error
           schema:
@@ -6757,14 +6757,14 @@ paths:
       summary: List groups
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-      
-        Gets a list of groups. 
-        
+
+        Gets a list of groups.
+
         You can use the **include** parameter to return additional information.
-        
-        You can use the **where** parameter to filter the returned groups by **isRoot**. For example, the following **where** 
+
+        You can use the **where** parameter to filter the returned groups by **isRoot**. For example, the following **where**
         clause will return just the root groups:
-          
+
         ```
         (isRoot=true)
         ```
@@ -6800,7 +6800,7 @@ paths:
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/groupEntryIncludeParam'
-        - $ref: '#/parameters/whereParam'        
+        - $ref: '#/parameters/whereParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -6823,21 +6823,21 @@ paths:
       summary: Create a group
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-        
+
         Create a group.
 
         The group id must start with "GROUP\_". If this is omitted it will be added automatically.
         This format is also returned when listing groups or group memberships. It should be noted
         that the other group-related operations also expect the id to start with "GROUP\_".
-        
+
         If one or more parentIds are specified then the group will be created and become a member
         of each of the specified parent groups.
-        
+
         If no parentIds are specified then the group will be created as a root group.
 
         The group will be created in the **APP.DEFAULT** and **AUTH.ALF** zones.
-        
-        You must have admin rights to create a group. 
+
+        You must have admin rights to create a group.
       operationId: createGroup
       produces:
         - application/json
@@ -6871,7 +6871,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Error'
   '/groups/{groupId}':
     get:
       x-alfresco-since: "5.2.1"
@@ -6880,9 +6880,9 @@ paths:
       summary: Get group details
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-      
+
         Get details for group **groupId**.
-        
+
         You can use the **include** parameter to return additional information.
       operationId: getGroup
       produces:
@@ -6900,7 +6900,7 @@ paths:
           description: |
             Invalid parameter: invalid **groupId**
         '401':
-          description: Authentication failed        
+          description: Authentication failed
         '404':
           description: |
             **groupId** does not exist
@@ -6915,9 +6915,9 @@ paths:
       summary: Update group details
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-      
+
         Update details (displayName) for group **groupId**.
-        
+
         You must have admin rights to update a group.
       operationId: updateGroup
       produces:
@@ -6943,7 +6943,7 @@ paths:
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to update a group             
+          description: User does not have permission to update a group
         '404':
           description: |
             **groupId** does not exist
@@ -6953,7 +6953,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Error'
     delete:
       x-alfresco-since: "5.2.1"
       tags:
@@ -6961,13 +6961,13 @@ paths:
       summary: Delete a group
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-        
-        Delete group **groupId**. 
-        
+
+        Delete group **groupId**.
+
         The option to cascade delete applies this recursively to any hierarchy of group members.
         In this case, removing a group member does not delete the person or sub-group itself.
         If a removed sub-group no longer has any parent groups then it becomes a root group.
-        
+
         You must have admin rights to delete a group.
       operationId: deleteGroup
       produces:
@@ -7000,7 +7000,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'                          
+            $ref: '#/definitions/Error'
   '/groups/{groupId}/members':
     post:
       x-alfresco-since: "5.2.1"
@@ -7009,13 +7009,13 @@ paths:
       summary: Create a group membership
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-        
+
         Create a group membership (for an existing person or group) within a group **groupId**.
-        
+
         If the added group was previously a root group then it becomes a non-root group since it now has a parent.
-        
+
         It is an error to specify an **id** that does not exist.
-        
+
         You must have admin rights to create a group membership.
       operationId: createGroupMembership
       produces:
@@ -7058,9 +7058,9 @@ paths:
       summary: List memberships of a group
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-        
+
         Gets a list of the group memberships for the group **groupId**.
-        
+
         You can use the **where** parameter to filter the returned groups by **memberType**.
 
         Example to filter by **memberType**, use any one of:
@@ -7069,7 +7069,7 @@ paths:
         (memberType='GROUP')
         (memberType='PERSON')
         ```
-        
+
         The default sort order for the returned list is for group members to be sorted by ascending displayName.
         You can override the default by using the **orderBy** parameter. You can specify one of the following fields in the **orderBy** parameter:
         * id
@@ -7104,7 +7104,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/groups/{groupId}/members/{groupMemberId}':            
+  '/groups/{groupId}/members/{groupMemberId}':
     delete:
       x-alfresco-since: "5.2.1"
       tags:
@@ -7112,13 +7112,13 @@ paths:
       summary: Delete a group membership
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-        
+
         Delete group member **groupMemberId** (person or sub-group) from group **groupId**.
-        
+
         Removing a group member does not delete the person or sub-group itself.
-        
+
         If a removed sub-group no longer has any parent groups then it becomes a root group.
-        
+
         You must have admin rights to delete a group membership.
       operationId: deleteGroupMembership
       produces:
@@ -7154,16 +7154,16 @@ paths:
       summary: List audit applications
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-        
+
         Gets a list of audit applications in this repository.
-        
+
         This list may include pre-configured audit applications, if enabled, such as:
-        
+
         * alfresco-access
         * CMISChangeLog
         * Alfresco Tagging Service
         * Alfresco Sync Service (used by Enterprise Cloud Sync)
-        
+
         You must have admin rights to retrieve audit information.
       operationId: listAuditApps
       produces:
@@ -7179,7 +7179,7 @@ paths:
             $ref: '#/definitions/AuditAppPaging'
         '400':
           description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid            
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -7198,12 +7198,12 @@ paths:
       summary: Get audit application info
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-        
+
         Get status of an audit application **auditApplicationId**.
-        
+
         You must have admin rights to retrieve audit information.
 
-        You can use the **include** parameter to return the minimum and/or maximum audit record id for the application. 
+        You can use the **include** parameter to return the minimum and/or maximum audit record id for the application.
       operationId: getAuditApp
       produces:
         - application/json
@@ -7222,7 +7222,7 @@ paths:
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to retrieve audit information        
+          description: User does not have permission to retrieve audit information
         '404':
           description: |
             **applicationId** does not exist
@@ -7239,15 +7239,15 @@ paths:
       summary: Update audit application info
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-        
+
         Disable or re-enable the audit application **auditApplicationId**.
-        
+
         New audit entries will not be created for a disabled audit application until
-        it is re-enabled (and system-wide auditing is also enabled). 
-        
+        it is re-enabled (and system-wide auditing is also enabled).
+
         Note, it is still possible to query &/or delete any existing audit entries even
         if auditing is disabled for the audit application.
-        
+
         You must have admin rights to update audit application.
       operationId: updateAuditApp
       produces:
@@ -7260,7 +7260,7 @@ paths:
           description: The audit application to update.
           required: true
           schema:
-            $ref: '#/definitions/AuditBodyUpdate'        
+            $ref: '#/definitions/AuditBodyUpdate'
       responses:
         '200':
           description: Successful response
@@ -7290,23 +7290,23 @@ paths:
       summary: List audit entries for an audit application
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-        
+
         Gets a list of audit entries for audit application **auditApplicationId**.
-        
+
         You can use the **include** parameter to return additional **values** information.
-        
+
         The list can be filtered by one or more of:
         * **createdByUser** person id
         * **createdAt** inclusive time period
         * **id** inclusive range of ids
         * **valuesKey** audit entry values contains the exact matching key
         * **valuesValue** audit entry values contains the exact matching value
-        
-        The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC** 
-        modifier to specify an ascending or descending sort order. 
-        
+
+        The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC**
+        modifier to specify an ascending or descending sort order.
+
         For example, specifying ```orderBy=createdAt DESC``` returns audit entries in descending **createdAt** order.
-        
+
         You must have admin rights to retrieve audit information.
       operationId: listAuditEntriesForAuditApp
       produces:
@@ -7320,22 +7320,22 @@ paths:
           in: query
           description: |
             Optionally filter the list. Here are some examples:
-            
+
             *   ```where=(createdByUser='jbloggs')```
-            
+
             *   ```where=(id BETWEEN ('1234', '4321')```
-            
+
             *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
-            
+
             *   ```where=(createdByUser='jbloggs' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
-            
+
             *   ```where=(valuesKey='/alfresco-access/login/user')```
-            
+
             *   ```where=(valuesKey='/alfresco-access/transaction/action' and valuesValue='DELETE')```
           required: false
           type: string
         - $ref: '#/parameters/auditMinimalEntryIncludeParam'
-        - $ref: '#/parameters/fieldsParam'          
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -7343,14 +7343,14 @@ paths:
             $ref: '#/definitions/AuditEntryPaging'
         '400':
           description: |
-            Invalid parameter: *auditApplicationId** is not a valid format, value of **maxItems** or **skipCount** is invalid            
+            Invalid parameter: *auditApplicationId** is not a valid format, value of **maxItems** or **skipCount** is invalid
         '401':
           description: Authentication failed
         '403':
           description: User does not have permission to retrieve audit information
         '404':
           description: |
-            **applicationId** does not exist          
+            **applicationId** does not exist
         '501':
           description: Audit is disabled for the system
         default:
@@ -7364,22 +7364,22 @@ paths:
       summary: Permanently delete audit entries for an audit application
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-        
+
         Permanently delete audit entries for an audit application **auditApplicationId**.
-        
-        The **where** clause must be specified, either with an inclusive time period or for 
+
+        The **where** clause must be specified, either with an inclusive time period or for
         an inclusive range of ids. The delete is within the context of the given audit application.
-        
+
         For example:
-        
+
         *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
         *   ```where=(id BETWEEN ('1234', '4321')```
-        
+
         You must have admin rights to delete audit information.
       operationId: deleteAuditEntriesForAuditApp
       produces:
         - application/json
-      parameters:       
+      parameters:
         - $ref: '#/parameters/auditApplicationIdParam'
         - name: where
           in: query
@@ -7389,7 +7389,7 @@ paths:
             *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
             *   ```where=(id BETWEEN ('1234', '4321')```
           required: true
-          type: string       
+          type: string
       responses:
         '204':
           description: Successful response
@@ -7408,7 +7408,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'         
+            $ref: '#/definitions/Error'
   '/audit-applications/{auditApplicationId}/audit-entries/{auditEntryId}':
     get:
       x-alfresco-since: "5.2.2"
@@ -7417,9 +7417,9 @@ paths:
       summary: Get audit entry
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-        
+
         Gets audit entry **auditEntryId**.
-        
+
         You must have admin rights to access audit information.
       operationId: getAuditEntry
       produces:
@@ -7435,14 +7435,14 @@ paths:
             $ref: '#/definitions/AuditEntryEntry'
         '400':
           description: |
-            Invalid parameter: **auditApplicationId** or **auditEntryId** is not a valid format            
+            Invalid parameter: **auditApplicationId** or **auditEntryId** is not a valid format
         '401':
           description: Authentication failed
         '403':
           description: User does not have permission to retrieve audit information
         '404':
           description: |
-            **auditApplicationId** or **auditEntryId** does not exist          
+            **auditApplicationId** or **auditEntryId** does not exist
         '501':
           description: Audit is disabled for the system
         default:
@@ -7456,16 +7456,16 @@ paths:
       summary: Permanently delete an audit entry
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-        
+
         Permanently delete a single audit entry **auditEntryId**.
-        
+
         You must have admin rights to delete audit information.
       operationId: deleteAuditEntry
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/auditApplicationIdParam'
-        - $ref: '#/parameters/auditEntryIdParam'        
+        - $ref: '#/parameters/auditEntryIdParam'
       responses:
         '204':
           description: Successful response
@@ -7493,16 +7493,16 @@ paths:
       summary: List audit entries for a node
       description: |
         **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-        
+
         Gets a list of audit entries for node **nodeId**.
-        
+
         The list can be filtered by **createdByUser** and for a given inclusive time period.
-        
-        The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC** 
-        modifier to specify an ascending or descending sort order. 
-            
+
+        The default sort order is **createdAt** ascending, but you can use an optional **ASC** or **DESC**
+        modifier to specify an ascending or descending sort order.
+
         For example, specifying ```orderBy=createdAt DESC``` returns audit entries in descending **createdAt** order.
-        
+
         This relies on the pre-configured 'alfresco-access' audit application.
       operationId: listAuditEntriesForNode
       produces:
@@ -7520,12 +7520,12 @@ paths:
             *   ```where=(createdByUser='-me-')```
 
             *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
-            
+
             *   ```where=(createdByUser='jbloggs' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
           required: false
           type: string
-        - $ref: '#/parameters/auditMinimalEntryIncludeParam'          
-        - $ref: '#/parameters/fieldsParam'          
+        - $ref: '#/parameters/auditMinimalEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -7533,20 +7533,20 @@ paths:
             $ref: '#/definitions/AuditEntryPaging'
         '400':
           description: |
-            Invalid parameter: *nodeId** is not a valid format, value of **maxItems** or **skipCount** is invalid            
+            Invalid parameter: *nodeId** is not a valid format, value of **maxItems** or **skipCount** is invalid
         '401':
           description: Authentication failed
         '403':
           description: User does not have permission to retrieve audit information
         '404':
           description: |
-            **nodeId** does not exist          
+            **nodeId** does not exist
         '501':
           description: Audit is disabled for the system
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'                       
+            $ref: '#/definitions/Error'
   '/action-definitions':
       get:
         x-alfresco-since: "5.2.2"
@@ -7726,13 +7726,17 @@ definitions:
             type: string
           logId:
             type: string
+  Capabilities:
+    type: object
+    properties:
+      isAdmin:
+        type: boolean
+      isGuest:
+        type: boolean
+      isMutable:
+        type: boolean
   Pagination:
     type: object
-    required:
-      - count
-      - hasMoreItems
-      - skipCount
-      - maxItems
     properties:
       count:
         type: integer
@@ -7757,7 +7761,7 @@ definitions:
         format: int64
         description: |
           An integer describing how many entities exist in the collection before
-          those included in this list. If there was no **skipCount** parameter then the 
+          those included in this list. If there was no **skipCount** parameter then the
           default value is 0.
       maxItems:
         type: integer
@@ -8085,7 +8089,7 @@ definitions:
         default: true
       emailNotificationsEnabled:
         type: boolean
-        default: true                
+        default: true
       password:
         type: string
       aspectNames:
@@ -8204,15 +8208,17 @@ definitions:
         default: true
       emailNotificationsEnabled:
         type: boolean
-        default: true        
+        default: true
       aspectNames:
         type: array
         items:
           type: string
       properties:
         type: object
+        additionalProperties:
+          type: string
       capabilities:
-        type: object
+        $ref: '#/definitions/Capabilities'
   Company:
     type: object
     properties:
@@ -8450,6 +8456,8 @@ definitions:
         type: string
       tag:
         type: string
+      count:
+        type: number
   PersonNetworkPaging:
     type: object
     required:
@@ -8721,6 +8729,8 @@ definitions:
         description: The feed on which this activity was posted
       activitySummary:
         type: object
+        additionalProperties:
+          type: string
         description: An object summarizing the activity
       activityType:
         description: The type of the activity posted
@@ -8760,7 +8770,7 @@ definitions:
         type: string
         description: The unique id of the preference
       value:
-        type: string        
+        type: string
         description: The value of the preference. Note that this can be of any JSON type.
   SiteMembershipRequestBodyCreate:
     type: object
@@ -8975,7 +8985,7 @@ definitions:
     type: object
     properties:
       isInheritanceEnabled:
-        type: boolean 
+        type: boolean
       inherited:
         type: array
         items:
@@ -8987,16 +8997,16 @@ definitions:
       settable:
         type: array
         items:
-          type: string     
+          type: string
   PermissionsBody:
     type: object
     properties:
       isInheritanceEnabled:
-        type: boolean 
+        type: boolean
       locallySet:
         type: array
         items:
-          $ref: '#/definitions/PermissionElement'          
+          $ref: '#/definitions/PermissionElement'
   NodeBodyCreate:
     type: object
     required:
@@ -9053,6 +9063,8 @@ definitions:
           type: string
       properties:
         type: object
+        additionalProperties:
+          type: string
       permissions:
         $ref: '#/definitions/PermissionsBody'
   NodeBodyCopy:
@@ -9271,7 +9283,7 @@ definitions:
       path:
         $ref: '#/definitions/PathInfo'
       permissions:
-        $ref: '#/definitions/PermissionsInfo' 
+        $ref: '#/definitions/PermissionsInfo'
       definition:
         $ref: '#/definitions/Definition'
   ProbeEntry:
@@ -9358,7 +9370,7 @@ definitions:
         type: string
         pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
         description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
           The character . must not be used at the end of the name.
       title:
         type: string
@@ -9515,7 +9527,7 @@ definitions:
         type: string
         pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
         description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |. 
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
           The character . must not be used at the end of the name.
       nodeType:
         type: string
@@ -9633,7 +9645,7 @@ definitions:
       id:
         type: string
       name:
-        type: string  
+        type: string
       isEnabled:
         type: boolean
         default: true
@@ -9674,7 +9686,7 @@ definitions:
       id:
         type: string
       auditApplicationId:
-        type: string          
+        type: string
       createdByUser:
         $ref: '#/definitions/UserInfo'
       createdAt:
@@ -9803,10 +9815,10 @@ definitions:
         description: define if the property is multi-valued
         type: boolean
       isMandatory:
-        description: define if the property is manadatory
+        description: define if the property is mandatory
         type: boolean
       isMandatoryEnforced:
-        description: define if the presence of manadatory properties is enforced
+        description: define if the presence of mandatory properties is enforced
         type: boolean
       isProtected:
         description: define if the property is system maintained
