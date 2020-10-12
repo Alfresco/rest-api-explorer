@@ -324,6 +324,15 @@ parameters:
     type: integer
     minimum: 0
     default: 0
+  skipTotalItemsParam:
+    name: skipTotalItems
+    in: query
+    description: |
+      A boolean to control if the response provides the total numbers of items in the collection.
+      If not supplied then the default value is false.
+    required: false
+    type: boolean
+    default: false
   maxItemsParam:
     name: maxItems
     in: query
@@ -7085,6 +7094,7 @@ paths:
       parameters:
         - $ref: '#/parameters/auditApplicationIdParam'
         - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/skipTotalItemsParam'      
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/maxItemsParam'
         - name: where
