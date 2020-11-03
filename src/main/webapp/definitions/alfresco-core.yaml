@@ -4323,6 +4323,12 @@ paths:
             **Note:** The client must be registered before this API can send an email.
           type: string
           required: false
+        - name: workspacePath
+          in: query
+          description: |
+            Optionally override the workspace deployment links to customise the sent email.
+          type: string
+          required: false
         - in: body
           name: siteMembershipRequestBodyCreate
           description: Site membership request details
