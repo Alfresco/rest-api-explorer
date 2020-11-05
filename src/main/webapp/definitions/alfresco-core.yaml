@@ -4319,14 +4319,14 @@ paths:
         - name: client
           in: query
           description: |
-            Optionally provided in the request query to customise the sent email.
+            Optionally provided in the request query to customise the email sent.
             **Note:** The client must be registered before this API can send an email.
           type: string
           required: false
         - name: workspacePath
           in: query
           description: |
-            Optionally override the workspace deployment links to customise the sent email.
+            Optionally override the workspace deployment link to customise the email sent.
           type: string
           required: false
         - in: body
