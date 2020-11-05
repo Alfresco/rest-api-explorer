@@ -4316,19 +4316,6 @@ paths:
       parameters:
         - $ref: '#/parameters/personIdParam'
         - $ref: '#/parameters/fieldsParam'
-        - name: client
-          in: query
-          description: |
-            Optionally provided in the request query to customise the email sent.
-            **Note:** The client must be registered before this API can send an email.
-          type: string
-          required: false
-        - name: workspacePath
-          in: query
-          description: |
-            Optionally override the workspace deployment link to customise the email sent.
-          type: string
-          required: false
         - in: body
           name: siteMembershipRequestBodyCreate
           description: Site membership request details
@@ -8577,6 +8564,13 @@ definitions:
         type: string
       title:
         type: string
+      client:
+        description: |
+          Optionally provided in the request query to customise the email sent.
+          **Note:** The client must be registered before this API can send an email.
+          **Note:** this is available in Alfresco 7.0.0 and newer versions.
+        type: string
+        required: false
   SiteMembershipRequestBodyUpdate:
     type: object
     properties:
