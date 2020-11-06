@@ -8566,7 +8566,7 @@ definitions:
         type: string
       client:
         description: |
-          Optional client name used when sending an email to the end user, defaults to "share" if not provided..
+          Optional client name used when sending an email to the end user, defaults to "share" if not provided.
           **Note:** The client must be registered before this API can send an email.
           **Note:** This is available in Alfresco 7.0.0 and newer versions.
         type: string
