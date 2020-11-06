@@ -8566,9 +8566,9 @@ definitions:
         type: string
       client:
         description: |
-          Optionally provided in the request query to customise the email sent.
+          Optional client name used when sending an email to the end user, defaults to "share" if not provided..
           **Note:** The client must be registered before this API can send an email.
-          **Note:** this is available in Alfresco 7.0.0 and newer versions.
+          **Note:** This is available in Alfresco 7.0.0 and newer versions.
         type: string
         required: false
   SiteMembershipRequestBodyUpdate:
