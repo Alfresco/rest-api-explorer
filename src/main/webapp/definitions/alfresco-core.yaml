@@ -129,6 +129,7 @@ parameters:
       * association
       * isLink
       * isFavorite
+      * isDirectLinkEnabled
       * isLocked
       * path
       * properties
@@ -147,6 +148,7 @@ parameters:
       * aspectNames
       * isLink
       * isFavorite
+      * isDirectLinkEnabled
       * isLocked
       * path
       * properties
@@ -164,6 +166,7 @@ parameters:
       * association
       * isLink
       * isFavorite
+      * isDirectLinkEnabled
       * isLocked
       * path
       * permissions
@@ -9351,6 +9354,8 @@ definitions:
       isLink:
         type: boolean
       isFavorite:
+        type: boolean
+      isDirectLinkEnabled:
         type: boolean
       content:
         $ref: '#/definitions/ContentInfo'
