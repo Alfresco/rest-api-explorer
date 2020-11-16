@@ -7742,6 +7742,15 @@ definitions:
           - SiteManager
       isMemberOfGroup:
         type: boolean
+      groupMembership:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            role:
+              type: string
   SiteGroupPaging:
     type: object
     required:
