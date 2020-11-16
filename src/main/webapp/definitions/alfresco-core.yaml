@@ -1299,19 +1299,19 @@ paths:
         **Note:** setting properties of type d:content and d:category are not supported.
 
         **Note:** When creating a new node using multipart/form-data by default versioning is enabled and set to MAJOR Version.
-        Since Alfresco 7.0 **versionEnabled** flag was introduced offering better control over the new node Versioning.
+        Since Alfresco 6.2.3 **versioningEnabled** flag was introduced offering better control over the new node Versioning.
 
-        | **versionEnabled** | **majorVersion** | **Version Type** |
-        |--------------------|------------------|------------------|
-        |        unset       |        unset     |    MAJOR         |
-        |        unset       |        true      |    MAJOR         |
-        |        unset       |        false     |    MINOR         |
-        |        true        |        unset     |    MAJOR         |
-        |        true        |        true      |    MAJOR         |
-        |        true        |        false     |    MINOR         |
-        |        false       |        true      |    Unversioned   |
-        |        false       |        false     |    Unversioned   |
-        |        false       |        true      |    Unversioned   |
+        | **versioningEnabled** | **majorVersion** | **Version Type** |
+        |-----------------------|------------------|------------------|
+        |        unset          |        unset     |    MAJOR         |
+        |        unset          |        true      |    MAJOR         |
+        |        unset          |        false     |    MINOR         |
+        |        true           |        unset     |    MAJOR         |
+        |        true           |        true      |    MAJOR         |
+        |        true           |        false     |    MINOR         |
+        |        false          |        true      |    Unversioned   |
+        |        false          |        false     |    Unversioned   |
+        |        false          |        true      |    Unversioned   |
         <br>
 
         **Using JSON**
@@ -1475,19 +1475,19 @@ paths:
         }
         ```
         **Note:** When creating a new node using JSON by default versioning is disabled.
-        Since Alfresco 7.0 **versionEnabled** flag was introduced offering better control over the new node Versioning.
+        Since Alfresco 6.2.3 **versioningEnabled** flag was introduced offering better control over the new node Versioning.
 
-        | **versionEnabled** | **majorVersion** | **Version Type** |
-        |--------------------|------------------|------------------|
-        |        unset       |        unset     |    Unversioned   |
-        |        unset       |        true      |    MAJOR         |
-        |        unset       |        false     |    MINOR         |
-        |        true        |        unset     |    MAJOR         |
-        |        true        |        true      |    MAJOR         |
-        |        true        |        false     |    MINOR         |
-        |        false       |        true      |    Unversioned   |
-        |        false       |        false     |    Unversioned   |
-        |        false       |        true      |    Unversioned   |
+        | **versioningEnabled** | **majorVersion** | **Version Type** |
+        |-----------------------|------------------|------------------|
+        |        unset          |        unset     |    Unversioned   |
+        |        unset          |        true      |    MAJOR         |
+        |        unset          |        false     |    MINOR         |
+        |        true           |        unset     |    MAJOR         |
+        |        true           |        true      |    MAJOR         |
+        |        true           |        false     |    MINOR         |
+        |        false          |        true      |    Unversioned   |
+        |        false          |        false     |    Unversioned   |
+        |        false          |        true      |    Unversioned   |
         <br>
       operationId: createNode
       parameters:
@@ -1495,6 +1495,18 @@ paths:
         - name: autoRename
           in: query
           description: If true, then  a name clash will cause an attempt to auto rename by finding a unique name using an integer suffix.
+          required: false
+          type: boolean
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - name: majorVersion
+          in: query
+          description: If true, then created node will be version *1.0 MAJOR*. If false, then created node will be version *0.1 MINOR*.
+          required: false
+          type: boolean
+        - $ref: '#/parameters/nodeIdWithAliasParam'
+        - name: versioningEnabled
+          in: query
+          description: If true, then created node will be versioned. If false, then created node will be unversioned and auto-versioning disabled.
           required: false
           type: boolean
         - $ref: '#/parameters/nodeEntryIncludeParam'
