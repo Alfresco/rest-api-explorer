@@ -1298,6 +1298,22 @@ paths:
 
         **Note:** setting properties of type d:content and d:category are not supported.
 
+        **Note:** When creating a new node using multipart/form-data by default versioning is enabled and set to MAJOR Version.
+        Since Alfresco 7.0 **versionEnabled** flag was introduced offering better control over the new node Versioning.
+
+        | **versionEnabled** | **majorVersion** | **Version Type** |
+        |--------------------|------------------|------------------|
+        |        unset       |        unset     |    MAJOR         |
+        |        unset       |        true      |    MAJOR         |
+        |        unset       |        false     |    MINOR         |
+        |        true        |        unset     |    MAJOR         |
+        |        true        |        true      |    MAJOR         |
+        |        true        |        false     |    MINOR         |
+        |        false       |        true      |    Unversioned   |
+        |        false       |        false     |    Unversioned   |
+        |        false       |        true      |    Unversioned   |
+        <br>
+
         **Using JSON**
 
         You must specify at least a **name** and **nodeType**. For example, to create a folder:
@@ -1458,6 +1474,21 @@ paths:
           }
         }
         ```
+        **Note:** When creating a new node using JSON by default versioning is disabled.
+        Since Alfresco 7.0 **versionEnabled** flag was introduced offering better control over the new node Versioning.
+
+        | **versionEnabled** | **majorVersion** | **Version Type** |
+        |--------------------|------------------|------------------|
+        |        unset       |        unset     |    Unversioned   |
+        |        unset       |        true      |    MAJOR         |
+        |        unset       |        false     |    MINOR         |
+        |        true        |        unset     |    MAJOR         |
+        |        true        |        true      |    MAJOR         |
+        |        true        |        false     |    MINOR         |
+        |        false       |        true      |    Unversioned   |
+        |        false       |        false     |    Unversioned   |
+        |        false       |        true      |    Unversioned   |
+        <br>
       operationId: createNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
