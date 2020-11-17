@@ -1496,13 +1496,11 @@ paths:
           description: If true, then  a name clash will cause an attempt to auto rename by finding a unique name using an integer suffix.
           required: false
           type: boolean
-        - $ref: '#/parameters/nodeIdWithAliasParam'
         - name: majorVersion
           in: query
           description: If true, then created node will be version *1.0 MAJOR*. If false, then created node will be version *0.1 MINOR*.
           required: false
           type: boolean
-        - $ref: '#/parameters/nodeIdWithAliasParam'
         - name: versioningEnabled
           in: query
           description: If true, then created node will be versioned. If false, then created node will be unversioned and auto-versioning disabled.
