@@ -58,7 +58,10 @@
       plugins: [
         SwaggerUIBundle.plugins.DownloadUrl
       ],
-      layout: "StandaloneLayout"
+      layout: "StandaloneLayout",
+      onComplete: function() {
+        ui.preauthorizeBasic("basicAuth", "admin", "admin");
+      }
     })
 
     window.ui = ui
