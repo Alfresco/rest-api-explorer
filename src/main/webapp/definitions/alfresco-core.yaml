@@ -8724,8 +8724,6 @@ definitions:
     type: object
     required:
       - mimeType
-      - mimeTypeName
-      - sizeInBytes
     properties:
       mimeType:
         type: string
