@@ -9237,6 +9237,8 @@ definitions:
         type: array
         items:
           type: string
+      path:
+        $ref: '#/definitions/PathInfo'
 
   RenditionBodyCreate:
     type: object
