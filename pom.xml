@@ -195,17 +195,10 @@
             </configuration>
             <executions>
               <execution>
-                <id>start-jetty</id>
+                <id>start-ephemeral-jetty</id>
                 <phase>pre-integration-test</phase>
                 <goals>
                   <goal>start-war</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>stop-jetty</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>stop</goal>
                 </goals>
               </execution>
             </executions>
