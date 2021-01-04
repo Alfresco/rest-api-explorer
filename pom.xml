@@ -14,6 +14,8 @@
       <maven.build.sourceVersion>11</maven.build.sourceVersion>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+      <!-- needed to set the port for "jetty:start-war" run before the integration tests -->
+      <jetty.httpPort>8085</jetty.httpPort>
     </properties>
     <scm>
       <connection>scm:git:ssh://git@github.com/Alfresco/rest-api-explorer.git</connection>
@@ -181,22 +183,32 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>11.0.0</version>
+            <configuration>
+              <scan>0</scan>
+              <webApp>
+                <contextPath>/api-explorer</contextPath>
+              </webApp>
+              <httpConnector>
+                <!-- needed to set the port for the manual "mvn jetty:run-war"-->
+                <port>8085</port>
+              </httpConnector>
+            </configuration>
             <executions>
-               <execution>
-                  <phase>pre-integration-test</phase>
-                  <configuration>
-                     <fork>true</fork>
-                  </configuration>
-               </execution>
+              <execution>
+                <id>start-jetty</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>start-war</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>stop-jetty</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
             </executions>
-              <configuration>
-                <webApp>
-                  <contextPath>/api-explorer</contextPath>
-                </webApp>
-                <httpConnector>
-                  <port>8085</port>
-                </httpConnector>
-              </configuration>
           </plugin>
 
           <plugin>
