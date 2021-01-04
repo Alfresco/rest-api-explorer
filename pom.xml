@@ -8,8 +8,10 @@
     <description>Produces the API Explorer for all API definitions</description>
     <properties>
       <swagger-ui.version>3.37.0</swagger-ui.version>
-      <maven.compiler.source>1.7</maven.compiler.source>
-      <maven.compiler.target>1.7</maven.compiler.target>
+      <java.version>11</java.version>
+      <maven.compiler.source>11</maven.compiler.source>
+      <maven.compiler.target>11</maven.compiler.target>
+      <maven.build.sourceVersion>11</maven.build.sourceVersion>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -174,26 +176,29 @@
                 </archive>
             </configuration>
           </plugin>
+
           <plugin>
-            <groupId>org.apache.tomcat.maven</groupId>
-            <artifactId>tomcat7-maven-plugin</artifactId>
-            <version>2.2</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>11.0.0</version>
             <executions>
                <execution>
-                  <id>run-war-only</id>
-                  <goals>
-                     <goal>run-war-only</goal>
-                  </goals>
                   <phase>pre-integration-test</phase>
                   <configuration>
                      <fork>true</fork>
                   </configuration>
                </execution>
             </executions>
-            <configuration>
-                <port>8085</port>
-            </configuration>
+              <configuration>
+                <webApp>
+                  <contextPath>/api-explorer</contextPath>
+                </webApp>
+                <httpConnector>
+                  <port>8085</port>
+                </httpConnector>
+              </configuration>
           </plugin>
+
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-failsafe-plugin</artifactId>
