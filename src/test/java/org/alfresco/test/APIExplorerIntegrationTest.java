@@ -56,28 +56,10 @@ public class APIExplorerIntegrationTest
     {
         // get index page content
         String indexPageContent = this.retrievePageContent("http://localhost:8085/api-explorer", 200);
-        
+
         // make sure the content is correct
         int titleIndex = indexPageContent.indexOf("<title>Alfresco Content Services REST API Explorer</title>");
         assertTrue("Expected to find page title", titleIndex != -1);
-        
-        int coreAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-core.yaml\">Core API</option>");
-        assertTrue("Expected to find Core API option", coreAPIIndex != -1);
-        
-        int workflowAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-workflow.yaml\">Workflow API</option>");
-        assertTrue("Expected to find Workflow API option", workflowAPIIndex != -1);
-
-        int authAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-auth.yaml\">Authentication API</option>");
-        assertTrue("Expected to find Authentication API option", authAPIIndex != -1);
-
-        int searchAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-search.yaml\">Search API</option>");
-        assertTrue("Expected to find Search API option", searchAPIIndex != -1);
-        
-        int searchSQLAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-search-sql.yaml\">Search SQL API</option>");
-        assertTrue("Expected to find Search SQL API option", searchSQLAPIIndex != -1);
-
-        int discoveryAPIIndex = indexPageContent.indexOf("<option value=\"definitions/alfresco-discovery.yaml\">Discovery API</option>");
-        assertTrue("Expected to find Discovery API option", discoveryAPIIndex != -1);
     }
     
     @Test
@@ -285,7 +267,7 @@ public class APIExplorerIntegrationTest
         
         // make sure we got some content
         assertNotNull("Expected content from the index page", pageContent);
-        
+
         return pageContent;
     }
 }
