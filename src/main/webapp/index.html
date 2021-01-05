@@ -16,14 +16,10 @@
       overflow: -moz-scrollbars-vertical;
       overflow-y: scroll;
     }
-
-    *,
-    *:before,
-    *:after
+    *, *:before, *:after
     {
       box-sizing: inherit;
     }
-
     body
     {
       margin:0;
@@ -37,11 +33,9 @@
     .swagger-ui .topbar .download-url-wrapper .select-label {
       color: #333;
     }
-
     .topbar-wrapper img[alt="Swagger UI"] {
       visibility: collapse;
     }
-
     .topbar-wrapper .link:before {
       content:url('images/logo.svg');
     }
@@ -74,10 +68,7 @@
       plugins: [
         SwaggerUIBundle.plugins.DownloadUrl
       ],
-      layout: "StandaloneLayout",
-      onComplete: function() {
-        ui.preauthorizeBasic("basicAuth", "admin", "admin");
-      }
+      layout: "StandaloneLayout"
     })
 
     window.ui = ui
