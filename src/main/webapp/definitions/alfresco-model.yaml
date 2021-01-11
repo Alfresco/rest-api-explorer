@@ -32,6 +32,7 @@ parameters:
 paths:
   '/aspects':
     get:
+      x-alfresco-since: "7.0.0"
       tags:
         - aspects
       summary: List aspects
@@ -131,14 +132,15 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/aspect/{aspectId}':
+  '/aspects/{aspectId}':
     get:
+      x-alfresco-since: "7.0.0"
       tags:
         - aspects
       summary: Get a aspect
       description: |
         **Note:** This is available in Alfresco 7.0.0 and newer versions.
-        Get the specific aspect **aspectId** on model.
+        Get information for aspect **aspectId**.
       parameters:
         - $ref: '#/parameters/aspectIdParam'
       produces:
@@ -259,8 +261,8 @@ definitions:
       properties:
         type: array
         items:
-          $ref: '#/definitions/NodeDefinitionProperty'
-  NodeDefinitionProperty:
+          $ref: '#/definitions/Property'
+  Property:
     type: object
     required:
       - id
