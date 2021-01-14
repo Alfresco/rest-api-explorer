@@ -25,6 +25,10 @@ paths:
         - search
       summary: Searches Alfresco
       description: |
+        **Note**: after the migration to Swagger UI 3, this API definition is raising **two errors on the top of this page**, related to the `pivots` field.
+        As documented in [the Pull Request](https://github.com/Alfresco/rest-api-explorer/pull/118) and in [this StackOverflow Q&A](https://stackoverflow.com/q/65584131/1654265), the API definition is fine, and this will hopefully get fixed by upgrading to a future release of Swagger UI.
+        Meanwhile, remember that in the `pivots` array, `null` should be replaced by `{}`, before being populated with proper values.
+
         **Note**: this endpoint is available in Alfresco 5.2 and newer versions.
 
         **You specify all the parameters in this API in a JSON body**, URL parameters are not supported.
@@ -332,11 +336,7 @@ paths:
                   ]
               },
         ```
-        **Note**: after the migration to Swagger UI 3, this API definition is raising **two errors on the top of this page**, related to the `pivots` field.
 
-        As documented in [the Pull Request](https://github.com/Alfresco/rest-api-explorer/pull/118) and in [this StackOverflow Q&A](https://stackoverflow.com/q/65584131/1654265), the API definition is fine, and this will hopefully get fixed by upgrading to a future release of Swagger UI.
-
-        Meanwhile, remember that in the `pivots` array, `null` should be replaced by `{}`, before being populated with proper values.
       parameters:
         - in: body
           name: queryBody
