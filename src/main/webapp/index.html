@@ -1,146 +1,78 @@
-
+<!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Alfresco Content Services REST API Explorer</title>
-  <link rel="shortcut icon" href="https://cdn-www.alfresco.com/sites/www.alfresco.com/themes/alfrescodotcom/favicon.ico" />
-  <link href='css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
-  <link href='css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
-  <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
-  <link href='css/reset.css' media='print' rel='stylesheet' type='text/css'/>
-  <link href='css/print.css' media='print' rel='stylesheet' type='text/css'/>
-  <link href='css/alfresco.css' media='screen' rel='stylesheet' type='text/css'/>
-  <!-- Google Tag Manager -->
-  <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-W4HV22');
-  </script>
-  <!-- End Google Tag Manager -->
-  <script src='lib/jquery-1.8.0.min.js' type='text/javascript'></script>
-  <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
-  <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
-  <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
-  <script src='lib/handlebars-4.0.5.js' type='text/javascript'></script>
-  <script src='lib/object-assign-pollyfill.js' type='text/javascript'></script>
-  <script src='lib/es5-shim.js' type='text/javascript'></script>
-  <script src='lib/js-yaml.min.js' type='text/javascript'></script>
-  <script src='lib/sanitize-html.min.js' type='text/javascript'></script> 
-  <script src='lib/lodash.min.js' type='text/javascript'></script> 
-  <script src='lib/backbone-min.js' type='text/javascript'></script>
-  <script src='swagger-ui.js' type='text/javascript'></script>
-  <script src='lib/highlight.9.1.0.pack.js' type='text/javascript'></script>
-  <script src='lib/highlight.9.1.0.pack_extended.js' type='text/javascript'></script>
-  <script src='lib/jsoneditor.min.js' type='text/javascript'></script>
-  <script src='lib/marked.js' type='text/javascript'></script>
-  <script src='lib/swagger-oauth.js' type='text/javascript'></script>
-  
-  <!-- Some basic translations -->
-  <!-- <script src='lang/translator.js' type='text/javascript'></script> -->
-  <!-- <script src='lang/ru.js' type='text/javascript'></script> -->
-  <!-- <script src='lang/en.js' type='text/javascript'></script> -->
+  <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
+  <link href='./css/alfresco.css' media='screen' rel='stylesheet' type='text/css'/>
 
-  <script type="text/javascript">
-    $(function () {
-      window.swaggerUi = new SwaggerUi({
-        url: "definitions/alfresco-core.yaml",
-        dom_id: "swagger-ui-container",
-        supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
-        onComplete: function(swaggerApi, swaggerUi){
+  <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+  <style>
+    html
+    {
+      box-sizing: border-box;
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
+    }
+    *, *:before, *:after
+    {
+      box-sizing: inherit;
+    }
+    body
+    {
+      margin:0;
+      background: #fafafa;
+      padding:0;
+    }
 
-          $('pre code').each(function(i, e) {
-            hljs.highlightBlock(e)
-          });
-
-          addAuthorization();
-        },
-        onFailure: function(data) {
-          log("Unable to Load SwaggerUI");
-        },
-        docExpansion: "none",
-        jsonEditor: false,
-        apisSorter: "alpha",
-        operationsSorter: "alpha",
-        defaultModelRendering: 'schema',
-        showRequestHeaders: false,
-        validatorUrl: null
-      });
-
-      function addAuthorization(){
-        var username = $('#input_username').val();
-        var password = $('#input_password').val();
-        if (username.trim() != "" && password.trim() != "") {
-          var basicAuth = new SwaggerClient.PasswordAuthorization(username, password);
-          window.swaggerUi.api.clientAuthorizations.remove("basicAuth");
-          window.swaggerUi.api.clientAuthorizations.add("basicAuth", basicAuth);
-          log("authorization added: username = " + username + ", auth = " + basicAuth);
-        }
-      }
-      $('#input_username').change(addAuthorization);
-      $('#input_password').change(addAuthorization);
-
-      window.swaggerUi.load();
-
-      $('#select_baseUrl').change(function() {
-        window.swaggerUi.headerView.trigger('update-swagger-ui', {
-          url: $('#select_baseUrl').val()
-        });
-      });
-
-      $('#input_hostname').val(location.hostname + (location.port ? ':' + location.port : ''));
-
-      $('#input_hostname').change(function() {
-        var host = $('#input_hostname').val();
-        if (host) {
-          window.swaggerUi.api.setHost(host);
-        }
-      });
-
-      function log() {
-        if ('console' in window) {
-          console.log.apply(console, arguments);
-        }
-      }
-  });
-  </script>
+    .swagger-ui .topbar {
+      background-color: #e6e6ec;
+    }
+    .swagger-ui .topbar .download-url-wrapper .select-label {
+      color: #333;
+    }
+    .topbar-wrapper img[alt="Swagger UI"] {
+      visibility: collapse;
+    }
+    .topbar-wrapper .link:before {
+      content:url('images/logo.svg');
+    }
+  </style>
 </head>
 
-<body class="swagger-section">
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W4HV22" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-<div id='header'>
-  <div class="swagger-ui-wrap">
-    <a id="alflogo" href="#"><img src="images/logo.png"/></a>
-    <form id="api_selector">
-      <div class="input" id="select-wrapper">
-        <p>API definition:</p>
-        <select id="select_baseUrl" name="select_baseUrl">
-          <option value="definitions/alfresco-core.yaml">Core API</option>
-          <option value="definitions/alfresco-search.yaml">Search API</option>
-          <option value="definitions/alfresco-search-sql.yaml">Search SQL API</option>
-          <option value="definitions/alfresco-auth.yaml">Authentication API</option>
-          <option value="definitions/alfresco-discovery.yaml">Discovery API</option>
-          <option value="definitions/alfresco-workflow.yaml">Workflow API</option>
-        </select>
-      </div>
-      <div class="input">
-        <p>Authentication:</p>
-        <input alt="Username" type="text" name="username" id="input_username" placeholder="username" size="10" value="admin">
-        <input alt="Password" type="password" name="password" id="input_password" placeholder="password" size="10" value="admin">
-      </div>
-      <div class="input">
-        <p>Alfresco server host:</p>
-        <input alt="Hostname" type="text" name="hostname" id="input_hostname" size="15">
-      </div>
-    </form>
-  </div>
-</div>
+<body>
+<div id="swagger-ui"></div>
 
-<div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
-<div id="swagger-ui-container" class="swagger-ui-wrap"></div>
+<script src="./swagger-ui-bundle.js" charset="UTF-8"> </script>
+<script src="./swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+<script>
+  window.onload = function() {
+
+    const ui = SwaggerUIBundle({
+      urls: [
+        {url: "definitions/alfresco-core.yaml",       name: "Core API"},
+        {url: "definitions/alfresco-search.yaml",     name: "Search API"},
+        {url: "definitions/alfresco-search-sql.yaml", name: "Search SQL API"},
+        {url: "definitions/alfresco-auth.yaml",       name: "Authentication API"},
+        {url: "definitions/alfresco-discovery.yaml",  name: "Discovery API"},
+        {url: "definitions/alfresco-workflow.yaml",   name: "Workflow API"}
+      ],
+      dom_id: '#swagger-ui',
+      deepLinking: true,
+      presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIStandalonePreset
+      ],
+      plugins: [
+        SwaggerUIBundle.plugins.DownloadUrl
+      ],
+      layout: "StandaloneLayout"
+    })
+
+    window.ui = ui
+  }
+</script>
 </body>
 </html>

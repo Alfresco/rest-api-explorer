@@ -25,6 +25,10 @@ paths:
         - search
       summary: Searches Alfresco
       description: |
+        **Note**: after the migration to Swagger UI 3, this API definition is raising **two errors on the top of this page**, related to the `pivots` field.
+        As documented in [the Pull Request](https://github.com/Alfresco/rest-api-explorer/pull/118) and in [this StackOverflow Q&A](https://stackoverflow.com/q/65584131/1654265), the API definition is fine, and this will hopefully get fixed by upgrading to a future release of Swagger UI.
+        Meanwhile, remember that in the `pivots` array, `null` should be replaced by `{}`, before being populated with proper values.
+
         **Note**: this endpoint is available in Alfresco 5.2 and newer versions.
 
         **You specify all the parameters in this API in a JSON body**, URL parameters are not supported.
@@ -61,8 +65,7 @@ paths:
           "skipCount": "28"
         }
         ```
-        This example would ensure that results are **limited by Final Size**,
-        skipping the first 28 results and returning the next 50.
+        This example would ensure that results are **limited by Final Size**, skipping the first 28 results and returning the next 50.
 
         Alternatively, you can limit the results by using the **limits JSON body parameter**. For example,
         ```JSON
@@ -91,7 +94,8 @@ paths:
         **Note:** the **sort** parameter is not supported for CMIS queries.
 
         By default, search uses the **"nodes" location**, which is the **content store known as workspace://SpacesStore**.
-        To change the scope to another location you can use the **locations JSON body parameter**. You can specify either **nodes** (the default), **versions** or **deleted-nodes**.  For example,
+        To change the scope to another location you can use the **locations JSON body parameter**.
+        You can specify either **nodes** (the default), **versions** or **deleted-nodes**. For example:
         ```JSON
         "scope": {
             "locations": ["deleted-nodes"]
@@ -115,8 +119,7 @@ paths:
         }
         ```
 
-        If you are already specifying "userQuery" then the following may be easier
-        and produces the same result :
+        If you are already specifying "userQuery" then the following may be easier and produces the same result :
         ```JSON
         {
           "query": {
@@ -309,10 +312,8 @@ paths:
           }
         }
         ```
-        The example above changes the highlighting prefix and postfix from the
-         default <em> for all fields to ¿? and just for the "description" field to ().
-         The hightlight information is added in each node entry response; here is
-         an example partial response:
+        The example above changes the highlighting prefix and postfix from the default `<em>` for all fields to ¿? and just for the "description" field to ().
+        The hightlight information is added in each node entry response; here is an example partial response:
         ```
         "entry": {
                 "createdAt": "2016-10-12T15:24:31.202+0000",
@@ -335,6 +336,7 @@ paths:
                   ]
               },
         ```
+
       parameters:
         - in: body
           name: queryBody
@@ -395,7 +397,7 @@ definitions:
       query:
         $ref: '#/definitions/RequestQuery'
       paging:
-         $ref: '#/definitions/RequestPagination'
+        $ref: '#/definitions/RequestPagination'
       include:
         $ref: '#/definitions/RequestInclude'
       includeRequest:
@@ -437,29 +439,29 @@ definitions:
       highlight:
         $ref: '#/definitions/RequestHighlight'
       ranges:
-          type: array
-          items:
-            $ref: '#/definitions/RequestRange'
+        type: array
+        items:
+          $ref: '#/definitions/RequestRange'
 
   RequestInclude:
     description: |
-         Returns additional information about the node. The following optional fields can be requested:
-          * properties
-          * aspectNames
-          * path
-          * isLink
-          * allowableOperations
-          * association
+      Returns additional information about the node. The following optional fields can be requested:
+       * properties
+       * aspectNames
+       * path
+       * isLink
+       * allowableOperations
+       * association
     type: array
     items:
-     type: string
-     enum:
-       - allowableOperations
-       - aspectNames
-       - isLink
-       - isLocked
-       - path
-       - properties
+      type: string
+      enum:
+        - allowableOperations
+        - aspectNames
+        - isLink
+        - isLocked
+        - path
+        - properties
 
   RequestFields:
     description: A list of field names.
@@ -474,7 +476,7 @@ definitions:
       parameter are returned in addition to those specified in the **fields** parameter.
     type: array
     items:
-     type: string
+      type: string
   RequestPivot:
     description: A list of pivots.
     type: object
@@ -577,24 +579,24 @@ definitions:
     description: Query.
     type: object
     required:
-    - query
+      - query
     properties:
-        language:
-          description: The query language in which the query is written.
-          type: string
-          default: afts
-          enum:
-            - afts
-            - lucene
-            - cmis
-        userQuery:
-          description: The exact search request typed in by the user
-          type: string
-        query:
-          description: The query which may have been generated in some way from the userQuery
-          type: string
+      language:
+        description: The query language in which the query is written.
+        type: string
+        default: afts
+        enum:
+          - afts
+          - lucene
+          - cmis
+      userQuery:
+        description: The exact search request typed in by the user
+        type: string
+      query:
+        description: The query which may have been generated in some way from the userQuery
+        type: string
 
-  # ReponseQuery
+  # ResponseQuery
 
   ResultSetPaging:
     description: Query results
@@ -626,13 +628,13 @@ definitions:
         items:
           type: object
           properties:
-             label:
-               type: string
-             filterQuery:
+            label:
+              type: string
+            filterQuery:
               description: The filter query you can use to apply this facet
               type: string
-             count:
-               type: integer
+            count:
+              type: integer
       facetsFields:
         description: The counts from field facets
         type: array
@@ -652,18 +654,18 @@ definitions:
           The highest quality suggestion is first.
         type: array
         items:
-           type: object
-           properties:
-             "type":
-               type: string
-               enum:
-                 - searchInsteadFor
-                 - didYouMean
-             suggestion:
-               description: A suggested alternative query
-               type: array
-               items:
-                 type: string
+          type: object
+          properties:
+            "type":
+              type: string
+              enum:
+                - searchInsteadFor
+                - didYouMean
+            suggestion:
+              description: A suggested alternative query
+              type: array
+              items:
+                type: string
   GenericFacetResponse:
     type: object
     properties:
@@ -682,52 +684,52 @@ definitions:
     description: A bucket of facet results
     type: object
     properties:
-        label:
-          description: The bucket label
-          type: string
-        filterQuery:
-          description: The filter query you can use to apply this facet
-          type: string
-        display:
-          description: An optional field for additional display information
+      label:
+        description: The bucket label
+        type: string
+      filterQuery:
+        description: The filter query you can use to apply this facet
+        type: string
+      display:
+        description: An optional field for additional display information
+        type: object
+      metrics:
+        description: An array of buckets and values
+        type: array
+        items:
+          $ref: '#/definitions/GenericMetric'
+      facets:
+        description: Additional list of nested facets
+        type: array
+        items:
           type: object
-        metrics:
-          description: An array of buckets and values
-          type: array
-          items:
-            $ref: '#/definitions/GenericMetric'
-        facets:
-          description: Additional list of nested facets
-          type: array
-          items:
-            type: object
-        bucketInfo:
-          description: Additional information of nested facet
-          type: object
-          properties:
-              start:
-                description: The start of range
-                type: string
-              startInclusive:
-                description: Includes values greater or equal to "start"
-                type: boolean
-              end:
-                description: The end of range
-                type: string
-              endInclusive:
-                description: Includes values less than or equal to "end"
-                type: boolean
+      bucketInfo:
+        description: Additional information of nested facet
+        type: object
+        properties:
+          start:
+            description: The start of range
+            type: string
+          startInclusive:
+            description: Includes values greater or equal to "start"
+            type: boolean
+          end:
+            description: The end of range
+            type: string
+          endInclusive:
+            description: Includes values less than or equal to "end"
+            type: boolean
   GenericMetric:
     description: A metric used in faceting
     type: object
     properties:
       type:
-          description: The type of metric, e.g. count
-          type: string
+        description: The type of metric, e.g. count
+        type: string
       value:
-          description:  |
-            The metric value, e.g. {"count": 34}
-          type: object
+        description:  |
+          The metric value, e.g. {"count": 34}
+        type: object
   ResultBuckets:
     type: object
     properties:
@@ -806,15 +808,15 @@ definitions:
   Node:
     type: object
     required:
-    - id
-    - name
-    - nodeType
-    - isFolder
-    - isFile
-    - createdAt
-    - createdByUser
-    - modifiedAt
-    - modifiedByUser
+      - id
+      - name
+      - nodeType
+      - isFolder
+      - isFile
+      - createdAt
+      - createdByUser
+      - modifiedAt
+      - modifiedByUser
     properties:
       id:
         type: string
@@ -918,42 +920,42 @@ definitions:
     description: Common query defaults
     type: object
     properties:
-       textAttributes:
-         description: |
-           A list of query fields/properties used to expand TEXT: queries.
-           The default is cm:content.
-           You could include all content properties using d:content or list all individual content properties or types.
-           As more terms are included the query size, complexity, memory impact and query time will increase.
-         type: array
-         items:
-           type: string
-           default: cm:content
-       defaultFTSOperator:
-         description: |
-           The default way to combine query parts when AND or OR is not explicitly stated - includes ! - +
-           one two three
-           (one two three)
-         type: string
-         default: AND
-         enum:
-            - AND
-            - OR
-       defaultFTSFieldOperator:
-         description: |
-           The default way to combine query parts in field query groups when AND or OR is not explicitly stated - includes ! - +
-           FIELD:(one two three)
-         type: string
-         default: AND
-         enum:
-            - AND
-            - OR
-       namespace:
-         description: The default name space to use if one is not provided
-         type: string
-         default: cm
-       defaultFieldName:
-         type: string
-         default: TEXT
+      textAttributes:
+        description: |
+          A list of query fields/properties used to expand TEXT: queries.
+          The default is cm:content.
+          You could include all content properties using d:content or list all individual content properties or types.
+          As more terms are included the query size, complexity, memory impact and query time will increase.
+        type: array
+        items:
+          type: string
+          default: cm:content
+      defaultFTSOperator:
+        description: |
+          The default way to combine query parts when AND or OR is not explicitly stated - includes ! - +
+          one two three
+          (one two three)
+        type: string
+        default: AND
+        enum:
+          - AND
+          - OR
+      defaultFTSFieldOperator:
+        description: |
+          The default way to combine query parts in field query groups when AND or OR is not explicitly stated - includes ! - +
+          FIELD:(one two three)
+        type: string
+        default: AND
+        enum:
+          - AND
+          - OR
+      namespace:
+        description: The default name space to use if one is not provided
+        type: string
+        default: cm
+      defaultFieldName:
+        type: string
+        default: TEXT
   RequestTemplates:
     description: |
       Templates usewd for query expansion.
@@ -975,14 +977,14 @@ definitions:
     description: Scope
     type: object
     properties:
-        locations:
-          description: |
-            The locations to include in the query
-          type: string
-          enum:
-              - nodes
-              - versions
-              - deleted-nodes
+      locations:
+        description: |
+          The locations to include in the query
+        type: string
+        enum:
+          - nodes
+          - versions
+          - deleted-nodes
   RequestPagination:
     type: object
     properties:
@@ -1258,7 +1260,7 @@ definitions:
             fragmentSize:
               type: integer
             mergeContiguous:
-             type: boolean
+              type: boolean
             prefix:
               type: string
             postfix:
