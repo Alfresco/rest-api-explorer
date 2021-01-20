@@ -1,0 +1,41 @@
+import:
+  - source: Alfresco/alfresco-build-tools:.travis.pre-commit.yml@v1.0.0
+
+language: java
+jdk: openjdk11
+dist: focal
+
+git:
+  depth: false
+  quiet: true
+
+cache:
+  directories:
+    - ${HOME}/.m2/repository
+
+before_cache: rm -rf $HOME/.m2/repository/org/alfresco/api-explorer
+before_install: python3 --version
+
+branches:
+  only:
+    - master
+    - /feature\/.*/
+    - /fix\/.*/
+
+stages:
+  - name: Test
+    if: commit_message !~ /\[skip tests\]/
+  - name: Release
+    if: commit_message ~= /\[release\]/ AND branch ~= /^(master|feature\/.+|fix\/.+)$/ AND type != pull_request AND fork = false
+
+jobs:
+  include:
+    - name: "Integration Tests"
+      stage: Test
+      script:
+        - mvn integration-test
+
+    - name: "Release"
+      stage: Release
+      script:
+        - bash CI/release.sh

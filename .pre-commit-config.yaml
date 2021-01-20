@@ -9,3 +9,11 @@ repos:
       - id: check-yaml
         args: [--allow-multiple-documents]
       - id: check-json
+
+  - repo: https://github.com/APIDevTools/swagger-cli
+    rev: v4.0.4
+    hooks:
+      - id: swagger-validation
+        name: Check Alfresco OpenAPI 2.0 definition
+        files: (alfresco).*\.(json|ya?ml)$
+        args: ["validate"]
