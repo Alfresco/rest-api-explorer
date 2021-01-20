@@ -14,7 +14,6 @@ cache:
     - ${HOME}/.m2/repository
 
 before_cache: rm -rf $HOME/.m2/repository/org/alfresco/api-explorer
-before_install: python3 --version
 
 branches:
   only:
