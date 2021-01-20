@@ -23,6 +23,7 @@ branches:
     - /fix\/.*/
 
 stages:
+  - name: Lint
   - name: Test
     if: commit_message !~ /\[skip tests\]/
   - name: Release
