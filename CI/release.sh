@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-echo "TODO: Do tag-based mvn release here"
+echo "RELEASE VERSION: ${RELEASE_VERSION}"
+
+#mvn -DreleaseVersion=${release.version} -DignoreSnapshots -DdevelopmentVersion=${next.version} release:prepare release:perform

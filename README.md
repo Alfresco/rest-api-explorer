@@ -1,12 +1,13 @@
 # Welcome to the Alfresco REST API Explorer
 
+[![Build Status](https://travis-ci.com/Alfresco/rest-api-explorer.svg?branch=master)](https://travis-ci.com/Alfresco/rest-api-explorer)
+
 The API Explorer allows you to browse and experiment with the REST APIs available in the Alfresco platform.
 
 #### Building and deploying the war
 - `mvn install`
 
 You now have a `target/api-explorer.war`, drop this into your Application server that is running alfresco.war
-
 
 #### For development only
 You can run the project as a packaged web application using an embedded Jetty server.  

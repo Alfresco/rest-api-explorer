@@ -23,17 +23,24 @@ branches:
 
 stages:
   - name: Lint
+  - name: Build
   - name: Test
     if: commit_message !~ /\[skip tests\]/
   - name: Release
-    if: commit_message ~= /\[release\]/ AND branch ~= /^(master|feature\/.+|fix\/.+)$/ AND type != pull_request AND fork = false
+#    if: commit_message ~= /\[release\]/ AND branch = master AND type != push AND type != pull_request AND fork = false
+    if: commit_message ~= /\[release\]/ AND branch = "feature/ACS-1139_migrate-to-Travis" AND type != push AND type != pull_request AND fork = false
 
 jobs:
   include:
+    - name: "Build"
+      stage: Build
+      script:
+        - bash CI/build.sh
+
     - name: "Integration Tests"
       stage: Test
       script:
-        - mvn integration-test
+        - bash CI/test.sh
 
     - name: "Release"
       stage: Release
