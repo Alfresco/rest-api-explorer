@@ -4,12 +4,12 @@
   <servers>
     <server>
       <id>alfresco-public</id>
-      <username>${NEXUS_USERNAME}</username>
+      <username>${NEXUS_USER}</username>
       <password>${NEXUS_PASSWORD}</password>
     </server>
     <server>
       <id>alfresco-public-snapshots</id>
-      <username>${NEXUS_USERNAME}</username>
+      <username>${NEXUS_USER}</username>
       <password>${NEXUS_PASSWORD}</password>
     </server>
   </servers>
