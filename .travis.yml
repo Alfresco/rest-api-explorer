@@ -1,23 +1,13 @@
 import:
-  - source: Alfresco/alfresco-build-tools:.travis.pre-commit.yml@v1.0.0
+  - source: Alfresco/alfresco-build-tools:.travis.pre-commit.yml@v1.0.1
+  - source: Alfresco/alfresco-build-tools:.travis.java.yml@v1.0.1
 
-language: java
-jdk: openjdk11
 dist: focal
 
 git:
   depth: false
   quiet: true
 
-cache:
-  directories:
-    - ${HOME}/.m2/repository
-
-before_cache: rm -rf $HOME/.m2/repository/org/alfresco/api-explorer
-
-before_install:
-  - cp -f .travis.settings.xml "${HOME}/.m2/settings.xml"
-  - travis_retry mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
 branches:
   only:
@@ -45,8 +35,3 @@ jobs:
       stage: Release
       script:
         - bash CI/release_to_nexus.sh $RELEASE_VERSION $GITHUB_EMAIL $GITHUB_PASSWORD
-
-#    - name: "Release on GitHub"
-#      stage: Release
-#      script:
-#        - bash CI/release_to_github.sh $RELEASE_VERSION $GITHUB_EMAIL $GITHUB_PASSWORD $GITHUB_TOKEN
