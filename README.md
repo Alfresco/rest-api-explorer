@@ -18,7 +18,7 @@ This is useful for changing documentation and endpoint descriptions but it means
 Now the application is running at [http://localhost:8085/api-explorer](http://localhost:8085/api-explorer/)
 
 ### License
-Copyright (C) 2020 Alfresco Software Limited
+Copyright (C) 2016-2021 Alfresco Software Limited
 
 This file is part of an unsupported extension to Alfresco.
 
