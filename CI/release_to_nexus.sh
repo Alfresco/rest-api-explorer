@@ -7,12 +7,14 @@ readonly GITHUB_PASSWORD=$3
 echo "RELEASE VERSION: $RELEASE_VERSION"
 
 # Needed for testing it from the dev branch
-git checkout -f master
+#git checkout -f master
 
 # Use full history for release
-#git checkout -B "${TRAVIS_BRANCH}"
+git checkout -B "${TRAVIS_BRANCH}"
 # Add email to link commits to user
 git config user.email "${GIT_EMAIL}"
+
+
 
 mvn release:clean release:prepare release:perform \
       -B \
@@ -21,6 +23,6 @@ mvn release:clean release:prepare release:perform \
       -DreleaseVersion="$RELEASE_VERSION" \
       -DignoreSnapshots \
       -DdevelopmentVersion="-SNAPSHOT" \
-      -DscmCommentPrefix="[maven-release-plugin][skip ci] " \
-      -Dusername="${GIT_EMAIL}" \
-      -Dpassword="${GIT_PASSWORD}"
+#      -DscmCommentPrefix="[maven-release-plugin][skip ci] " \
+#      -Dusername="${GIT_EMAIL}" \
+#      -Dpassword="${GIT_PASSWORD}"
