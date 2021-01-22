@@ -31,7 +31,7 @@ jobs:
       script:
         - bash CI/test.sh
 
-    - name: "Release on NEXUS"
+    - name: "Release on Nexus and GitHub"
       stage: release
       script:
-        - bash CI/release.sh $RELEASE_VERSION $GITHUB_EMAIL $GITHUB_PASSWORD
+        - bash CI/release.sh
