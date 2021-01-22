@@ -21,12 +21,12 @@
     <jetty.httpPort>8085</jetty.httpPort>
   </properties>
 
-<!--  <scm>-->
-<!--    <connection>scm:git:ssh://git@github.com/Alfresco/rest-api-explorer.git</connection>-->
-<!--    <developerConnection>scm:git:ssh://git@github.com/Alfresco/rest-api-explorer.git</developerConnection>-->
-<!--    <url>scm:git:ssh://git@github.com/Alfresco/rest-api-explorer.git</url>-->
-<!--    <tag>HEAD</tag>-->
-<!--  </scm>-->
+  <scm>
+    <connection>scm:git:https://git@github.com/Alfresco/rest-api-explorer.git</connection>
+    <developerConnection>scm:git:https://git@github.com/Alfresco/rest-api-explorer.git</developerConnection>
+    <url>scm:git:https://git@github.com/Alfresco/rest-api-explorer.git</url>
+    <tag>HEAD</tag>
+  </scm>
 
   <licenses>
     <license>

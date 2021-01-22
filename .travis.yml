@@ -16,10 +16,10 @@ branches:
     - /fix\/.*/
 
 stages:
-  - name: Lint
-  - name: Test
+  - name: lint
+  - name: test
     if: commit_message !~ /\[skip tests\]/
-  - name: Release
+  - name: release
 #    if: commit_message ~= /\[release\]/ AND branch = master AND type != push AND type != pull_request AND fork = false
     if: commit_message ~= /\[release\]/ AND branch = "feature/ACS-1139_migrate-to-Travis" AND type != push AND type != pull_request AND fork = false
 
@@ -27,11 +27,11 @@ jobs:
   include:
 
     - name: "Integration Tests"
-      stage: Test
+      stage: test
       script:
         - bash CI/test.sh
 
     - name: "Release on NEXUS"
-      stage: Release
+      stage: release
       script:
-        - bash CI/release_to_nexus.sh $RELEASE_VERSION $GITHUB_EMAIL $GITHUB_PASSWORD
+        - bash CI/release.sh $RELEASE_VERSION $GITHUB_EMAIL $GITHUB_PASSWORD
