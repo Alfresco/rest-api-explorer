@@ -8,7 +8,7 @@ echo "RELEASE VERSION: $RELEASE_VERSION"
 # Use full history for release
 git checkout -B "${TRAVIS_BRANCH}"
 # Add email to link commits to user
-git config user.email "${GITHUB_EMAIL}"
+git config user.email "${GIT_EMAIL}"
 
 
 
@@ -20,5 +20,5 @@ mvn release:clean release:prepare release:perform \
       -DignoreSnapshots \
       -DdevelopmentVersion="-SNAPSHOT" \
       -DscmCommentPrefix="[maven-release-plugin][skip ci] " \
-      -Dusername="${GITHUB_USERNAME}" \
-      -Dpassword="${GITHUB_PASSWORD}"
+      -Dusername="${GIT_USERNAME}" \
+      -Dpassword="${GIT_PASSWORD}"
