@@ -1,0 +1,35 @@
+import:
+  - source: Alfresco/alfresco-build-tools:.travis.pre-commit.yml@v1.0.1
+  - source: Alfresco/alfresco-build-tools:.travis.java.yml@v1.0.1
+
+dist: focal
+
+git:
+  depth: false
+  quiet: true
+
+branches:
+  only:
+    - master
+    - /feature\/.*/
+    - /fix\/.*/
+
+stages:
+  - name: lint
+  - name: test
+    if: commit_message !~ /\[skip tests\]/
+  - name: release
+    if: commit_message ~= /\[release\]/ AND branch = master AND type != push AND type != pull_request AND fork = false
+
+jobs:
+  include:
+
+    - name: "integration tests"
+      stage: test
+      script:
+        - bash CI/test.sh
+
+    - name: "release on Nexus and GitHub"
+      stage: release
+      script:
+        - bash CI/release.sh
