@@ -6,8 +6,10 @@ readonly GITHUB_PASSWORD=$3
 
 echo "RELEASE VERSION: $RELEASE_VERSION"
 
-# Needed for testing it from the dev branch
-git checkout -f master
+# Use full history for release
+git checkout -B "${TRAVIS_BRANCH}"
+# Add email to link commits to user
+git config user.email "${GIT_EMAIL}"
 
 mvn release:clean release:prepare release:perform \
       -B \
