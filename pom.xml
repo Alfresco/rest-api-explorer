@@ -110,7 +110,7 @@
             </goals>
             <configuration>
               <includes>META-INF/resources/webjars/swagger-ui/${swagger-ui.version}/**/*.*</includes>
-              <excludes>**/index.html,**/*.gz</excludes>
+              <excludes>**/index.html,**/*.gz,**/*.map</excludes>
               <outputDirectory>${basedir}/src/main/swagger</outputDirectory>
             </configuration>
           </execution>
