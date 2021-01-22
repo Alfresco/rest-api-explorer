@@ -13,6 +13,7 @@ fi
 
 # Use full history for release
 git checkout -B master
+
 # Add email to link commits to user
 git config user.email "${GIT_EMAIL}"
 
