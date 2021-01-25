@@ -112,11 +112,15 @@ paths:
               ```
               where=(modelIds=customModel1,customModel2)
               ```
+            The following where clause will only return aspects that matches the pattern.
+              ```
+              where=(not uriPrefix matches('http://www.alfresco.org/model.*'))
+              ```
+            The following where clause will only return aspects that doesn't matches the pattern.
+              ```
+              where=(not uriPrefix matches('http://www.alfresco.org/model.*'))
+              ```
 
-              The following where clause will only return all the aspect from custom models.
-              ```
-              where=(customModelOnly=true)
-              ```
           required: false
           type: string
       produces:
