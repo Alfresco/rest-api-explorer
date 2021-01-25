@@ -53,36 +53,22 @@ paths:
             "entries": [
               {
                 "entry": {
-                  "name": "titled",
-                  "prefixedName": "cm:titled",
+                  "id": "cm:titled",
                   "description": "Titled",
                   "title": "Titled",
                   "properties": [
                     {
-                      "name": "title",
-                      "prefixedName": "cm:title",
+                      "id": "cm:title",
                       "title": "Title",
                       "description": "Content Title",
                       "dataType": "d:mltext",
-                      "facetable": "UNSET",
-                      "indexTokenisationMode": "BOTH",
-                      "multiValued": false,
-                      "mandatoryEnforced": false,
-                      "mandatory": false,
-                      "indexed": true
+                      "isMultiValued": false,
+                      "isMandatory": false,
+                      "isMandatoryEnforced": false
+                      "isProtected": false
                     },
                     {
-                      "name": "description",
-                      "prefixedName": "cm:description",
-                      "title": "Description",
-                      "description": "Content Description",
-                      "dataType": "d:mltext",
-                      "facetable": "UNSET",
-                      "indexTokenisationMode": "BOTH",
-                      "multiValued": false,
-                      "mandatoryEnforced": false,
-                      "mandatory": false,
-                      "indexed": true
+                      ...
                     }
                   ]
                 }
@@ -120,7 +106,6 @@ paths:
               ```
               where=(not uriPrefix matches('http://www.alfresco.org/model.*'))
               ```
-
           required: false
           type: string
       produces:
