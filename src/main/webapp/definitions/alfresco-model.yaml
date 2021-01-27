@@ -97,6 +97,9 @@ paths:
             The following where clause will only return aspects from the customModel1 and customModel2.
               ```
               where=(modelIds=customModel1,customModel2)
+            The following where clause will only return sub aspects for the given parents.
+              ```
+              where=(parentIds=cm:titled)
               ```
             The following where clause will only return aspects that matches the pattern.
               ```

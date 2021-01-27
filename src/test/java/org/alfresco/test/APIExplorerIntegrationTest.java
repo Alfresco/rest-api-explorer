@@ -69,7 +69,7 @@ public class APIExplorerIntegrationTest
         
         // get core definition content
         String coreDefinitionContent = this.retrievePageContent(coreDefinitionUrl+YAML, 200);
-        
+
         // make sure the content is correct
         int swaggerIndex = coreDefinitionContent.indexOf("swagger:");
         assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
@@ -212,6 +212,28 @@ public class APIExplorerIntegrationTest
         assertTrue("Expected to find /discovery path", paths.containsKey("/discovery"));
     }
 
+    @Test
+    public void testDiscoveryModelDefinition() throws Exception {
+        String definitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-model";
+
+        // get definition content
+        String definitionContent = this.retrievePageContent(definitionUrl + YAML, 200);
+
+        // make sure the content is correct
+        int swaggerIndex = definitionContent.indexOf("swagger:");
+        assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
+
+        validateModelDefn(definitionUrl + YAML);
+        validateModelDefn(definitionUrl + JSON);
+    }
+
+    private void validateModelDefn(String definitionUrl) {
+        Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Content Services REST API", "Model API", "1");
+        Map<String, Path> paths = swagger.getPaths();
+        assertNotNull("Expected to retrieve a map of paths", paths);
+        assertTrue("Expected to find /aspects path", paths.containsKey("/aspects"));
+    }
+
     private Swagger validateSwaggerDef(String definitionUrl, String title, String description, String version) {
         Swagger swagger = new SwaggerParser().read(definitionUrl);
         assertNotNull("Expected the API definition to parse successfully: "+ definitionUrl, swagger);
@@ -227,7 +249,7 @@ public class APIExplorerIntegrationTest
         String defs = this.retrievePageContent("http://localhost:8085/api-explorer/definitions/index.jsp", 200);
         List<String> definitions = Json.mapper().readValue(defs, new TypeReference<List<String>>(){});
         assertNotNull(definitions);
-        assertEquals("6 definitions in 2 formats should be 12.", 12, definitions.size());
+        assertEquals("7 definitions in 2 formats should be 14.", 14, definitions.size());
     }
 
     public String retrievePageContent(String url, int expectedStatus) throws Exception
