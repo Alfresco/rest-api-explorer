@@ -9636,7 +9636,7 @@ definitions:
         description:  the default value
         type: string
       dataType:
-        description: the name of the property type (i.g. d:text)
+        description: the name of the property type (e.g. d:text)
         type: string
       isMultiValued:
         description: define if the property is multi-valued

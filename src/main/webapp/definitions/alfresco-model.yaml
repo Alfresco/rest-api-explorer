@@ -25,7 +25,7 @@ parameters:
   aspectIdParam:
     name: aspectId
     in: path
-    description: The Qname of a aspect.
+    description: The Qname of an aspect. e.g `namespace_prefix:name`
     required: true
     type: string
 
@@ -104,12 +104,12 @@ paths:
               where=(parentIds='parentId1,parentId2')
               ```
 
-            The following where clause will only return aspects that matches the pattern.
+            The following where clause will only return aspects that match the pattern.
               ```
               where=(uriPrefix matches('http://www.alfresco.org/model.*'))
               ```
 
-            The following where clause will only return aspects that doesn't matches the pattern.
+            The following where clause will only return aspects that don't match the pattern.
               ```
               where=(not uriPrefix matches('http://www.alfresco.org/model.*'))
               ```
@@ -133,7 +133,7 @@ paths:
       x-alfresco-since: "7.0.0"
       tags:
         - aspects
-      summary: Get a aspect
+      summary: Get an aspect
       description: |
         **Note:** This is available in Alfresco 7.0.0 and newer versions.
         Get information for aspect **aspectId**.
@@ -275,7 +275,7 @@ definitions:
         description:  the default value
         type: string
       dataType:
-        description: the name of the property type (i.g. d:text)
+        description: the name of the property type (e.g. d:text)
         type: string
       isMultiValued:
         description: define if the property is multi-valued
