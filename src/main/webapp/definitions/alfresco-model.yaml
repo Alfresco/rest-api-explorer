@@ -103,7 +103,7 @@ paths:
               ```
             The following where clause will only return aspects that matches the pattern.
               ```
-              where=(not uriPrefix matches('http://www.alfresco.org/model.*'))
+              where=(uriPrefix matches('http://www.alfresco.org/model.*'))
               ```
             The following where clause will only return aspects that doesn't matches the pattern.
               ```

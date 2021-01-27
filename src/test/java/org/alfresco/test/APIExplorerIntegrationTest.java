@@ -213,7 +213,7 @@ public class APIExplorerIntegrationTest
     }
 
     @Test
-    public void testDiscoveryModelDefinition() throws Exception {
+    public void testModelDefinition() throws Exception {
         String definitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-model";
 
         // get definition content
