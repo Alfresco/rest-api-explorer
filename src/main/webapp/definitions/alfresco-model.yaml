@@ -94,14 +94,16 @@ paths:
           description: |
             Optionally filter the list. Here are some examples:
 
-            The following where clause will only return aspects from the customModel1 and customModel2.
+            An aspect should represented in the fully qualified name(`namespace_prefix:name`). e.g 'cm:title'.
+
+            The following where clause will only return aspects from the `namespace1:model` and `namespace2:model`.
               ```
-              where=(modelIds='customModel1,customModel2')
+              where=(modelIds='namespace1:model,namespace2:model')
               ```
 
             The following where clause will only return sub aspects for the given parents.
               ```
-              where=(parentIds='parentId1,parentId2')
+              where=(parentIds='namespace1:parent1,namespace1:parent2')
               ```
 
             The following where clause will only return aspects that match the pattern.
