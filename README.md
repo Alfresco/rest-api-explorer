@@ -1,6 +1,8 @@
 # Welcome to the Alfresco REST API Explorer
 
 [![Build Status](https://travis-ci.com/Alfresco/rest-api-explorer.svg?branch=master)](https://travis-ci.com/Alfresco/rest-api-explorer)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+![GitHub](https://img.shields.io/github/license/Alfresco/rest-api-explorer?color=brightgreen)
 
 The API Explorer allows you to browse and experiment with the REST APIs available in the Alfresco platform.
 
