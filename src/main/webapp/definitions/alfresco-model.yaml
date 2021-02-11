@@ -418,6 +418,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Property'
+      model:
+        $ref: '#/definitions/Model'
   Property:
     type: object
     required:
@@ -474,3 +476,18 @@ definitions:
         type: object
         additionalProperties:
           type: object
+  Model:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+      author:
+        type: string
+      description:
+        type: string
+      namespaceUri:
+        type: string
+      namespacePrefix:
+        type: string
