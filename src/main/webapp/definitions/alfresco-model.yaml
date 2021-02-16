@@ -291,6 +291,10 @@ paths:
           description: |
             Returns additional information about the type. The following optional fields can be requested:
             * properties
+            * associations
+            * mandatoryAspects
+            * isContainer
+            * includedInSupertypeQuery
           required: false
           type: array
           items:
@@ -447,7 +451,22 @@ definitions:
       entry:
         $ref: '#/definitions/Type'
   Type:
-    $ref: '#/definitions/AbstractClass'
+    allOf:
+      - $ref: '#/definitions/AbstractClass'
+      - type: object
+        properties:
+          isContainer:
+            type: boolean
+          includedInSupertypeQuery:
+            type: boolean
+          mandatoryAspects:
+            type: array
+            items:
+              type: string
+          associations:
+            type: array
+            items:
+              $ref: '#/definitions/Association'
   AbstractClass:
     type: object
     required:
@@ -539,3 +558,30 @@ definitions:
         type: string
       namespacePrefix:
         type: string
+  Association:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+      duplicate:
+        type: boolean
+      propagateTimestamps:
+        type: boolean
+      source:
+        type: object
+        properties:
+          mandatory:
+            type: boolean
+          many:
+            type: boolean
+      target:
+        type: object
+        properties:
+          mandatory:
+            type: boolean
+          many:
+            type: boolean
+          class:
+            type: string
