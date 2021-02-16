@@ -295,6 +295,7 @@ paths:
             * mandatoryAspects
             * isContainer
             * includedInSupertypeQuery
+            * archive
           required: false
           type: array
           items:
@@ -456,6 +457,8 @@ definitions:
       - type: object
         properties:
           isContainer:
+            type: boolean
+          archive:
             type: boolean
           includedInSupertypeQuery:
             type: boolean
