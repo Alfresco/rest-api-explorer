@@ -574,33 +574,24 @@ definitions:
         type: string
       description:
         type: string
-      child:
+      isChild:
         type: boolean
-      protected:
+      isProtected:
         type: boolean
       source:
-        type: object
-        properties:
-          role:
-            type: string
-          cls:
-            type: string
-          mandatory:
-            type: boolean
-          many:
-            type: boolean
-          mandatoryEnforced:
-            type: boolean
+        $ref: '#/definitions/AssociationSource'
       target:
-        type: object
-        properties:
-          role:
-            type: string
-          cls:
-            type: string
-          mandatory:
-            type: boolean
-          many:
-            type: boolean
-          mandatoryEnforced:
-            type: boolean
+        $ref: '#/definitions/AssociationSource'
+  AssociationSource:
+    type: object
+    properties:
+      role:
+        type: string
+      cls:
+        type: string
+      isMandatory:
+        type: boolean
+      many:
+        type: boolean
+      isMandatoryEnforced:
+        type: boolean
