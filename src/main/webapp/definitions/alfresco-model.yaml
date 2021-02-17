@@ -141,6 +141,11 @@ paths:
           description: |
             Returns additional information about the aspect. The following optional fields can be requested:
             * properties
+            * container
+            * archive
+            * includedInSupertypeQuery
+            * mandatoryAspects
+            * associations
           required: false
           type: array
           items:
@@ -291,11 +296,11 @@ paths:
           description: |
             Returns additional information about the type. The following optional fields can be requested:
             * properties
-            * associations
-            * mandatoryAspects
-            * isContainer
-            * includedInSupertypeQuery
+            * container
             * archive
+            * includedInSupertypeQuery
+            * mandatoryAspects
+            * associations
           required: false
           type: array
           items:
@@ -452,24 +457,7 @@ definitions:
       entry:
         $ref: '#/definitions/Type'
   Type:
-    allOf:
-      - $ref: '#/definitions/AbstractClass'
-      - type: object
-        properties:
-          isContainer:
-            type: boolean
-          archive:
-            type: boolean
-          includedInSupertypeQuery:
-            type: boolean
-          mandatoryAspects:
-            type: array
-            items:
-              type: string
-          associations:
-            type: array
-            items:
-              $ref: '#/definitions/Association'
+    $ref: '#/definitions/AbstractClass'
   AbstractClass:
     type: object
     required:
@@ -488,6 +476,20 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Property'
+      container:
+        type: boolean
+      archive:
+        type: boolean
+      includedInSupertypeQuery:
+        type: boolean
+      mandatoryAspects:
+        type: array
+        items:
+          type: string
+      associations:
+        type: array
+        items:
+          $ref: '#/definitions/Association'
       model:
         $ref: '#/definitions/Model'
   Property:
@@ -568,23 +570,37 @@ definitions:
     properties:
       id:
         type: string
-      duplicate:
+      title:
+        type: string
+      description:
+        type: string
+      child:
         type: boolean
-      propagateTimestamps:
+      protected:
         type: boolean
       source:
         type: object
         properties:
+          role:
+            type: string
+          cls:
+            type: string
           mandatory:
             type: boolean
           many:
+            type: boolean
+          mandatoryEnforced:
             type: boolean
       target:
         type: object
         properties:
+          role:
+            type: string
+          cls:
+            type: string
           mandatory:
             type: boolean
           many:
             type: boolean
-          class:
-            type: string
+          mandatoryEnforced:
+            type: boolean
