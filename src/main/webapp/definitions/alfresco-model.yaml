@@ -141,9 +141,6 @@ paths:
           description: |
             Returns additional information about the aspect. The following optional fields can be requested:
             * properties
-            * container
-            * archive
-            * includedInSupertypeQuery
             * mandatoryAspects
             * associations
           required: false
@@ -296,9 +293,6 @@ paths:
           description: |
             Returns additional information about the type. The following optional fields can be requested:
             * properties
-            * container
-            * archive
-            * includedInSupertypeQuery
             * mandatoryAspects
             * associations
           required: false
@@ -476,7 +470,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Property'
-      container:
+      isContainer:
         type: boolean
       archive:
         type: boolean
@@ -591,7 +585,7 @@ definitions:
         type: string
       isMandatory:
         type: boolean
-      many:
+      isMany:
         type: boolean
       isMandatoryEnforced:
         type: boolean
