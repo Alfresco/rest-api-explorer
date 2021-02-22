@@ -483,7 +483,7 @@ definitions:
       associations:
         type: array
         items:
-          $ref: '#/definitions/Association'
+          $ref: '#/definitions/AbstractClassAssociation'
       model:
         $ref: '#/definitions/Model'
   Property:
@@ -557,7 +557,7 @@ definitions:
         type: string
       namespacePrefix:
         type: string
-  Association:
+  AbstractClassAssociation:
     type: object
     required:
       - id
@@ -573,10 +573,10 @@ definitions:
       isProtected:
         type: boolean
       source:
-        $ref: '#/definitions/AssociationSource'
+        $ref: '#/definitions/AbstractClassAssociationSource'
       target:
-        $ref: '#/definitions/AssociationSource'
-  AssociationSource:
+        $ref: '#/definitions/AbstractClassAssociationSource'
+  AbstractClassAssociationSource:
     type: object
     properties:
       role:
