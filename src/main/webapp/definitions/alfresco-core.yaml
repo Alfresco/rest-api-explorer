@@ -58,6 +58,8 @@ tags:
     description: Retrieve and manage deleted nodes
   - name: versions
     description: Retrieve and manage versions
+  - name: storage-classes
+    description: Retrieve the list of supported storage classes
 parameters:
   actionDefinitionIdParam:
       name: actionDefinitionId
@@ -168,6 +170,7 @@ parameters:
       * path
       * permissions
       * definition
+      * storageClasses
     required: false
     type: array
     items:
@@ -482,6 +485,15 @@ parameters:
     description: |
       Returns additional information about the audit entry. The following optional fields can be requested:
       * values
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  storageClasses:
+    name: storageClasses
+    in: query
+    description: Specifies the storage classes associated with the node. If not specified, the default storage class will be used. 
     required: false
     type: array
     items:
@@ -1062,6 +1074,7 @@ paths:
             }
         }
         ```
+        Starting with Alfresco 7.1, **StorageClasses** can be used to update a node to a particular storage class.
         **Note:** if you want to add or remove locally set permissions then you must use **GET /nodes/{nodeId}** first to get the complete set of *locallySet* permissions.
 
         **Note:** Currently there is no optimistic locking for updates, so they are applied in "last one wins" order.
@@ -1474,6 +1487,7 @@ paths:
           }
         }
         ```
+        Starting with Alfresco 7.1, **StorageClasses** can be used to create a node with a particular storage class.
         **Note:** When creating a new node using JSON by default versioning is disabled.
         Since Alfresco 6.2.3 **versioningEnabled** flag was introduced offering better control over the new node Versioning.
 
@@ -1836,6 +1850,8 @@ paths:
 
         The request body for this endpoint can be any text or binary stream.
 
+        Starting with Alfresco 7.1, **StorageClasses** can be used to update a node to a particular storage class.
+
         The **majorVersion** and **comment** parameters can be used to control versioning behaviour. If the content is versionable,
         a new minor version is created by default.
 
@@ -1874,6 +1890,7 @@ paths:
           pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
+        - $ref: '#/parameters/storageClasses'
         - in: body
           name: contentBodyUpdate
           description: The binary content
@@ -7521,6 +7538,44 @@ paths:
         '404':
           description: |
             **actionDefinitionId** or **targetId** does not exist
+  '/storage-classes':
+    get:
+      x-alfresco-since: "7.1"
+      tags:
+        - storage-classes
+      summary: Retrieve the list of supported storage classes in the system
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
+
+        Gets a list of all available storage classes
+
+          The default sort order for the returned list of storage classes is by ascending id.
+          You can override the default by using the **orderBy** parameter.
+
+          You can use any of the following fields to order the results:
+          * id
+      operationId: listStorageClasses
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/StorageClasses'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
+        '401':
+          description: Authentication failed
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -8732,6 +8787,10 @@ definitions:
         format: int64
       encoding:
         type: string
+      storageClasses:
+        type: array
+        items:
+          $ref: '#/definitions/StorageClass'
   AssociationInfo:
     type: object
     required:
@@ -8871,6 +8930,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/AssociationBody'
+      storageClasses:
+        type: array
+        items:
+          $ref: '#/definitions/StorageClass'
   NodeBodyUpdate:
     type: object
     properties:
@@ -8892,6 +8955,10 @@ definitions:
           type: string
       permissions:
         $ref: '#/definitions/PermissionsBody'
+      storageClasses:
+        type: array
+        items:
+          $ref: '#/definitions/StorageClass'
   NodeBodyCopy:
     type: object
     required:
@@ -9111,6 +9178,10 @@ definitions:
         $ref: '#/definitions/PermissionsInfo'
       definition:
         $ref: '#/definitions/Definition'
+      storageClasses:
+        type: array
+        items:
+          $ref: '#/definitions/StorageClass'
   ProbeEntry:
     type: object
     required:
@@ -9675,3 +9746,26 @@ definitions:
         type: object
         additionalProperties:
           type: object
+  StorageClasses:
+    type: object
+    required:
+      - entries
+    properties:
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/StorageClassEntry'
+  StorageClassEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/StorageClass'
+  StorageClass:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
