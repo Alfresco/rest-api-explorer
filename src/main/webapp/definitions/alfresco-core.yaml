@@ -7558,9 +7558,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/StorageClasses'
-        '400':
-          description: |
-            Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
         '401':
           description: Authentication failed
         default:
