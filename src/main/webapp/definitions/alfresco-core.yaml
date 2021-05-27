@@ -1760,6 +1760,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
+        - $ref: '#/parameters/storageClasses'
         - in: body
           name: nodeBodyMove
           description: The targetParentId and, optionally, a new name which should include the file extension.
@@ -1778,7 +1779,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or **targetParentId** is not a folder,
-            or **nodeBodyMove** is invalid
+            or **nodeBodyMove** is invalid, or **storageClasses** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -7548,20 +7549,10 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
 
         Gets a list of all available storage classes
-
-          The default sort order for the returned list of storage classes is by ascending id.
-          You can override the default by using the **orderBy** parameter.
-
-          You can use any of the following fields to order the results:
-          * id
+      
       operationId: listStorageClasses
       produces:
         - application/json
-      parameters:
-        - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/orderByParam'
-        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
