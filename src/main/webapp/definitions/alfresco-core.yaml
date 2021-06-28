@@ -1851,8 +1851,6 @@ paths:
 
         The request body for this endpoint can be any text or binary stream.
 
-        Starting with Alfresco 7.1, **StorageClasses** can be used to update a node to a particular storage class.
-
         The **majorVersion** and **comment** parameters can be used to control versioning behaviour. If the content is versionable,
         a new minor version is created by default.
 
@@ -1891,7 +1889,6 @@ paths:
           pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
-        - $ref: '#/parameters/storageClasses'
         - in: body
           name: contentBodyUpdate
           description: The binary content
