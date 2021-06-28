@@ -4668,12 +4668,13 @@ paths:
             $ref: '#/definitions/Error'
   '/people/{personId}/request-password-reset':
     post:
+      deprecated: true
       x-alfresco-since: "5.2.1"
       tags:
         - people
       summary: Request password reset
       description: |
-        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
+        **Note:** this endpoint is deprecated as of Alfresco 7.1, and will be removed in the future.
 
         Initiates the reset password workflow to send an email with reset password instruction to the user's registered email.
 
@@ -4711,13 +4712,13 @@ paths:
             **client** is not registered
   '/people/{personId}/reset-password':
     post:
+      deprecated: true
       x-alfresco-since: "5.2.1"
       tags:
         - people
       summary: Reset password
       description: |
-        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-
+        **Note:** this endpoint is deprecated as of Alfresco 7.1, and will be removed in the future.
         Resets user's password
 
         The password, id and key properties are mandatory in the request body. For example:
