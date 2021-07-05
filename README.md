@@ -12,7 +12,7 @@ The API Explorer allows you to browse and experiment with the REST APIs availabl
 You now have a `target/api-explorer.war`, drop this into your Application server that is running alfresco.war
 
 #### For development only
-You can run the project as a packaged web application using an embedded Jetty server.  
+You Can run the project as a packaged web application using an embedded Jetty server.  
 This is useful for changing documentation and endpoint descriptions but it means that the "Try it Out!" button will not work.
 
 - `mvn jetty:run-war`
