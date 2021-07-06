@@ -58,6 +58,8 @@ tags:
     description: Retrieve and manage deleted nodes
   - name: versions
     description: Retrieve and manage versions
+  - name: storage-classes
+    description: Retrieve the list of supported storage classes
 parameters:
   actionDefinitionIdParam:
       name: actionDefinitionId
@@ -138,6 +140,26 @@ parameters:
     items:
       type: string
     collectionFormat: csv
+  nodeMinimalEntryIncludeParamStorageClasses:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the node. The following optional fields can be requested:
+      * allowableOperations
+      * aspectNames
+      * association
+      * isLink
+      * isFavorite
+      * isLocked
+      * path
+      * properties
+      * permissions
+      * storageClasses
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
   nodeAssocMinimalEntryIncludeParam:
     name: include
     in: query
@@ -168,6 +190,25 @@ parameters:
       * path
       * permissions
       * definition
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  nodeEntryIncludeParamStorageClasses:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the node. The following optional fields can be requested:
+      * allowableOperations
+      * association
+      * isLink
+      * isFavorite
+      * isLocked
+      * path
+      * permissions
+      * definition
+      * storageClasses
     required: false
     type: array
     items:
@@ -973,7 +1014,7 @@ paths:
       operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/nodeEntryIncludeParamStorageClasses'
         - name: relativePath
           in: query
           description: |
@@ -988,7 +1029,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeEntry'
+            $ref: '#/definitions/NodeEntryWithStorageClasses'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format
@@ -1062,13 +1103,14 @@ paths:
             }
         }
         ```
+        Starting with Alfresco 7.1, **StorageClasses** can be used to update a node to a particular storage class.
         **Note:** if you want to add or remove locally set permissions then you must use **GET /nodes/{nodeId}** first to get the complete set of *locallySet* permissions.
 
         **Note:** Currently there is no optimistic locking for updates, so they are applied in "last one wins" order.
       operationId: updateNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/nodeEntryIncludeParamStorageClasses'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: nodeBodyUpdate
@@ -1082,10 +1124,10 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeEntry'
+            $ref: '#/definitions/NodeEntryWithStorageClasses'
         '400':
           description: |
-            Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBodyUpdate** is invalid
+            Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBodyUpdate** is invalid or **StorageClasses** is not supported
         '401':
           description: Authentication failed
         '403':
@@ -1218,7 +1260,7 @@ paths:
             *   ```where=(isPrimary=false and assocType='my:specialAssocType')```
           required: false
           type: string
-        - $ref: '#/parameters/nodeMinimalEntryIncludeParam'
+        - $ref: '#/parameters/nodeMinimalEntryIncludeParamStorageClasses'
         - name: relativePath
           in: query
           description: Return information on children in the folder resolved by this path. The path is relative to **nodeId**.
@@ -1474,6 +1516,7 @@ paths:
           }
         }
         ```
+        Starting with Alfresco 7.1, **StorageClasses** can be used to create a node with a particular storage class.
         **Note:** When creating a new node using JSON by default versioning is disabled.
         Since Alfresco 6.2.3 **versioningEnabled** flag was introduced offering better control over the new node Versioning.
 
@@ -1507,7 +1550,7 @@ paths:
           description: If true, then created node will be versioned. If false, then created node will be unversioned and auto-versioning disabled.
           required: false
           type: boolean
-        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/nodeEntryIncludeParamStorageClasses'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: nodeBodyCreate
@@ -1524,10 +1567,10 @@ paths:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeEntry'
+            $ref: '#/definitions/NodeEntryWithStorageClasses'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or **nodeBodyCreate** is invalid
+            Invalid parameter: **nodeId** is not a valid format or **nodeBodyCreate** is invalid or **StorageClasses** are invalid
         '401':
           description: Authentication failed
         '403':
@@ -7522,6 +7565,31 @@ paths:
         '404':
           description: |
             **actionDefinitionId** or **targetId** does not exist
+  '/storage-classes':
+    get:
+      x-alfresco-since: "7.1"
+      tags:
+        - storage-classes
+      summary: Retrieve the list of supported storage classes in the system
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
+
+        Gets a list of all available storage classes
+      
+      operationId: listStorageClasses
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/StorageClasses'
+        '401':
+          description: Authentication failed
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -8733,6 +8801,24 @@ definitions:
         format: int64
       encoding:
         type: string
+  ContentInfoStorageClasses:
+    type: object
+    required:
+      - mimeType
+    properties:
+      mimeType:
+        type: string
+      mimeTypeName:
+        type: string
+      sizeInBytes:
+        type: integer
+        format: int64
+      encoding:
+        type: string
+      storageClasses:
+        type: array
+        items:
+          type: string
   AssociationInfo:
     type: object
     required:
@@ -8872,6 +8958,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/AssociationBody'
+      content:
+        $ref: '#/definitions/StorageClassArray'
   NodeBodyUpdate:
     type: object
     properties:
@@ -8893,6 +8981,8 @@ definitions:
           type: string
       permissions:
         $ref: '#/definitions/PermissionsBody'
+      content:
+        $ref: '#/definitions/StorageClassArray'
   NodeBodyCopy:
     type: object
     required:
@@ -9048,6 +9138,13 @@ definitions:
     properties:
       entry:
         $ref: '#/definitions/Node'
+  NodeEntryWithStorageClasses:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeStorageClasses'
   Node:
     type: object
     required:
@@ -9096,6 +9193,70 @@ definitions:
         type: boolean
       content:
         $ref: '#/definitions/ContentInfo'
+      aspectNames:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+      allowableOperations:
+        type: array
+        items:
+          type: string
+      path:
+        $ref: '#/definitions/PathInfo'
+      permissions:
+        $ref: '#/definitions/PermissionsInfo'
+      definition:
+        $ref: '#/definitions/Definition'
+  NodeStorageClasses:
+    type: object
+    required:
+    - id
+    - name
+    - nodeType
+    - isFolder
+    - isFile
+    - createdAt
+    - createdByUser
+    - modifiedAt
+    - modifiedByUser
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      isLocked:
+        type: boolean
+        default: false
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser:
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+        format: date-time
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      parentId:
+        type: string
+      isLink:
+        type: boolean
+      isFavorite:
+        type: boolean
+      content:
+        $ref: '#/definitions/ContentInfoStorageClasses'
       aspectNames:
         type: array
         items:
@@ -9676,3 +9837,33 @@ definitions:
         type: object
         additionalProperties:
           type: object
+  StorageClasses:
+    type: object
+    required:
+      - entries
+    properties:
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/StorageClassEntry'
+  StorageClassEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/StorageClass'
+  StorageClass:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+  StorageClassArray:
+    type: object
+    properties:
+      storageClasses:
+        type: array
+        items:
+          type: string
