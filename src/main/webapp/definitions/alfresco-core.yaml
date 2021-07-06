@@ -140,6 +140,26 @@ parameters:
     items:
       type: string
     collectionFormat: csv
+  nodeMinimalEntryIncludeParamStorageClasses:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the node. The following optional fields can be requested:
+      * allowableOperations
+      * aspectNames
+      * association
+      * isLink
+      * isFavorite
+      * isLocked
+      * path
+      * properties
+      * permissions
+      * storageClasses
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
   nodeAssocMinimalEntryIncludeParam:
     name: include
     in: query
@@ -158,6 +178,24 @@ parameters:
       type: string
     collectionFormat: csv
   nodeEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the node. The following optional fields can be requested:
+      * allowableOperations
+      * association
+      * isLink
+      * isFavorite
+      * isLocked
+      * path
+      * permissions
+      * definition
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  nodeEntryIncludeParamStorageClasses:
     name: include
     in: query
     description: |
@@ -485,15 +523,6 @@ parameters:
     description: |
       Returns additional information about the audit entry. The following optional fields can be requested:
       * values
-    required: false
-    type: array
-    items:
-      type: string
-    collectionFormat: csv
-  storageClasses:
-    name: storageClasses
-    in: query
-    description: Specifies the storage classes associated with the node. If not specified, the default storage class will be used. 
     required: false
     type: array
     items:
@@ -985,7 +1014,7 @@ paths:
       operationId: getNode
       parameters:
         - $ref: '#/parameters/nodeIdWithAliasParam'
-        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/nodeEntryIncludeParamStorageClasses'
         - name: relativePath
           in: query
           description: |
@@ -1000,7 +1029,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeEntry'
+            $ref: '#/definitions/NodeEntryWithStorageClasses'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format
@@ -1081,7 +1110,7 @@ paths:
       operationId: updateNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/nodeEntryIncludeParamStorageClasses'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: nodeBodyUpdate
@@ -1095,10 +1124,10 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeEntry'
+            $ref: '#/definitions/NodeEntryWithStorageClasses'
         '400':
           description: |
-            Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBodyUpdate** is invalid
+            Invalid parameter: the update request is invalid or **nodeId** is not a valid format or **nodeBodyUpdate** is invalid or **StorageClasses** is not supported
         '401':
           description: Authentication failed
         '403':
@@ -1231,7 +1260,7 @@ paths:
             *   ```where=(isPrimary=false and assocType='my:specialAssocType')```
           required: false
           type: string
-        - $ref: '#/parameters/nodeMinimalEntryIncludeParam'
+        - $ref: '#/parameters/nodeMinimalEntryIncludeParamStorageClasses'
         - name: relativePath
           in: query
           description: Return information on children in the folder resolved by this path. The path is relative to **nodeId**.
@@ -1521,7 +1550,7 @@ paths:
           description: If true, then created node will be versioned. If false, then created node will be unversioned and auto-versioning disabled.
           required: false
           type: boolean
-        - $ref: '#/parameters/nodeEntryIncludeParam'
+        - $ref: '#/parameters/nodeEntryIncludeParamStorageClasses'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: nodeBodyCreate
@@ -1538,10 +1567,10 @@ paths:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/NodeEntry'
+            $ref: '#/definitions/NodeEntryWithStorageClasses'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format or **nodeBodyCreate** is invalid
+            Invalid parameter: **nodeId** is not a valid format or **nodeBodyCreate** is invalid or **StorageClasses** are invalid
         '401':
           description: Authentication failed
         '403':
@@ -1760,7 +1789,6 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/nodeEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
-        - $ref: '#/parameters/storageClasses'
         - in: body
           name: nodeBodyMove
           description: The targetParentId and, optionally, a new name which should include the file extension.
@@ -1779,7 +1807,7 @@ paths:
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or **targetParentId** is not a folder,
-            or **nodeBodyMove** is invalid, or **storageClasses** is invalid
+            or **nodeBodyMove** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -8773,10 +8801,24 @@ definitions:
         format: int64
       encoding:
         type: string
+  ContentInfoStorageClasses:
+    type: object
+    required:
+      - mimeType
+    properties:
+      mimeType:
+        type: string
+      mimeTypeName:
+        type: string
+      sizeInBytes:
+        type: integer
+        format: int64
+      encoding:
+        type: string
       storageClasses:
         type: array
         items:
-          $ref: '#/definitions/StorageClass'
+          type: string
   AssociationInfo:
     type: object
     required:
@@ -8916,10 +8958,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/AssociationBody'
-      storageClasses:
-        type: array
-        items:
-          $ref: '#/definitions/StorageClass'
+      content:
+        $ref: '#/definitions/StorageClassArray'
   NodeBodyUpdate:
     type: object
     properties:
@@ -8941,10 +8981,8 @@ definitions:
           type: string
       permissions:
         $ref: '#/definitions/PermissionsBody'
-      storageClasses:
-        type: array
-        items:
-          $ref: '#/definitions/StorageClass'
+      content:
+        $ref: '#/definitions/StorageClassArray'
   NodeBodyCopy:
     type: object
     required:
@@ -9100,6 +9138,13 @@ definitions:
     properties:
       entry:
         $ref: '#/definitions/Node'
+  NodeEntryWithStorageClasses:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NodeStorageClasses'
   Node:
     type: object
     required:
@@ -9164,10 +9209,70 @@ definitions:
         $ref: '#/definitions/PermissionsInfo'
       definition:
         $ref: '#/definitions/Definition'
-      storageClasses:
+  NodeStorageClasses:
+    type: object
+    required:
+    - id
+    - name
+    - nodeType
+    - isFolder
+    - isFile
+    - createdAt
+    - createdByUser
+    - modifiedAt
+    - modifiedByUser
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+        pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
+        description: |
+          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The character . must not be used at the end of the name.
+      nodeType:
+        type: string
+      isFolder:
+        type: boolean
+      isFile:
+        type: boolean
+      isLocked:
+        type: boolean
+        default: false
+      modifiedAt:
+        type: string
+        format: date-time
+      modifiedByUser:
+        $ref: '#/definitions/UserInfo'
+      createdAt:
+        type: string
+        format: date-time
+      createdByUser:
+        $ref: '#/definitions/UserInfo'
+      parentId:
+        type: string
+      isLink:
+        type: boolean
+      isFavorite:
+        type: boolean
+      content:
+        $ref: '#/definitions/ContentInfoStorageClasses'
+      aspectNames:
         type: array
         items:
-          $ref: '#/definitions/StorageClass'
+          type: string
+      properties:
+        type: object
+      allowableOperations:
+        type: array
+        items:
+          type: string
+      path:
+        $ref: '#/definitions/PathInfo'
+      permissions:
+        $ref: '#/definitions/PermissionsInfo'
+      definition:
+        $ref: '#/definitions/Definition'
   ProbeEntry:
     type: object
     required:
@@ -9755,3 +9860,10 @@ definitions:
     properties:
       id:
         type: string
+  StorageClassArray:
+    type: object
+    properties:
+      storageClasses:
+        type: array
+        items:
+          type: string
