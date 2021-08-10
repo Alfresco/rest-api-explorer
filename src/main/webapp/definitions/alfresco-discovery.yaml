@@ -99,6 +99,7 @@ definitions:
     - isAuditEnabled
     - isQuickShareEnabled
     - isThumbnailGenerationEnabled
+    - isDirectAccessUrlEnabled
     properties:
       isReadOnly:
         type: boolean
@@ -108,6 +109,8 @@ definitions:
       isQuickShareEnabled:
         type: boolean
       isThumbnailGenerationEnabled:
+        type: boolean
+      isDirectAccessUrlEnabled:
         type: boolean
   EntitlementsInfo:
     type: object
