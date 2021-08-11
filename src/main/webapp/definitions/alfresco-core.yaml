@@ -129,6 +129,7 @@ parameters:
       * association
       * isLink
       * isFavorite
+      * isDirectLinkEnabled
       * isLocked
       * path
       * properties
@@ -147,6 +148,7 @@ parameters:
       * aspectNames
       * isLink
       * isFavorite
+      * isDirectLinkEnabled
       * isLocked
       * path
       * properties
@@ -164,6 +166,7 @@ parameters:
       * association
       * isLink
       * isFavorite
+      * isDirectLinkEnabled
       * isLocked
       * path
       * permissions
@@ -1912,6 +1915,55 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/request-direct-access-url':
+    post:
+      x-alfresco-since: "7.1.0"
+      tags:
+        - nodes
+      summary: Generate a direct access content URL
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
+        Generate a direct access content url for the given **nodeId**.
+      operationId: requestNodeDirectAccessUrl
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Direct Access URL options and flags.
+
+            It can be used to set the **attachment** flag, which controls the download method of
+            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
+            the value for the Content Disposition response header will be **attachment**.
+
+            Note: It is up to the actual ContentStore implementation if it can fulfil this
+            request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions':
     post:
       x-alfresco-since: "5.2"
@@ -2101,6 +2153,57 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/renditions/{renditionId}/request-direct-access-url':
+    post:
+      x-alfresco-since: "7.1.0"
+      tags:
+        - renditions
+      summary: Generate a direct access content URL
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
+        Generate a direct access content url for the given **nodeId**.
+      operationId: requestRenditionDirectAccessUrl
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Direct Access URL options and flags.
+
+            It can be used to set the **attachment** flag, which controls the download method of
+            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
+            the value for the Content Disposition response header will be **attachment**.
+
+            Note: It is up to the actual ContentStore implementation if it can fulfil this
+            request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
   '/nodes/{nodeId}/secondary-children':
     post:
       x-alfresco-since: "5.2"
@@ -2713,6 +2816,57 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/request-direct-access-url':
+    post:
+      x-alfresco-since: "7.1.0"
+      tags:
+        - versions
+      summary: Generate a direct access content URL
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
+        Generate a direct access content url for the given **nodeId**.
+      operationId: requestVersionDirectAccessUrl
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Direct Access URL options and flags.
+
+            It can be used to set the **attachment** flag, which controls the download method of
+            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
+            the value for the Content Disposition response header will be **attachment**.
+
+            Note: It is up to the actual ContentStore implementation if it can fulfil this
+            request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
   '/nodes/{nodeId}/versions/{versionId}/revert':
     post:
       x-alfresco-since: "5.2"
@@ -2955,6 +3109,58 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}/request-direct-access-url':
+    post:
+      x-alfresco-since: "7.1.0"
+      tags:
+        - versions
+      summary: Generate a direct access content URL
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
+        Generate a direct access content url for the given **nodeId**.
+      operationId: requestVersionRenditionDirectAccessUrl
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Direct Access URL options and flags.
+
+            It can be used to set the **attachment** flag, which controls the download method of
+            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
+            the value for the Content Disposition response header will be **attachment**.
+
+            Note: It is up to the actual ContentStore implementation if it can fulfil this
+            request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
   '/nodes/{nodeId}/action-definitions':
     get:
       x-alfresco-since: "5.2.2"
@@ -3142,6 +3348,56 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/deleted-nodes/{nodeId}/request-direct-access-url':
+    post:
+      x-alfresco-since: "7.1.0"
+      tags:
+        - trashcan
+      summary: Generate a direct access content URL
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
+        Generate a direct access content url for the given **nodeId**.
+      operationId: requestDeletedNodeDirectAccessUrl
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Direct Access URL options and flags.
+
+            It can be used to set the **attachment** flag, which controls the download method of
+            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
+            the value for the Content Disposition response header will be **attachment**.
+
+            Note: It is up to the actual ContentStore implementation if it can fulfil this
+            request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
   '/deleted-nodes/{nodeId}/restore':
     post:
       x-alfresco-since: "5.2"
@@ -3322,6 +3578,56 @@ paths:
             **nodeId** or **renditionId** does not exist
         '416':
           description: Range Not Satisfiable
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/deleted-nodes/{nodeId}/renditions/{renditionId}/request-direct-access-url':
+    post:
+      x-alfresco-since: "7.1.0"
+      tags:
+        - trashcan
+      summary: Generate a direct access content URL
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
+        Generate a direct access content url for the given **nodeId**.
+      operationId: requestArchivedNodeRenditionDirectAccessUrl
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Direct Access URL options and flags.
+
+            It can be used to set the **attachment** flag, which controls the download method of
+            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
+            the value for the Content Disposition response header will be **attachment**.
+
+            Note: It is up to the actual ContentStore implementation if it can fulfil this
+            request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
         default:
           description: Unexpected error
           schema:
@@ -9094,6 +9400,8 @@ definitions:
         type: boolean
       isFavorite:
         type: boolean
+      isDirectLinkEnabled:
+        type: boolean
       content:
         $ref: '#/definitions/ContentInfo'
       aspectNames:
@@ -9127,14 +9435,28 @@ definitions:
   DirectAccessUrlBodyCreate:
     type: object
     properties:
+      attachment:
+        type: boolean
+        description: URL type (embedded/attachment).
+  DirectAccessUrlEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/DirectAccessUrl'
+  DirectAccessUrl:
+    type: object
+    required:
+      - contentUrl
+    properties:
+      contentUrl:
+        type: string
+        description: The direct access URL of a binary content
       expiresAt:
         type: string
         format: date-time
-      validFor:
-        description: |
-          The length of time in seconds that the url is valid for.
-        type: integer
-        minimum: 1
+        description: The direct access URL would become invalid when the expiry date is reached
   SharedLinkBodyCreate:
     type: object
     required:
