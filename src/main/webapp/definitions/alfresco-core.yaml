@@ -1876,12 +1876,12 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/request-direct-access-url':
     post:
-      x-alfresco-since: "7.0.0"
+      x-alfresco-since: "7.1.0"
       tags:
         - nodes
       summary: Generate a direct access content URL
       description: |
-        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
         Generate a direct access content url for the given **nodeId**.
       operationId: requestNodeDirectAccessUrl
       parameters:
@@ -2114,12 +2114,12 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}/request-direct-access-url':
     post:
-      x-alfresco-since: "7.0.0"
+      x-alfresco-since: "7.1.0"
       tags:
         - renditions
       summary: Generate a direct access content URL
       description: |
-        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
         Generate a direct access content url for the given **nodeId**.
       operationId: requestRenditionDirectAccessUrl
       parameters:
@@ -2777,12 +2777,12 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/request-direct-access-url':
     post:
-      x-alfresco-since: "7.0.0"
+      x-alfresco-since: "7.1.0"
       tags:
         - versions
       summary: Generate a direct access content URL
       description: |
-        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
         Generate a direct access content url for the given **nodeId**.
       operationId: requestVersionDirectAccessUrl
       parameters:
@@ -3070,12 +3070,12 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}/request-direct-access-url':
     post:
-      x-alfresco-since: "7.0.0"
+      x-alfresco-since: "7.1.0"
       tags:
         - versions
       summary: Generate a direct access content URL
       description: |
-        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
         Generate a direct access content url for the given **nodeId**.
       operationId: requestVersionRenditionDirectAccessUrl
       parameters:
@@ -3309,12 +3309,12 @@ paths:
             $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}/request-direct-access-url':
     post:
-      x-alfresco-since: "7.0.0"
+      x-alfresco-since: "7.1.0"
       tags:
         - trashcan
       summary: Generate a direct access content URL
       description: |
-        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
         Generate a direct access content url for the given **nodeId**.
       operationId: requestDeletedNodeDirectAccessUrl
       parameters:
@@ -3543,12 +3543,12 @@ paths:
             $ref: '#/definitions/Error'
   '/deleted-nodes/{nodeId}/renditions/{renditionId}/request-direct-access-url':
     post:
-      x-alfresco-since: "7.0.0"
+      x-alfresco-since: "7.1.0"
       tags:
         - trashcan
       summary: Generate a direct access content URL
       description: |
-        **Note:** this endpoint is available in Alfresco 7.0 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
         Generate a direct access content url for the given **nodeId**.
       operationId: requestArchivedNodeRenditionDirectAccessUrl
       parameters:
