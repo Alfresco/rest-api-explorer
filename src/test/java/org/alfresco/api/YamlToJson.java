@@ -104,7 +104,7 @@ public class YamlToJson {
             Json.mapper().writeValue(new File(rootPath + MODEL_JSON_DEFINITION), swagger);
 
             //Event Gateway
-            swagger = parseSwaggerDef(new File(rootPath + EVENT_GATEWAY_JSON_DEFINITION), EVENT_GATEWAY_DEFINITION_TITLE);
+            swagger = parseSwaggerDef(new File(rootPath + EVENT_GATEWAY_DEFINITION), EVENT_GATEWAY_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + EVENT_GATEWAY_JSON_DEFINITION), swagger);
 
         } catch (IOException e) {
