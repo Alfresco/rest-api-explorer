@@ -1,0 +1,124 @@
+openapi: 3.0.1
+info:
+  title: Alfresco Event Gateway REST API
+  version: M2
+servers:
+- url: http://localhost:7070
+  description: Generated server url
+paths:
+  /subscriptions/{id}:
+    get:
+      description: Get a Subscription by its id
+      operationId: getSubscription
+      parameters:
+      - name: id
+        in: path
+        description: The subscription id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Subscription'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+    patch:
+      description: Update the status of a Subscription
+      operationId: partiallyUpdateSubscription
+      parameters:
+      - name: id
+        in: path
+        description: The subscription id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The JSON snippet holding the new status of the subscription
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/JsonNode'
+        required: false
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Subscription'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+  /subscriptions:
+    post:
+      description: Create a Subscription
+      operationId: createSubscription
+      requestBody:
+        description: The subscription object to be created
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Subscription'
+        required: false
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Subscription'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+components:
+  schemas:
+    Filter:
+      required:
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        config:
+          type: object
+          additionalProperties:
+            type: string
+    Subscription:
+      required:
+      - type
+      type: object
+      properties:
+        createdDate:
+          type: integer
+          format: int64
+        modifiedDate:
+          type: integer
+          format: int64
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+        type:
+          type: string
+        user:
+          type: string
+        config:
+          type: object
+          additionalProperties:
+            type: string
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
+    JsonNode:
+      type: object
