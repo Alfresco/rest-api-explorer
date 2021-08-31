@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.alfresco</groupId>
   <artifactId>api-explorer</artifactId>
-  <version>7.1.0-A2</version>
+  <version>7.1.0-A3</version>
   <packaging>war</packaging>
   <name>Alfresco REST API Explorer</name>
   <description>Produces the API Explorer for all API definitions</description>
