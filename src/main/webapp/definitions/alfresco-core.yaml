@@ -8916,7 +8916,6 @@ definitions:
           **Note:** The client must be registered before this API can send an email.
           **Note:** This is available in Alfresco 7.0.0 and newer versions.
         type: string
-        required: false
   SiteMembershipRequestBodyUpdate:
     type: object
     properties:
