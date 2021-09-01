@@ -14,6 +14,12 @@ branches:
     - /feature\/.*/
     - /fix\/.*/
 
+env:
+  global:
+    # Release version has to start with real version (7.1.0-....) for the docker image to build successfully.
+    - RELEASE_VERSION=7.1.0-A4
+    - DEVELOPMENT_VERSION=7.1.0-A5-SNAPSHOT
+
 stages:
   - name: lint
   - name: test
