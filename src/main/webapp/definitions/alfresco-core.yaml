@@ -9401,6 +9401,9 @@ definitions:
       contentUrl:
         type: string
         description: The direct access URL of a binary content
+      attachment:
+        type: boolean
+        description: Flag to control the download method, **true** for attachment URL, **false** for embedded URL
       expiresAt:
         type: string
         format: date-time
