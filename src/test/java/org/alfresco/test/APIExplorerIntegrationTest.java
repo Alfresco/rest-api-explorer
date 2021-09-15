@@ -244,25 +244,12 @@ public class APIExplorerIntegrationTest
     }
 
     @Test
-    public void testEventGatewayDefinition() throws Exception {
-        String definitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-event-gateway";
-
-        // get definition content
-        String definitionContent = this.retrievePageContent(definitionUrl + YAML, 200);
-
-        // make sure the content is correct - using swagger 3.0.x for event gateway
-        int swaggerIndex = definitionContent.indexOf("openapi:");
-        assertTrue("Expected to find 'openapi:'", swaggerIndex != -1);
-
-    }
-
-    @Test
     public void testAllDefinitions() throws Exception
     {
         String defs = this.retrievePageContent("http://localhost:8085/api-explorer/definitions/index.jsp", 200);
         List<String> definitions = Json.mapper().readValue(defs, new TypeReference<List<String>>(){});
         assertNotNull(definitions);
-        assertEquals("8 definitions in 2 formats should be 16.", 16, definitions.size());
+        assertEquals("7 definitions in 2 formats should be 14.", 14, definitions.size());
     }
 
     public String retrievePageContent(String url, int expectedStatus) throws Exception
