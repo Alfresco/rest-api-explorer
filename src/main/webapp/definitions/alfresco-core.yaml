@@ -52,6 +52,8 @@ tags:
     description: Retrieve and manage public shared links
   - name: sites
     description: Retrieve and manage sites
+  - name: storage-info
+    description: Storage information for content
   - name: tags
     description: Retrieve and manage tags
   - name: trashcan
@@ -3197,6 +3199,40 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+  '/nodes/{nodeId}/storage-info/{contentPropName}':
+    get:
+      x-alfresco-since: "7.2.0"
+      tags:
+        - storage-info
+      summary: Retrieve storage properties for given content
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.2.0 and newer versions.
+
+        Gets storage properties for given content.
+      operationId: getStorageProperties
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - name: contentPropName
+          in: path
+          description: The qualified property name of content (e.g. 'cm:content')
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ContentStorageInfo'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/deleted-nodes':
     get:
       x-alfresco-since: "5.2"
@@ -10027,3 +10063,15 @@ definitions:
         type: object
         additionalProperties:
           type: object
+  ContentStorageInfo:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        description: content type property identifier (e.g. cm_content)
+      storageProperties:
+        type: object
+        additionalProperties:
+          type: string
