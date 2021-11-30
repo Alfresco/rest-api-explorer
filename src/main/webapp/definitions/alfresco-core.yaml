@@ -3355,6 +3355,9 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '501':
           description: The actual ContentStore implementation can't fulfil this request
         default:
