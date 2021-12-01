@@ -1822,6 +1822,9 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '416':
           description: |
             Range Not Satisfiable
@@ -1960,6 +1963,9 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '501':
           description: The actual ContentStore implementation can't fulfil this request
         default:
@@ -2149,6 +2155,9 @@ paths:
         '404':
           description: |
             **nodeId** or **renditionId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '416':
           description: Range Not Satisfiable
         default:
@@ -2199,6 +2208,9 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '501':
           description: The actual ContentStore implementation can't fulfil this request
         default:
@@ -2812,6 +2824,9 @@ paths:
         '404':
           description: |
             **nodeId** or **versionId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '416':
           description: Range Not Satisfiable
         default:
@@ -2862,6 +2877,9 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '501':
           description: The actual ContentStore implementation can't fulfil this request
         default:
@@ -3105,6 +3123,9 @@ paths:
         '404':
           description: |
             **nodeId** or **versionId** or **renditionId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '416':
           description: Range Not Satisfiable
         default:
@@ -3327,6 +3348,9 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '416':
           description: Range Not Satisfiable
         default:
@@ -3376,6 +3400,9 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '501':
           description: The actual ContentStore implementation can't fulfil this request
         default:
@@ -3561,6 +3588,9 @@ paths:
         '404':
           description: |
             **nodeId** or **renditionId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '416':
           description: Range Not Satisfiable
         default:
@@ -3611,6 +3641,9 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible  
         '501':
           description: The actual ContentStore implementation can't fulfil this request
         default:
@@ -6443,6 +6476,9 @@ paths:
         '404':
           description: |
             **sharedId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '416':
           description: Range Not Satisfiable
         '501':
@@ -6558,6 +6594,9 @@ paths:
         '404':
           description: |
             **sharedId** does not exist
+        '412':
+          description: |
+            Content is archived and is inaccessible
         '416':
           description: Range Not Satisfiable
         '501':
