@@ -3207,8 +3207,74 @@ paths:
       summary: Retrieve storage properties for given content
       description: |
         **Note:** this endpoint is available in Alfresco 7.2.0 and newer versions.
+        It also requires at least one specific implementation of underlying functionality in Cloud Connector(s).
 
         Gets storage properties for given content.
+        Please find below sample responses for this endpoint (when Alfresco Content Connector for AWS S3 is installed).
+        Standard storage class:
+        ```json
+        {
+          "entry": {
+            "storageProperties": {
+              "x-alf-archived": "false"
+            },
+            "id": "cm:content"
+          }
+        }
+        ```
+        Intelligent tiering storage class:
+        ```json
+        {
+          "entry": {
+            "storageProperties": {
+              "x-alf-archived": "false",
+              "x-amz-storage-class": "INTELLIGENT_TIERING"
+            },
+            "id": "cm:content"
+          }
+        }
+        ```
+        Glacier archive storage class (no restore request ongoing or submitted):
+        ```json
+        {
+          "entry": {
+            "storageProperties": {
+              "x-alf-archived": "true",
+              "x-amz-storage-class": "GLACIER"
+            },
+            "id": "cm:content"
+          }
+        }
+        ```
+        Glacier archive storage class (restore request ongoing, not completed):
+        ```json
+        {
+          "entry": {
+            "storageProperties": {
+              "x-alf-archive-restore-in-progress": "true",
+              "x-amz-restore": "ongoing-request=\"true\"",
+              "x-alf-archived": "true",
+              "x-amz-storage-class": "GLACIER"
+            },
+            "id": "cm:content"
+          }
+        }
+        ```
+        Glacier archive storage class (restore request completed):
+        ```json
+        {
+          "entry": {
+            "storageProperties": {
+              "x-alf-archive-restore-in-progress": "false",
+              "x-amz-restore": "ongoing-request=\"false\", expiry-date=\"Fri Nov 26 01:00:00 CET 2021\"",
+              "x-alf-archive-restore-expiry": "2021-11-26T00:00:00.000Z",
+              "x-alf-archived": "true",
+              "x-amz-storage-class": "GLACIER"
+            },
+            "id": "cm:content"
+          }
+        }
+        ```
       operationId: getStorageProperties
       produces:
         - application/json
@@ -3216,7 +3282,9 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - name: contentPropName
           in: path
-          description: The qualified property name of content (e.g. 'cm:content')
+          description: |
+            The namespace-prefix property name of content.
+            Delimiter between namespace-prefix and property name can be either colon (':') or underscore ('_') character (e.g., 'cm:content' or 'cm_content').
           required: true
           type: string
       responses:
@@ -3226,7 +3294,7 @@ paths:
             $ref: '#/definitions/ContentStorageInfo'
         '400':
           description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+            Invalid parameter: nodeId is not a valid format, or is not a file
         '401':
           description: Authentication failed
         default:
@@ -10070,7 +10138,8 @@ definitions:
     properties:
       id:
         type: string
-        description: content type property identifier (e.g. cm_content)
+        description: |
+          Content type property identifier (e.g. cm:content). Inside this object only colon (':') delimiter for namespace-prefix will be used.
       storageProperties:
         type: object
         additionalProperties:
