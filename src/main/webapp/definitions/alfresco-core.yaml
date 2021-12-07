@@ -408,8 +408,7 @@ parameters:
     in: query
     description: |
        **true** enables a web browser to download the file as an attachment.
-       **false** means a web browser may preview the file in a new tab or window, but not
-       download the file.
+       **false** means a web browser may preview the file in a new tab or window.
 
        You can only set this parameter to **false** if the content type of the file is in the supported list;
        for example, certain image files and PDF files.
@@ -1932,12 +1931,20 @@ paths:
           description: |
             Direct Access URL options and flags.
 
-            It can be used to set the **attachment** flag, which controls the download method of
-            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
-            the value for the Content Disposition response header will be **attachment**.
-
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
+
+            The **attachment** flag controls the download method of the generated URL. It defaults 
+            to **true**, meaning the value for the Content Disposition response header will be **attachment**.
+
+            **true** enables a web browser to download the file as an attachment.
+            **false** means a web browser may preview the file in a new tab or window.
+
+            You can only set this parameter to **false** if the content type of the file is in the supported list;
+            for example, certain image files and PDF files.
+
+            If the content type is not supported for preview, then a value of **false** is ignored, and
+            the attachment will be returned in the response.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
@@ -2171,12 +2178,20 @@ paths:
           description: |
             Direct Access URL options and flags.
 
-            It can be used to set the **attachment** flag, which controls the download method of
-            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
-            the value for the Content Disposition response header will be **attachment**.
-
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
+
+            The **attachment** flag controls the download method of the generated URL. It defaults 
+            to **true**, meaning the value for the Content Disposition response header will be **attachment**.
+
+            **true** enables a web browser to download the file as an attachment.
+            **false** means a web browser may preview the file in a new tab or window.
+
+            You can only set this parameter to **false** if the content type of the file is in the supported list;
+            for example, certain image files and PDF files.
+
+            If the content type is not supported for preview, then a value of **false** is ignored, and
+            the attachment will be returned in the response.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
@@ -2834,12 +2849,20 @@ paths:
           description: |
             Direct Access URL options and flags.
 
-            It can be used to set the **attachment** flag, which controls the download method of
-            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
-            the value for the Content Disposition response header will be **attachment**.
-
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
+
+            The **attachment** flag controls the download method of the generated URL. It defaults 
+            to **true**, meaning the value for the Content Disposition response header will be **attachment**.
+
+            **true** enables a web browser to download the file as an attachment.
+            **false** means a web browser may preview the file in a new tab or window.
+
+            You can only set this parameter to **false** if the content type of the file is in the supported list;
+            for example, certain image files and PDF files.
+
+            If the content type is not supported for preview, then a value of **false** is ignored, and
+            the attachment will be returned in the response.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
@@ -3314,12 +3337,20 @@ paths:
           description: |
             Direct Access URL options and flags.
 
-            It can be used to set the **attachment** flag, which controls the download method of
-            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
-            the value for the Content Disposition response header will be **attachment**.
-
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
+
+            The **attachment** flag controls the download method of the generated URL. It defaults 
+            to **true**, meaning the value for the Content Disposition response header will be **attachment**.
+
+            **true** enables a web browser to download the file as an attachment.
+            **false** means a web browser may preview the file in a new tab or window.
+
+            You can only set this parameter to **false** if the content type of the file is in the supported list;
+            for example, certain image files and PDF files.
+
+            If the content type is not supported for preview, then a value of **false** is ignored, and
+            the attachment will be returned in the response.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
@@ -3549,12 +3580,20 @@ paths:
           description: |
             Direct Access URL options and flags.
 
-            It can be used to set the **attachment** flag, which controls the download method of
-            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
-            the value for the Content Disposition response header will be **attachment**.
-
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
+
+            The **attachment** flag controls the download method of the generated URL. It defaults 
+            to **true**, meaning the value for the Content Disposition response header will be **attachment**.
+
+            **true** enables a web browser to download the file as an attachment.
+            **false** means a web browser may preview the file in a new tab or window.
+
+            You can only set this parameter to **false** if the content type of the file is in the supported list;
+            for example, certain image files and PDF files.
+
+            If the content type is not supported for preview, then a value of **false** is ignored, and
+            the attachment will be returned in the response.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
