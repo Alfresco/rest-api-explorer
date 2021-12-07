@@ -11,14 +11,15 @@ git:
 branches:
   only:
     - master
+    - /release\/.*/
     - /feature\/.*/
     - /fix\/.*/
 
 env:
   global:
     # Release version has to start with real version (7.1.0-....) for the docker image to build successfully.
-    - RELEASE_VERSION=7.1.0
-    - DEVELOPMENT_VERSION=7.2.0-SNAPSHOT
+    - RELEASE_VERSION=7.1.1-A1
+    - DEVELOPMENT_VERSION=7.1.1-A2-SNAPSHOT
 
 stages:
   - name: lint
