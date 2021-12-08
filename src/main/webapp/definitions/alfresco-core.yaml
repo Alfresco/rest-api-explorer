@@ -3253,7 +3253,7 @@ paths:
               "x-alf-archive-restore-in-progress": "false",
               "x-amz-restore": "ongoing-request=\"false\", expiry-date=\"Fri Nov 26 01:00:00 CET 2021\"",
               "x-alf-archive-restore-expiry": "2021-11-26T00:00:00.000Z",
-              "x-alf-archived": "true",
+              "x-alf-archived": "false",
               "x-amz-storage-class": "GLACIER"
             },
             "id": "cm:content"
@@ -3297,6 +3297,22 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/contentPropNameParam'
+        - name: archiveContentRequest
+          in: body
+          description: |
+            Archive content request parameters - currently not supported by any Alfresco Cloud Connector.
+            Body is not mandatory.
+            Request body example:
+            ```JSON
+            {
+              "archiveProperties": {
+                            "x-amz-storage-class": "GLACIER"
+                          }
+            }
+            ```
+          required: false
+          schema:
+            $ref: '#/definitions/ArchiveContentRequest'
       responses:
         '200':
           description: Successful response
@@ -3315,7 +3331,7 @@ paths:
       x-alfresco-since: "7.2.0"
       tags:
         - storage-info
-      summary: Request to restore given content from acrhive
+      summary: Request to restore given content from archive
       description: |
         **Note:** this endpoint is available in Alfresco 7.2.0 and newer versions.
         It also requires at least one specific implementation of underlying functionality in Cloud Connector(s).
@@ -3330,8 +3346,10 @@ paths:
         - name: restoreArchivedContentRequest
           in: body
           description: |
-            Restore request parameters.
+            Restore content from archive request parameters.
             At the moment there is one parameter being supported which is restore priority.
+            'High' restore priority translates to 'Expedited' Glacier restore tier in AWS S3 and 'High' rehydrate priority in Azure Blob.
+            'Standard' restore priority translates to 'Standard' Glacier restore tier in AWS S3 and 'Standard' rehydrate priority in Azure Blob.
             Body is not mandatory.
             High restore priority request body example:
             ```JSON
@@ -3339,10 +3357,10 @@ paths:
               "restorePriority": "High"
             }
             ```
-            Normal restore priority request body example:
+            Standard restore priority request body example:
             ```JSON
             {
-              "restorePriority": "Normal"
+              "restorePriority": "Standard"
             }
             ```
           required: false
@@ -10176,6 +10194,8 @@ definitions:
         additionalProperties:
           type: object
   ContentStorageInfo:
+    description: |
+      Response object holding storage properties related data for given content.
     type: object
     required:
       - id
@@ -10185,12 +10205,27 @@ definitions:
         description: |
           Content type property identifier (e.g. cm:content). Inside this object only colon (':') delimiter for namespace-prefix will be used.
       storageProperties:
+        description: |
+          A map (String-String) of storage properties for given content.
         type: object
         additionalProperties:
           type: string
   RestoreArchivedContentRequest:
+    description: |
+      Request object holding restore content from artchive related paramteres for given content.
     type: object
     properties:
       restorePriority:
         type: string
         description: Restore from archive priority (Standard/High - to be mapped to Storage Provider specific values in Cloud Connectors)
+  ArchiveContentRequest:
+    description: |
+      Request object holding archive content related paramteres for given content.
+    type: object
+    properties:
+      archiveProperties:
+        description: |
+          A map (String-String) of archive request properties for given content.
+        type: object
+        additionalProperties:
+          type: string
