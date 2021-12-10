@@ -3388,7 +3388,7 @@ paths:
         '403':
           description: Not authorized
         '409':
-          description: Content already restored
+          description: Content already restored or restoration is already in progress
         default:
           description: Unexpected error
           schema:
