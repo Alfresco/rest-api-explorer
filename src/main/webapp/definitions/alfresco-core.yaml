@@ -3320,8 +3320,14 @@ paths:
           description: |
             Invalid parameter: nodeId is not a valid format, or is not a file
                                property name of content is not valid
+            Content's storage state does not allow archive.
+            Invalid archive paramters.
         '401':
           description: Authentication failed
+        '403':
+          description: Not authorized
+        '409':
+          description: Content already archived
         default:
           description: Unexpected error
           schema:
@@ -3373,8 +3379,14 @@ paths:
           description: |
             Invalid parameter: nodeId is not a valid format, or is not a file
                                            property name of content is not valid
+            Content's storage state does not allow restore.
+            Invalid restore paramters.
         '401':
           description: Authentication failed
+        '403':
+          description: Not authorized
+        '409':
+          description: Content already restored
         default:
           description: Unexpected error
           schema:
