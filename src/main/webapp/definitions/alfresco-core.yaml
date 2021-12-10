@@ -3276,6 +3276,8 @@ paths:
             Invalid parameter: nodeId is not a valid format, or is not a file
         '401':
           description: Authentication failed
+        '403':
+          description: Not authorized
         default:
           description: Unexpected error
           schema:
