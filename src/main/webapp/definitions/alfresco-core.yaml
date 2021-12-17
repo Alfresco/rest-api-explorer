@@ -3330,7 +3330,7 @@ paths:
             Request body example:
             ```JSON
             {
-              "archiveProperties": {
+              "archiveParams": {
                             "x-amz-storage-class": "GLACIER"
                           }
             }
@@ -10276,9 +10276,9 @@ definitions:
       Request object holding archive content related paramteres for given content.
     type: object
     properties:
-      archiveProperties:
+      archiveParams:
         description: |
-          A map (String-String) of archive request properties for given content.
+          Optional map (String-String) of archive request properties for given content.
         type: object
         additionalProperties:
           type: string
