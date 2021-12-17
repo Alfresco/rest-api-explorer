@@ -3310,12 +3310,12 @@ paths:
       x-alfresco-since: "7.2.0"
       tags:
         - storage-info
-      summary: Request to send given content to acrhive
+      summary: Request to send given content to archive
       description: |
         **Note:** this endpoint is available in Alfresco 7.2.0 and newer versions.
         It also requires at least one specific implementation of underlying functionality in Cloud Connector(s).
 
-        Request to send given content to acrhive.
+        Request to send given content to archive.
       operationId: requestArchiveContent
       produces:
         - application/json
@@ -3367,7 +3367,7 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.2.0 and newer versions.
         It also requires at least one specific implementation of underlying functionality in Cloud Connector(s).
 
-        Request to restore given content from acrhive.
+        Request to restore given content from archive.
       operationId: requestRestoreContentFromArchive
       produces:
         - application/json
