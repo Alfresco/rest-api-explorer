@@ -1,6 +1,6 @@
 import:
-  - source: Alfresco/alfresco-build-tools:.travis.pre-commit.yml@v1.0.1
-  - source: Alfresco/alfresco-build-tools:.travis.java.yml@v1.0.1
+  - source: Alfresco/alfresco-build-tools:.travis.pre-commit.yml@v1.1.5
+  - source: Alfresco/alfresco-build-tools:.travis.java.yml@v1.1.5
 
 dist: focal
 
