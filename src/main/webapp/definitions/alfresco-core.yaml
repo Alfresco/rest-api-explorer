@@ -3218,7 +3218,12 @@ paths:
         It also requires at least one specific implementation of underlying functionality in Cloud Connector(s).
 
         Gets storage properties for given content.
-        Please find below sample responses for this endpoint (when Alfresco Content Connector for AWS S3 is installed).
+
+        Please find below sample responses for this endpoint when Alfresco Content Connector for AWS S3 is installed.
+
+        Similar responses will be returned when Alfresco Content Connector for Azure Blob is installed, albeit it with 
+        some native storage properties with x-ms- prefix instead of x-amz- prefix.
+
         Standard storage class:
         ```json
         {
@@ -3296,11 +3301,121 @@ paths:
             $ref: '#/definitions/ContentStorageInfo'
         '400':
           description: |
-            Invalid parameter: nodeId is not a valid format, or is not a file
+            Invalid parameter: **nodeId** or **contentPropName** is not a valid format, or is not a file
         '401':
           description: Authentication failed
         '403':
           description: Not authorized
+        '404':
+          description: |
+            **nodeId** or **contentPropName** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/storage-info/{contentPropName}':
+    get:
+      x-alfresco-since: "7.2.0"
+      tags:
+        - storage-info
+      summary: Retrieve storage properties for given version content
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.2.0 and newer versions.
+        It also requires at least one specific implementation of underlying functionality in Cloud Connector(s).
+
+        Gets storage properties for given version content.
+
+        Please find below sample responses for this endpoint when Alfresco Content Connector for AWS S3 is installed.
+
+        Similar responses will be returned when Alfresco Content Connector for Azure Blob is installed, albeit it with 
+        some native storage properties with x-ms- prefix instead of x-amz- prefix.
+
+        Standard storage class:
+        ```json
+        {
+          "entry": {
+            "storageProperties": {
+              "x-alf-archived": "false"
+            },
+            "id": "cm:content"
+          }
+        }
+        ```
+        Intelligent tiering storage class:
+        ```json
+        {
+          "entry": {
+            "storageProperties": {
+              "x-alf-archived": "false",
+              "x-amz-storage-class": "INTELLIGENT_TIERING"
+            },
+            "id": "cm:content"
+          }
+        }
+        ```
+        Glacier archive storage class (no restore request ongoing or submitted):
+        ```json
+        {
+          "entry": {
+            "storageProperties": {
+              "x-alf-archived": "true",
+              "x-amz-storage-class": "GLACIER"
+            },
+            "id": "cm:content"
+          }
+        }
+        ```
+        Glacier archive storage class (restore request ongoing, not completed):
+        ```json
+        {
+          "entry": {
+            "storageProperties": {
+              "x-alf-archive-restore-in-progress": "true",
+              "x-amz-restore": "ongoing-request=\"true\"",
+              "x-alf-archived": "true",
+              "x-amz-storage-class": "GLACIER"
+            },
+            "id": "cm:content"
+          }
+        }
+        ```
+        Glacier archive storage class (restore request completed):
+        ```json
+        {
+          "entry": {
+            "storageProperties": {
+              "x-alf-archive-restore-in-progress": "false",
+              "x-amz-restore": "ongoing-request=\"false\", expiry-date=\"Fri Nov 26 01:00:00 CET 2021\"",
+              "x-alf-archive-restore-expiry": "2021-11-26T00:00:00.000Z",
+              "x-alf-archived": "false",
+              "x-amz-storage-class": "GLACIER"
+            },
+            "id": "cm:content"
+          }
+        }
+        ```
+      operationId: getStorageProperties
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/contentPropNameParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ContentStorageInfo'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** or **versionId** or **contentPropName** is not a valid format, or is not a file
+        '401':
+          description: Authentication failed
+        '403':
+          description: Not authorized
+        '404':
+          description: |
+            **nodeId** or **versionId** or **contentPropName** does not exist
         default:
           description: Unexpected error
           schema:
@@ -3343,14 +3458,71 @@ paths:
           description: Successful response
         '400':
           description: |
-            Invalid parameter: nodeId is not a valid format, or is not a file
-                               property name of content is not valid
+            Invalid parameter: **nodeId** or **contentPropName** is not a valid format, or is not a file
             Content's storage state does not allow archive.
             Invalid archive paramters.
         '401':
           description: Authentication failed
         '403':
           description: Not authorized
+        '404':
+          description: |
+            **nodeId** or **contentPropName** does not exist
+        '409':
+          description: Content already archived
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/storage-info/{contentPropName}/archive':
+    post:
+      x-alfresco-since: "7.2.0"
+      tags:
+        - storage-info
+      summary: Request to send given version content to archive
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.2.0 and newer versions.
+        It also requires at least one specific implementation of underlying functionality in Cloud Connector(s).
+
+        Request to send given version content to archive.
+      operationId: requestArchiveContent
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/contentPropNameParam'
+        - name: archiveContentRequest
+          in: body
+          description: |
+            Archive content request parameters - currently not supported by any Alfresco Cloud Connector.
+            Body is not mandatory.
+            Request body example:
+            ```JSON
+            {
+              "archiveParams": {
+                            "x-amz-storage-class": "GLACIER"
+                          }
+            }
+            ```
+          required: false
+          schema:
+            $ref: '#/definitions/ArchiveContentRequest'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: |
+            Invalid parameter: **nodeId** or **versionId** or **contentPropName** is not a valid format, or is not a file
+            Content's storage state does not allow archive.
+            Invalid archive paramters.
+        '401':
+          description: Authentication failed
+        '403':
+          description: Not authorized
+        '404':
+          description: |
+            **nodeId** or **versionId** or **contentPropName** does not exist
         '409':
           description: Content already archived
         default:
@@ -3402,14 +3574,78 @@ paths:
           description: Successful response (request accepted)
         '400':
           description: |
-            Invalid parameter: nodeId is not a valid format, or is not a file
-                                           property name of content is not valid
+            Invalid parameter: n**nodeId** or **contentPropName** is not a valid format, or is not a file
             Content's storage state does not allow restore.
             Invalid restore paramters.
         '401':
           description: Authentication failed
         '403':
           description: Not authorized
+        '404':
+          description: |
+            **nodeId** or **contentPropName** does not exist
+        '409':
+          description: Content already restored or restoration is already in progress
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/storage-info/{contentPropName}/archive-restore':
+    post:
+      x-alfresco-since: "7.2.0"
+      tags:
+        - storage-info
+      summary: Request to restore given version content from archive
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.2.0 and newer versions.
+        It also requires at least one specific implementation of underlying functionality in Cloud Connector(s).
+
+        Request to restore given version content from archive.
+      operationId: requestRestoreContentFromArchive
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/contentPropNameParam'
+        - name: restoreArchivedContentRequest
+          in: body
+          description: |
+            Restore content from archive request parameters.
+            At the moment there is one parameter being supported which is restore priority.
+            'High' restore priority translates to 'Expedited' Glacier restore tier in AWS S3 and 'High' rehydrate priority in Azure Blob.
+            'Standard' restore priority translates to 'Standard' Glacier restore tier in AWS S3 and 'Standard' rehydrate priority in Azure Blob.
+            Body is not mandatory.
+            High restore priority request body example:
+            ```JSON
+            {
+              "restorePriority": "High"
+            }
+            ```
+            Standard restore priority request body example:
+            ```JSON
+            {
+              "restorePriority": "Standard"
+            }
+            ```
+          required: false
+          schema:
+            $ref: '#/definitions/RestoreArchivedContentRequest'
+      responses:
+        '202':
+          description: Successful response (request accepted)
+        '400':
+          description: |
+            Invalid parameter: **nodeId** or **versionId** or **contentPropName** is not a valid format, or is not a file
+            Content's storage state does not allow restore.
+            Invalid restore paramters.
+        '401':
+          description: Authentication failed
+        '403':
+          description: Not authorized
+        '404':
+          description: |
+            **nodeId** or **versionId** or **contentPropName** does not exist
         '409':
           description: Content already restored or restoration is already in progress
         default:
