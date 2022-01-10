@@ -11,6 +11,7 @@ git:
 branches:
   only:
     - master
+    - /release\/.*/
     - /feature\/.*/
     - /fix\/.*/
 
@@ -18,14 +19,14 @@ env:
   global:
     # Release version has to start with real version (7.1.0-....) for the docker image to build successfully.
     - RELEASE_VERSION=7.1.0.1
-    - DEVELOPMENT_VERSION=7.2.0-SNAPSHOT
+    - DEVELOPMENT_VERSION=7.1.0.2-SNAPSHOT
 
 stages:
   - name: lint
   - name: test
     if: commit_message !~ /\[skip tests\]/
   - name: release
-    if: commit_message ~= /\[release\]/ AND branch = master AND type != pull_request AND fork = false
+    if: commit_message ~= /\[release\]/ AND (branch = master OR branch ~= /^release/) AND type != pull_request AND fork = false
 
 jobs:
   include:
