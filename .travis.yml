@@ -26,7 +26,7 @@ stages:
   - name: test
     if: commit_message !~ /\[skip tests\]/
   - name: release
-    if: commit_message ~= /\[release\]/ AND branch = master AND type != pull_request AND fork = false
+    if: commit_message ~= /\[release\]/ AND (branch = master OR branch ~= /^release/) AND type != pull_request AND fork = false
 
 jobs:
   include:
