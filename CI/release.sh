@@ -12,8 +12,7 @@ if [ -z "${RELEASE_VERSION}" ] || [ -z "${DEVELOPMENT_VERSION}" ]; then
 fi
 
 # Use full history for release
-git checkout -B master
-
+git checkout -B "${TRAVIS_BRANCH}"
 # Add email to link commits to user
 git config user.email "${GIT_EMAIL}"
 
