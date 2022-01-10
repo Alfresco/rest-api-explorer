@@ -22,7 +22,7 @@
   <scm>
     <connection>scm:git:https://github.com/Alfresco/rest-api-explorer.git</connection>
     <developerConnection>scm:git:https://github.com/Alfresco/rest-api-explorer.git</developerConnection>
-    <url>https://github.com/Alfresco/rest-api-explorer.git</url>
+    <url>https://github.com/Alfresco/rest-api-explorer</url>
     <tag>HEAD</tag>
   </scm>
 

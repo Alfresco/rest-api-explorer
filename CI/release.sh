@@ -23,6 +23,6 @@ mvn release:clean release:prepare release:perform \
       -DreleaseVersion="${RELEASE_VERSION}" \
       -DignoreSnapshots \
       -DdevelopmentVersion="${DEVELOPMENT_VERSION}" \
-      -DscmCommentPrefix="[maven-release-plugin][skip ci] " \
+      -DscmCommentPrefix="[maven-release-plugin][skip tests] " \
       -Dusername="${GIT_USERNAME}" \
       -Dpassword="${GIT_PASSWORD}"
