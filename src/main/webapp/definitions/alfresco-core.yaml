@@ -2107,6 +2107,39 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "7.1.1"
+      tags:
+        - renditions
+      summary: Delete rendition
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.1.1 and newer versions.
+
+        Delete the rendition identified by **renditionId** of **nodeId**.
+
+        If the rendition is successfully deleted then the content for that rendition node
+        will be cleared.
+      operationId: deleteRendition
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format or **renditionId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to delete the rendition
+        '404':
+          description: |
+            **nodeId** or **renditionId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions/{renditionId}/content':
     get:
       x-alfresco-since: "5.2"
@@ -3074,6 +3107,40 @@ paths:
         '404':
           description: |
             **nodeId** or **versionId** or **renditionId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "7.1.1"
+      tags:
+        - versions
+      summary: Delete rendition for a version
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.1.1 and newer versions.
+
+        Delete the rendition for **renditionId** of version **versionId** of **nodeId**.
+
+        If the rendition is successfully deleted then the content  for that rendition node
+        will be cleared.
+      operationId: deleteVersionRendition
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format or **versionId** or **renditionId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to delete the version rendition
+        '404':
+          description: |
+            **nodeId**, **versionId** or **renditionId** does not exist
         default:
           description: Unexpected error
           schema:
