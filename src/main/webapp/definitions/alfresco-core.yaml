@@ -3143,7 +3143,7 @@ paths:
       x-alfresco-since: "7.1.1"
       tags:
         - versions
-      summary: Delete rendition for a file version
+      summary: Delete rendition for a version
       description: |
         **Note:** this endpoint is available in Alfresco 7.1.1 and newer versions.
 
