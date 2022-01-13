@@ -2131,7 +2131,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.1.1 and newer versions.
 
-        Delete the rendition identified by **renditionId** of file **nodeId**.
+        Delete the rendition identified by **renditionId** of **nodeId**.
 
         If the rendition is successfully deleted then the content for that rendition node
         will be cleared.
@@ -2144,7 +2144,7 @@ paths:
           description: Successful response
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
+            Invalid parameter: **nodeId** is not a valid format or **renditionId** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -3147,7 +3147,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.1.1 and newer versions.
 
-        Delete the rendition for **renditionId** of version of file **nodeId** and **versionId**.
+        Delete the rendition for **renditionId** of version **versionId** of **nodeId**.
 
         If the rendition is successfully deleted then the content  for that rendition node
         will be cleared.
@@ -3161,7 +3161,7 @@ paths:
           description: Successful response
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a valid format, or is not a file, or **renditionId** is invalid
+            Invalid parameter: **nodeId** is not a valid format or **versionId** or **renditionId** is invalid
         '401':
           description: Authentication failed
         '403':
