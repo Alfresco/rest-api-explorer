@@ -3461,7 +3461,7 @@ paths:
           }
         }
         ```
-      operationId: getStorageProperties
+      operationId: getVersionStorageProperties
       produces:
         - application/json
       parameters:
@@ -3552,7 +3552,7 @@ paths:
         It also requires at least one specific implementation of underlying functionality in Cloud Connector(s).
 
         Request to send given version content to archive.
-      operationId: requestArchiveContent
+      operationId: requestArchiveVersionContent
       produces:
         - application/json
       parameters:
@@ -3668,7 +3668,7 @@ paths:
         It also requires at least one specific implementation of underlying functionality in Cloud Connector(s).
 
         Request to restore given version content from archive.
-      operationId: requestRestoreContentFromArchive
+      operationId: requestRestoreVersionContentFromArchive
       produces:
         - application/json
       parameters:
