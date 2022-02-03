@@ -3230,6 +3230,57 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}/request-direct-access-url':
+    post:
+      x-alfresco-since: "7.2.0"
+      tags:
+        - versions
+      summary: Generate a direct access content URL
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.2 and newer versions.
+        Generate a direct access content url for the given **nodeId**.
+      operationId: requestVersionRenditionDirectAccessUrl
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/renditionIdParam'
+        - in: body
+          name: requestContentUrlBodyCreate
+          description: |
+            Direct Access URL options and flags.
+
+            It can be used to set the **attachment** flag, which controls the download method of
+            the generated URL (attachment DAU vs embedded DAU). It defaults to **true**, meaning
+            the value for the Content Disposition response header will be **attachment**.
+
+            Note: It is up to the actual ContentStore implementation if it can fulfil this
+            request or not.
+          required: false
+          schema:
+            $ref: '#/definitions/DirectAccessUrlBodyCreate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DirectAccessUrlEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a file
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** does not exist
+        '501':
+          description: The actual ContentStore implementation can't fulfil this request
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 
   '/nodes/{nodeId}/action-definitions':
     get:
