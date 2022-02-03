@@ -3232,12 +3232,12 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/versions/{versionId}/renditions/{renditionId}/request-direct-access-url':
     post:
-      x-alfresco-since: "7.1.0"
+      x-alfresco-since: "7.2.0"
       tags:
         - versions
       summary: Generate a direct access content URL
       description: |
-        **Note:** this endpoint is available in Alfresco 7.1 and newer versions.
+        **Note:** this endpoint is available in Alfresco 7.2 and newer versions.
         Generate a direct access content url for the given **nodeId**.
       operationId: requestVersionRenditionDirectAccessUrl
       parameters:
