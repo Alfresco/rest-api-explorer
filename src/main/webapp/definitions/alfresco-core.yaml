@@ -1291,11 +1291,10 @@ paths:
         any rendition failure (e.g. No transformer is currently available) will not fail the whole upload and has the potential to silently fail.
 
         Use **overwrite** to overwrite an existing file, matched by name. If the file is versionable,
-        the existing content is replaced.
+        the existing content is replaced. It is not possible to overwrite an existing file which is not versionable.
 
         When you overwrite existing content, you can set the **majorVersion** boolean field to **true** to indicate a major version
         should be created. The default for **majorVersion** is **false**.
-        Setting  **majorVersion** enables versioning of the node, if it is not already versioned.
 
         When you overwrite existing content, you can use the **comment** field to add a version comment that appears in the
         version history. This also enables versioning of this node, if it is not already versioned.
