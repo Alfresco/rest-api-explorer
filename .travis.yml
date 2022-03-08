@@ -17,8 +17,8 @@ branches:
 env:
   global:
     # Release version has to start with real version (7.1.0-....) for the docker image to build successfully.
-    - RELEASE_VERSION=7.2.0-A4
-    - DEVELOPMENT_VERSION=7.2.0-A5-SNAPSHOT
+    - RELEASE_VERSION=7.2.0
+    - DEVELOPMENT_VERSION=7.2.1-A1-SNAPSHOT
 
 stages:
   - name: lint
