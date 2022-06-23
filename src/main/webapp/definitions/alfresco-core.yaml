@@ -8437,10 +8437,14 @@ paths:
             **actionDefinitionId** or **targetId** does not exist
   '/nodes/{nodeId}/rules':
     get:
+      x-alfresco-since: "7.3.0"
       tags:
         - rules
       summary: List rules
-      description: Gets a list of rules for the folder node **nodeId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Gets a list of rules for the folder node **nodeId**.
       operationId: listRules
       produces:
         - application/json
