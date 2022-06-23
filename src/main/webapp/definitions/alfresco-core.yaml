@@ -10710,7 +10710,6 @@ definitions:
     required:
       - id
       - name
-      - conditions
       - actions
     properties:
       id:
@@ -10752,7 +10751,10 @@ definitions:
           - outbound
         default: ["inbound"]
       conditions:
-        description: The condition that determines whether the actions will be executed for a rule
+        description: |
+          The conditions that determine whether the actions will be executed for a rule.
+
+          A condition should contain at least one entry in compositeConditions or simpleConditions.
         type: '#/definitions/CompositeConditionDefinition'
       actions:
         description: The actions for the rule
@@ -10763,7 +10765,7 @@ definitions:
     type: object
     properties:
       inverted:
-        description: Whether to invert the logic for this condition
+        description: Whether to invert the logic for this condition (if true then "not" is applied to the whole condition)
         type: boolean
         default: false
       booleanMode:
@@ -10793,7 +10795,15 @@ definitions:
       - parameter
     properties:
       field:
-        description: The name of the property to compare (e.g. "cm:name")
+        description: |
+          The name of the property to compare.
+
+          This should be either a property (e.g. "cm:name") or one of the keywords from this list:
+          - size (the size of the content for a node)
+          - mimetype (the mimetype of the content for a node)
+          - encoding (the encoding of the content for a node)
+          - category (a category for the node)
+          - aspect (an aspect that the node has)
         type: string
       comparator:
         description: The method to compare the property against the parameter
