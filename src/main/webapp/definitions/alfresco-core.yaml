@@ -48,6 +48,8 @@ tags:
     description: Retrieve and manage ratings
   - name: renditions
     description: Retrieve and manage file renditions
+  - name: rules
+    description: Retrieve and manage rules
   - name: shared-links
     description: Retrieve and manage public shared links
   - name: sites
@@ -119,6 +121,12 @@ parameters:
     name: nodeId
     in: path
     description: The identifier of a target node.
+    required: true
+    type: string
+  nodeFolderIdParam:
+    name: nodeId
+    in: path
+    description: The identifier of a folder node.
     required: true
     type: string
   nodeMinimalEntryIncludeParam:
@@ -8427,6 +8435,44 @@ paths:
         '404':
           description: |
             **actionDefinitionId** or **targetId** does not exist
+  '/nodes/{nodeId}/rules':
+    get:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: List rules
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Gets a list of rules for the folder node **nodeId**.
+      operationId: listRules
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RulePaging'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a folder
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to read rules on the node
+        '404':
+          description: |
+            **nodeId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
 definitions:
   Error:
     type: object
@@ -10635,3 +10681,144 @@ definitions:
         type: object
         additionalProperties:
           type: string
+  RulePaging:
+    type: object
+    required:
+      - list
+    properties:
+      list:
+        type: object
+        required:
+          - pagination
+          - entries
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/RuleEntry'
+  RuleEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Rule'
+  Rule:
+    type: object
+    required:
+      - id
+      - name
+      - actions
+    properties:
+      id:
+        description: Identifier for the rule
+        type: string
+      name:
+        description: Name of the rule
+        type: string
+      description:
+        description: Description of the rule
+        type: string
+      enabled:
+        description: Whether the rule is enabled
+        type: boolean
+        default: true
+      cascade:
+        description: Whether the rule also applies to subfolders
+        type: boolean
+        default: false
+      asynchronous:
+        description: Whether the rule should be run in the background
+        type: boolean
+        default: false
+      errorScript:
+        description: If the rule should be run in the background then an optional error script can be referenced
+        type: string
+      shared:
+        description: Whether the rule has been shared with more than one folder
+        type: boolean
+      trigger:
+        description: |
+          The trigger(s) that cause the rule to be activated.
+          * inbound - The rule should be activated when an item enters the folder
+          * update - The rule should be activated when an item within the folder is updated
+          * outbound - The rule should be activated when an item leaves the folder or is deleted
+        type: array
+        items:
+          type: string
+          enum:
+          - inbound
+          - update
+          - outbound
+        default: ["inbound"]
+      conditions:
+        description: |
+          The conditions that determine whether the actions will be executed for a rule.
+
+          A condition should contain at least one entry in compositeConditions or simpleConditions.
+        type: '#/definitions/CompositeConditionDefinition'
+      actions:
+        description: The actions for the rule
+        type: array
+        items:
+          $ref: '#/definitions/ActionDefinition'
+  CompositeConditionDefinition:
+    type: object
+    properties:
+      inverted:
+        description: Whether to invert the logic for this condition (if true then "not" is applied to the whole condition)
+        type: boolean
+        default: false
+      booleanMode:
+        description: How to combine the clauses of this condition ("and" or "or")
+        type: string
+        enum:
+        - and
+        - or
+        default: "and"
+      compositeConditions:
+        description: Nested list of composite clauses in this condition
+        type: array
+        items:
+          $ref: '#/definitions/CompositeConditionDefinition'
+        default: []
+      simpleConditions:
+        description: Nested list of simple (per field) conditions.
+        type: array
+        items:
+          $ref: '#/definitions/SimpleConditionDefinition'
+        default: []
+  SimpleConditionDefinition:
+    type: object
+    required:
+      - field
+      - comparator
+      - parameter
+    properties:
+      field:
+        description: |
+          The name of the property to compare.
+
+          This should be either a property (e.g. "cm:name") or one of the keywords from this list:
+          * size (the size of the content for a node)
+          * mimetype (the mimetype of the content for a node)
+          * encoding (the encoding of the content for a node)
+          * category (a category for the node)
+          * aspect (an aspect that the node has)
+        type: string
+      comparator:
+        description: |
+          The method to compare the property against the parameter.
+
+          Depending on the type of the property then different comparators are available:
+          * All types: equals
+          * text: contains, startsWith, endsWith
+          * int/long/float/double/date: greaterThan, lessThan, greaterThanOrEqual, lessThanOrEqual
+
+          Where a property is multivalued then the condition is true if it is satisfied by any of the values.
+        type: string
+      parameter:
+        description: The value to compare the field against
+        type: string
