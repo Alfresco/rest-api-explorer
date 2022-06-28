@@ -10736,6 +10736,9 @@ definitions:
       errorScript:
         description: If the rule should be run in the background then an optional error script can be referenced
         type: string
+      shared:
+        description: Whether the rule has been shared with more than one folder
+        type: boolean
       trigger:
         description: |
           The trigger(s) that cause the rule to be activated.
@@ -10799,14 +10802,22 @@ definitions:
           The name of the property to compare.
 
           This should be either a property (e.g. "cm:name") or one of the keywords from this list:
-          - size (the size of the content for a node)
-          - mimetype (the mimetype of the content for a node)
-          - encoding (the encoding of the content for a node)
-          - category (a category for the node)
-          - aspect (an aspect that the node has)
+          * size (the size of the content for a node)
+          * mimetype (the mimetype of the content for a node)
+          * encoding (the encoding of the content for a node)
+          * category (a category for the node)
+          * aspect (an aspect that the node has)
         type: string
       comparator:
-        description: The method to compare the property against the parameter
+        description: |
+          The method to compare the property against the parameter.
+
+          Depending on the type of the property then different comparators are available:
+          * All types: equals
+          * text: contains, startsWith, endsWith
+          * int/long/float/double/date: greaterThan, lessThan, greaterThanOrEqual, lessThanOrEqual
+
+          Where a property is multivalued then the condition is true if it is satisfied by any of the values.
         type: string
       parameter:
         description: The value to compare the field against
