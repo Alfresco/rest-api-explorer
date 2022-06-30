@@ -10806,6 +10806,7 @@ definitions:
           * mimetype (the mimetype of the content for a node)
           * encoding (the encoding of the content for a node)
           * category (a category for the node)
+          * tag (a tag that the node has)
           * aspect (an aspect that the node has)
         type: string
       comparator:
@@ -10816,6 +10817,7 @@ definitions:
           * All types: equals
           * text: contains, startsWith, endsWith
           * int/long/float/double/date: greaterThan, lessThan, greaterThanOrEqual, lessThanOrEqual
+          * content of type or sub-type: content, file transfer target, folder, smart folder template, transfer target
 
           Where a property is multivalued then the condition is true if it is satisfied by any of the values.
         type: string
