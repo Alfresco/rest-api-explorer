@@ -8608,6 +8608,39 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Delete a rule
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Deletes the rule **ruleId**.
+      operationId: deleteRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/rulesetIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to delete a rule
+        '404':
+          description: |
+            **nodeId**, **rulesetId** or **ruleId** does not exist
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
