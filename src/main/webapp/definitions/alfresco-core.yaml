@@ -10938,7 +10938,7 @@ definitions:
           A condition should contain at least one entry in compositeConditions or simpleConditions.
 
           If the field is omitted then the rule will apply to all nodes.
-        type: '#/definitions/CompositeConditionDefinition'
+        $ref: '#/definitions/CompositeConditionDefinition'
       actions:
         description: The actions for the rule
         type: array
@@ -10992,7 +10992,7 @@ definitions:
           A condition should contain at least one entry in compositeConditions or simpleConditions.
 
           If the field is omitted then the rule will apply to all nodes.
-        type: '#/definitions/CompositeConditionDefinition'
+        $ref: '#/definitions/CompositeConditionDefinition'
       actions:
         description: The actions for the rule
         type: array
