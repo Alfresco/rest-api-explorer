@@ -507,6 +507,18 @@ parameters:
       Delimiter between namespace-prefix and property name can be either colon (':') or underscore ('_') character (e.g., 'cm:content' or 'cm_content').
     required: true
     type: string
+  rulesetIdParam:
+    name: rulesetId
+    in: path
+    description: The identifier for a ruleset. Currently only the alias **-default-** is supported.
+    required: true
+    type: string
+  ruleIdParam:
+    name: ruleId
+    in: path
+    description: The identifier for a rule.
+    required: true
+    type: string
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -8435,7 +8447,7 @@ paths:
         '404':
           description: |
             **actionDefinitionId** or **targetId** does not exist
-  '/nodes/{nodeId}/rules':
+  '/nodes/{nodeId}/rulesets/{rulesetId}/rules':
     get:
       x-alfresco-since: "7.3.0"
       tags:
@@ -8450,6 +8462,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/rulesetIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
@@ -8510,6 +8523,40 @@ paths:
         '409':
           description: |
             **nodeId** is locked and you are not the lock owner
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/rulesets/{rulesetId}/rules/{ruleId}':
+    get:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Get information about a particular rule
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Gets the rule information for **ruleId**.
+      operationId: getRule
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/rulesetIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId**, **rulesetId** or **ruleId** is not a valid format, or the node is not the correct type
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId**, **rulesetId** or **ruleId** does not exist
         default:
           description: Unexpected error
           schema:
