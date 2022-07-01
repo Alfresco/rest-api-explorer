@@ -8494,11 +8494,12 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
 
         Creates a rule on folder **nodeId**.
-      operationId: createComment
+      operationId: createRule
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/fieldsParam'
         - in: body
           name: ruleBodyCreate
           description: The rule. Note that you can also provide a list of rules.
@@ -8532,7 +8533,7 @@ paths:
       x-alfresco-since: "7.3.0"
       tags:
         - rules
-      summary: Get information about a particular rule
+      summary: Get information about a particular rule **ruleId**.
       description: |
         **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
 
@@ -8542,6 +8543,7 @@ paths:
         - $ref: '#/parameters/nodeFolderIdParam'
         - $ref: '#/parameters/rulesetIdParam'
         - $ref: '#/parameters/ruleIdParam'
+        - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
           description: Successful response
@@ -8557,6 +8559,51 @@ paths:
         '404':
           description: |
             **nodeId**, **rulesetId** or **ruleId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Update a rule
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Updates an existing rule **ruleId**.
+      operationId: updateRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/rulesetIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: ruleBodyUpdate
+          description: The JSON representing the rule to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RuleBody'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId**, **rulesetId** or **ruleId** is not a valid format, or the node is not the correct type
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId**, **rulesetId** or **ruleId** does not exist
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
         default:
           description: Unexpected error
           schema:
