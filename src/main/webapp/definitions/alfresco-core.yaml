@@ -10809,6 +10809,11 @@ definitions:
           * tag (a tag that the node has)
           * aspect (an aspect that the node has)
         type: string
+      multi-value: |
+         Multiple value properties can exist for the following property types:
+          * text/mltext
+          * int/long/float/double (in Share only)
+         When using "If all criteria are met" condition, the rule is triggered if any of the property values matches the condition.
       comparator:
         description: |
           The method to compare the property against the parameter.
