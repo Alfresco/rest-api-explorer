@@ -510,7 +510,10 @@ parameters:
   rulesetIdParam:
     name: rulesetId
     in: path
-    description: The identifier for a ruleset. Currently only the alias **-default-** is supported.
+    description: |
+      The identifier for a ruleset. The alias **-default-** can be used to refer to the only ruleset on a folder.
+
+      Currently there is no support for multiple rulesets on a folder, and the behaviour of **-default-** is not defined in this case.
     required: true
     type: string
   ruleIdParam:
