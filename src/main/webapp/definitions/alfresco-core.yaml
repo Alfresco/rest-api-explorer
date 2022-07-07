@@ -522,6 +522,17 @@ parameters:
     description: The identifier for a rule.
     required: true
     type: string
+  ruleSetMinimalEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the rule set entry. The following optional field can be requested:
+      * usedBy
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -8733,12 +8744,15 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.3.0 and newer versions.
 
         Remove the link between a rule set and the folder **nodeId**.
+        
+        If the link being deleted is the last one for the rule set **ruleSetId**, the rule set will be deleted.
       operationId: removeLinkedRuleSet
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/ruleSetIdParam'
+        - $ref: '#/parameters/ruleSetMinimalEntryIncludeParam'
       responses:
         '204':
           description: Successful response
@@ -11141,18 +11155,18 @@ definitions:
     type: object
     required:
       - id
-      - linked
+      - shared
     properties:
       id:
         description: Identifier for the rule set
         type: string
-      linked:
-        description: True if the rule set is linked to at least one folder
-      linkedBy:
+      shared:
+        description: True if the rule set is shared to at least one folder
+      usedBy:
         description: |
           List of folder identifiers which use the rule set.
           
-          Note that any folders the user does not have access to will not appear in this list. Use **linked** instead to check existence of any link.
+          Note that any folders the user does not have access to will not appear in this list. Use **shared** instead to check existence of any link.
         type: array
         items:
           type: string
