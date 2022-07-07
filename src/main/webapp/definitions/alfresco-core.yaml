@@ -507,6 +507,21 @@ parameters:
       Delimiter between namespace-prefix and property name can be either colon (':') or underscore ('_') character (e.g., 'cm:content' or 'cm_content').
     required: true
     type: string
+  ruleSetIdParam:
+    name: ruleSetId
+    in: path
+    description: |
+      The identifier for a rule set. The alias **-default-** can be used to refer to the only rule set on a folder.
+
+      Currently there is no support for multiple rule sets on a folder, and the behaviour of **-default-** is not defined in this case.
+    required: true
+    type: string
+  ruleIdParam:
+    name: ruleId
+    in: path
+    description: The identifier for a rule.
+    required: true
+    type: string
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -6126,7 +6141,7 @@ paths:
         This may be combined with the siteId filter, as shown below:
 
         ```
-        where=(siteId=mySite AND personId=person))
+        where=(siteId=mySite AND personId=person)
         ```
       operationId: getSiteMembershipRequests
       produces:
@@ -8059,11 +8074,11 @@ paths:
 
             *   ```where=(createdByUser='jbloggs')```
 
-            *   ```where=(id BETWEEN ('1234', '4321')```
+            *   ```where=(id BETWEEN ('1234', '4321'))```
 
-            *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+            *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00'))```
 
-            *   ```where=(createdByUser='jbloggs' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+            *   ```where=(createdByUser='jbloggs' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00'))```
 
             *   ```where=(valuesKey='/alfresco-access/login/user')```
 
@@ -8108,8 +8123,8 @@ paths:
 
         For example:
 
-        *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
-        *   ```where=(id BETWEEN ('1234', '4321')```
+        *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00'))```
+        *   ```where=(id BETWEEN ('1234', '4321'))```
 
         You must have admin rights to delete audit information.
       operationId: deleteAuditEntriesForAuditApp
@@ -8122,8 +8137,8 @@ paths:
           description: |
             Audit entries to permanently delete for an audit application, given an inclusive time period or range of ids. For example:
 
-            *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
-            *   ```where=(id BETWEEN ('1234', '4321')```
+            *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00'))```
+            *   ```where=(id BETWEEN ('1234', '4321'))```
           required: true
           type: string
       responses:
@@ -8255,9 +8270,9 @@ paths:
 
             *   ```where=(createdByUser='-me-')```
 
-            *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+            *   ```where=(createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00'))```
 
-            *   ```where=(createdByUser='jbloggs' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00')```
+            *   ```where=(createdByUser='jbloggs' and createdAt BETWEEN ('2017-06-02T12:13:51.593+01:00' , '2017-06-04T10:05:16.536+01:00'))```
           required: false
           type: string
         - $ref: '#/parameters/auditMinimalEntryIncludeParam'
@@ -8435,7 +8450,7 @@ paths:
         '404':
           description: |
             **actionDefinitionId** or **targetId** does not exist
-  '/nodes/{nodeId}/rules':
+  '/nodes/{nodeId}/rule-sets/{ruleSetId}/rules':
     get:
       x-alfresco-since: "7.3.0"
       tags:
@@ -8450,6 +8465,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
@@ -8472,7 +8488,274 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    post:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Create a rule
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
 
+        Creates a rule on folder **nodeId**.
+      operationId: createRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: ruleBodyCreate
+          description: The rule. Note that you can also provide a list of rules.
+          required: true
+          schema:
+            $ref: '#/definitions/RuleBody'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleEntry'
+        '400':
+          description: |
+            Invalid parameter: **ruleBodyCreate** is invalid or **nodeId** is not a folder
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to create a rule
+        '404':
+          description: |
+            **nodeId** does not exist
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/rule-sets/{ruleSetId}/rules/{ruleId}':
+    get:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Get information about a particular rule **ruleId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Gets the rule information for **ruleId**.
+      operationId: getRule
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId**, **ruleSetId** or **ruleId** is not a valid format, or the node is not the correct type
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId**, **ruleSetId** or **ruleId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Update a rule
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Updates an existing rule **ruleId**.
+      operationId: updateRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: ruleBodyUpdate
+          description: The JSON representing the rule to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RuleBody'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId**, **ruleSetId** or **ruleId** is not a valid format, or the node is not the correct type
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId**, **ruleSetId** or **ruleId** does not exist
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Delete a rule
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Deletes the rule **ruleId**.
+      operationId: deleteRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to delete a rule
+        '404':
+          description: |
+            **nodeId**, **ruleSetId** or **ruleId** does not exist
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/rule-sets':
+    get:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: List rule-sets on a folder
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer version.
+
+        Gets a list of rule sets that are used by the folder **nodeId**.
+
+        Currently, this list may only ever contain zero or one rule set entries as folders cannot use multiple rule sets.
+      operationId: listRuleSets
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#parameters/nodeIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema: '#/definitions/RuleSetPaging'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a folder
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to read rule sets on the node
+        '404':
+          description: |
+            **nodeId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/linked-rule-sets':
+    post:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Link a rule set
+      desciption: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Links a rule set to the folder node **nodeId**.
+      operationId: linkRuleSet
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#parameters/nodeIdParam'
+        - in: body
+          name: linkedRuleSetBodyCreate
+          description: The rule set to add.
+          required: true
+          schema:
+            $ref: '#/definitions/LinkedRuleSetBodyCreate'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleSet',
+        '400':
+          description: |
+            Invalid parameter: **nodeId** or **linkedRuleSetBodyCreate** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to create a link to this rule set
+        '404':
+          description: |
+            **nodeId** or **id** does not exist
+        '409':
+          description: This folder already owns a rule set or links to another ruleSet
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/linked-rule-sets/{ruleSetId}':
+    delete:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Removes the link between a rule set and a folder
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3.0 and newer versions.
+
+        Remove the link between a rule set and the folder **nodeId**.
+      operationId: removeLinkedRuleSet
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: |
+            Invalid parameter: value of **nodeId** or **ruleSetId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to unlink the rule set from this folder
+        '404':
+          description: |
+            **nodeId** or **ruleSetId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -10567,6 +10850,15 @@ definitions:
         description: The entity upon which to execute the action, typically a node ID or similar.
       params:
         type: object
+  ActionBodyExecTemplate:
+    type: object
+    required:
+      - actionDefinitionId
+    properties:
+      actionDefinitionId:
+        type: string
+      params:
+        type: object
   ActionExecResultEntry:
     type: object
     required:
@@ -10711,6 +11003,7 @@ definitions:
       - id
       - name
       - actions
+      - shared
     properties:
       id:
         description: Identifier for the rule
@@ -10739,9 +11032,9 @@ definitions:
       shared:
         description: Whether the rule has been shared with more than one folder
         type: boolean
-      trigger:
+      triggers:
         description: |
-          The trigger(s) that cause the rule to be activated.
+          The set of triggers that cause the rule to be activated.
           * inbound - The rule should be activated when an item enters the folder
           * update - The rule should be activated when an item within the folder is updated
           * outbound - The rule should be activated when an item leaves the folder or is deleted
@@ -10758,12 +11051,126 @@ definitions:
           The conditions that determine whether the actions will be executed for a rule.
 
           A condition should contain at least one entry in compositeConditions or simpleConditions.
-        type: '#/definitions/CompositeConditionDefinition'
+
+          If the field is omitted then the rule will apply to all nodes.
+        $ref: '#/definitions/CompositeConditionDefinition'
       actions:
         description: The actions for the rule
         type: array
         items:
-          $ref: '#/definitions/ActionDefinition'
+          $ref: '#/definitions/ActionBodyExecTemplate'
+  RuleBody:
+    type: object
+    required:
+      - name
+      - actions
+    properties:
+      name:
+        description: Name of the rule
+        type: string
+      description:
+        description: Description of the rule
+        type: string
+      enabled:
+        description: Whether the rule is enabled
+        type: boolean
+        default: true
+      cascade:
+        description: Whether the rule also applies to subfolders
+        type: boolean
+        default: false
+      asynchronous:
+        description: Whether the rule should be run in the background
+        type: boolean
+        default: false
+      errorScript:
+        description: If the rule should be run in the background then an optional error script can be referenced
+        type: string
+      triggers:
+        description: |
+          The set of triggers that cause the rule to be activated.
+          * inbound - The rule should be activated when an item enters the folder
+          * update - The rule should be activated when an item within the folder is updated
+          * outbound - The rule should be activated when an item leaves the folder or is deleted
+        type: array
+        items:
+          type: string
+          enum:
+            - inbound
+            - update
+            - outbound
+        default: ["inbound"]
+      conditions:
+        description: |
+          The conditions that determine whether the actions will be executed for a rule.
+
+          A condition should contain at least one entry in compositeConditions or simpleConditions.
+
+          If the field is omitted then the rule will apply to all nodes.
+        $ref: '#/definitions/CompositeConditionDefinition'
+      actions:
+        description: The actions for the rule
+        type: array
+        items:
+          $ref: '#/definitions/ActionBodyExecTemplate'
+  RuleSetPaging:
+    type: object
+    required:
+      - list
+    properties:
+      list:
+        type: object
+        required:
+          - pagination
+          - entries
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/RuleSetEntry'
+  RuleSetEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/RuleSet'
+  RuleSet:
+    type: object
+    required:
+      - id
+      - ownedBy
+    properties:
+      id:
+        description: Identifier for the rule set
+        type: string
+      ownedBy:
+        description: The identifier of the folder which owns the rule set
+        type: string
+      sharedWith:
+        description: List of folder identifiers which also use the rule set
+        type: array
+        items:
+          type: string
+  LinkedRuleSetBodyCreate:
+    type: object
+    required:
+      - id
+      - type
+    properties:
+      id:
+        description: Identifier for either the folder or the rule set
+        type: string
+      type:
+        description: Whether id refers to a folder or a rule set
+        type: string
+        default: RULE_SET
+        enum:
+          - RULE_SET
+          - FOLDER
+
   CompositeConditionDefinition:
     type: object
     properties:
