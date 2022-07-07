@@ -522,18 +522,6 @@ parameters:
     description: The identifier for a rule.
     required: true
     type: string
-  ruleSetMinimalEntryIncludeParam:
-    name: include
-    in: query
-    description: |
-      Returns additional information about the rule set. The following optional fields can be requested:
-      * owned
-      * shared
-    required: false
-    type: array
-    items:
-      type: string
-    collectionFormat: csv
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -8675,7 +8663,6 @@ paths:
         - $ref: '#parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/ruleSetMinimalEntryIncludeParam'
       responses:
         '200':
           description: Successful response
@@ -11154,16 +11141,19 @@ definitions:
     type: object
     required:
       - id
+      - ownedBy
     properties:
       id:
         description: Identifier for the rule set
         type: string
-      owned:
-        description: True if this rule set is owned by the folder
-        type: boolean
-      shared:
-        description: True if this rule set is used in at least one other folder
-        type: boolean
+      ownedBy:
+        description: The identifier of the folder which owns the rule set
+        type: string
+      sharedWith:
+        description: List of folder identifiers which also use the rule set
+        type: array
+        items:
+          type: string
   LinkedRuleSetBodyCreate:
     type: object
     required:
