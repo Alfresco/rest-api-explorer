@@ -522,11 +522,11 @@ parameters:
     description: The identifier for a rule.
     required: true
     type: string
-  rulesetMinimalEntryIncludeParam:
+  ruleSetMinimalEntryIncludeParam:
     name: include
     in: query
     description: |
-      Returns additional information about the ruleset. The following optional fields can be requested:
+      Returns additional information about the rule set. The following optional fields can be requested:
       * owned
       * shared
     required: false
@@ -8656,37 +8656,37 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/rulesets':
+  '/nodes/{nodeId}/rule-sets':
     get:
       x-alfresco-since: "7.3.0"
       tags:
         - rules
-      summary: List rulesets on a folder
+      summary: List rule-sets on a folder
       description: |
         **Note:** this endpoint is available in Alfresco 7.3 and newer version.
 
-        Gets a list of rulesets that are used by the folder **nodeId**.
+        Gets a list of rule sets that are used by the folder **nodeId**.
 
-        Currently, this list may only ever contain zero or one ruleset entries as folders cannot use multiple rulesets.
-      operationId: listRulesets
+        Currently, this list may only ever contain zero or one rule set entries as folders cannot use multiple rule sets.
+      operationId: listRuleSets
       produces:
         - application/json
       parameters:
         - $ref: '#parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/rulesetMinimalEntryIncludeParam'
+        - $ref: '#/parameters/ruleSetMinimalEntryIncludeParam'
       responses:
         '200':
           description: Successful response
-          schema: '#/definitions/RulesetPaging'
+          schema: '#/definitions/RuleSetPaging'
         '400':
           description: |
             Invalid parameter: **nodeId** is not a valid format, or is not a folder
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to read rulesets on the node
+          description: User does not have permission to read rule sets on the node
         '404':
           description: |
             **nodeId** does not exist
@@ -8694,77 +8694,77 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/linked-rulesets':
+  '/nodes/{nodeId}/linked-rule-sets':
     post:
       x-alfresco-since: "7.3.0"
       tags:
         - rules
-      summary: Link a ruleset
+      summary: Link a rule set
       desciption: |
         **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
 
-        Links a ruleset to the folder node **nodeId**.
-      operationId: linkRuleset
+        Links a rule set to the folder node **nodeId**.
+      operationId: linkRuleSet
       produces:
         - application/json
       parameters:
         - $ref: '#parameters/nodeIdParam'
         - in: body
-          name: linkedRulesetBodyCreate
-          description: The ruleset to add.
+          name: linkedRuleSetBodyCreate
+          description: The rule set to add.
           required: true
           schema:
-            $ref: '#/definitions/LinkedRulesetBodyCreate'
+            $ref: '#/definitions/LinkedRuleSetBodyCreate'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/LinkedRulesets',
+            $ref: '#/definitions/RuleSet',
         '400':
           description: |
-            Invalid parameter: **nodeId** or **linkedRulesetBodyCreate** is invalid
+            Invalid parameter: **nodeId** or **linkedRuleSetBodyCreate** is invalid
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to create a link to this ruleset
+          description: User does not have permission to create a link to this rule set
         '404':
           description: |
             **nodeId** or **id** does not exist
         '409':
-          description: This folder already owns a ruleset or links to another ruleset
+          description: This folder already owns a rule set or links to another ruleSet
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/linked-rulesets/{rulesetId}':
+  '/nodes/{nodeId}/linked-rule-sets/{ruleSetId}':
     delete:
       x-alfresco-since: "7.3.0"
       tags:
         - rules
-      summary: Removes the link between a ruleset and a folder
+      summary: Removes the link between a rule set and a folder
       description: |
         **Note:** this endpoint is available in Alfresco 7.3.0 and newer versions.
 
-        Remove the link between a ruleset and the folder **nodeId**.
-      operationId: removeLinkedRuleset
+        Remove the link between a rule set and the folder **nodeId**.
+      operationId: removeLinkedRuleSet
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/rulesetIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
       responses:
         '204':
           description: Successful response
         '400':
           description: |
-            Invalid parameter: value of **nodeId** or **rulesetId** is invalid
+            Invalid parameter: value of **nodeId** or **ruleSetId** is invalid
         '401':
           description: Authentication failed
         '403':
-          description: User does not have permission to unlink the ruleset from this folder
+          description: User does not have permission to unlink the rule set from this folder
         '404':
           description: |
-            **nodeId** or **rulesetId** does not exist
+            **nodeId** or **ruleSetId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -11126,7 +11126,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ActionBodyExecTemplate'
-  RulesetPaging:
+  RuleSetPaging:
     type: object
     required:
       - list
@@ -11142,43 +11142,43 @@ definitions:
           entries:
             type: array
             items:
-              $ref: '#/definitions/RulesetEntry'
-  RulesetEntry:
+              $ref: '#/definitions/RuleSetEntry'
+  RuleSetEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/Ruleset'
-  Ruleset:
+        $ref: '#/definitions/RuleSet'
+  RuleSet:
     type: object
     required:
       - id
     properties:
       id:
-        description: Identifier for the ruleset
+        description: Identifier for the rule set
         type: string
       owned:
-        description: True if this ruleset is owned by the folder
+        description: True if this rule set is owned by the folder
         type: boolean
       shared:
-        description: True if this ruleset is used in at least one other folder
+        description: True if this rule set is used in at least one other folder
         type: boolean
-  LinkedRulesetBodyCreate:
+  LinkedRuleSetBodyCreate:
     type: object
     required:
       - id
       - type
     properties:
       id:
-        description: Identifier for either the folder or the ruleset
+        description: Identifier for either the folder or the rule set
         type: string
       type:
-        description: Whether id refers to a folder or a ruleset
+        description: Whether id refers to a folder or a rule set
         type: string
-        default: RULESET
+        default: RULE_SET
         enum:
-          - RULESET
+          - RULE_SET
           - FOLDER
 
   CompositeConditionDefinition:
