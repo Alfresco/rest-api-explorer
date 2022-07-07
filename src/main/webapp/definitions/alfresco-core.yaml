@@ -8649,11 +8649,11 @@ paths:
       x-alfresco-since: "7.3.0"
       tags:
         - rules
-      summary: List rule-sets on a folder
+      summary: List rule sets on a folder
       description: |
         **Note:** this endpoint is available in Alfresco 7.3 and newer version.
 
-        Gets a list of rule sets that are used by the folder **nodeId**.
+        Gets a list of rule sets that are used (either owned or linked) by the folder **nodeId**.
 
         Currently, this list may only ever contain zero or one rule set entries as folders cannot use multiple rule sets.
       operationId: listRuleSets
@@ -8718,7 +8718,7 @@ paths:
           description: |
             **nodeId** or **id** does not exist
         '409':
-          description: This folder already owns a rule set or links to another ruleSet
+          description: This folder already owns a rule set or links to another rule set
         default:
           description: Unexpected error
           schema:
@@ -11141,16 +11141,18 @@ definitions:
     type: object
     required:
       - id
-      - ownedBy
+      - linked
     properties:
       id:
         description: Identifier for the rule set
         type: string
-      ownedBy:
-        description: The identifier of the folder which owns the rule set
-        type: string
-      sharedWith:
-        description: List of folder identifiers which also use the rule set
+      linked:
+        description: True if the rule set is linked to at least one folder
+      linkedBy:
+        description: |
+          List of folder identifiers which use the rule set.
+          
+          Note that any folders the user does not have access to will not appear in this list. Use **linked** instead to check existence of any link.
         type: array
         items:
           type: string
@@ -11158,18 +11160,10 @@ definitions:
     type: object
     required:
       - id
-      - type
     properties:
       id:
         description: Identifier for either the folder or the rule set
         type: string
-      type:
-        description: Whether id refers to a folder or a rule set
-        type: string
-        default: RULE_SET
-        enum:
-          - RULE_SET
-          - FOLDER
 
   CompositeConditionDefinition:
     type: object
