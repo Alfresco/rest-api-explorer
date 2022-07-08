@@ -11162,6 +11162,7 @@ definitions:
         type: string
       shared:
         description: True if the rule set is shared to at least one folder
+        type: boolean
       usedBy:
         description: |
           List of folder identifiers which use the rule set.
