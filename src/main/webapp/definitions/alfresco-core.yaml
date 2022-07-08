@@ -526,8 +526,9 @@ parameters:
     name: include
     in: query
     description: |
-      Returns additional information about the rule set entry. The following optional field can be requested:
+      Returns additional information about the rule set entry. The following optional fields can be requested:
       * usedBy
+      * ruleIds
     required: false
     type: array
     items:
@@ -8675,6 +8676,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/ruleSetMinimalEntryIncludeParam'
       responses:
         '200':
           description: Successful response
@@ -8694,6 +8696,52 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/rule-sets/{ruleSetId}':
+    put:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Update a rule set
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Update a rule set including setting the order of the rules within it.
+      operationId: updateRuleSet
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - $ref: '#/parameters/ruleSetMinimalEntryIncludeParam'
+        - in: body
+          name: ruleSetBodyUpdate
+          description: The JSON representing the rule set to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RuleSetBodyUpdate'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleSetEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** or **ruleSetId** is not a valid format, or the node is not the correct type
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **ruleSetId** does not exist
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/linked-rule-sets':
     post:
       x-alfresco-since: "7.3.0"
@@ -8709,6 +8757,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/ruleSetMinimalEntryIncludeParam'
         - in: body
           name: linkedRuleSetBodyCreate
           description: The rule set to add.
@@ -8754,7 +8803,6 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/ruleSetIdParam'
-        - $ref: '#/parameters/ruleSetMinimalEntryIncludeParam'
       responses:
         '204':
           description: Successful response
@@ -11170,6 +11218,24 @@ definitions:
           List of folder identifiers which use the rule set.
           
           Note that any folders the user does not have access to will not appear in this list. Use **shared** instead to check existence of any link.
+        type: array
+        items:
+          type: string
+      ruleIds:
+        description: An ordered list of the rule ids within the rule set
+        type: array
+        items:
+            type: string
+  RuleSetBodyUpdate:
+    type: object
+    properties:
+      ruleIds:
+        description: |
+          An ordered list of the rule ids within the rule set.
+
+          Rules may not be added or removed from the rule set using this endpoint.
+
+          If this field is omitted then there is no change to the rule ordering.
         type: array
         items:
           type: string
