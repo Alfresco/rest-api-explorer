@@ -511,9 +511,9 @@ parameters:
     name: ruleSetId
     in: path
     description: |
-      The identifier for a ruleset. The alias **-default-** can be used to refer to the only ruleset on a folder.
+      The identifier for a rule set. The alias **-default-** can be used to refer to the only rule set on a folder.
 
-      Currently there is no support for multiple rulesets on a folder, and the behaviour of **-default-** is not defined in this case.
+      Currently there is no support for multiple rule sets on a folder, and the behaviour of **-default-** is not defined in this case.
     required: true
     type: string
   ruleIdParam:
@@ -8461,7 +8461,7 @@ paths:
         '404':
           description: |
             **actionDefinitionId** or **targetId** does not exist
-  '/nodes/{nodeId}/rulesets/{ruleSetId}/rules':
+  '/nodes/{nodeId}/rule-sets/{ruleSetId}/rules':
     get:
       x-alfresco-since: "7.3.0"
       tags:
@@ -8543,7 +8543,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/rulesets/{ruleSetId}/rules/{ruleId}':
+  '/nodes/{nodeId}/rule-sets/{ruleSetId}/rules/{ruleId}':
     get:
       x-alfresco-since: "7.3.0"
       tags:
@@ -11224,7 +11224,10 @@ definitions:
           * mimetype (the mimetype of the content for a node)
           * encoding (the encoding of the content for a node)
           * category (a category for the node)
+          * tag (a tag that the node has)
           * aspect (an aspect that the node has)
+
+          For multi-valued properties the condition is satisfied if any of the values match the condition.
         type: string
       comparator:
         description: |
@@ -11234,6 +11237,7 @@ definitions:
           * All types: equals
           * text: contains, startsWith, endsWith
           * int/long/float/double/date: greaterThan, lessThan, greaterThanOrEqual, lessThanOrEqual
+          * type: instanceOf
 
           Where a property is multivalued then the condition is true if it is satisfied by any of the values.
         type: string
