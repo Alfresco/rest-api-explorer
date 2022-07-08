@@ -8727,7 +8727,7 @@ paths:
             $ref: '#/definitions/RuleSetEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** or **ruleSetId** is not a valid format, or the node is not the correct type
+            Invalid parameter: **nodeId** or **ruleSetId** is not a valid format, the node is not the correct type or the wrong set of ruleIds have been supplied
         '401':
           description: Authentication failed
         '403':
