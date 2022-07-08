@@ -8671,7 +8671,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
       responses:
@@ -8706,7 +8706,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#parameters/nodeIdParam'
+        - $ref: '#/parameters/nodeIdParam'
         - in: body
           name: linkedRuleSetBodyCreate
           description: The rule set to add.
@@ -8716,8 +8716,7 @@ paths:
       responses:
         '201':
           description: Successful response
-          schema:
-            $ref: '#/definitions/RuleSet',
+          schema: '#/definitions/RuleSet',
         '400':
           description: |
             Invalid parameter: **nodeId** or **linkedRuleSetBodyCreate** is invalid
