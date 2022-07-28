@@ -8933,6 +8933,48 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/run-rules':
+    post:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Run the rules for a folder
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Runs the rules for the folder **nodeId**.
+      operationId: runRules
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - in: body
+          name: runRulesBody
+          description: Configuration parameters
+          required: true
+          schema:
+            $ref: '#/definitions/RulesExecutionBody'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RulesExecutionEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to create a link to this rule set
+        '404':
+          description: |
+            **nodeId** or **id** does not exist
+        '409':
+          description: This folder already owns a rule set or links to another rule set
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -11451,8 +11493,10 @@ definitions:
       - value
     properties:
       key:
+        description: The key for the setting
         type: string
       value:
+        description: The value for the setting
         type: object
   RuleSettingEntry:
     type: object
@@ -11466,4 +11510,25 @@ definitions:
       - value
     properties:
       value:
+        description: The value for the given setting
         type: object
+  RulesExecution:
+    required:
+      - includeSubfolders
+    properties:
+      includeSubfolders:
+        description: Whether the rules will also run against subfolders
+        type: boolean
+  RulesExecutionEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/RulesExecution'
+  RulesExecutionBody:
+    properties:
+      includeSubfolders:
+        description: Run the rules against the given folder and all subfolders
+        type: boolean
+        default: false
