@@ -513,7 +513,7 @@ parameters:
     description: |
       The identifier for a rule set. The alias **-default-** can be used to refer to the only rule set on a folder.
 
-      Currently there is no support for multiple rule sets on a folder, and the behaviour of **-default-** is not defined in this case.
+      Currently there is no support for multiple rule sets linked to a single folder, and the behaviour of **-default-** is not defined in this case.
     required: true
     type: string
   ruleIdParam:
@@ -527,8 +527,23 @@ parameters:
     in: query
     description: |
       Returns additional information about the rule set entry. The following optional fields can be requested:
-      * usedBy
+      * isInherited
+      * isLinkedTo
+      * owningFolder
+      * inheritedBy
+      * linkedToBy
       * ruleIds
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  ruleMinimalEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the rule. The following optional fields can be requested:
+      * isShared
     required: false
     type: array
     items:
@@ -8480,6 +8495,7 @@ paths:
         - $ref: '#/parameters/ruleSetIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/ruleMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -8515,6 +8531,7 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeFolderIdParam'
         - $ref: '#/parameters/ruleSetIdParam'
+        - $ref: '#/parameters/ruleMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: ruleBodyCreate
@@ -8559,6 +8576,7 @@ paths:
         - $ref: '#/parameters/nodeFolderIdParam'
         - $ref: '#/parameters/ruleSetIdParam'
         - $ref: '#/parameters/ruleIdParam'
+        - $ref: '#/parameters/ruleMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -8595,6 +8613,7 @@ paths:
         - $ref: '#/parameters/nodeFolderIdParam'
         - $ref: '#/parameters/ruleSetIdParam'
         - $ref: '#/parameters/ruleIdParam'
+        - $ref: '#/parameters/ruleMinimalEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: ruleBodyUpdate
@@ -8676,6 +8695,14 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - name: where
+          in: query
+          description: |
+            Optionally filter the list by inclusionType:
+
+            *   ```where=(inclusionType=owned)```
+          required: false
+          type: string
         - $ref: '#/parameters/ruleSetMinimalEntryIncludeParam'
       responses:
         '200':
@@ -11067,7 +11094,9 @@ definitions:
       - id
       - name
       - actions
-      - shared
+      - isEnabled
+      - isInheritable
+      - isAsynchronous
     properties:
       id:
         description: Identifier for the rule
@@ -11078,23 +11107,23 @@ definitions:
       description:
         description: Description of the rule
         type: string
-      enabled:
+      isEnabled:
         description: Whether the rule is enabled
         type: boolean
         default: true
-      cascade:
-        description: Whether the rule also applies to subfolders
+      isInheritable:
+        description: Whether the rule can also apply to subfolders
         type: boolean
         default: false
-      asynchronous:
+      isAsynchronous:
         description: Whether the rule should be run in the background
         type: boolean
         default: false
       errorScript:
         description: If the rule should be run in the background then an optional error script can be referenced
         type: string
-      shared:
-        description: Whether the rule has been shared with more than one folder
+      isShared:
+        description: True if the rule set is linked to, or if the rule is inheritable and the rule set is inherited by a folder with inheriting enabled.
         type: boolean
       triggers:
         description: |
@@ -11135,15 +11164,15 @@ definitions:
       description:
         description: Description of the rule
         type: string
-      enabled:
+      isEnabled:
         description: Whether the rule is enabled
         type: boolean
         default: true
-      cascade:
-        description: Whether the rule also applies to subfolders
+      isInheritable:
+        description: Whether the rule can also apply to subfolders
         type: boolean
         default: false
-      asynchronous:
+      isAsynchronous:
         description: Whether the rule should be run in the background
         type: boolean
         default: false
@@ -11205,19 +11234,40 @@ definitions:
     type: object
     required:
       - id
-      - shared
     properties:
       id:
         description: Identifier for the rule set
         type: string
-      shared:
-        description: True if the rule set is shared to at least one folder
-        type: boolean
-      usedBy:
+      inclusionType:
         description: |
-          List of folder identifiers which use the rule set.
-          
-          Note that any folders the user does not have access to will not appear in this list. Use **shared** instead to check existence of any link.
+          How the rule set is included in the given folder
+
+          In the case that a rule set applies to the given folder for multiple reasons then priority is given to owned, then linked, then inherited.
+        type: string
+        enum:
+          - owned
+          - linked
+          - inherited
+      isInherited:
+        description: Whether any child of the owning folder has inheriting enabled (ignores links)
+        type: boolean
+      isLinkedTo:
+        description: Whether any folder links to this rule set
+        type: boolean
+      owningFolder:
+        description: The node id of the folder that owns this rule set
+        type: string
+      inheritedBy:
+        description: List of direct children of the owning folder that have inheriting enabled
+
+          Note that any folders the user does not have access to will not appear in this list. Use **isInherited** instead to check existence of any inheritance.
+        type: array
+        items:
+          type: string
+      linkedToBy:
+        description: List of folders that link to this rule set
+
+          Note that any folders the user does not have access to will not appear in this list. Use **isLinkedTo** instead to check existence of any link.
         type: array
         items:
           type: string
@@ -11247,7 +11297,6 @@ definitions:
       id:
         description: Identifier for either the folder or the rule set
         type: string
-
   CompositeConditionDefinition:
     type: object
     properties:
