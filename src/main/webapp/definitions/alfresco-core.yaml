@@ -549,6 +549,14 @@ parameters:
     items:
       type: string
     collectionFormat: csv
+  ruleSettingKeyParam:
+    name: ruleSettingKey
+    in: path
+    description: |
+      The key for the rule setting. You can use one of the following settings:
+      * -isInheritanceEnabled- (boolean) - Whether the folder inherits rule sets from its parent(s)
+    required: true
+    type: string
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -8847,6 +8855,84 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/rule-settings/{ruleSettingKey}':
+    get:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Retrieve the specified rule setting for a folder
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer version.
+
+        Gets the rule setting with key **ruleSettingKey** for the folder **nodeId**.
+      operationId: getRuleSetting
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/ruleSettingKeyParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleSettingEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a folder
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to view the folder
+        '404':
+          description: |
+            **nodeId** or **ruleSettingKeyParam** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Update the rule setting for a folder
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Sets the rule setting with key **ruleSettingKey** for the folder node **nodeId**.
+      operationId: setRuleSetting
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/ruleSettingKeyParam'
+        - in: body
+          name: ruleSettings
+          description: |
+            The rule settings for this folder.
+
+             This can be a boolean, string or number, depending on the setting key.
+          required: true
+          schema:
+            $ref: '#/definitions/RuleSettingBody'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleSettingEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not a valid format, or is not a folder
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to view the folder
+        '404':
+          description: |
+            **nodeId** or **ruleSettingKeyParam** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -11359,3 +11445,25 @@ definitions:
       parameter:
         description: The value to compare the field against
         type: string
+  RuleSetting:
+    required:
+      - key
+      - value
+    properties:
+      key:
+        type: string
+      value:
+        type: object
+  RuleSettingEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/RuleSetting'
+  RuleSettingBody:
+    required:
+      - value
+    properties:
+      value:
+        type: object
