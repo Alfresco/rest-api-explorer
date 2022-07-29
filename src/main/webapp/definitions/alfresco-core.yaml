@@ -8724,6 +8724,41 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/rule-sets/{ruleSetId}':
+    get:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Retrieve a rule set from a folder
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer version.
+
+        Gets information about a rule set **ruleSetId** that is used (either owned or linked) by the folder **nodeId**.
+      operationId: getRuleSet
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
+        - $ref: '#/parameters/ruleSetMinimalEntryIncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleSetEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** or **ruleSetId** is not valid
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to read the rule set from the node
+        '404':
+          description: |
+            **nodeId** or **ruleSetId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
     put:
       x-alfresco-since: "7.3.0"
       tags:
