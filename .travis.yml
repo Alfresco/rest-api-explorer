@@ -2,9 +2,10 @@ import:
   - source: Alfresco/alfresco-build-tools:.travis.pre-commit.yml@v1.1.5
   - source: Alfresco/alfresco-build-tools:.travis.java.yml@v1.1.5
 
+os: linux
+dist: focal
 language: java
 jdk: openjdk17
-dist: focal
 
 git:
   depth: false
@@ -22,7 +23,7 @@ env:
     - RELEASE_VERSION=7.2.0
     - DEVELOPMENT_VERSION=7.3.0-A1-SNAPSHOT
 
-before_install: jdk_switcher use openjdk17
+before_install: $TRAVIS_BUILD_DIR/install-jdk.sh -F 17 --target $JAVA_HOME
 
 stages:
   - name: lint
