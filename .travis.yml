@@ -23,7 +23,6 @@ env:
     - RELEASE_VERSION=7.2.0
     - DEVELOPMENT_VERSION=7.3.0-A1-SNAPSHOT
 
-before_install: $TRAVIS_BUILD_DIR/install-jdk.sh -F 17 --target $JAVA_HOME
 
 stages:
   - name: lint
@@ -34,6 +33,16 @@ stages:
 
 jobs:
   include:
+
+    - name: build application
+      stage: build
+      script:
+        - travis_wait $TRAVIS_WAIT_TIMEOUT mvn $MAVEN_CLI_OPTS verify -Dlogging.root.level=off -Dspring.main.banner-mode=off
+
+    - name: publish artifacts
+      stage: publish
+      script:
+        - travis_wait $TRAVIS_WAIT_TIMEOUT mvn $MAVEN_CLI_OPTS deploy -DskipTests
 
     - name: "integration tests"
       stage: test
