@@ -21,7 +21,6 @@ env:
     # Release version has to start with real version (7.1.0-....) for the docker image to build successfully.
     - RELEASE_VERSION=7.2.0
     - DEVELOPMENT_VERSION=7.3.0-A1-SNAPSHOT
-    - TRAVIS_JDK_VERSION=openjdk17
 
 stages:
   - name: lint
