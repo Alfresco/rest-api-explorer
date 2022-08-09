@@ -22,6 +22,8 @@ env:
     - RELEASE_VERSION=7.2.0
     - DEVELOPMENT_VERSION=7.3.0-A1-SNAPSHOT
 
+before_install: jdk_switcher use openjdk17
+
 stages:
   - name: lint
   - name: test
