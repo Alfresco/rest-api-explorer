@@ -11478,11 +11478,8 @@ definitions:
   RuleSetLink:
     type: object
     properties:
-      folderNodeId:
+      id:
         description: Identifier for the folder node containing the rule set or the rule set node itself.
-        type: string
-      ruleSetNodeId:
-        description: Identifier for the rule set node
         type: string
   CompositeConditionDefinition:
     type: object
