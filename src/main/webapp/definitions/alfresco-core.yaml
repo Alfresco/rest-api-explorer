@@ -8812,7 +8812,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/linked-rule-sets':
+  '/nodes/{nodeId}/rule-set-links':
     post:
       x-alfresco-since: "7.3.0"
       tags:
@@ -8827,18 +8827,17 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
-        - $ref: '#/parameters/ruleSetMinimalEntryIncludeParam'
         - in: body
           name: linkedRuleSetBodyCreate
           description: The rule set to add.
           required: true
           schema:
-            $ref: '#/definitions/LinkedRuleSetBodyCreate'
+            $ref: '#/definitions/RuleSetLink'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/RuleSet'
+            $ref: '#/definitions/RuleSetLinkPaging'
         '400':
           description: |
             Invalid parameter: **nodeId** or **linkedRuleSetBodyCreate** is invalid
@@ -8855,7 +8854,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/linked-rule-sets/{ruleSetId}':
+  '/nodes/{nodeId}/rule-set-links/{ruleSetId}':
     delete:
       x-alfresco-since: "7.3.0"
       tags:
@@ -11452,13 +11451,38 @@ definitions:
         type: array
         items:
           type: string
-  LinkedRuleSetBodyCreate:
+  RuleSetLinkPaging:
     type: object
     required:
-      - id
+      - list
     properties:
-      id:
-        description: Identifier for either the folder or the rule set
+      list:
+        type: object
+        required:
+          - pagination
+          - entries
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/RuleSetLinkEntry'
+  RuleSetLinkEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/RuleSetLink'
+  RuleSetLink:
+    type: object
+    properties:
+      folderNodeId:
+        description: Identifier for the folder node containing the rule set or the rule set node itself.
+        type: string
+      ruleSetNodeId:
+        description: Identifier for the rule set node
         type: string
   CompositeConditionDefinition:
     type: object
