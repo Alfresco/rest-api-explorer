@@ -8967,32 +8967,32 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/run-rules':
+  '/nodes/{nodeId}/rule-executions':
     post:
       x-alfresco-since: "7.3.0"
       tags:
         - rules
-      summary: Run the rules for a folder
+      summary: Execute the rules for a folder
       description: |
         **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
 
         Runs the rules for the folder **nodeId**.
-      operationId: runRules
+      operationId: executeRules
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: runRulesBody
+          name: ruleExecutionBody
           description: Configuration parameters
           required: true
           schema:
-            $ref: '#/definitions/RulesExecutionBody'
+            $ref: '#/definitions/RuleExecutionBody'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/RulesExecutionEntry'
+            $ref: '#/definitions/RuleExecutionEntry'
         '400':
           description: |
             Invalid parameter: **nodeId** is invalid
@@ -11572,23 +11572,31 @@ definitions:
       value:
         description: The value for the given setting
         type: object
-  RulesExecution:
+  RuleExecution:
     required:
-      - includeSubfolders
+      - hasSubFoldersIncluded
+      - hasInheritedRulesExecuted
     properties:
-      includeSubfolders:
-        description: Whether the rules will also run against subfolders
+      hasSubFoldersIncluded:
+        description: Whether the rules were executed also against sub-folders
         type: boolean
-  RulesExecutionEntry:
+      hasInheritedRulesExecuted:
+        description: Whether the inherited rules were also executed
+        type: boolean
+  RuleExecutionEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/RulesExecution'
-  RulesExecutionBody:
+        $ref: '#/definitions/RuleExecution'
+  RuleExecutionBody:
     properties:
-      includeSubfolders:
-        description: Run the rules against the given folder and all subfolders
+      hasSubFoldersIncluded:
+        description: Execute rules against the given folder and all sub-folders
+        type: boolean
+        default: false
+      hasInheritedRulesExecuted:
+        description: Execute also inherited rules
         type: boolean
         default: false
