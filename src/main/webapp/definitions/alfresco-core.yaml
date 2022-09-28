@@ -11574,13 +11574,13 @@ definitions:
         type: object
   RuleExecution:
     required:
-      - hasSubFoldersIncluded
-      - hasInheritedRulesExecuted
+      - isEachSubFolderIncluded
+      - isEachInheritedRuleExecuted
     properties:
-      hasSubFoldersIncluded:
+      isEachSubFolderIncluded:
         description: Whether the rules were executed also against sub-folders
         type: boolean
-      hasInheritedRulesExecuted:
+      isEachInheritedRuleExecuted:
         description: Whether the inherited rules were also executed
         type: boolean
   RuleExecutionEntry:
@@ -11592,11 +11592,11 @@ definitions:
         $ref: '#/definitions/RuleExecution'
   RuleExecutionBody:
     properties:
-      hasSubFoldersIncluded:
+      isEachSubFolderIncluded:
         description: Execute rules against the given folder and all sub-folders
         type: boolean
         default: false
-      hasInheritedRulesExecuted:
+      isEachInheritedRuleExecuted:
         description: Execute also inherited rules
         type: boolean
         default: false
