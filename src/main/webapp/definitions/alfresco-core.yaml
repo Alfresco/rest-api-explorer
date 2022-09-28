@@ -8983,16 +8983,16 @@ paths:
       parameters:
         - $ref: '#/parameters/nodeIdParam'
         - in: body
-          name: ruleExecutionBody
+          name: rulesExecutionBody
           description: Configuration parameters
           required: true
           schema:
-            $ref: '#/definitions/RuleExecutionBody'
+            $ref: '#/definitions/RulesExecutionBody'
       responses:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/RuleExecutionEntry'
+            $ref: '#/definitions/RulesExecutionEntry'
         '400':
           description: |
             Invalid parameter: **nodeId** is invalid
@@ -11572,7 +11572,7 @@ definitions:
       value:
         description: The value for the given setting
         type: object
-  RuleExecution:
+  RulesExecution:
     required:
       - isEachSubFolderIncluded
       - isEachInheritedRuleExecuted
@@ -11583,14 +11583,14 @@ definitions:
       isEachInheritedRuleExecuted:
         description: Whether the inherited rules were also executed
         type: boolean
-  RuleExecutionEntry:
+  RulesExecutionEntry:
     type: object
     required:
       - entry
     properties:
       entry:
-        $ref: '#/definitions/RuleExecution'
-  RuleExecutionBody:
+        $ref: '#/definitions/RulesExecution'
+  RulesExecutionBody:
     properties:
       isEachSubFolderIncluded:
         description: Execute rules against the given folder and all sub-folders
