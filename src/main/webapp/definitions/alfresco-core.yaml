@@ -557,11 +557,12 @@ parameters:
       * -isInheritanceEnabled- (boolean) - Whether the folder inherits rule sets from its parent(s)
     required: true
     type: string
-  constraintNamesFilterParam:
+  actionConstraintNameParam:
     name: names
-    in: query
+    in: path
+    required: true
     description: |
-      Comma separated list of action parameter constraint names to be returned in the response.
+      Action parameter constraint name to be returned in the response.
     type: string
 paths:
   '/nodes/{nodeId}/comments':
@@ -8344,20 +8345,55 @@ paths:
       x-alfresco-since: "7.3.0"
       tags:
         - actions
-      summary: Retrieve a list of action parameter constraints
+      summary: Retrieve a list of all action parameter constraints
       description: |
         **Note:** this endpoint is available in Alfresco 7.3.0 and newer versions.
 
         Gets a list of action parameter constraints
-
-        One can filter the response by constraint name passed in a query parameter **names** (multiple names can be comma separated).
+        Sample reposne:
+        ```
+        {
+        	"list": {
+        		"pagination": {
+        			"count": 2,
+        			"hasMoreItems": false,
+        			"totalItems": 2,
+        			"skipCount": 0,
+        			"maxItems": 100
+        		},
+        		"entries": [
+        			{
+        				"entry": {
+        				   "name": "ac-types",
+        				   "constraintsMap": {
+        					   "cm:content": "Content",
+        					   "cm:authority": "Alfresco Authority Abstract Type",
+        					   "usr:user": "Alfresco User Type",
+        					   "usr:authority": "Alfresco Authority Abstract Type",
+        					   "rule:rule": "Rule"
+        				   }
+        			   }
+        		   },
+        			{
+        				"entry": {
+        					"constraintsMap": {
+        						"MIME_TYPE": "Mimetype",
+        						"ENCODING": "Encoding",
+        						"SIZE": "Size"
+        					},
+        					"name": "ac-content-properties"
+        				}
+        			}
+        	   ]
+           }
+        }
+        ```
       operationId: listActionConstraints
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/constraintNamesFilterParam'
       responses:
         '200':
           description: Successful response
@@ -8365,8 +8401,52 @@ paths:
             $ref: '#/definitions/ActionConstraintPaging'
         '401':
           description: Authentication failed
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/action-constraints/{actionConstraintName}':
+    get:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - actions
+      summary: Retrieve an action parameter constraint by requested name
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3.0 and newer versions.
+
+        Gets action parameter constraint by requested name.
+        Sample reposne:
+        ```
+        {
+          "entry": {
+            "name": "ac-mimetypes",
+            "constraintsMap": {
+              "application/acp": "Alfresco Content Package",
+              "application/dita+xml": "DITA",
+              "application/eps": "EPS Type PostScript",
+              "application/framemaker": "Adobe FrameMaker",
+              "application/illustrator": "Adobe Illustrator File",
+              "application/java": "Java Class",
+              "application/java-archive": "Java Archive",
+              "application/json": "JSON"
+            }
+          }
+        }
+        ```
+      operationId: getActionConstraint
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/actionConstraintNameParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ActionConstraintEntry'
+        '401':
+          description: Authentication failed
         '404':
-          description: Contraint(s) for given names not found
+          description: Contraint with given name not found
         default:
           description: Unexpected error
           schema:
@@ -11076,7 +11156,20 @@ definitions:
           Name of the constraint.
       constraintsMap:
         description: |
-          A map (String-String) of constraint values and labels.
+          A map (String-String) of constraint possbile value (map's key) and corresponding label (map's value).
+          Sample object could be:
+          ```JSON
+          "constraintsMap": {
+                                 "EQUALS": "Equals",
+                                 "CONTAINS": "Contains",
+                                 "BEGINS": "Begins With",
+                                 "ENDS": "Ends With",
+                                 "GREATER_THAN": "Greater Than",
+                                 "GREATER_THAN_EQUAL": "Greater Than Or Equal To",
+                                 "LESS_THAN": "Less Than",
+                                 "LESS_THAN_EQUAL": "Less Than Or Equal To"
+                             }
+          ```
         type: object
         additionalProperties:
           type: string
