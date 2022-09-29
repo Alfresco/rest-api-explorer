@@ -557,6 +557,12 @@ parameters:
       * -isInheritanceEnabled- (boolean) - Whether the folder inherits rule sets from its parent(s)
     required: true
     type: string
+  constraintNamesFilterParam:
+    name: names
+    in: query
+    description: |
+      Comma separated list of action parameter constraint names to be returned in the response.
+    type: string
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -8333,6 +8339,38 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/action-constraints':
+    get:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - actions
+      summary: Retrieve a list of action parameter constraints
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3.0 and newer versions.
+
+        Gets a list of action parameter constraints
+
+        One can filter the response by constraint name passed in a query parameter **names** (multiple names can be comma separated).
+      operationId: listActionConstraints
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/constraintNamesFilterParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ActionConstraintPaging'
+        '401':
+          description: Authentication failed
+        '404':
+          description: Contraint(s) for given names not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/action-definitions':
       get:
         x-alfresco-since: "5.2.2"
@@ -11027,6 +11065,45 @@ definitions:
          format: date-time
       values:
         type: object
+  ActionConstraint:
+    description: |
+      Response object holding action parameter constraint name and map of its values-labels.
+    type: object
+    properties:
+      name:
+        type: string
+        description: |
+          Name of the constraint.
+      constraintsMap:
+        description: |
+          A map (String-String) of constraint values and labels.
+        type: object
+        additionalProperties:
+          type: string
+  ActionConstraintEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ActionConstraint'
+  ActionConstraintPaging:
+    type: object
+    required:
+      - list
+    properties:
+      list:
+        type: object
+        required:
+          - pagination
+          - entries
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/ActionConstraintEntry'
   ActionDefinitionList:
     type: object
     properties:
