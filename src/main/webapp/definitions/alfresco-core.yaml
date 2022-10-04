@@ -8363,26 +8363,40 @@ paths:
         		},
         		"entries": [
         			{
-        				"entry": {
-        				   "name": "ac-types",
-        				   "constraintsMap": {
-        					   "cm:content": "Content",
-        					   "cm:authority": "Alfresco Authority Abstract Type",
-        					   "usr:user": "Alfresco User Type",
-        					   "usr:authority": "Alfresco Authority Abstract Type",
-        					   "rule:rule": "Rule"
-        				   }
-        			   }
-        		   },
+                           "entry": {
+                               "constraintValues": [
+                                   {
+                                       "value": "051a82f6-b897-462a-a189-3abefc506fb0",
+                                       "label": "notify_user_email_nl.html.ftl",
+                                       "isNode": true
+                                   },
+                                   {
+                                       "value": "adeb274a-0517-4658-8c80-e36eb6bb1f52",
+                                       "label": "notify_user_email_es.html.ftl",
+                                       "isNode": true
+                                   }
+                               ],
+                               "constraintName": "ac-email-templates"
+                           }
+                       },
+
         			{
         				"entry": {
-        					"constraintsMap": {
-        						"MIME_TYPE": "Mimetype",
-        						"ENCODING": "Encoding",
-        						"SIZE": "Size"
-        					},
-        					"name": "ac-content-properties"
-        				}
+                                "constraintValues": [
+                                    {
+                                        "value": "MIME_TYPE",
+                                        "label": "Mimetype"
+                                    },
+                                    {
+                                        "value": "ENCODING",
+                                        "label": "Encoding"
+                                    },
+                                    {
+                                        "value": "SIZE",
+                                        "label": "Size"
+                                    }
+                                ],
+                                "constraintName": "ac-content-properties"
         			}
         	   ]
            }
@@ -8419,18 +8433,15 @@ paths:
         ```
         {
           "entry": {
-            "name": "ac-mimetypes",
-            "constraintsMap": {
-              "application/acp": "Alfresco Content Package",
-              "application/dita+xml": "DITA",
-              "application/eps": "EPS Type PostScript",
-              "application/framemaker": "Adobe FrameMaker",
-              "application/illustrator": "Adobe Illustrator File",
-              "application/java": "Java Class",
-              "application/java-archive": "Java Archive",
-              "application/json": "JSON"
-            }
-          }
+                  "constraintValues": [
+                      {
+                          "value": "fa41fd6e-5640-410f-9f3e-93f268186f69",
+                          "label": "Start Pooled Review and Approve Workflow",
+                          "isNode": true
+                      }
+                  ],
+                  "constraintName": "ac-scripts"
+              }
         }
         ```
       operationId: getActionConstraint
@@ -11154,25 +11165,73 @@ definitions:
         type: string
         description: |
           Name of the constraint.
-      constraintsMap:
+      constraintValues:
+        type: array
+        items:
+          $ref: '#/definitions/ActionConstraintData'
         description: |
-          A map (String-String) of constraint possbile value (map's key) and corresponding label (map's value).
+          A list of constraint possbile values along with additional data (label, isNode flag).
           Sample object could be:
           ```JSON
-          "constraintsMap": {
-                                 "EQUALS": "Equals",
-                                 "CONTAINS": "Contains",
-                                 "BEGINS": "Begins With",
-                                 "ENDS": "Ends With",
-                                 "GREATER_THAN": "Greater Than",
-                                 "GREATER_THAN_EQUAL": "Greater Than Or Equal To",
-                                 "LESS_THAN": "Less Than",
-                                 "LESS_THAN_EQUAL": "Less Than Or Equal To"
-                             }
+          "constraintValues": [
+                     {
+                        "value": "EQUALS",
+                        "label": "Equals"
+                     },
+                     {
+                        "value": "CONTAINS",
+                        "label": "Contains"
+                     },
+                     {
+                        "value": "BEGINS",
+                        "label": "Begins With"
+                     },
+                     {
+                        "value": "ENDS",
+                        "label": "Ends With"
+                     },
+                     {
+                        "value": "GREATER_THAN",
+                        "label": "Greater Than"
+                     },
+                     {
+                        "value": "GREATER_THAN_EQUAL",
+                        "label": "Greater Than Or Equal To"
+                     },
+                     {
+                        "value": "LESS_THAN",
+                        "label": "Less Than"
+                     },
+                     {
+                        "value": "LESS_THAN_EQUAL",
+                        "label": "Less Than Or Equal To"
+                     }
+                  ]
           ```
-        type: object
-        additionalProperties:
-          type: string
+          or
+          ```JSON
+          "constraintValues": [
+                                  {
+                                      "value": "fa41fd6e-5640-410f-9f3e-93f268186f69",
+                                      "label": "Start Pooled Review and Approve Workflow",
+                                      "isNode": true
+                                  }
+                              ]
+          ```
+  ActionConstraintData:
+    type: object
+    required:
+      - value
+    properties:
+      value:
+        description: Constraint value (this can also be a node id)
+        type: string
+      label:
+        description: Constraint display label
+        type: string
+      isNode:
+        description: True if value is a node id
+        type: boolean
   ActionConstraintEntry:
     type: object
     required:
