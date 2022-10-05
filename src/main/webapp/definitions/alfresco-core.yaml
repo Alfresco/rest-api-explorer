@@ -11433,6 +11433,8 @@ definitions:
         description: |
           List of folders that link to this rule set
 
+          The server may impose a limit on the maximum number of results returned for performance reasons.
+
           Note that any folders the user does not have access to will not appear in this list. Use **isLinkedTo** instead to check existence of any link.
         type: array
         items:
