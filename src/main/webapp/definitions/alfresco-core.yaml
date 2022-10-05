@@ -8340,85 +8340,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/action-constraints':
-    get:
-      x-alfresco-since: "7.3.0"
-      tags:
-        - actions
-      summary: Retrieve a list of all action parameter constraints
-      description: |
-        **Note:** this endpoint is available in Alfresco 7.3.0 and newer versions.
-
-        Gets a list of action parameter constraints
-        Sample reposne:
-        ```
-        {
-        	"list": {
-        		"pagination": {
-        			"count": 2,
-        			"hasMoreItems": false,
-        			"totalItems": 2,
-        			"skipCount": 0,
-        			"maxItems": 100
-        		},
-        		"entries": [
-        			{
-                           "entry": {
-                               "constraintValues": [
-                                   {
-                                       "value": "051a82f6-b897-462a-a189-3abefc506fb0",
-                                       "label": "notify_user_email_nl.html.ftl",
-                                       "isNode": true
-                                   },
-                                   {
-                                       "value": "adeb274a-0517-4658-8c80-e36eb6bb1f52",
-                                       "label": "notify_user_email_es.html.ftl",
-                                       "isNode": true
-                                   }
-                               ],
-                               "constraintName": "ac-email-templates"
-                           }
-                       },
-
-        			{
-        				"entry": {
-                                "constraintValues": [
-                                    {
-                                        "value": "MIME_TYPE",
-                                        "label": "Mimetype"
-                                    },
-                                    {
-                                        "value": "ENCODING",
-                                        "label": "Encoding"
-                                    },
-                                    {
-                                        "value": "SIZE",
-                                        "label": "Size"
-                                    }
-                                ],
-                                "constraintName": "ac-content-properties"
-        			}
-        	   ]
-           }
-        }
-        ```
-      operationId: listActionConstraints
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/maxItemsParam'
-        - $ref: '#/parameters/skipCountParam'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/ActionConstraintPaging'
-        '401':
-          description: Authentication failed
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
   '/action-constraints/{actionConstraintName}':
     get:
       x-alfresco-since: "7.3.0"
@@ -11161,7 +11082,7 @@ definitions:
       Response object holding action parameter constraint name and map of its values-labels.
     type: object
     properties:
-      name:
+      constraintName:
         type: string
         description: |
           Name of the constraint.
@@ -11239,23 +11160,6 @@ definitions:
     properties:
       entry:
         $ref: '#/definitions/ActionConstraint'
-  ActionConstraintPaging:
-    type: object
-    required:
-      - list
-    properties:
-      list:
-        type: object
-        required:
-          - pagination
-          - entries
-        properties:
-          pagination:
-            $ref: '#/definitions/Pagination'
-          entries:
-            type: array
-            items:
-              $ref: '#/definitions/ActionConstraintEntry'
   ActionDefinitionList:
     type: object
     properties:
