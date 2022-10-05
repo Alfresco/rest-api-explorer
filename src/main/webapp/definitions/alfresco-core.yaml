@@ -557,6 +557,13 @@ parameters:
       * -isInheritanceEnabled- (boolean) - Whether the folder inherits rule sets from its parent(s)
     required: true
     type: string
+  actionConstraintNameParam:
+    name: names
+    in: path
+    required: true
+    description: |
+      Action parameter constraint name to be returned in the response.
+    type: string
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -8333,6 +8340,49 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/action-constraints/{actionConstraintName}':
+    get:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - actions
+      summary: Retrieve an action parameter constraint by requested name
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3.0 and newer versions.
+
+        Gets action parameter constraint by requested name.
+        Sample reposne:
+        ```
+        {
+          "entry": {
+                  "constraintValues": [
+                      {
+                          "value": "fa41fd6e-5640-410f-9f3e-93f268186f69",
+                          "label": "Start Pooled Review and Approve Workflow",
+                          "isNode": true
+                      }
+                  ],
+                  "constraintName": "ac-scripts"
+              }
+        }
+        ```
+      operationId: getActionConstraint
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/actionConstraintNameParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ActionConstraintEntry'
+        '401':
+          description: Authentication failed
+        '404':
+          description: Contraint with given name not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/action-definitions':
       get:
         x-alfresco-since: "5.2.2"
@@ -11027,6 +11077,89 @@ definitions:
          format: date-time
       values:
         type: object
+  ActionConstraint:
+    description: |
+      Response object holding action parameter constraint name and map of its values-labels.
+    type: object
+    properties:
+      constraintName:
+        type: string
+        description: |
+          Name of the constraint.
+      constraintValues:
+        type: array
+        items:
+          $ref: '#/definitions/ActionConstraintData'
+        description: |
+          A list of constraint possbile values along with additional data (label, isNode flag).
+          Sample object could be:
+          ```JSON
+          "constraintValues": [
+                     {
+                        "value": "EQUALS",
+                        "label": "Equals"
+                     },
+                     {
+                        "value": "CONTAINS",
+                        "label": "Contains"
+                     },
+                     {
+                        "value": "BEGINS",
+                        "label": "Begins With"
+                     },
+                     {
+                        "value": "ENDS",
+                        "label": "Ends With"
+                     },
+                     {
+                        "value": "GREATER_THAN",
+                        "label": "Greater Than"
+                     },
+                     {
+                        "value": "GREATER_THAN_EQUAL",
+                        "label": "Greater Than Or Equal To"
+                     },
+                     {
+                        "value": "LESS_THAN",
+                        "label": "Less Than"
+                     },
+                     {
+                        "value": "LESS_THAN_EQUAL",
+                        "label": "Less Than Or Equal To"
+                     }
+                  ]
+          ```
+          or
+          ```JSON
+          "constraintValues": [
+                                  {
+                                      "value": "fa41fd6e-5640-410f-9f3e-93f268186f69",
+                                      "label": "Start Pooled Review and Approve Workflow",
+                                      "isNode": true
+                                  }
+                              ]
+          ```
+  ActionConstraintData:
+    type: object
+    required:
+      - value
+    properties:
+      value:
+        description: Constraint value (this can also be a node id)
+        type: string
+      label:
+        description: Constraint display label
+        type: string
+      isNode:
+        description: True if value is a node id
+        type: boolean
+  ActionConstraintEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ActionConstraint'
   ActionDefinitionList:
     type: object
     properties:
