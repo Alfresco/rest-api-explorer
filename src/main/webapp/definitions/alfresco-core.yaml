@@ -9037,7 +9037,7 @@ paths:
           description: Configuration parameters
           required: true
           schema:
-            $ref: '#/definitions/RuleExecutionBody'
+            $ref: '#/definitions/RuleExecution'
       responses:
         '201':
           description: Successful response
@@ -11708,16 +11708,11 @@ definitions:
         description: The value for the given setting
         type: object
   RuleExecution:
-    required:
-      - isEachSubFolderIncluded
-      - isEachInheritedRuleExecuted
     properties:
       isEachSubFolderIncluded:
-        description: Whether the rules were executed also against sub-folders
+        description: Whether to execute rules also against sub-folders
         type: boolean
-      isEachInheritedRuleExecuted:
-        description: Whether the inherited rules were also executed
-        type: boolean
+        default: false
   RuleExecutionEntry:
     type: object
     required:
@@ -11725,13 +11720,3 @@ definitions:
     properties:
       entry:
         $ref: '#/definitions/RuleExecution'
-  RuleExecutionBody:
-    properties:
-      isEachSubFolderIncluded:
-        description: Execute rules against the given folder and all sub-folders
-        type: boolean
-        default: false
-      isEachInheritedRuleExecuted:
-        description: Execute also inherited rules
-        type: boolean
-        default: false
