@@ -11150,9 +11150,6 @@ definitions:
       label:
         description: Constraint display label
         type: string
-      isNode:
-        description: True if value is a node id
-        type: boolean
   ActionConstraintEntry:
     type: object
     required:
