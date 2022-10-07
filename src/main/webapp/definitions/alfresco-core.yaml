@@ -8619,121 +8619,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/rule-sets/{ruleSetId}/rules/{ruleId}':
-    get:
-      x-alfresco-since: "7.3.0"
-      tags:
-        - rules
-      summary: Get information about a particular rule **ruleId**.
-      description: |
-        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
 
-        Gets the rule information for **ruleId**.
-      operationId: getRule
-      parameters:
-        - $ref: '#/parameters/nodeFolderIdParam'
-        - $ref: '#/parameters/ruleSetIdParam'
-        - $ref: '#/parameters/ruleIdParam'
-        - $ref: '#/parameters/ruleMinimalEntryIncludeParam'
-        - $ref: '#/parameters/fieldsParam'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/RuleEntry'
-        '400':
-          description: |
-            Invalid parameter: **nodeId**, **ruleSetId** or **ruleId** is not a valid format, or the node is not the correct type
-        '401':
-          description: Authentication failed
-        '403':
-          description: Current user does not have permission for **nodeId**
-        '404':
-          description: |
-            **nodeId**, **ruleSetId** or **ruleId** does not exist
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    put:
-      x-alfresco-since: "7.3.0"
-      tags:
-        - rules
-      summary: Update a rule
-      description: |
-        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
-
-        Updates an existing rule **ruleId**.
-      operationId: updateRule
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/nodeFolderIdParam'
-        - $ref: '#/parameters/ruleSetIdParam'
-        - $ref: '#/parameters/ruleIdParam'
-        - $ref: '#/parameters/ruleMinimalEntryIncludeParam'
-        - $ref: '#/parameters/fieldsParam'
-        - in: body
-          name: ruleBodyUpdate
-          description: The JSON representing the rule to be updated.
-          required: true
-          schema:
-            $ref: '#/definitions/RuleBody'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/RuleEntry'
-        '400':
-          description: |
-            Invalid parameter: **nodeId**, **ruleSetId** or **ruleId** is not a valid format, or the node is not the correct type
-        '401':
-          description: Authentication failed
-        '403':
-          description: Current user does not have permission for **nodeId**
-        '404':
-          description: |
-            **nodeId**, **ruleSetId** or **ruleId** does not exist
-        '409':
-          description: |
-            **nodeId** is locked and you are not the lock owner
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    delete:
-      x-alfresco-since: "7.3.0"
-      tags:
-        - rules
-      summary: Delete a rule
-      description: |
-        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
-
-        Deletes the rule **ruleId**.
-      operationId: deleteRule
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/nodeFolderIdParam'
-        - $ref: '#/parameters/ruleSetIdParam'
-        - $ref: '#/parameters/ruleIdParam'
-      responses:
-        '204':
-          description: Successful response
-        '401':
-          description: Authentication failed
-        '403':
-          description: User does not have permission to delete a rule
-        '404':
-          description: |
-            **nodeId**, **ruleSetId** or **ruleId** does not exist
-        '409':
-          description: |
-            **nodeId** is locked and you are not the lock owner
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/rule-sets':
     get:
       x-alfresco-since: "7.3.0"
@@ -8862,6 +8748,122 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/rule-sets/{ruleSetId}/rules/{ruleId}':
+    get:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Get information about a particular rule **ruleId**.
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Gets the rule information for **ruleId**.
+      operationId: getRule
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+        - $ref: '#/parameters/ruleMinimalEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId**, **ruleSetId** or **ruleId** is not a valid format, or the node is not the correct type
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId**, **ruleSetId** or **ruleId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Update a rule
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Updates an existing rule **ruleId**.
+      operationId: updateRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+        - $ref: '#/parameters/ruleMinimalEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: ruleBodyUpdate
+          description: The JSON representing the rule to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/RuleBody'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RuleEntry'
+        '400':
+          description: |
+            Invalid parameter: **nodeId**, **ruleSetId** or **ruleId** is not a valid format, or the node is not the correct type
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId**, **ruleSetId** or **ruleId** does not exist
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "7.3.0"
+      tags:
+        - rules
+      summary: Delete a rule
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.3 and newer versions.
+
+        Deletes the rule **ruleId**.
+      operationId: deleteRule
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeFolderIdParam'
+        - $ref: '#/parameters/ruleSetIdParam'
+        - $ref: '#/parameters/ruleIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to delete a rule
+        '404':
+          description: |
+            **nodeId**, **ruleSetId** or **ruleId** does not exist
+        '409':
+          description: |
+            **nodeId** is locked and you are not the lock owner
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
   '/nodes/{nodeId}/rule-set-links':
     post:
       x-alfresco-since: "7.3.0"
