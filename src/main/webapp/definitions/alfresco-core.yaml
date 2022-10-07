@@ -558,7 +558,7 @@ parameters:
     required: true
     type: string
   parameterConstraintNameParam:
-    name: names
+    name: parameterConstraintName
     in: path
     required: true
     description: |
