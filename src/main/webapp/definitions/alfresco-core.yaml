@@ -8340,7 +8340,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/action-constraints/{parameterConstraintName}':
+  '/action-parameter-constraints/{parameterConstraintName}':
     get:
       x-alfresco-since: "7.3.0"
       tags:
