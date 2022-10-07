@@ -557,7 +557,7 @@ parameters:
       * -isInheritanceEnabled- (boolean) - Whether the folder inherits rule sets from its parent(s)
     required: true
     type: string
-  actionConstraintNameParam:
+  parameterConstraintNameParam:
     name: names
     in: path
     required: true
@@ -8340,7 +8340,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/action-constraints/{actionConstraintName}':
+  '/action-parameter-constraints/{parameterConstraintName}':
     get:
       x-alfresco-since: "7.3.0"
       tags:
@@ -8369,7 +8369,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/actionConstraintNameParam'
+        - $ref: '#/parameters/parameterConstraintNameParam'
       responses:
         '200':
           description: Successful response
@@ -11150,9 +11150,6 @@ definitions:
       label:
         description: Constraint display label
         type: string
-      isNode:
-        description: True if value is a node id
-        type: boolean
   ActionConstraintEntry:
     type: object
     required:
@@ -11223,7 +11220,8 @@ definitions:
         type: boolean
       displayLabel:
         type: string
-
+      parameterConstraintName:
+        type: string
   ActionBodyExec:
     type: object
     required:
