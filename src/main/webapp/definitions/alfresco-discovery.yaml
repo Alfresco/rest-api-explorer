@@ -127,6 +127,9 @@ definitions:
       isCryptodocEnabled:
         type: boolean
         default: false
+      isCustomEmbeddedWorkflowEnabled:
+        type: boolean
+        default: false
   LicenseInfo:
     type: object
     required:
