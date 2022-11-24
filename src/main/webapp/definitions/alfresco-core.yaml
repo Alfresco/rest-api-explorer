@@ -56,6 +56,8 @@ tags:
     description: Storage information for content
   - name: tags
     description: Retrieve and manage tags
+  - name: categories
+    description: Retrieve and manage categories
   - name: trashcan
     description: Retrieve and manage deleted nodes
   - name: versions
@@ -299,6 +301,12 @@ parameters:
     name: tagId
     in: path
     description: The identifier of a tag.
+    required: true
+    type: string
+  categoryIdParam:
+    name: categoryId
+    in: path
+    description: The identifier of a category.
     required: true
     type: string
   networkIdParam:
@@ -979,6 +987,161 @@ paths:
         '404':
           description: |
             **nodeId** or **tagId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/category-links':
+    get:
+      x-alfresco-since: "7.4"
+      tags:
+        - categories
+      summary: List categories that a node is assigned to
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
+
+        Gets a list of categories for node **nodeId**.
+      operationId: listCategoriesForNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CategoryPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to read categories on the node
+        '404':
+          description: |
+            **nodeId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      x-alfresco-since: "7.4"
+      tags:
+        - categories
+      summary: Assign a node to a category
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
+
+        Assign the node **nodeId** to a category. You specify the category id in a JSON body like this:
+
+        ```JSON
+        {
+          "categoryId": "01234567-89ab-cdef-0123-456789abcdef"
+        }
+        ```
+
+        **Note:** You can assign the node to more than one category by specifying a list of categories in the JSON body like this:
+
+        ```JSON
+        [
+          {
+            "categoryId": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          {
+            "categoryId": "89abcdef-0123-4567-89ab-cdef01234567"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                 ...
+                }
+              }
+            ]
+          }
+        }
+        ```
+      operationId: createCategoryLinkForNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: categoryLinkBodyCreate
+          description: The new category link
+          required: true
+          schema:
+            $ref: '#/definitions/CategoryLinkBody'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CategoryEntry'
+        '400':
+          description: |
+            Invalid parameter: **categoryLinkBodyCreate** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to assign the node to a category
+        '404':
+          description: |
+            **nodeId** or **categoryId** does not exist
+        '405':
+          description: Cannot assign a node of this type to a category
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/category-links/{categoryId}':
+    delete:
+      x-alfresco-since: "7.4"
+      tags:
+        - categories
+      summary: Unassign a node from a category
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
+
+        Removes the node **nodeId** from the category **categoryId**.
+      operationId: deleteCategoryLinkFromNode
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/categoryIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed
+        '403':
+          description: User does not have permission to remove the node from the category
+        '404':
+          description: |
+            **nodeId** or **categoryId** does not exist
         default:
           description: Unexpected error
           schema:
@@ -6704,12 +6867,27 @@ paths:
         Gets a list of tags in this repository.
 
         You can use the **include** parameter to return additional **values** information.
+
+        You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+        * name
+        * count
       operationId: listTags
       parameters:
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
         - $ref: '#/parameters/tagEntryIncludeParam'
+        - $ref: '#/parameters/orderByParam'
+        - name: where
+          in: query
+          description: |
+            Optionally filter the list. The only supported options are:
+
+            * ```where=(name='tagName')```
+
+            * ```where=(name in ('tag1', 'tag2'))```
+          required: false
+          type: string
       produces:
         - application/json
       responses:
@@ -6722,6 +6900,45 @@ paths:
             Invalid parameter: value of **maxItems** or **skipCount** is invalid
         '401':
           description: Authentication failed
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      x-alfresco-since: "7.4"
+      tags:
+        - tags
+      summary: Create a tag
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
+
+        Creates a new tag.
+      operationId: createTag
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/tagEntryIncludeParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: tagBodyCreate
+          description: The tag details
+          required: true
+          schema:
+            $ref: '#/definitions/TagBody'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/TagEntry'
+        '400':
+          description: |
+            Invalid parameter: **tagBodyCreate** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: User is not an administrator
+        '409':
+          description: Tag with the given name already exists
         default:
           description: Unexpected error
           schema:
@@ -6790,6 +7007,250 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "7.4"
+      tags:
+        - tags
+      summary: Delete a tag
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
+
+        Deletes the tag with **tagId**. This will cause the tag to be removed from all nodes.
+      operationId: deleteTag
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/tagIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user is not an administrator and so does not have permission to delete the tag.
+        '404':
+          description: |
+            **tagId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/category/{categoryId}':
+    get:
+      x-alfresco-since: "7.4"
+      tags:
+        - categories
+      summary: Get a category
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
+
+        Get a specific tag with **categoryId**.
+      produces:
+        - application/json
+      operationId: getCategory
+      parameters:
+        - $ref: '#/parameters/categoryIdParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CategoryEntry'
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **categoryId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      x-alfresco-since: "7.4"
+      tags:
+        - categories
+      summary: Update a category
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
+
+        Updates the category **categoryId**.
+      operationId: updateCategory
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/categoryIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: categoryBodyUpdate
+          description: The updated category
+          required: true
+          schema:
+            $ref: '#/definitions/CategoryBody'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CategoryEntry'
+        '400':
+          description: |
+            Invalid parameter: **categoryBodyUpdate** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user is not an administrator and so does not have permission to update the category.
+        '404':
+          description: |
+            **categoryId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      x-alfresco-since: "7.4"
+      tags:
+        - categories
+      summary: Delete a category
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
+
+        Deletes the category with **categoryId**. This will cause everything to be removed from the category.
+      operationId: deleteCategory
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/categoryIdParam'
+      responses:
+        '204':
+          description: Successful response
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user is not an administrator and so does not have permission to delete the category.
+        '404':
+          description: |
+            **categoryId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/categories/{categoryId}/subcategories':
+    get:
+      x-alfresco-since: "7.4"
+      tags:
+        - categories
+      summary: List categories
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
+
+        Gets a list of subcategories within the category **categoryId**.
+
+        The parameter categoryId can be set to the alias -root- to obtain a list of top level categories.
+      operationId: listSubcategories
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/categoryIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CategoryPaging'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            **categoryId** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      x-alfresco-since: "7.4"
+      tags:
+        - categories
+      summary: Create a category
+      description: |
+        **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
+
+        Creates a new category within the category **categoryId**.
+
+        The parameter categoryId can be set to the alias -root- to create a new top level category.
+
+        It is possible to create more than one subcategory by posting a list of categories:
+        ```JSON
+        [
+          {
+            "name": "test category 1"
+          },
+          {
+            "name": "test category 2"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                 ...
+                }
+              }
+            ]
+          }
+        }
+        ```
+      operationId: createCategory
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/categoryIdParam'
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: categoryBodyCreate
+          description: The category details
+          required: true
+          schema:
+            $ref: '#/definitions/CategoryBody'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CategoryEntry'
+        '400':
+          description: |
+            Invalid parameter: **categoryBodyCreate** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: User is not an administrator
+        '409':
+          description: Category with the given name already exists
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
   '/networks/{networkId}':
     get:
       tags:
@@ -8483,6 +8944,7 @@ paths:
         '404':
           description: |
             **actionDefinitionId** or **targetId** does not exist
+
 definitions:
   Error:
     type: object
@@ -9240,6 +9702,70 @@ definitions:
         type: string
       count:
         type: number
+  CategoryPaging:
+    type: object
+    required:
+      - list
+    properties:
+      list:
+        type: object
+        required:
+          - pagination
+          - entries
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/CategoryEntry'
+  CategoryEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Category'
+  Category:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+        description: The identifier for the category.
+      name:
+        type: string
+        description: |
+          The name of the category.
+
+          This must be unique within the parent category.
+      parentId:
+        type: string
+        description: The id of the parent category (or -root- if this is a top level category).
+      hasChildren:
+        type: boolean
+        description: True if the category has at least one child category.
+  CategoryBody:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: |
+          The name of the category.
+
+          This must be unique within the parent category.
+  CategoryLinkBody:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        description: The identifier of the category.
   PersonNetworkPaging:
     type: object
     required:
