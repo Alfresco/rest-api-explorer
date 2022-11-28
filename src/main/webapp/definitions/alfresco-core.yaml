@@ -866,8 +866,7 @@ paths:
           schema:
             $ref: '#/definitions/TagPaging'
         '400':
-          description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
@@ -950,8 +949,7 @@ paths:
           schema:
             $ref: '#/definitions/TagEntry'
         '400':
-          description: |
-            Invalid parameter: **tagBodyCreate** is invalid
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
@@ -980,6 +978,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '400':
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
@@ -1015,8 +1015,7 @@ paths:
           schema:
             $ref: '#/definitions/CategoryPaging'
         '400':
-          description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
@@ -1101,8 +1100,7 @@ paths:
           schema:
             $ref: '#/definitions/CategoryEntry'
         '400':
-          description: |
-            Invalid parameter: **categoryLinkBodyCreate** is invalid
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
@@ -1135,6 +1133,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '400':
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
@@ -6896,8 +6896,7 @@ paths:
           schema:
             $ref: '#/definitions/TagPaging'
         '400':
-          description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         default:
@@ -6931,8 +6930,7 @@ paths:
           schema:
             $ref: '#/definitions/TagEntry'
         '400':
-          description: |
-            Invalid parameter: **tagBodyCreate** is invalid
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
@@ -6964,6 +6962,8 @@ paths:
             application/json:
               id: ed2444b5-d0c1-440b-b5b8-34a53e578091
               tag: test tag 1
+        '400':
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '404':
@@ -6996,8 +6996,7 @@ paths:
           schema:
             $ref: '#/definitions/TagEntry'
         '400':
-          description: |
-            Invalid parameter: **tagBodyUpdate** is invalid
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '404':
@@ -7024,6 +7023,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '400':
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
@@ -7044,7 +7045,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
 
-        Get a specific tag with **categoryId**.
+        Get a specific category with **categoryId**.
       produces:
         - application/json
       operationId: getCategory
@@ -7056,6 +7057,8 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/CategoryEntry'
+        '400':
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '404':
@@ -7092,8 +7095,7 @@ paths:
           schema:
             $ref: '#/definitions/CategoryEntry'
         '400':
-          description: |
-            Invalid parameter: **categoryBodyUpdate** is invalid
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
@@ -7122,6 +7124,8 @@ paths:
       responses:
         '204':
           description: Successful response
+        '400':
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
@@ -7159,8 +7163,7 @@ paths:
           schema:
             $ref: '#/definitions/CategoryPaging'
         '400':
-          description: |
-            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '404':
@@ -7238,8 +7241,7 @@ paths:
           schema:
             $ref: '#/definitions/CategoryEntry'
         '400':
-          description: |
-            Invalid parameter: **categoryBodyCreate** is invalid
+          description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
         '403':
