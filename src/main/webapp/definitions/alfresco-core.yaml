@@ -7245,7 +7245,7 @@ paths:
         '403':
           description: User is not an administrator
         '409':
-          description: Category with the given name already exists
+          description: Category with the given name already exists under the parent category
         default:
           description: Unexpected error
           schema:
