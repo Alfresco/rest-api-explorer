@@ -6912,6 +6912,8 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
 
         Creates a new tag.
+
+        You must have admin rights to create a tag with this endpoint.
       operationId: createTag
       produces:
         - application/json
@@ -6977,7 +6979,10 @@ paths:
       tags:
         - tags
       summary: Update a tag
-      description: Updates the tag **tagId**.
+      description: |
+        Updates the tag **tagId**.
+
+        You must have admin rights to update a tag.
       operationId: updateTag
       produces:
         - application/json
@@ -6999,6 +7004,8 @@ paths:
           description: An invalid parameter has been supplied.
         '401':
           description: Authentication failed
+        '403':
+          description: Current user is not an administrator and so does not have permission to update the tag.
         '404':
           description: |
             **tagId** does not exist
@@ -7015,6 +7022,8 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
 
         Deletes the tag with **tagId**. This will cause the tag to be removed from all nodes.
+
+        You must have admin rights to delete a tag.
       operationId: deleteTag
       produces:
         - application/json
@@ -7077,6 +7086,8 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
 
         Updates the category **categoryId**.
+
+        You must have admin rights to update a category.
       operationId: updateCategory
       produces:
         - application/json
@@ -7116,6 +7127,8 @@ paths:
         **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
 
         Deletes the category with **categoryId**. This will cause everything to be removed from the category.
+
+        You must have admin rights to delete a category.
       operationId: deleteCategory
       produces:
         - application/json
@@ -7184,6 +7197,8 @@ paths:
         Creates a new category within the category **categoryId**.
 
         The parameter categoryId can be set to the alias -root- to create a new top level category.
+
+        You must have admin rights to create a category.
 
         It is possible to create more than one subcategory by posting a list of categories:
         ```JSON
