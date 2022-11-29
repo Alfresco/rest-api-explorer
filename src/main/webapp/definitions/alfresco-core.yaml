@@ -222,6 +222,17 @@ parameters:
     items:
       type: string
     collectionFormat: csv
+  categoryEntryIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the category. The following optional fields can be requested:
+      * count
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
   sharedIdParam:
     name: sharedId
     in: path
@@ -7060,6 +7071,7 @@ paths:
       operationId: getCategory
       parameters:
         - $ref: '#/parameters/categoryIdParam'
+        - $ref: '#/parameters/categoryEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -7093,6 +7105,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/categoryIdParam'
+        - $ref: '#/parameters/categoryEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: categoryBodyUpdate
@@ -7167,6 +7180,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/categoryIdParam'
+        - $ref: '#/parameters/categoryEntryIncludeParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
@@ -7243,6 +7257,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/categoryIdParam'
+        - $ref: '#/parameters/categoryEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: categoryBodyCreate
