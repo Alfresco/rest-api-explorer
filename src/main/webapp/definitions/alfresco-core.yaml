@@ -9730,10 +9730,13 @@ definitions:
     properties:
       id:
         type: string
+        description: The identifier for the tag.
       tag:
         type: string
+        description: The unique name of the tag.
       count:
         type: number
+        description: The number of nodes that this tag has been applied to.
   CategoryPaging:
     type: object
     required:
@@ -9779,6 +9782,9 @@ definitions:
       hasChildren:
         type: boolean
         description: True if the category has at least one child category.
+      count:
+        type: number
+        description: The number of nodes that are assigned to this category.
   CategoryBody:
     type: object
     required:
