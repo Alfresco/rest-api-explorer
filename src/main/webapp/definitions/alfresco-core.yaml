@@ -7056,7 +7056,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/category/{categoryId}':
+  '/categories/{categoryId}':
     get:
       x-alfresco-since: "7.4"
       tags:
