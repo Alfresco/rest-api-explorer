@@ -1046,11 +1046,11 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco 7.4 and newer versions.
 
-        Assign the node **nodeId** to a category. You specify the category id in a JSON body like this:
+        Assign the node **nodeId** to a category. You specify the category ID in a JSON body like this:
 
         ```JSON
         {
-          "categoryId": "01234567-89ab-cdef-0123-456789abcdef"
+          "id": "01234567-89ab-cdef-0123-456789abcdef"
         }
         ```
 
@@ -1059,10 +1059,10 @@ paths:
         ```JSON
         [
           {
-            "categoryId": "01234567-89ab-cdef-0123-456789abcdef"
+            "id": "01234567-89ab-cdef-0123-456789abcdef"
           },
           {
-            "categoryId": "89abcdef-0123-4567-89ab-cdef01234567"
+            "id": "89abcdef-0123-4567-89ab-cdef01234567"
           }
         ]
         ```
@@ -1109,7 +1109,7 @@ paths:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/CategoryEntry'
+            $ref: '#/definitions/CategoryPaging'
         '400':
           description: An invalid parameter has been supplied.
         '401':
