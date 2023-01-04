@@ -1050,7 +1050,7 @@ paths:
 
         ```JSON
         {
-          "id": "01234567-89ab-cdef-0123-456789abcdef"
+          "categoryId": "01234567-89ab-cdef-0123-456789abcdef"
         }
         ```
 
@@ -1059,10 +1059,10 @@ paths:
         ```JSON
         [
           {
-            "id": "01234567-89ab-cdef-0123-456789abcdef"
+            "categoryId": "01234567-89ab-cdef-0123-456789abcdef"
           },
           {
-            "id": "89abcdef-0123-4567-89ab-cdef01234567"
+            "categoryId": "89abcdef-0123-4567-89ab-cdef01234567"
           }
         ]
         ```
@@ -1109,7 +1109,7 @@ paths:
         '201':
           description: Successful response
           schema:
-            $ref: '#/definitions/CategoryPaging'
+            $ref: '#/definitions/CategoryEntry'
         '400':
           description: An invalid parameter has been supplied.
         '401':
@@ -9799,9 +9799,9 @@ definitions:
   CategoryLinkBody:
     type: object
     required:
-      - id
+      - categoryId
     properties:
-      id:
+      categoryId:
         type: string
         description: The identifier of the category.
   PersonNetworkPaging:
