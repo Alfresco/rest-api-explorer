@@ -1034,6 +1034,8 @@ paths:
         '404':
           description: |
             **nodeId** does not exist
+        '422':
+          description: Invalid type for node with id **nodeId**
         default:
           description: Unexpected error
           schema:
@@ -1119,7 +1121,7 @@ paths:
         '404':
           description: |
             **nodeId** or **categoryId** does not exist
-        '405':
+        '422':
           description: Cannot assign a node of this type to a category
         default:
           description: Unexpected error
@@ -1153,6 +1155,8 @@ paths:
         '404':
           description: |
             **nodeId** or **categoryId** does not exist
+        '422':
+          description: Invalid type for node with id **nodeId**
         default:
           description: Unexpected error
           schema:
