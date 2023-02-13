@@ -20,7 +20,7 @@ env:
   GIT_PASSWORD: ${{ secrets.BOT_GITHUB_TOKEN }}
   RELEASE_VERSION: "7.3.0"
   DEVELOPMENT_VERSION: "7.4.0-A1-SNAPSHOT"
-  MAVEN_CLI_OPTS: "$MAVEN_CLI_OPTS -B -q -e -fae -V -DinstallAtEnd=true -U"
+  MAVEN_CLI_OPTS: "-B -q -e -fae -V -DinstallAtEnd=true -U"
   GITHUB_ACTIONS_DEPLOY_TIMEOUT: 30
 
 jobs:
@@ -37,9 +37,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
       - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - name: "Init"
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: "Build"
         timeout-minutes: ${{ fromJSON(env.GITHUB_ACTIONS_DEPLOY_TIMEOUT) }}
-        run: mvn $MAVEN_CLI_OPTS verify -Dlogging.root.level=off -Dspring.main.banner-mode=off
+        run: mvn ${MAVEN_CLI_OPTS} verify -Dlogging.root.level=off -Dspring.main.banner-mode=off
 
   tests:
     name: "Integration tests"
@@ -50,6 +52,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
       - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - name: "Init"
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: "Run tests"
         run: bash CI/test.sh
 
@@ -62,9 +66,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
       - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - name: "Init"
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: "Publish"
         timeout-minutes: ${{ fromJSON(env.GITHUB_ACTIONS_DEPLOY_TIMEOUT) }}
-        run: mvn $MAVEN_CLI_OPTS deploy -DskipTests
+        run: mvn ${MAVEN_CLI_OPTS} deploy -DskipTests
 
   release:
     name: "Release"
@@ -77,5 +83,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
       - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - name: "Init"
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: "Release"
         run: bash CI/release.sh
