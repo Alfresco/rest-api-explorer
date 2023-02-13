@@ -64,8 +64,6 @@ jobs:
     if: "!failure()"
     steps:
       - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
       - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
       - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
       - name: "Init"
@@ -87,6 +85,11 @@ jobs:
           persist-credentials: false
       - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
       - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/configure-git-author@v1.33.0
+        with:
+          username: ${{ env.GIT_USERNAME }}
+          email: ${{ env.GIT_EMAIL }}
+          global: true
       - name: "Init"
         run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: "Release"
