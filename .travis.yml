@@ -14,9 +14,7 @@ git:
 
 branches:
   only:
-    - master
-    - /feature\/.*/
-    - /fix\/.*/
+    - none
 
 env:
   global:

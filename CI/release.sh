@@ -14,13 +14,10 @@ fi
 # Use full history for release
 git checkout -B master
 
-# Add email to link commits to user
-git config user.email "${GIT_EMAIL}"
-
 mvn release:clean release:prepare release:perform \
       -B \
       -DskipTests \
-      -Dbuild-number="${TRAVIS_BUILD_NUMBER}" \
+      -Dbuild-number="${BUILD_NUMBER}" \
       -DreleaseVersion="${RELEASE_VERSION}" \
       -DignoreSnapshots \
       -DdevelopmentVersion="${DEVELOPMENT_VERSION}" \
