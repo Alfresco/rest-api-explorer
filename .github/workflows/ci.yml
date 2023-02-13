@@ -12,6 +12,8 @@ on:
       - fix/**
       - feature/**
   workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * 3'
 
 env:
   MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
