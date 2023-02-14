@@ -39,6 +39,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
       - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - name: "Build"
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: "Verify"
         timeout-minutes: ${{ fromJSON(env.GITHUB_ACTIONS_DEPLOY_TIMEOUT) }}
         run: mvn ${MAVEN_CLI_OPTS} verify -Dlogging.root.level=off -Dspring.main.banner-mode=off
