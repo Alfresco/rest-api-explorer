@@ -6902,7 +6902,7 @@ paths:
 
             * ```where=(tag in ('tag1', 'tag2'))```
             
-            * ```where=(tag matches ('tag*'))```
+            * ```where=(tag matches ('*tag*'))```
             
             OR operator is supported.
           required: false
