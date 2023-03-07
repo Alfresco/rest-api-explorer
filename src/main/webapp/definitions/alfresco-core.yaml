@@ -6896,7 +6896,7 @@ paths:
         - name: where
           in: query
           description: |
-            Optionally filter the list. Supported options are:
+            Optionally filter the list. The only supported options are:
 
             * ```where=(tag='tagName')```
 
@@ -6904,7 +6904,7 @@ paths:
             
             * ```where=(tag matches ('*tag*'))```
             
-            OR operator is supported.
+            OR operator is also supported.
           required: false
           type: string
       produces:
