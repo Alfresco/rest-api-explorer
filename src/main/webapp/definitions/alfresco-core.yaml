@@ -6884,7 +6884,7 @@ paths:
         You can use the **include** parameter to return additional **values** information.
 
         You can sort the result list using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
-        * name
+        * tag
         * count
       operationId: listTags
       parameters:
@@ -6898,9 +6898,13 @@ paths:
           description: |
             Optionally filter the list. The only supported options are:
 
-            * ```where=(name='tagName')```
+            * ```where=(tag='tagName')```
 
-            * ```where=(name in ('tag1', 'tag2'))```
+            * ```where=(tag in ('tag1', 'tag2'))```
+            
+            * ```where=(tag matches ('*tag*'))```
+            
+            OR operator is also supported.
           required: false
           type: string
       produces:
