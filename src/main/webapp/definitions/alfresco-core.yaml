@@ -9793,6 +9793,9 @@ definitions:
       count:
         type: number
         description: The number of nodes that are assigned to this category.
+      path:
+        type: string
+        description: The path to this category.
   CategoryBody:
     type: object
     required:
