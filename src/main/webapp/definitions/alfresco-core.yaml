@@ -228,6 +228,18 @@ parameters:
     description: |
       Returns additional information about the category. The following optional fields can be requested:
       * count
+      * path
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+  categoryEntryIncludePathParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the category. The following optional fields can be requested:
+      * path
     required: false
     type: array
     items:
@@ -1019,6 +1031,7 @@ paths:
         - $ref: '#/parameters/nodeIdParam'
         - $ref: '#/parameters/skipCountParam'
         - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/categoryEntryIncludePathParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -1100,6 +1113,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/categoryEntryIncludePathParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: categoryLinkBodyCreate
