@@ -6987,6 +6987,7 @@ paths:
       operationId: getTag
       parameters:
         - $ref: '#/parameters/tagIdParam'
+        - $ref: '#/parameters/tagEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -7021,6 +7022,7 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/tagIdParam'
+        - $ref: '#/parameters/tagEntryIncludeParam'
         - $ref: '#/parameters/fieldsParam'
         - in: body
           name: tagBodyUpdate
