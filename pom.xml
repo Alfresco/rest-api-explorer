@@ -2,17 +2,18 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.alfresco</groupId>
   <artifactId>api-explorer</artifactId>
-  <version>7.4.1-SNAPSHOT</version>
+  <version>23.1.0-A1-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>Alfresco REST API Explorer</name>
   <description>Produces the API Explorer for all API definitions</description>
 
   <properties>
     <swagger-ui.version>3.38.0</swagger-ui.version>
-    <java.version>11</java.version>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-    <maven.build.sourceVersion>11</maven.build.sourceVersion>
+    <java.version>17</java.version>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.release>17</maven.compiler.release>
+    <maven.build.sourceVersion>17</maven.build.sourceVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- needed to set the port for "jetty:start-war" run before the integration tests -->
