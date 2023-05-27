@@ -2820,6 +2820,8 @@ paths:
           required: false
           type: string
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
@@ -2910,6 +2912,8 @@ paths:
           required: false
           type: string
         - $ref: '#/parameters/nodeAssocMinimalEntryIncludeParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
         - $ref: '#/parameters/fieldsParam'
       responses:
         '200':
