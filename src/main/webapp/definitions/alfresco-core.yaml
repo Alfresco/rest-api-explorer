@@ -2162,6 +2162,9 @@ paths:
 
             If the content type is not supported for preview, then a value of **false** is ignored, and
             the attachment will be returned in the response.
+
+            The **fileName** field is optional for setting the file name when downloaded. By default Alfresco
+            will use the `cm:name` attribute unless configured otherwise.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
@@ -2448,6 +2451,9 @@ paths:
 
             If the content type is not supported for preview, then a value of **false** is ignored, and
             the attachment will be returned in the response.
+
+            The **fileName** field is optional for setting the file name when downloaded. By default Alfresco
+            will use the `cm:name` attribute unless configured otherwise.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
@@ -3125,6 +3131,9 @@ paths:
 
             If the content type is not supported for preview, then a value of **false** is ignored, and
             the attachment will be returned in the response.
+
+            The **fileName** field is optional for setting the file name when downloaded. By default Alfresco
+            will use the `cm:name` attribute unless configured otherwise.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
@@ -3459,6 +3468,9 @@ paths:
 
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
+
+            The **fileName** field is optional for setting the file name when downloaded. By default Alfresco
+            will use the `cm:name` attribute unless configured otherwise.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
@@ -4152,6 +4164,9 @@ paths:
 
             If the content type is not supported for preview, then a value of **false** is ignored, and
             the attachment will be returned in the response.
+
+            The **fileName** field is optional for setting the file name when downloaded. By default Alfresco
+            will use the `cm:name` attribute unless configured otherwise.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
@@ -4401,6 +4416,9 @@ paths:
 
             If the content type is not supported for preview, then a value of **false** is ignored, and
             the attachment will be returned in the response.
+
+            The **fileName** field is optional for setting the file name when downloaded. By default Alfresco
+            will use the `cm:name` attribute unless configured otherwise.
           required: false
           schema:
             $ref: '#/definitions/DirectAccessUrlBodyCreate'
@@ -10683,6 +10701,9 @@ definitions:
       attachment:
         type: boolean
         description: URL type (embedded/attachment).
+      fileName:
+        type: string
+        description: Optional file name when downloaded
   DirectAccessUrlEntry:
     type: object
     required:
