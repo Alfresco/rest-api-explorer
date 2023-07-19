@@ -10035,7 +10035,7 @@ definitions:
         type: array
         items:
           type: string
-        description: Thee allowable operations for the target.
+        description: The allowable operations for the target.
   FavoriteSiteBodyCreate:
     type: object
     required:
