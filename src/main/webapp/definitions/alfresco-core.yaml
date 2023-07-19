@@ -488,10 +488,15 @@ parameters:
       Returns additional information about favorites, the following optional fields can be requested:
       * path (note, this only applies to files and folders)
       * properties
+      * allowableOperations
     required: false
     type: array
     items:
       type: string
+      enum:
+        - path
+        - properties
+        - allowableOperations
     collectionFormat: csv
   auditApplicationIdParam:
     name: auditApplicationId
@@ -10026,6 +10031,11 @@ definitions:
       properties:
         type: object
         description: A subset of the target favorite properties, system properties and properties already available in the target are excluded.
+      allowableOperations:
+        type: array
+        items:
+          type: string
+        description: The allowable operations for the target.
   FavoriteSiteBodyCreate:
     type: object
     required:

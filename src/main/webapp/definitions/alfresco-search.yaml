@@ -449,6 +449,7 @@ definitions:
        * isLink
        * allowableOperations
        * association
+       * isFavorite
     type: array
     items:
       type: string
@@ -459,6 +460,7 @@ definitions:
         - isLocked
         - path
         - properties
+        - isFavorite
 
   RequestFields:
     description: A list of field names.
@@ -865,6 +867,8 @@ definitions:
           type: string
       path:
         $ref: '#/definitions/PathInfo'
+      isFavorite:
+        type: boolean
   ## Standard definition
   UserInfo:
     type: object
