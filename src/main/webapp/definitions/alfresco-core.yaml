@@ -10722,10 +10722,13 @@ definitions:
       attachment:
         type: boolean
         description: Flag to control the download method, **true** for attachment URL, **false** for embedded URL
-      expiresAt:
+      expiryTime:
         type: string
         format: date-time
         description: The direct access URL would become invalid when the expiry date is reached
+      fileName:
+        type: string
+        description: The file name when downloaded
   SharedLinkBodyCreate:
     type: object
     required:
