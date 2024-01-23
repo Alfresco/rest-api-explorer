@@ -54,9 +54,21 @@
 <script src="./swagger-ui-bundle.js" charset="UTF-8"> </script>
 <script src="./swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
 <script>
+        // Function to extract the validatorUrl parameter from the URL query string
+        function getValidatorUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('validatorUrl');
+        }
+</script>
+<script>
   window.onload = function() {
-
-    const ui = SwaggerUIBundle({
+        // Get the validatorUrl from the query string
+    const validatorUrl = getValidatorUrl();
+    const ui = null;
+ // Check if the validatorUrl is valid
+    if(validatorUrl == null)
+    {
+      ui = SwaggerUIBundle({
       urls: [
         {url: "definitions/alfresco-core.yaml",       name: "Core API"},
         {url: "definitions/alfresco-search.yaml",     name: "Search API"},
@@ -78,7 +90,11 @@
       ],
       layout: "StandaloneLayout"
     });
-
+    }
+    else{
+            alert('Invalid Url');
+            window.history.back();
+        }
     window.ui = ui
   }
 </script>
