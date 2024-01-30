@@ -193,6 +193,8 @@ parameters:
       Returns additional information about the group. The following optional fields can be requested:
       * parentIds
       * zones
+      * hasSubgroups
+      * description
     required: false
     type: array
     items:
