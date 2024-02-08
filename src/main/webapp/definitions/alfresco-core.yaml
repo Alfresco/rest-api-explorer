@@ -193,6 +193,8 @@ parameters:
       Returns additional information about the group. The following optional fields can be requested:
       * parentIds
       * zones
+      * hasSubgroups
+      * description
     required: false
     type: array
     items:
@@ -9577,9 +9579,14 @@ definitions:
         type: string
       displayName:
         type: string
+      description:
+        type: string
       isRoot:
         type: boolean
         default: true
+      hasSubgroups:
+        type: boolean
+        default: false
       parentIds:
         type: array
         items:
@@ -9646,6 +9653,8 @@ definitions:
         type: string
       displayName:
         type: string
+      description:
+        type: string
       parentIds:
         type: array
         items:
@@ -9656,6 +9665,8 @@ definitions:
       - displayName
     properties:
       displayName:
+        type: string
+      description:
         type: string
   CommentBody:
     type: object
