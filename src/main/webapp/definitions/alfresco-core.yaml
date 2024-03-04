@@ -10725,10 +10725,6 @@ definitions:
     properties:
       id:
         type: string
-      name:
-        type: string
-      nodeType:
-        type: string
       size:
         type: string
 
