@@ -2963,7 +2963,7 @@ paths:
         '401':
           description: Authentication failed
         '404':
-          description: Target **nodeId** does not exist
+          description: Entity with **nodeId** does not exist
         default:
           description: Unexpected error
           schema:
