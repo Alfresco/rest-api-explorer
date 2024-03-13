@@ -2940,32 +2940,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/size':
-    get:
-      tags:
-        - nodes
-      summary: Get folder size
-      description: |
-        Get the size of a folder
-      operationId: getFolderSize
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/nodeTargetIdParam'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/FolderSizeResponse'
-        '401':
-          description: Authentication failed
-        '404':
-          description: Entity with **nodeId** does not exist
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-
   '/nodes/{nodeId}/versions':
     get:
       x-alfresco-since: "5.2"
@@ -10716,15 +10690,6 @@ definitions:
         $ref: '#/definitions/PermissionsInfo'
       definition:
         $ref: '#/definitions/Definition'
-
-  FolderSizeResponse:
-    type: object
-    properties:
-      id:
-        type: string
-      size:
-        type: string
-
   ProbeEntry:
     type: object
     required:
