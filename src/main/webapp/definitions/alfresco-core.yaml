@@ -2957,9 +2957,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/FolderSizeResponse'
-        '400':
-          description: |
-            Invalid parameter: **nodeId** is not in valid format
         '401':
           description: Authentication failed
         '404':
