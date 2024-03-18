@@ -2959,6 +2959,8 @@ paths:
             $ref: '#/definitions/FolderSizeResponse'
         '401':
           description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
         '404':
           description: Entity with **nodeId** does not exist
         default:
