@@ -455,14 +455,14 @@ parameters:
     name: attachment
     in: query
     description: |
-       **true** enables a web browser to download the file as an attachment.
-       **false** means a web browser may preview the file in a new tab or window.
-
-       You can only set this parameter to **false** if the content type of the file is in the supported list;
-       for example, certain image files and PDF files.
-
-       If the content type is not supported for preview, then a value of **false**  is ignored, and
-       the attachment will be returned in the response.
+      **true** enables a web browser to download the file as an attachment.
+      **false** means a web browser may preview the file in a new tab or window.
+      
+      You can only set this parameter to **false** if the content type of the file is in the supported list;
+      for example, certain image files and PDF files.
+      
+      If the content type is not supported for preview, then a value of **false**  is ignored, and
+      the attachment will be returned in the response.
     required: false
     default: true
     type: boolean
@@ -1338,21 +1338,21 @@ paths:
         - nodes
       summary: Delete a node
       description: |
-         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
-
-         Deletes the node **nodeId**.
-
-         If **nodeId** is a folder, then its children are also deleted.
-
-         Deleted nodes move to the trashcan unless the **permanent** query parameter is **true** and the current user is the owner of the node or an admin.
-
-         Deleting a node deletes it from its primary parent and also from any secondary parents. Peer associations are also deleted, where the deleted
-         node is either a source or target of an association. This applies recursively to any hierarchy of primary children of the deleted node.
-
-         **Note:** If the node is not permanently deleted, and is later successfully restored to its former primary parent, then the primary
-         child association is restored. This applies recursively for any primary children. No other secondary child associations or
-         peer associations are restored for any of the nodes in the primary parent-child hierarchy of restored nodes, regardless of whether the original
-         associations were to nodes inside or outside the restored hierarchy.
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
+        Deletes the node **nodeId**.
+        
+        If **nodeId** is a folder, then its children are also deleted.
+        
+        Deleted nodes move to the trashcan unless the **permanent** query parameter is **true** and the current user is the owner of the node or an admin.
+        
+        Deleting a node deletes it from its primary parent and also from any secondary parents. Peer associations are also deleted, where the deleted
+        node is either a source or target of an association. This applies recursively to any hierarchy of primary children of the deleted node.
+        
+        **Note:** If the node is not permanently deleted, and is later successfully restored to its former primary parent, then the primary
+        child association is restored. This applies recursively for any primary children. No other secondary child associations or
+        peer associations are restored for any of the nodes in the primary parent-child hierarchy of restored nodes, regardless of whether the original
+        associations were to nodes inside or outside the restored hierarchy.
       operationId: deleteNode
       parameters:
         - $ref: '#/parameters/nodeIdParam'
@@ -2493,7 +2493,6 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/calculateSize':
     post:
-      x-alfresco-since: "5.2"
       tags:
         - nodes
       summary: Calculate a folder size
@@ -2541,7 +2540,6 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     get:
-      x-alfresco-since: "5.2"
       tags:
         - nodes
       summary: Get the size of folder after initiating POST/calculate Endpoint.
@@ -2577,7 +2575,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
   '/nodes/{nodeId}/secondary-children':
     post:
       x-alfresco-since: "5.2"
@@ -4527,7 +4524,7 @@ paths:
             **nodeId** does not exist
         '412':
           description: |
-            Content is archived and is inaccessible  
+            Content is archived and is inaccessible
         '501':
           description: The actual ContentStore implementation can't fulfil this request
         default:
@@ -5807,45 +5804,45 @@ paths:
         - groups
       summary: List group memberships
       description: |
-       **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
-
-        Gets a list of group membership information for person **personId**.
-
-        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
-
-        You can use the **include** parameter to return additional information.
-
-        You can use the **where** parameter to filter the returned groups by **isRoot**. For example, the following **where**
-        clause will return just the root groups:
-
-        ```
-        (isRoot=true)
-        ```
-
-        The **where** parameter can also be used to filter by ***zone***. This may be combined with isRoot to narrow
-        a result set even further. For example, the following where clause will only return groups belonging to the
-        `MY.ZONE` zone.
-
-        ```
-        where=(zones in ('MY.ZONE'))
-        ```
-
-        This may be combined with the isRoot filter, as shown below:
-
-        ```
-        where=(isRoot=false AND zones in ('MY.ZONE'))
-        ```
-
-        ***Note:*** restrictions include
-        * `AND` is the only supported operator when combining `isRoot` and `zones` filters
-        * Only one zone is supported by the filter
-        * The quoted zone name must be placed in parenthesis — a 400 error will result if these are omitted.
-
-
-        The default sort order for the returned list is for groups to be sorted by ascending displayName.
-        You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
-        * id
-        * displayName
+        **Note:** this endpoint is available in Alfresco 5.2.1 and newer versions.
+        
+         Gets a list of group membership information for person **personId**.
+        
+         You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+        
+         You can use the **include** parameter to return additional information.
+        
+         You can use the **where** parameter to filter the returned groups by **isRoot**. For example, the following **where**
+         clause will return just the root groups:
+        
+         ```
+         (isRoot=true)
+         ```
+        
+         The **where** parameter can also be used to filter by ***zone***. This may be combined with isRoot to narrow
+         a result set even further. For example, the following where clause will only return groups belonging to the
+         `MY.ZONE` zone.
+        
+         ```
+         where=(zones in ('MY.ZONE'))
+         ```
+        
+         This may be combined with the isRoot filter, as shown below:
+        
+         ```
+         where=(isRoot=false AND zones in ('MY.ZONE'))
+         ```
+        
+         ***Note:*** restrictions include
+         * `AND` is the only supported operator when combining `isRoot` and `zones` filters
+         * Only one zone is supported by the filter
+         * The quoted zone name must be placed in parenthesis — a 400 error will result if these are omitted.
+        
+        
+         The default sort order for the returned list is for groups to be sorted by ascending displayName.
+         You can override the default by using the **orderBy** parameter. You can specify one or more of the following fields in the **orderBy** parameter:
+         * id
+         * displayName
       operationId: listGroupMembershipsForPerson
       produces:
         - application/json
@@ -6452,45 +6449,45 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   '/sites/{siteId}/site-membership-requests/{inviteeId}/approve':
-      post:
-        tags:
-          - sites
-        summary: Approve a site membership request
-        description: |
-          Approve a site membership request.
-        operationId: approveSiteMembershipRequest
-        produces:
-          - application/json
-        parameters:
-          - $ref: '#/parameters/siteIdParam'
-          - $ref: '#/parameters/inviteeIdParam'
-          - in: body
-            name: siteMembershipApprovalBody
-            description: |
-              Accepting a request to join, optionally, allows assignment of a role to the user.
-            required: false
-            schema:
-              $ref: '#/definitions/SiteMembershipApprovalBody'
-        responses:
-          '200':
-            description: Successful response
-          '400':
-            description: |
-              Invalid parameter: value of **siteId** or **inviteeId** is invalid
-          '401':
-            description: Authentication failed
-          '403':
-            description: Current user does not have permission to approve membership request
-          '404':
-            description: |
-              **siteId** or **inviteeId** does not exist
-          '422':
-            description: |
-              Integrity exception or not allowed to approve membership request.
-          default:
-            description: Unexpected error
-            schema:
-              $ref: '#/definitions/Error'
+    post:
+      tags:
+        - sites
+      summary: Approve a site membership request
+      description: |
+        Approve a site membership request.
+      operationId: approveSiteMembershipRequest
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/siteIdParam'
+        - $ref: '#/parameters/inviteeIdParam'
+        - in: body
+          name: siteMembershipApprovalBody
+          description: |
+            Accepting a request to join, optionally, allows assignment of a role to the user.
+          required: false
+          schema:
+            $ref: '#/definitions/SiteMembershipApprovalBody'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: |
+            Invalid parameter: value of **siteId** or **inviteeId** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to approve membership request
+        '404':
+          description: |
+            **siteId** or **inviteeId** does not exist
+        '422':
+          description: |
+            Integrity exception or not allowed to approve membership request.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/sites/{siteId}/site-membership-requests/{inviteeId}/reject':
     post:
       tags:
@@ -6771,9 +6768,9 @@ paths:
         - sites
       summary: List group membership for site
       description: |
-          **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
-
-          Gets a list of group membership for site **siteId**.
+        **Note:** this endpoint is available in Alfresco 7.0.0 and newer versions.
+        
+        Gets a list of group membership for site **siteId**.
       operationId: listSiteGroups
       produces:
         - application/json
@@ -8134,7 +8131,7 @@ paths:
         ```
         where=(isRoot=false AND displayName in ('MY.GROUP.NAME'))
         ```
-       
+        
         ```
         where=(zones in ('MY.ZONE') AND displayName in ('MY.GROUP.NAME'))
         ```
@@ -8675,7 +8672,7 @@ paths:
       parameters:
         - $ref: '#/parameters/auditApplicationIdParam'
         - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/omitTotalItemsParam'      
+        - $ref: '#/parameters/omitTotalItemsParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/maxItemsParam'
         - name: where
@@ -8953,44 +8950,44 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   '/action-definitions':
-      get:
-        x-alfresco-since: "5.2.2"
-        tags:
-          - actions
-        summary: Retrieve list of available actions
-        description: |
-          **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
-
-          Gets a list of all available actions
-
-          The default sort order for the returned list is for actions to be sorted by ascending name.
-          You can override the default by using the **orderBy** parameter.
-
-          You can use any of the following fields to order the results:
-          * name
-          * title
-        operationId: listActions
-        produces:
-          - application/json
-        parameters:
-          - $ref: '#/parameters/skipCountParam'
-          - $ref: '#/parameters/maxItemsParam'
-          - $ref: '#/parameters/orderByParam'
-          - $ref: '#/parameters/fieldsParam'
-        responses:
-          '200':
-            description: Successful response
-            schema:
-              $ref: '#/definitions/ActionDefinitionList'
-          '400':
-            description: |
-              Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
-          '401':
-            description: Authentication failed
-          default:
-            description: Unexpected error
-            schema:
-              $ref: '#/definitions/Error'
+    get:
+      x-alfresco-since: "5.2.2"
+      tags:
+        - actions
+      summary: Retrieve list of available actions
+      description: |
+        **Note:** this endpoint is available in Alfresco 5.2.2 and newer versions.
+        
+        Gets a list of all available actions
+        
+        The default sort order for the returned list is for actions to be sorted by ascending name.
+        You can override the default by using the **orderBy** parameter.
+        
+        You can use any of the following fields to order the results:
+        * name
+        * title
+      operationId: listActions
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ActionDefinitionList'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems**, **skipCount** or **orderBy** is invalid
+        '401':
+          description: Authentication failed
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/action-definitions/{actionDefinitionId}':
     get:
       x-alfresco-since: "5.2.2"
@@ -9265,7 +9262,7 @@ definitions:
   SiteContainerPaging:
     type: object
     required:
-     - list
+      - list
     properties:
       list:
         type: object
@@ -9305,10 +9302,10 @@ definitions:
       role:
         type: string
         enum:
-        - SiteConsumer
-        - SiteCollaborator
-        - SiteContributor
-        - SiteManager
+          - SiteConsumer
+          - SiteCollaborator
+          - SiteContributor
+          - SiteManager
       id:
         type: string
   SiteMembershipBodyUpdate:
@@ -9319,10 +9316,10 @@ definitions:
       role:
         type: string
         enum:
-        - SiteConsumer
-        - SiteCollaborator
-        - SiteContributor
-        - SiteManager
+          - SiteConsumer
+          - SiteCollaborator
+          - SiteContributor
+          - SiteManager
   SiteMemberPaging:
     type: object
     required:
@@ -9776,8 +9773,8 @@ definitions:
       list:
         type: object
         required:
-         - pagination
-         - entries
+          - pagination
+          - entries
         properties:
           pagination:
             $ref: '#/definitions/Pagination'
@@ -10092,8 +10089,8 @@ definitions:
     required:
       - target
     properties:
-       target:
-          type: object
+      target:
+        type: object
   FavoritePaging:
     type: object
     required:
@@ -10412,8 +10409,8 @@ definitions:
   AssociationBody:
     type: object
     required:
-    - targetId
-    - assocType
+      - targetId
+      - assocType
     properties:
       targetId:
         type: string
@@ -10432,8 +10429,8 @@ definitions:
   ChildAssociationBody:
     type: object
     required:
-    - childId
-    - assocType
+      - childId
+      - assocType
     properties:
       childId:
         type: string
@@ -10474,8 +10471,8 @@ definitions:
         type: string
         default: ALLOWED
         enum:
-         - ALLOWED
-         - DENIED
+          - ALLOWED
+          - DENIED
   PermissionsInfo:
     type: object
     properties:
@@ -10598,14 +10595,14 @@ definitions:
         type: string
         default: ALLOW_OWNER_CHANGES
         enum:
-         - ALLOW_OWNER_CHANGES
-         - FULL
+          - ALLOW_OWNER_CHANGES
+          - FULL
       lifetime:
         type: string
         default: PERSISTENT
         enum:
-         - PERSISTENT
-         - EPHEMERAL
+          - PERSISTENT
+          - EPHEMERAL
   NodePaging:
     type: object
     properties:
@@ -10720,15 +10717,15 @@ definitions:
   Node:
     type: object
     required:
-    - id
-    - name
-    - nodeType
-    - isFolder
-    - isFile
-    - createdAt
-    - createdByUser
-    - modifiedAt
-    - modifiedByUser
+      - id
+      - name
+      - nodeType
+      - isFolder
+      - isFile
+      - createdAt
+      - createdByUser
+      - modifiedAt
+      - modifiedByUser
     properties:
       id:
         type: string
@@ -11222,8 +11219,8 @@ definitions:
       createdByUser:
         $ref: '#/definitions/UserInfo'
       createdAt:
-         type: string
-         format: date-time
+        type: string
+        format: date-time
       values:
         type: object
   ActionConstraint:
@@ -11319,12 +11316,12 @@ definitions:
             items:
               $ref: '#/definitions/ActionDefinition'
   ActionDefinitionEntry:
-      type: object
-      required:
-        - entry
-      properties:
-        entry:
-          $ref: '#/definitions/ActionDefinition'
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ActionDefinition'
   ActionDefinition:
     type: object
     required:
@@ -11517,8 +11514,8 @@ definitions:
         description: How to combine the clauses of this condition ("and" or "or")
         type: string
         enum:
-        - and
-        - or
+          - and
+          - or
         default: "and"
       compositeConditions:
         description: Nested list of composite clauses in this condition
