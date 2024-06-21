@@ -2542,7 +2542,7 @@ paths:
     get:
       tags:
         - nodes
-      summary: Get the size of folder after initiating POST/calculate Endpoint.
+      summary: Get the size of folder after initiating POST/calculateSize Endpoint.
       description: |
         ***Receiving the size***
         
@@ -10785,17 +10785,22 @@ definitions:
     properties:
       id:
         type: string
+        description: Provides the id for which POST/calculateSize has been initiated.
       size:
         type: string
+        description: Provides a folder size in bytes.
       calculatedAtTime:
         type: string
+        description: Provides the time when the calculating folder size will be completed.
       status:
         type: string
+        description: Provides a status that signifies the completion of the calculateSize mechanism.
   sizeAcknowledgedResponse:
     type: object
     properties:
       executionId:
         type: string
+        description: Provides nodeId indicating that the request has been acknowledged.
   ProbeEntry:
     type: object
     required:
