@@ -2529,6 +2529,9 @@ paths:
           description: Request Accepted
           schema:
             $ref: '#/definitions/sizeAcknowledgedResponse'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not of Folder Type
         '401':
           description: Authentication failed
         '403':
@@ -2565,6 +2568,9 @@ paths:
           description: Successful Response
           schema:
             $ref: '#/definitions/calculateSizeResponse'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not of Folder Type
         '401':
           description: Authentication failed
         '403':
