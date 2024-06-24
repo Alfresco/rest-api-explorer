@@ -123,19 +123,12 @@ parameters:
     description: The identifier of a target node.
     required: true
     type: string
-  maxItemsForSizeParam:
-    name: maxItems
-    in: query
-    description: |
-      This assists in handling scenarios where ***large files*** or ***subfolders*** exist within a folder,
-      allowing the folder size determination mechanism to function in chunks.
-      
-      So that calculating the huge folder will be done efficiently.  
-      If not supplied then the default value is 100.
-    required: false
-    type: integer
-    minimum: 1
-    default: 100
+  nodeFolderIdParam:
+    name: nodeId
+    in: path
+    description: The identifier of a folder node.
+    required: true
+    type: string
   nodeMinimalEntryIncludeParam:
     name: include
     in: query
@@ -2491,96 +2484,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/calculateSize':
-    post:
-      tags:
-        - nodes
-      summary: Calculate a folder size
-      description: |
-        
-        This may be executed against a node specified by **nodeId** and this nodeId must be a valid node ID.
-        Furthermore, this POST endpoint will be executed **asynchronously** with a `202` HTTP response signifying that
-        the request has been accepted successfully.
-        
-        The response body will include the ```nodeId``` of the pending action, which can be used in a
-        **GET/calculateSize** endpoint to check if the action's status has been completed, at which point the result will be returned, comprising ```the size of the node in bytes```.
-        
-        Essentially, ```maxItems``` ***parameter*** is utilized for pagination purposes.
-        
-        By default, **results are limited to the first 100.**
-        Results can be restricted using "paging". For example:
-        
-        ```JSON
-        "paging": {
-          "maxItems": "50",
-          "skipCount": "28"
-        }
-        ```
-        This assists in handling scenarios where large files or subfolders exist within a folder, allowing the folder size determination mechanism to function in chunks.
 
-      operationId: calculateSize
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/nodeTargetIdParam'
-        - $ref: '#/parameters/maxItemsForSizeParam'
-      responses:
-        '202':
-          description: Request Accepted
-          schema:
-            $ref: '#/definitions/sizeAcknowledgedResponse'
-        '400':
-          description: |
-            Invalid parameter: **nodeId** is not of Folder Type
-        '401':
-          description: Authentication failed
-        '403':
-          description: Current user does not have permission for **nodeId**
-        '404':
-          description: Entity with **nodeId** does not exist
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    get:
-      tags:
-        - nodes
-      summary: Get the size of folder after initiating POST/calculateSize Endpoint.
-      description: |
-        ***Receiving the size***
-        
-        This endpoint takes ```nodeId``` as a path parameter and returns the result after executing above POST request.
-        
-        Below are the three stages, which reflect the status for the present execution ***nodeId***.
-        
-        ```
-           NOT INITIATED: Not Iniated yet.
-           IN-PROGRESS:   Calculating execution is in progress.
-           COMPLETED:     Calculation has been done.
-        ```
-      operationId: getSize
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/nodeTargetIdParam'
-      responses:
-        '200':
-          description: Successful Response
-          schema:
-            $ref: '#/definitions/calculateSizeResponse'
-        '400':
-          description: |
-            Invalid parameter: **nodeId** is not of Folder Type
-        '401':
-          description: Authentication failed
-        '403':
-          description: Current user does not have permission for **nodeId**
-        '404':
-          description: Entity with **nodeId** does not exist
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/secondary-children':
     post:
       x-alfresco-since: "5.2"
@@ -4530,7 +4434,7 @@ paths:
             **nodeId** does not exist
         '412':
           description: |
-            Content is archived and is inaccessible
+            Content is archived and is inaccessible  
         '501':
           description: The actual ContentStore implementation can't fulfil this request
         default:
@@ -8678,7 +8582,7 @@ paths:
       parameters:
         - $ref: '#/parameters/auditApplicationIdParam'
         - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/omitTotalItemsParam'
+        - $ref: '#/parameters/omitTotalItemsParam'      
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/maxItemsParam'
         - name: where
@@ -10786,30 +10690,6 @@ definitions:
         $ref: '#/definitions/PermissionsInfo'
       definition:
         $ref: '#/definitions/Definition'
-  calculateSizeResponse:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Provides the id for which POST/calculateSize has been initiated.
-      size:
-        type: string
-        description: Provides a folder size in bytes.
-      calculatedAtTime:
-        type: string
-        description: Provides the time when the calculating folder size will be completed.
-      numberOfFiles:
-        type: integer
-        description: Provides the number of files in the folder.
-      status:
-        type: string
-        description: Provides a status that signifies the completion of the calculateSize mechanism.
-  sizeAcknowledgedResponse:
-    type: object
-    properties:
-      executionId:
-        type: string
-        description: Provides nodeId indicating that the request has been acknowledged.
   ProbeEntry:
     type: object
     required:
