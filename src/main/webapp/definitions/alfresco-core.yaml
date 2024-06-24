@@ -10798,6 +10798,9 @@ definitions:
       calculatedAtTime:
         type: string
         description: Provides the time when the calculating folder size will be completed.
+      numberOfFiles:
+        type: integer
+        description: Provides the number of files in the folder.
       status:
         type: string
         description: Provides a status that signifies the completion of the calculateSize mechanism.
