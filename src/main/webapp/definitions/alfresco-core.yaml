@@ -2554,7 +2554,7 @@ paths:
         Below are the three stages, which reflect the status for the present execution ***nodeId***.
         
         ```
-           NOT INITIATED: Not Iniated yet.
+           NOT-INITIATED: Not Initiated yet.
            IN-PROGRESS:   Calculating execution is in progress.
            COMPLETED:     Calculation has been done.
         ```
@@ -10807,7 +10807,7 @@ definitions:
   sizeAcknowledgedResponse:
     type: object
     properties:
-      executionId:
+      nodeId:
         type: string
         description: Provides nodeId indicating that the request has been acknowledged.
   ProbeEntry:
