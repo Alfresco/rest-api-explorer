@@ -2531,7 +2531,7 @@ paths:
             $ref: '#/definitions/sizeAcknowledgedResponse'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not of Folder Type
+            Invalid parameter: value of **nodeId** is invalid
         '401':
           description: Authentication failed
         '403':
@@ -2570,7 +2570,7 @@ paths:
             $ref: '#/definitions/calculateSizeResponse'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not of Folder Type
+            Invalid parameter: value of **nodeId** is invalid
         '401':
           description: Authentication failed
         '403':
