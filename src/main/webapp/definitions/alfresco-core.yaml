@@ -123,6 +123,12 @@ parameters:
     description: The identifier of a target node.
     required: true
     type: string
+  nodeFolderIdParam:
+    name: nodeId
+    in: path
+    description: The identifier of a folder node.
+    required: true
+    type: string
   maxItemsForSizeParam:
     name: maxItems
     in: query
