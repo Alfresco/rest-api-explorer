@@ -128,9 +128,7 @@ parameters:
     in: query
     description: |
       This assists in handling scenarios where ***large files*** or ***subfolders*** exist within a folder,
-      allowing the folder size determination mechanism to function in chunks.
-      
-      So that calculating the huge folder will be done efficiently.  
+      allowing the folder size determination mechanism to function in chunks.So that calculating the huge folder will be done efficiently.  
       If not supplied then the default value is 100.
     required: false
     type: integer
@@ -2505,18 +2503,7 @@ paths:
         The response body will include the ```nodeId``` of the pending action, which can be used in a
         **GET/calculateSize** endpoint to check if the action's status has been completed, at which point the result will be returned, comprising ```the size of the node in bytes```.
         
-        Essentially, ```maxItems``` ***parameter*** is utilized for pagination purposes.
-        
-        By default, **results are limited to the first 100.**
-        Results can be restricted using "paging". For example:
-        
-        ```JSON
-        "paging": {
-          "maxItems": "50",
-          "skipCount": "28"
-        }
-        ```
-        This assists in handling scenarios where large files or subfolders exist within a folder, allowing the folder size determination mechanism to function in chunks.
+        Here, We are taking ```maxItems``` ***parameter*** for splitting a large folder into smaller chunks to calculate efficiently and consolidating all size in single unit.       
 
       operationId: calculateSize
       produces:
@@ -2545,17 +2532,17 @@ paths:
     get:
       tags:
         - nodes
-      summary: Get the size of folder after initiating POST/calculateSize Endpoint.
+      summary: Get the result of a background job to calculate the size of a folder.
       description: |
         ***Receiving the size***
         
         This endpoint takes ```nodeId``` as a path parameter and returns the result after executing above POST request.
         
-        Below are the three stages, which reflect the status for the present execution ***nodeId***.
+        The size calculation job can be in one of three states:
         
         ```
            NOT-INITIATED: Not Initiated yet.
-           IN-PROGRESS:   Calculating execution is in progress.
+           IN-PROGRESS:   Calculation is in progress.
            COMPLETED:     Calculation has been done.
         ```
       operationId: getSize
@@ -10794,16 +10781,22 @@ definitions:
         description: Provides the id for which POST/calculateSize has been initiated.
       size:
         type: string
-        description: Provides a folder size in bytes.
-      calculatedAtTime:
+        description: The folder size in bytes.
+      calculatedAt:
         type: string
-        description: Provides the time when the calculating folder size will be completed.
+        description: Provides the timestamp when the calculation of folder size is completed.
       numberOfFiles:
         type: integer
         description: Provides the number of files in the folder.
       status:
         type: string
-        description: Provides a status that signifies the completion of the calculateSize mechanism.
+        description: |
+                      Provides a status that signifies the completion of the calculateSize mechanism.
+                      ```
+                      NOT-INITIATED: Not Initiated yet.
+                      IN-PROGRESS: Calculation is in progress.
+                      COMPLETED: Calculation has been done.
+                      ```
   sizeAcknowledgedResponse:
     type: object
     properties:
