@@ -127,9 +127,7 @@ parameters:
     name: maxItems
     in: query
     description: |
-      This assists in handling scenarios where ***large files*** or ***subfolders*** exist within a folder,
-      allowing the folder size determination mechanism to function in chunks.So that calculating the huge folder will be done efficiently.  
-      If not supplied then the default value is 100.
+      ```MaxItems``` ***parameter*** to partition a huge folder into smaller chunks so that we can compute more efficiently and consolidate all sizes into a single unit.
     required: false
     type: integer
     minimum: 1
@@ -2503,7 +2501,7 @@ paths:
         The response body will include the ```nodeId``` of the pending action, which can be used in a
         **GET/calculateSize** endpoint to check if the action's status has been completed, at which point the result will be returned, comprising ```the size of the node in bytes```.
         
-        Here, We are taking ```maxItems``` ***parameter*** for splitting a large folder into smaller chunks to calculate efficiently and consolidating all size in single unit.       
+        Here, We are taking ```maxItems``` ***parameter*** to partition a huge folder into smaller chunks so that we can compute more efficiently and consolidate all sizes into a single unit.
 
       operationId: calculateSize
       produces:
