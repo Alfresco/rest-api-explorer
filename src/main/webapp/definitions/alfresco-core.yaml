@@ -2521,15 +2521,15 @@ paths:
           description: Request Accepted
           schema:
             $ref: '#/definitions/sizeAcknowledgedResponse'
-        '400':
-          description: |
-            Invalid parameter: value of **nodeId** is invalid
         '401':
           description: Authentication failed
         '403':
           description: Current user does not have permission for **nodeId**
         '404':
           description: Entity with **nodeId** does not exist
+        '422':
+          description: |
+            Invalid parameter: value of **nodeId** is invalid
         default:
           description: Unexpected error
           schema:
@@ -2560,15 +2560,15 @@ paths:
           description: Successful Response
           schema:
             $ref: '#/definitions/calculateSizeResponse'
-        '400':
-          description: |
-            Invalid parameter: value of **nodeId** is invalid
         '401':
           description: Authentication failed
         '403':
           description: Current user does not have permission for **nodeId**
         '404':
           description: Entity with **nodeId** does not exist
+        '422':
+          description: |
+            Invalid parameter: value of **nodeId** is invalid
         default:
           description: Unexpected error
           schema:
