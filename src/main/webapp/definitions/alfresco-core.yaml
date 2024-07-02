@@ -129,6 +129,16 @@ parameters:
     description: The identifier of a folder node.
     required: true
     type: string
+  maxItemsForSizeParam:
+    name: maxItems
+    in: query
+    description: |
+      ```MaxItems``` ***parameter*** to partition a huge folder into smaller chunks so that we can compute more efficiently and consolidate all sizes into a single unit.
+    required: false
+    type: integer
+    minimum: 1
+    maximum: 1000
+    default: 100
   nodeMinimalEntryIncludeParam:
     name: include
     in: query
@@ -2484,7 +2494,85 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/calculateSize':
+    post:
+      tags:
+        - nodes
+      summary: Calculate a folder size
+      description: |
+        
+        This may be executed against a node specified by **nodeId** and this nodeId must be a valid node ID.
+        Furthermore, this POST endpoint will be executed **asynchronously** with a `202` HTTP response signifying that
+        the request has been accepted successfully.
+        
+        The response body will include the ```nodeId``` of the pending action, which can be used in a
+        **GET/calculateSize** endpoint to check if the action's status has been completed, at which point the result will be returned, comprising ```the size of the node in bytes```.
+        
+        Here, We are taking ```maxItems``` ***parameter*** to partition a huge folder into smaller chunks so that we can compute more efficiently and consolidate all sizes into a single unit.
 
+      operationId: calculateSize
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeTargetIdParam'
+        - $ref: '#/parameters/maxItemsForSizeParam'
+      responses:
+        '202':
+          description: Request Accepted
+          schema:
+            $ref: '#/definitions/sizeAcknowledgedResponse'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: Entity with **nodeId** does not exist
+        '422':
+          description: |
+            Invalid parameter: value of **nodeId** is invalid
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - nodes
+      summary: Get the result of a background job to calculate the size of a folder.
+      description: |
+        ***Receiving the size***
+        
+        This endpoint takes ```nodeId``` as a path parameter and returns the result after executing above POST request.
+        
+        The size calculation job can be in one of three states:
+        
+        ```
+           NOT-INITIATED: Not Initiated yet.
+           IN-PROGRESS:   Calculation is in progress.
+           COMPLETED:     Calculation has been done.
+        ```
+      operationId: getSize
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeTargetIdParam'
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/calculateSizeResponse'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: Entity with **nodeId** does not exist
+        '422':
+          description: |
+            Invalid parameter: value of **nodeId** is invalid
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/secondary-children':
     post:
       x-alfresco-since: "5.2"
@@ -4434,7 +4522,7 @@ paths:
             **nodeId** does not exist
         '412':
           description: |
-            Content is archived and is inaccessible  
+            Content is archived and is inaccessible
         '501':
           description: The actual ContentStore implementation can't fulfil this request
         default:
@@ -8582,7 +8670,7 @@ paths:
       parameters:
         - $ref: '#/parameters/auditApplicationIdParam'
         - $ref: '#/parameters/skipCountParam'
-        - $ref: '#/parameters/omitTotalItemsParam'      
+        - $ref: '#/parameters/omitTotalItemsParam'
         - $ref: '#/parameters/orderByParam'
         - $ref: '#/parameters/maxItemsParam'
         - name: where
@@ -10690,6 +10778,36 @@ definitions:
         $ref: '#/definitions/PermissionsInfo'
       definition:
         $ref: '#/definitions/Definition'
+  calculateSizeResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Provides the id for which POST/calculateSize has been initiated.
+      size:
+        type: string
+        description: The folder size in bytes.
+      calculatedAt:
+        type: string
+        description: Provides the timestamp when the calculation of folder size is completed.
+      numberOfFiles:
+        type: integer
+        description: Provides the number of files in the folder.
+      status:
+        type: string
+        description: |
+                      Provides a status that signifies the completion of the calculateSize mechanism.
+                      ```
+                      NOT-INITIATED: Not Initiated yet.
+                      IN-PROGRESS: Calculation is in progress.
+                      COMPLETED: Calculation has been done.
+                      ```
+  sizeAcknowledgedResponse:
+    type: object
+    properties:
+      executionId:
+        type: string
+        description: Provides nodeId indicating that the request has been acknowledged.
   ProbeEntry:
     type: object
     required:
