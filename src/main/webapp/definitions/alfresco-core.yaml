@@ -137,6 +137,7 @@ parameters:
     required: false
     type: integer
     minimum: 1
+    maximum: 1000
     default: 100
   nodeMinimalEntryIncludeParam:
     name: include
@@ -10804,7 +10805,7 @@ definitions:
   sizeAcknowledgedResponse:
     type: object
     properties:
-      nodeId:
+      executionId:
         type: string
         description: Provides nodeId indicating that the request has been acknowledged.
   ProbeEntry:
