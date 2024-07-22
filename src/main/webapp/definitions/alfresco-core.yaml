@@ -129,6 +129,12 @@ parameters:
     description: The identifier of a folder node.
     required: true
     type: string
+  executedIdParam:
+    name: executionId
+    in: path
+    description: The identifier of a Execution Job.
+    required: true
+    type: string
   maxItemsForSizeParam:
     name: maxItems
     in: query
@@ -2534,6 +2540,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{executionId}/calculateSize':
     get:
       tags:
         - nodes
@@ -2554,7 +2561,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/nodeTargetIdParam'
+        - $ref: '#/parameters/executedIdParam'
       responses:
         '200':
           description: Successful Response
