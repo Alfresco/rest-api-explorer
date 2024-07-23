@@ -2569,13 +2569,8 @@ paths:
             $ref: '#/definitions/calculateSizeResponse'
         '401':
           description: Authentication failed
-        '403':
-          description: Current user does not have permission for **nodeId**
         '404':
-          description: Entity with **nodeId** does not exist
-        '422':
-          description: |
-            Invalid parameter: value of **nodeId** is invalid
+          description: Searched **ExecutionId** does not exist
         default:
           description: Unexpected error
           schema:
