@@ -129,12 +129,6 @@ parameters:
     description: The identifier of a folder node.
     required: true
     type: string
-  executedIdParam:
-    name: executionId
-    in: path
-    description: The identifier of a Execution Job.
-    required: true
-    type: string
   maxItemsForSizeParam:
     name: maxItems
     in: query
@@ -2214,6 +2208,86 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/calculate-folder-size':
+    post:
+      tags:
+        - nodes
+      summary: Calculate a folder size
+      description: |
+
+        This may be executed against a node specified by **nodeId** and this nodeId must be a valid node ID.
+        Furthermore, this POST endpoint will be executed **asynchronously** with a `202` HTTP response signifying that
+        the request has been accepted successfully.
+
+        The response body will include the ```nodeId``` of the pending action, which can be used in a
+        **GET/calculateSize** endpoint to check if the action's status has been completed, at which point the result will be returned, comprising ```the size of the node in bytes```.
+
+        Here, We are taking ```maxItems``` ***parameter*** to partition a huge folder into smaller chunks so that we can compute more efficiently and consolidate all sizes into a single unit.
+
+      operationId: calculateSize
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeTargetIdParam'
+        - $ref: '#/parameters/maxItemsForSizeParam'
+      responses:
+        '202':
+          description: Request Accepted
+          schema:
+            $ref: '#/definitions/sizeAcknowledgedResponse'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: Entity with **nodeId** does not exist
+        '422':
+          description: |
+            Invalid parameter: value of **nodeId** is invalid
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/get-folder-size':
+    get:
+      tags:
+        - nodes
+      summary: Get the result of a background job to calculate the size of a folder.
+      description: |
+        ***Receiving the size***
+
+        This endpoint takes ```nodeId``` as a path parameter and returns the result after executing above POST request.
+
+        The size calculation job can be in one of three states:
+
+        ```
+           NOT-INITIATED: Not Initiated yet.
+           IN-PROGRESS:   Calculation is in progress.
+           COMPLETED:     Calculation has been done.
+        ```
+      operationId: getSize
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeTargetIdParam'
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/calculateSizeResponse'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
+        '404':
+          description: Entity with **nodeId** does not exist
+        '422':
+          description: |
+            Invalid parameter: value of **nodeId** is invalid
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/nodes/{nodeId}/renditions':
     post:
       x-alfresco-since: "5.2"
@@ -2496,81 +2570,6 @@ paths:
             Content is archived and is inaccessible
         '501':
           description: The actual ContentStore implementation can't fulfil this request
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/calculateSize':
-    post:
-      tags:
-        - nodes
-      summary: Calculate a folder size
-      description: |
-        
-        This may be executed against a node specified by **nodeId** and this nodeId must be a valid node ID.
-        Furthermore, this POST endpoint will be executed **asynchronously** with a `202` HTTP response signifying that
-        the request has been accepted successfully.
-        
-        The response body will include the ```nodeId``` of the pending action, which can be used in a
-        **GET/calculateSize** endpoint to check if the action's status has been completed, at which point the result will be returned, comprising ```the size of the node in bytes```.
-        
-        Here, We are taking ```maxItems``` ***parameter*** to partition a huge folder into smaller chunks so that we can compute more efficiently and consolidate all sizes into a single unit.
-
-      operationId: calculateSize
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/nodeTargetIdParam'
-        - $ref: '#/parameters/maxItemsForSizeParam'
-      responses:
-        '202':
-          description: Request Accepted
-          schema:
-            $ref: '#/definitions/sizeAcknowledgedResponse'
-        '401':
-          description: Authentication failed
-        '403':
-          description: Current user does not have permission for **nodeId**
-        '404':
-          description: Entity with **nodeId** does not exist
-        '422':
-          description: |
-            Invalid parameter: value of **nodeId** is invalid
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  '/nodes/{executionId}/calculateSize':
-    get:
-      tags:
-        - nodes
-      summary: Get the result of a background job to calculate the size of a folder.
-      description: |
-        ***Receiving the size***
-        
-        This endpoint takes ```nodeId``` as a path parameter and returns the result after executing above POST request.
-        
-        The size calculation job can be in one of three states:
-        
-        ```
-           NOT-INITIATED: Not Initiated yet.
-           IN-PROGRESS:   Calculation is in progress.
-           COMPLETED:     Calculation has been done.
-        ```
-      operationId: getSize
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/executedIdParam'
-      responses:
-        '200':
-          description: Successful Response
-          schema:
-            $ref: '#/definitions/calculateSizeResponse'
-        '401':
-          description: Authentication failed
-        '404':
-          description: Searched **ExecutionId** does not exist
         default:
           description: Unexpected error
           schema:
