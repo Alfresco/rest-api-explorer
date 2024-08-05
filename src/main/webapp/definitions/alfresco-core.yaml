@@ -10782,9 +10782,9 @@ definitions:
   calculateSizeResponse:
     type: object
     properties:
-      id:
+      nodeId:
         type: string
-        description: Provides the id for which POST/calculateSize has been initiated.
+        description: Provides the nodeId for which POST/calculateSize has been initiated.
       size:
         type: string
         description: The folder size in bytes.
@@ -10806,7 +10806,7 @@ definitions:
   sizeAcknowledgedResponse:
     type: object
     properties:
-      executionId:
+      nodeId:
         type: string
         description: Provides nodeId indicating that the request has been acknowledged.
   ProbeEntry:
