@@ -2198,7 +2198,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/calculate-folder-size':
+  '/nodes/{nodeId}/request-size-details':
     post:
       tags:
         - nodes
@@ -2209,48 +2209,19 @@ paths:
         Furthermore, this POST endpoint will be executed **asynchronously** with a `202` HTTP response signifying that
         the request has been accepted successfully.
 
-        The response body will include the ```nodeId``` of the pending action, which can be used in a
-        **GET/size** endpoint to check if the action's status has been completed, at which point the result will be returned, comprising ```the size of the node in bytes```.
-
-      operationId: calculateSize
-      produces:
-        - application/json
-      parameters:
-        - $ref: '#/parameters/nodeTargetIdParam'
-      responses:
-        '202':
-          description: Request Accepted
-          schema:
-            $ref: '#/definitions/sizeAcknowledgedResponse'
-        '401':
-          description: Authentication failed
-        '403':
-          description: Current user does not have permission for **nodeId**
-        '422':
-          description: |
-            Invalid parameter: value of **nodeId** is invalid
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/size':
-    get:
-      tags:
-        - nodes
-      summary: Get the result of a background job to calculate the size of a folder.
-      description: |
-        ***Receiving the size***
-
-        This endpoint takes ```nodeId``` as a path parameter and returns the result after executing above POST request.
+        The response body (after calculating folder size) will include the ```nodeId``` of the pending/completed action, along with the ```the size of the node in bytes```.
+        
+        ***Receiving the size details***
 
         The size calculation job can be in one of three states:
-
+        
         ```
            NOT-INITIATED: Not Initiated yet.
            IN-PROGRESS:   Calculation is in progress.
            COMPLETED:     Calculation has been done.
         ```
-      operationId: getSize
+
+      operationId: calculateSize
       produces:
         - application/json
       parameters:
@@ -2260,6 +2231,10 @@ paths:
           description: Successful Response
           schema:
             $ref: '#/definitions/calculateSizeResponse'
+        '202':
+          description: Request Accepted
+          schema:
+            $ref: '#/definitions/sizeAcknowledgedResponse'
         '401':
           description: Authentication failed
         '403':
@@ -10767,7 +10742,7 @@ definitions:
     properties:
       nodeId:
         type: string
-        description: Provides the nodeId for which POST/calculate-folder-size has been initiated.
+        description: Provides the nodeId for which POST/request-size-details has been initiated.
       size:
         type: string
         description: The folder size in bytes.
@@ -10785,7 +10760,15 @@ definitions:
                       NOT-INITIATED: Not Initiated yet.
                       IN-PROGRESS: Calculation is in progress.
                       COMPLETED: Calculation has been done.
+                      
                       ```
+  nodeSizeDetailsBody:
+    type: object
+    required:
+      - folderName
+    properties:
+      folderName:
+        type: string
   sizeAcknowledgedResponse:
     type: object
     properties:
