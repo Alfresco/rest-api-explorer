@@ -2221,7 +2221,7 @@ paths:
            COMPLETED:     Calculation has been done.
         ```
 
-      operationId: calculateSize
+      operationId: calculateAndRetrieveSize
       produces:
         - application/json
       parameters:
