@@ -10763,13 +10763,6 @@ definitions:
                       COMPLETED: Calculation has been done.
                       
                       ```
-  nodeSizeDetailsBody:
-    type: object
-    required:
-      - folderName
-    properties:
-      folderName:
-        type: string
   ProbeEntry:
     type: object
     required:
