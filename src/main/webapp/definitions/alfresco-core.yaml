@@ -2233,12 +2233,13 @@ paths:
             $ref: '#/definitions/calculateSizeResponse'
         '202':
           description: Request Accepted
-          schema:
-            $ref: '#/definitions/sizeAcknowledgedResponse'
         '401':
           description: Authentication failed
         '403':
           description: Current user does not have permission for **nodeId**
+        '404':
+          description: |
+            **nodeId** or **folderId** does not exist
         '422':
           description: |
             Invalid parameter: value of **nodeId** is invalid
@@ -10769,12 +10770,6 @@ definitions:
     properties:
       folderName:
         type: string
-  sizeAcknowledgedResponse:
-    type: object
-    properties:
-      message:
-        type: string
-        description: Provides response indicating that the request has been acknowledged.
   ProbeEntry:
     type: object
     required:
