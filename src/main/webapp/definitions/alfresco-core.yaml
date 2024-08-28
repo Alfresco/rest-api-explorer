@@ -2198,7 +2198,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/request-size-details':
+  '/nodes/{nodeId}/request-size-detail':
     post:
       tags:
         - nodes
@@ -10743,7 +10743,7 @@ definitions:
     properties:
       nodeId:
         type: string
-        description: Provides the nodeId for which POST/request-size-details has been initiated.
+        description: Provides the nodeId for which POST/request-size-detail has been initiated.
       size:
         type: string
         description: The folder size in bytes.
