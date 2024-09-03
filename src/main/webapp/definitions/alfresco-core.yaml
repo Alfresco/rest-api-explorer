@@ -123,6 +123,12 @@ parameters:
     description: The identifier of a target node.
     required: true
     type: string
+  jobIdParam:
+    name: jobId
+    in: path
+    description: The identifier of a job.
+    required: true
+    type: string
   nodeFolderIdParam:
     name: nodeId
     in: path
@@ -2198,41 +2204,28 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  '/nodes/{nodeId}/request-size-detail':
+  '/nodes/{nodeId}/size-details':
     post:
       tags:
         - nodes
-      summary: Calculate a folder size
+      summary: Accepts request to generate Node Size Details
       description: |
 
         This may be executed against a node specified by **nodeId** and this nodeId must be a valid node ID.
         Furthermore, this POST endpoint will be executed **asynchronously** with a `202` HTTP response signifying that
         the request has been accepted successfully.
 
-        The response body (after calculating folder size) will include the ```nodeId``` of the pending/completed action, along with the ```the size of the node in bytes```.
-        
-        ***Receiving the size details***
-
-        The size calculation job can be in one of three states:
-        
-        ```
-           NOT-INITIATED: Not Initiated yet.
-           IN-PROGRESS:   Calculation is in progress.
-           COMPLETED:     Calculation has been done.
-        ```
-
-      operationId: calculateAndRetrieveSize
+        The response body will include the ```jobId``` of the pending/completed action.
+      operationId: getNodeSizeDetailsRequest
       produces:
         - application/json
       parameters:
         - $ref: '#/parameters/nodeTargetIdParam'
       responses:
-        '200':
-          description: Successful Response
-          schema:
-            $ref: '#/definitions/calculateSizeResponse'
         '202':
           description: Request Accepted
+          schema:
+            $ref: '#/definitions/sizeDetailsRequestResultEntry'
         '401':
           description: Authentication failed
         '403':
@@ -2240,6 +2233,44 @@ paths:
         '404':
           description: |
             **nodeId** or **folderId** does not exist
+        '422':
+          description: |
+            Invalid parameter: value of **nodeId** is invalid
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/nodes/{nodeId}/size-details/{jobId}':
+    get:
+      tags:
+        - nodes
+      summary: Get the result of a background job to get the size of a node.
+      description: |
+        ***Receiving the size***
+        This endpoint takes ```nodeId``` and ```jobId``` as the path parameters and returns the result after executing above GET request.
+        The size details job can be in one of three states:
+        
+        ```
+           NOT-INITIATED: Not Initiated yet.
+           IN-PROGRESS:   Calculation is in progress.
+           COMPLETED:     Calculation has been done.
+        ```
+
+      operationId: getNodeSizeDetails
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/nodeTargetIdParam'
+        - $ref: '#/parameters/jobIdParam'
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/getNodeSizeDetailsResponse'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission for **nodeId**
         '422':
           description: |
             Invalid parameter: value of **nodeId** is invalid
@@ -10738,7 +10769,7 @@ definitions:
         $ref: '#/definitions/PermissionsInfo'
       definition:
         $ref: '#/definitions/Definition'
-  calculateSizeResponse:
+  getNodeSizeDetailsResponse:
     type: object
     properties:
       nodeId:
@@ -10763,6 +10794,9 @@ definitions:
                       COMPLETED: Calculation has been done.
                       
                       ```
+      jobId:
+        type: string
+        description: Provides the getId for which POST/size-details has been initiated.
   ProbeEntry:
     type: object
     required:
@@ -11371,6 +11405,21 @@ definitions:
       id:
         type: string
         description: The unique identifier of the action pending execution
+  sizeDetailsRequestResultEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/sizeDetailsRequestExecResult'
+  sizeDetailsRequestExecResult:
+    type: object
+    required:
+      - jobId
+    properties:
+      jobId:
+        type: string
+        description: The unique identifier of the size details execution request
   Definition:
     properties:
       properties:
