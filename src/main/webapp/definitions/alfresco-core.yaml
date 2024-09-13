@@ -10775,10 +10775,10 @@ definitions:
   getNodeSizeDetailsResponse:
     type: object
     properties:
-      nodeId:
+      id:
         type: string
-        description: Provides the nodeId for which POST/request-size-detail has been initiated.
-      size:
+        description: Provides the nodeId for which POST/size-details has been initiated.
+      sizeInBytes:
         type: string
         description: The folder size in bytes.
       calculatedAt:
