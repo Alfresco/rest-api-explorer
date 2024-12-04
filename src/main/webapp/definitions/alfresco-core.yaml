@@ -5488,6 +5488,9 @@ paths:
             $ref: '#/definitions/PreferenceEntry'
         '401':
           description: Authentication failed
+        '400':
+          description: |
+            Invalid parameter: **preferenceBodyUpdate** is invalid
         '403':
           description: Current user does not have access to the preferences for **personId**
         '404':
