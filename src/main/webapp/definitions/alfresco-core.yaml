@@ -5456,6 +5456,50 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    put:
+      tags:
+        - preferences
+      summary: Update a preference
+      description: |
+        Updates a specific preference for person **personId**.
+
+        You can use the `-me-` string in place of `<personId>` to specify the currently authenticated user.
+      operationId: updatePreference
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - name: preferenceName
+          in: path
+          description: The name of the preference.
+          required: true
+          type: string
+        - $ref: '#/parameters/fieldsParam'
+        - in: body
+          name: preferenceBodyUpdate
+          description: The preference information to update.
+          required: true
+          schema:
+            $ref: '#/definitions/PreferenceBodyUpdate'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PreferenceEntry'
+        '401':
+          description: Authentication failed
+        '400':
+          description: |
+            Invalid parameter: **preferenceBodyUpdate** is invalid
+        '403':
+          description: Current user does not have access to the preferences for **personId**
+        '404':
+          description: |
+            **personId** or **preferenceName** does not exist
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/people/{personId}/site-membership-requests':
     get:
       tags:
@@ -10243,6 +10287,17 @@ definitions:
     type: object
     description: |
       A specific preference.
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        description: The unique id of the preference
+      value:
+        type: string
+        description: The value of the preference. Note that this can be of any JSON type.
+  PreferenceBodyUpdate:
+    type: object
     required:
       - id
     properties:
