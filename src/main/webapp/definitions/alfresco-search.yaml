@@ -828,7 +828,7 @@ definitions:
         type: string
         pattern: "^(?!(.*[\\\"\\*\\\\\\>\\<\\?\\/\\:\\|]+.*)|(.*[\\.]?.*[\\.]+$)|(.*[ ]+$))"
         description: |
-          The name must not contain spaces or the following special characters: * " < > \ / ? : and |.
+          The name must not contain spaces or the following special characters: * " gt; lt; \ / ? : and |.
           The character . must not be used at the end of the name.
       nodeType:
         type: string
@@ -1071,7 +1071,7 @@ definitions:
     properties:
       facets:
         description: |
-          Define specifc fields on which to facet (adds SOLR facet.field and f.<field>.facet.* options)
+          Define specifc fields on which to facet (adds SOLR facet.field and f.field.facet.* options)
         type: array
         items:
           $ref: '#/definitions/RequestFacetField'
