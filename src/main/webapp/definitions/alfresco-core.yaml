@@ -6123,6 +6123,40 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/people/{personId}/deauthorize':
+    post:
+      x-alfresco-since: "25.x"
+      tags:
+        - people
+      summary: Deauthorize the user
+      description: |
+        **Note:** this endpoint is available in Alfresco Enterprise 25.x and newer versions.
+
+        Deauthorizes the user related to the person's **personId**. After this action the user can't be reauthorized.
+
+        You must have admin rights to deauthorize the user.
+      operationId: deauthorizeUser
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: | 
+            Invalid parameter: **personId** is not a valid format
+        '401':
+          description: Authentication failed
+        '403':
+          description: The current user does not have permission to deauthorize the person for **personId**
+        '422':
+          description: |
+            Integrity exception (eg. the user has the admin rights and cannot be deauthorized or the user was never authorized).
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /sites:
     get:
       tags:
