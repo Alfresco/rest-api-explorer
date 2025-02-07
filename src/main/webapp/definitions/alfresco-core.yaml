@@ -6203,7 +6203,9 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco Enterprise 25.x and newer versions.
 
-        Reauthorizes the user related to the person's **personId**.
+        Reauthorizes the user related to the person's **personId**. 
+        To obtain the encrypted authorization key, the authorization code must be generated and sent to the Alfresco Support. 
+        See: [POST /people/{personId}/reauthorization-code](#people/reauthorizationCode)
 
         You must have admin rights to use this endpoint.
       operationId: reauthorizeUser
