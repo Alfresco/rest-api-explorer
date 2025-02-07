@@ -6132,7 +6132,7 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco Enterprise 25.x and newer versions.
 
-        Deauthorizes the user related to the person's **personId**. After this action the user can't be reauthorized.
+        Deauthorizes the user related to the person's **personId**. After this action the user can't be reauthorized without contact with the Alfresco Support.
 
         You must have admin rights to deauthorize the user.
       operationId: deauthorizeUser
@@ -6145,6 +6145,85 @@ paths:
           description: Successful response
         '400':
           description: | 
+            Invalid parameter: **personId** is not a valid format
+        '401':
+          description: Authentication failed
+        '403':
+          description: The current user does not have permission to deauthorize the person for **personId**
+        '422':
+          description: |
+            Integrity exception (eg. the user has the admin rights and cannot be deauthorized or the user was never authorized).
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/people/{personId}/reauthorization-code':
+    post:
+      x-alfresco-since: "25.x"
+      tags:
+        - people
+      summary: Generate the reauthorization code for the user
+      description: |
+        **Note:** this endpoint is available in Alfresco Enterprise 25.x and newer versions.
+
+        Generates the authorization code that can be sent to the Alfresco Support to obtain the encrypted authorization key.
+        The encrypted authorization key can be used to reauthorize the user by invoking [POST /people/{personId}/reauthorize](#people/reauthorizeUser) endpoint.
+
+        You must have admin rights to use this endpoint.
+      operationId: reauthorizationCode
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AuthCodeEntry'
+        '400':
+          description: |
+            Invalid parameter: **personId** is not a valid format
+        '401':
+          description: Authentication failed
+        '403':
+          description: Not sufficient access rights
+        '422':
+          description: |
+            Integrity exception
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/people/{personId}/reauthorize':
+    post:
+      x-alfresco-since: "25.x"
+      tags:
+        - people
+      summary: Reauthorize the user
+      description: |
+        **Note:** this endpoint is available in Alfresco Enterprise 25.x and newer versions.
+
+        Reauthorizes the user related to the person's **personId**.
+
+        You must have admin rights to use this endpoint.
+      operationId: reauthorizeUser
+      parameters:
+        - $ref: '#/parameters/personIdParam'
+        - in: body
+          name: authorizationKey
+          description: The encrypted authorization key received them the Alfresco Support
+          required: true
+          schema:
+            $ref: '#/definitions/AuthKey'
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        '204':
+          description: Successful response
+        '400':
+          description: |
             Invalid parameter: **personId** is not a valid format
         '401':
           description: Authentication failed
@@ -11673,3 +11752,28 @@ definitions:
       parameter:
         description: The value to compare the field against
         type: string
+  AuthCodeEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/AuthCode'
+  AuthCode:
+    type: object
+    required:
+      - authorizationCode
+    properties:
+      authorizationCode:
+        type: string
+        example: johntest@5523945981643765984
+  AuthKey:
+    description: The encrypted authorization key received form the Alfresco Support.
+    type: object
+    required:
+      - authorizationKey
+    properties:
+      authorizationKey:
+        description: The Base64 encoded authorization key.
+        type: string
+        example: 5v02VjCqJmmOfs8My8yV1A7tcym2bIjA
