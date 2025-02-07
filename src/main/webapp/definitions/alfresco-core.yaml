@@ -6133,6 +6133,7 @@ paths:
         **Note:** this endpoint is available in Alfresco Enterprise 25.x and newer versions.
 
         Deauthorizes the user related to the person's **personId**. After this action the user can't be reauthorized without contact with the Alfresco Support.
+        See: [POST /people/{personId}/reauthorization-code](#people/reauthorizationCode)
 
         You must have admin rights to deauthorize the user.
       operationId: deauthorizeUser
