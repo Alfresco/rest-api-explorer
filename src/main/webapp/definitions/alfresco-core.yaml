@@ -6214,7 +6214,7 @@ paths:
         - $ref: '#/parameters/personIdParam'
         - in: body
           name: authorizationKey
-          description: The encrypted authorization key received them the Alfresco Support
+          description: The encrypted authorization key received from the Alfresco Support
           required: true
           schema:
             $ref: '#/definitions/AuthKey'
@@ -11771,7 +11771,7 @@ definitions:
         type: string
         example: johntest@5523945981643765984
   AuthKey:
-    description: The encrypted authorization key received form the Alfresco Support.
+    description: The encrypted authorization key received from the Alfresco Support.
     type: object
     required:
       - authorizationKey
