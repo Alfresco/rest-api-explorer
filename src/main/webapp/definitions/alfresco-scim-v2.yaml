@@ -20,7 +20,7 @@ info:
     
     ## Limitations
     - Maximum page size limit enforced
-    - Limited filtering support
+    - Limited filtering support for Users Endpoint
   version: "1"
 
 basePath: /alfresco/api/-default-/public/scim/v2
@@ -94,21 +94,31 @@ parameters:
     description: Non-negative integer specifying desired maximum number of query results per page
     x-example: 10
 
-  Filter:
+  FilterUser:
     name: filter
     in: query
     type: string
     description: |
-      SCIM filter expression. Limited support for specific attributes.
+      SCIM filter expression.
       
-      ## Supported Filters
-      - Users: `userName eq "value"`
-      - Groups: `displayName eq "value"`
+      ## Limitations
+      - Users: Only equality filtering on `userName` is supported.
       
       ## Examples
       - `userName eq "john.doe"`
       - `displayName eq "Admin"`
     x-example: 'userName eq "john.doe"'
+
+  FilterGroup:
+    name: filter
+    in: query
+    type: string
+    description: |
+      SCIM filter expression.
+      
+      ## Examples
+      - `displayName eq "Administrators"`
+    x-example: 'displayName eq "GROUP_EMAIL_CONTRIBUTORS"'
 
   SortBy:
     name: sortBy
@@ -181,7 +191,7 @@ paths:
       parameters:
         - $ref: '#/parameters/StartIndex'
         - $ref: '#/parameters/Count'
-        - $ref: '#/parameters/Filter'
+        - $ref: '#/parameters/FilterUser'
         - $ref: '#/parameters/SortBy'
         - $ref: '#/parameters/SortOrder'
         - $ref: '#/parameters/Attributes'
@@ -264,7 +274,7 @@ paths:
   /Users/{id}:
     get:
       summary: Get User
-      description: Retrieve a specific user by ID .
+      description: Retrieve a specific user by ID.
       operationId: getUser
       tags:
         - Users
@@ -403,7 +413,7 @@ paths:
         
         ## Filtering
         - Supports equality filtering by username using SCIM filter expressions
-        - Example: `filter: "userName eq "john.doe"`
+        - Example: `filter: "userName eq \"john.doe\""`
         
         ## Sorting
         - Supports sorting by a single attribute
@@ -449,11 +459,11 @@ paths:
         Retrieve a paginated list of groups. Supports filtering, sorting, and attribute selection.
         
         ## Filtering
-        - Supports filtering by displayName using SCIM filter expressions
+        - Supports filtering using SCIM filter expressions
         - Example: `filter=displayName eq "Administrators"`
         
         ## Sorting
-        - Supports sorting by displayName
+        - Supports sorting by a single attribute
         - Default sort order is ascending
         
         ## Member References
@@ -465,7 +475,7 @@ paths:
       parameters:
         - $ref: '#/parameters/StartIndex'
         - $ref: '#/parameters/Count'
-        - $ref: '#/parameters/Filter'
+        - $ref: '#/parameters/FilterGroup'
         - $ref: '#/parameters/SortBy'
         - $ref: '#/parameters/SortOrder'
         - $ref: '#/parameters/Attributes'
@@ -528,7 +538,7 @@ paths:
     get:
       summary: Get Group
       description: |
-        Retrieve a specific group by ID with optional attribute filtering.
+        Retrieve a specific group by ID.
         
         ## Member Information
         - Members include full reference URLs
@@ -564,7 +574,8 @@ paths:
         - All mutable attributes are replaced with provided values
         - Missing mutable attributes are cleared
         - Member list is completely replaced
-        - Immutable attributes (like id) are ignored if provided
+        - Immutable attributes if provided throws exception
+        - Read-Only attributes if provided are ignored
       operationId: replaceGroup
       tags:
         - Groups
