@@ -60,6 +60,11 @@ public class YamlToJson {
     public static final String MODEL_JSON_DEFINITION = JSON_DESTINATION + "alfresco-model.json";
     public static final String MODEL_DEFINITION_TITLE = "Alfresco Model REST API";
 
+    public static final String SCIM_V2_DEFINITION = "/src/main/webapp/definitions/alfresco-scim-v2.yaml";
+    public static final String SCIM_V2_JSON_DEFINITION = JSON_DESTINATION + "alfresco-scim-v2.json";
+    public static final String SCIM_V2_DEFINITION_TITLE = "Alfresco Scim V2 REST API";
+
+
     public static void main(String[] args) {
 
         String rootPath = args[0];
@@ -96,6 +101,10 @@ public class YamlToJson {
             //Model
             swagger = parseSwaggerDef(new File(rootPath + MODEL_DEFINITION), MODEL_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + MODEL_JSON_DEFINITION), swagger);
+
+            //Scim
+            swagger = parseSwaggerDef(new File(rootPath + SCIM_V2_DEFINITION), SCIM_V2_DEFINITION_TITLE);
+            Json.mapper().writeValue(new File(rootPath + SCIM_V2_JSON_DEFINITION), swagger);
 
         } catch (IOException e) {
             System.err.println("Failed to create a json definitions: " + e.getLocalizedMessage());
