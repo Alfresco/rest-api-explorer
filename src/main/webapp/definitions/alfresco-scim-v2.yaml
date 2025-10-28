@@ -106,7 +106,6 @@ parameters:
       
       ## Examples
       - `userName eq "john.doe"`
-      - `displayName eq "Admin"`
     x-example: 'userName eq "john.doe"'
 
   FilterGroup:
@@ -175,7 +174,7 @@ paths:
         Retrieve a paginated list of users. Supports filtering, sorting, and attribute selection.
         
         ## Filtering
-        - Supports equality filtering by username using SCIM filter expressions
+        - Supports only equality filtering by username using SCIM filter expressions
         - Example: `filter=userName eq "john.doe"`
         
         ## Sorting
@@ -184,7 +183,7 @@ paths:
         
         ## Limitations
         - Maximum page size is configurable (default: 1000)
-        - Only username filtering is currently supported
+        - Only filtering using username is currently supported
       operationId: getUsers
       tags:
         - Users
@@ -304,7 +303,7 @@ paths:
         ## Behavior
         - All mutable attributes are replaced with provided values
         - Missing mutable attributes are cleared
-        - Immutable attributes (like userName) if provided throws exception
+        - Immutable attributes (like userName) if provided and doesn't match with existing throws exception
         - Read-Only attributes (like active) if provided is ignored
       operationId: replaceUser
       tags:
