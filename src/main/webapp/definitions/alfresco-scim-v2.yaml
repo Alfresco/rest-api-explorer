@@ -1443,7 +1443,7 @@ definitions:
         description: Resource type's base schema URI
         example: "urn:ietf:params:scim:schemas:core:2.0:User"
       meta:
-        $ref: '#/definitions/MetaUser'
+        $ref: '#/definitions/MetaResourceType'
 
   ResourceTypeListResponse:
     type: object
