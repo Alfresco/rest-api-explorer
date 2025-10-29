@@ -164,7 +164,7 @@ parameters:
       ## Examples
       - `emails,title`
       - `name.givenName`
-    x-example: "password,meta.version"
+    x-example: "meta.version"
 
 paths:
   /Users:
@@ -411,7 +411,7 @@ paths:
         more complex search criteria to be passed in the request body.
         
         ## Filtering
-        - Supports equality filtering by username using SCIM filter expressions
+        - Supports Only equality filtering by username using SCIM filter expressions
         - Example: `filter: "userName eq \"john.doe\""`
         
         ## Sorting
@@ -793,9 +793,6 @@ paths:
         ## Available Schemas
         - User schema: Defines user attributes and structure
         - Group schema: Defines group attributes and structure
-        - ServiceProviderConfig schema: Configuration schema
-        - ResourceType schema: Resource type definition schema
-        - Schema schema: Meta-schema for schema definitions
       operationId: getSchemas
       tags:
         - Discovery
@@ -1548,7 +1545,7 @@ definitions:
               items:
                 type: string
               description: Collection of suggested canonical values
-              example: ["work", "home", "other"]
+              example: ["work"]
             subAttributes:
               type: array
               description: Used for complex attributes to define sub-attributes
