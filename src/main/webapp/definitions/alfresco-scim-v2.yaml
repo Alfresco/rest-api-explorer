@@ -56,7 +56,7 @@ parameters:
     required: true
     type: string
     description: The unique identifier of the group
-    x-example: "e9e30dba-f08f-4109-8486-d5c6a331660a"
+    x-example: "GROUP_EMAIL_CONTRIBUTORS"
 
   ResourceTypeId:
     name: id
@@ -1017,11 +1017,7 @@ definitions:
         type: string
         readOnly: true
         description: Unique identifier for the group
-        example: "e9e30dba-f08f-4109-8486-d5c6a331660a"
-      externalId:
-        type: string
-        description: External unique identifier for the group
-        example: "external-group-123"
+        example: "GROUP_EMAIL_CONTRIBUTORS"
       displayName:
         type: string
         description: Human-readable name for the group
