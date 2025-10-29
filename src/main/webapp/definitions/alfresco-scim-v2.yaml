@@ -351,7 +351,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/PatchRequest'
+            $ref: '#/definitions/PatchRequestUser'
           x-examples:
             application/scim+json:
               schemas:
@@ -611,7 +611,7 @@ paths:
         
         ## Special Considerations
         - displayName cannot be removed (required attribute)
-        - Member operations support adding/removing individual members
+        - Member operations support adding/removing individual members (provided they exists)
       operationId: patchGroup
       tags:
         - Groups
@@ -621,7 +621,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/PatchRequest'
+            $ref: '#/definitions/PatchRequestGroup'
           x-examples:
             application/scim+json:
               schemas:
@@ -1124,7 +1124,7 @@ definitions:
         items:
           $ref: '#/definitions/Group'
 
-  PatchRequest:
+  PatchRequestUser:
     type: object
     required:
       - schemas
@@ -1155,6 +1155,38 @@ definitions:
             value:
               description: Value for the operation
               example: "Johnny"
+
+  PatchRequestGroup:
+    type: object
+    required:
+      - schemas
+      - Operations
+    properties:
+      schemas:
+        type: array
+        items:
+          type: string
+        example:
+          - "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+      Operations:
+        type: array
+        items:
+          type: object
+          required:
+            - op
+          properties:
+            op:
+              type: string
+              enum: [add, remove, replace]
+              description: The operation to be performed
+              example: "replace"
+            path:
+              type: string
+              description: Attribute path describing the target of the operation
+              example: "displayName"
+            value:
+              description: Value for the operation
+              example: "GROUP_SITE_ADMINISTRATORS"
 
   SearchRequest:
     type: object
