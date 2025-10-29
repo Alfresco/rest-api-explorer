@@ -999,7 +999,7 @@ definitions:
               description: Type of group membership
               example: "direct"
       meta:
-        $ref: '#/definitions/Meta'
+        $ref: '#/definitions/MetaUser'
 
   Group:
     type: object
@@ -1051,9 +1051,9 @@ definitions:
               description: Human-readable name of the member
               example: "John Doe"
       meta:
-        $ref: '#/definitions/Meta'
+        $ref: '#/definitions/MetaGroup'
 
-  Meta:
+  MetaUser:
     type: object
     readOnly: true
     description: Resource metadata
@@ -1066,7 +1066,83 @@ definitions:
         type: string
         format: uri
         description: URI of the resource
-        example: "https://example.com/v2/Users/2819c223-7f76-453a-919d-413861904646"
+        example: "https://example.com/alfresco/api/-default-/public/scim/v2/Users/2819c223-7f76-453a-919d-413861904646"
+      version:
+        type: string
+        description: Version of the resource being returned
+        example: "1"
+
+  MetaResourceType:
+    type: object
+    readOnly: true
+    description: Resource metadata
+    properties:
+      resourceType:
+        type: string
+        description: Name of the resource type
+        example: "ResourceType"
+      location:
+        type: string
+        format: uri
+        description: URI of the resource
+        example: "https://example.com/alfresco/api/-default-/public/scim/v2/ResourceTypes/User"
+      version:
+        type: string
+        description: Version of the resource being returned
+        example: "1"
+
+  MetaSPC:
+    type: object
+    readOnly: true
+    description: Resource metadata
+    properties:
+      resourceType:
+        type: string
+        description: Name of the resource type
+        example: "ServiceProviderConfig"
+      location:
+        type: string
+        format: uri
+        description: URI of the resource
+        example: "https://example.com/alfresco/api/-default-/public/scim/v2/ServiceProviderConfig"
+      version:
+        type: string
+        description: Version of the resource being returned
+        example: "1"
+
+  MetaGroup:
+    type: object
+    readOnly: true
+    description: Resource metadata
+    properties:
+      resourceType:
+        type: string
+        description: Name of the resource type
+        example: "Group"
+      location:
+        type: string
+        format: uri
+        description: URI of the resource
+        example: "https://example.com/alfresco/api/-default-/public/scim/v2/Groups/GROUP_SITE_ADMINISTRATORS"
+      version:
+        type: string
+        description: Version of the resource being returned
+        example: "1"
+
+  MetaSchema:
+    type: object
+    readOnly: true
+    description: Resource metadata
+    properties:
+      resourceType:
+        type: string
+        description: Name of the resource type
+        example: "Schema"
+      location:
+        type: string
+        format: uri
+        description: URI of the resource
+        example: "https://example.com/alfresco/api/-default-/public/scim/v2/Schemas/urn:ietf:params:scim:schemas:core:2.0:User"
       version:
         type: string
         description: Version of the resource being returned
@@ -1335,7 +1411,7 @@ definitions:
               description: Boolean value indicating the primary authentication scheme
               example: true
       meta:
-        $ref: '#/definitions/Meta'
+        $ref: '#/definitions/MetaSPC'
 
   ResourceType:
     type: object
@@ -1367,7 +1443,7 @@ definitions:
         description: Resource type's base schema URI
         example: "urn:ietf:params:scim:schemas:core:2.0:User"
       meta:
-        $ref: '#/definitions/Meta'
+        $ref: '#/definitions/MetaUser'
 
   ResourceTypeListResponse:
     type: object
@@ -1479,7 +1555,7 @@ definitions:
               items:
                 type: object
       meta:
-        $ref: '#/definitions/Meta'
+        $ref: '#/definitions/MetaSchema'
 
   SchemaListResponse:
     type: object
