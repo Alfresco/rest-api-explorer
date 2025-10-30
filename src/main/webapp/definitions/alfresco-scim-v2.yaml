@@ -124,11 +124,26 @@ parameters:
     in: query
     type: string
     description: |
-      Attribute path for sorting results. Only single attribute sorting is supported.
+      Attribute path for sorting results.
+      
+      **Note:** Sorting is restricted to a single attribute.
       
       ## Supported Sort Attributes
-      - Users: userName, name.givenName, name.familyName
-      - Groups: displayName
+      
+      ### Users
+      - `userName` - Sort by username
+      - `name.familyName` - Sort by family name (last name)
+      - `name.givenName` - Sort by given name (first name)
+      - `emails` or `emails.value` - Sort by email address
+      - `externalId` - Sort by external identifier
+      - `phoneNumbers.work` - Sort by work phone number
+      - `phoneNumbers.mobile` - Sort by mobile phone number
+      - `title` - Sort by user title
+
+      **Note:** Resources without data for the specified sortBy attribute are excluded from the results.
+
+      ### Groups
+      - `displayName` - Sort by group display name
     x-example: "userName"
 
   SortOrder:
