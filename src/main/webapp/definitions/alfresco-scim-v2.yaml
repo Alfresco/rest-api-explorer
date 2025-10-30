@@ -119,7 +119,7 @@ parameters:
       - `displayName eq "Administrators"`
     x-example: 'displayName eq "GROUP_EMAIL_CONTRIBUTORS"'
 
-  SortBy:
+  SortByUser:
     name: sortBy
     in: query
     type: string
@@ -129,8 +129,6 @@ parameters:
       **Note:** Sorting is restricted to a single attribute.
       
       ## Supported Sort Attributes
-      
-      ### Users
       - `userName` - Sort by username
       - `name.familyName` - Sort by family name (last name)
       - `name.givenName` - Sort by given name (first name)
@@ -141,10 +139,22 @@ parameters:
       - `title` - Sort by user title
 
       **Note:** Resources without data for the specified sortBy attribute are excluded from the results.
-
-      ### Groups
-      - `displayName` - Sort by group display name
     x-example: "userName"
+
+  SortByGroup:
+    name: sortBy
+    in: query
+    type: string
+    description: |
+      Attribute path for sorting results.
+      
+      **Note:** Sorting is restricted to a single attribute.
+      
+      ## Supported Sort Attributes
+      - `displayName` - Sort by group display name
+      
+      **Note:** Resources without data for the specified sortBy attribute are excluded from the results.
+    x-example: "displayName"
 
   SortOrder:
     name: sortOrder
@@ -206,7 +216,7 @@ paths:
         - $ref: '#/parameters/StartIndex'
         - $ref: '#/parameters/Count'
         - $ref: '#/parameters/FilterUser'
-        - $ref: '#/parameters/SortBy'
+        - $ref: '#/parameters/SortByUser'
         - $ref: '#/parameters/SortOrder'
         - $ref: '#/parameters/Attributes'
         - $ref: '#/parameters/ExcludedAttributes'
@@ -440,6 +450,9 @@ paths:
       tags:
         - Users
       parameters:
+        - $ref: '#/parameters/FilterUser'
+        - $ref: '#/parameters/SortByUser'
+        - $ref: '#/parameters/SortOrder'
         - name: body
           in: body
           required: true
@@ -490,7 +503,7 @@ paths:
         - $ref: '#/parameters/StartIndex'
         - $ref: '#/parameters/Count'
         - $ref: '#/parameters/FilterGroup'
-        - $ref: '#/parameters/SortBy'
+        - $ref: '#/parameters/SortByGroup'
         - $ref: '#/parameters/SortOrder'
         - $ref: '#/parameters/Attributes'
         - $ref: '#/parameters/ExcludedAttributes'
@@ -698,6 +711,9 @@ paths:
       tags:
         - Groups
       parameters:
+        - $ref: '#/parameters/FilterGroup'
+        - $ref: '#/parameters/SortByGroup'
+        - $ref: '#/parameters/SortOrder'
         - name: body
           in: body
           required: true
