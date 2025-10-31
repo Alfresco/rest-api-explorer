@@ -440,8 +440,18 @@ paths:
         - Example: `filter: "userName eq \"john.doe\""`
         
         ## Sorting
-        - Supports sorting by a single attribute
+        - Sorting is restricted to a single attribute.
         - Default sort order is ascending
+        - **Supported Sort Attributes:**
+          - `userName` - Sort by username
+          - `name.familyName` - Sort by family name (last name)
+          - `name.givenName` - Sort by given name (first name)
+          - `emails` or `emails.value` - Sort by email address
+          - `externalId` - Sort by external identifier
+          - `phoneNumbers.work` - Sort by work phone number
+          - `phoneNumbers.mobile` - Sort by mobile phone number
+          - `title` - Sort by user title
+        - **Note:** Resources without data for the specified sortBy attribute are excluded from the results.
         
         ## Limitations
         - Maximum page size is configurable (default: 1000)
@@ -450,14 +460,11 @@ paths:
       tags:
         - Users
       parameters:
-        - $ref: '#/parameters/FilterUser'
-        - $ref: '#/parameters/SortByUser'
-        - $ref: '#/parameters/SortOrder'
         - name: body
           in: body
           required: true
           schema:
-            $ref: '#/definitions/SearchRequest'
+            $ref: '#/definitions/SearchRequestUser'
           x-examples:
             application/scim+json:
               schemas:
@@ -707,18 +714,29 @@ paths:
         Search groups using a POST request with search criteria in the request body.
         This endpoint provides the same functionality as GET /Groups but allows for
         more complex search criteria to be passed in the request body.
+        
+        ## Filtering
+        - Supports filtering using SCIM filter expressions
+        - Example: `filter=displayName eq "Administrators"`
+        
+        ## Sorting
+        - Sorting is restricted to a single attribute.
+        - Default sort order is ascending 
+        - **Supported Sort Attributes:**
+            - `displayName` - Sort by group display name
+        - **Note:** Resources without data for the specified sortBy attribute are excluded from the results.
+
+        ## Limitations
+        - Maximum page size is configurable (default: 1000)
       operationId: searchGroups
       tags:
         - Groups
       parameters:
-        - $ref: '#/parameters/FilterGroup'
-        - $ref: '#/parameters/SortByGroup'
-        - $ref: '#/parameters/SortOrder'
         - name: body
           in: body
           required: true
           schema:
-            $ref: '#/definitions/SearchRequest'
+            $ref: '#/definitions/SearchRequestGroup'
           x-examples:
             application/scim+json:
               schemas:
@@ -1292,7 +1310,7 @@ definitions:
               description: Value for the operation
               example: "GROUP_SITE_ADMINISTRATORS"
 
-  SearchRequest:
+  SearchRequestUser:
     type: object
     required:
       - schemas
@@ -1323,6 +1341,55 @@ definitions:
         type: string
         description: Specifies the attribute whose value SHALL be used to order the returned responses
         example: "userName"
+      sortOrder:
+        type: string
+        enum: [ascending, descending]
+        description: Order in which the sortBy parameter is applied
+        example: "ascending"
+      startIndex:
+        type: integer
+        minimum: 1
+        description: 1-based index of the first query result
+        example: 1
+      count:
+        type: integer
+        minimum: 0
+        description: Specifies the desired maximum number of query results per page
+        example: 10
+
+  SearchRequestGroup:
+    type: object
+    required:
+      - schemas
+    properties:
+      schemas:
+        type: array
+        items:
+          type: string
+        example:
+          - "urn:ietf:params:scim:api:messages:2.0:SearchRequest"
+      attributes:
+        type: array
+        items:
+          type: string
+        description: Multi-valued list of group attribute names to return
+        example: ["displayName", "members"]
+      excludedAttributes:
+        type: array
+        items:
+          type: string
+        description: Multi-valued list of group attribute names to exclude
+        example: ["meta"]
+      filter:
+        type: string
+        description: Filtering using SCIM filter expressions (e.g., displayName eq "Administrators")
+        example: 'displayName eq "Administrators"'
+      sortBy:
+        type: string
+        description: |
+          Attribute path for sorting group results.
+          Supported: displayName
+        example: "displayName"
       sortOrder:
         type: string
         enum: [ascending, descending]
