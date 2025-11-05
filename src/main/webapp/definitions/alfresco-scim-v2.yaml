@@ -1021,29 +1021,6 @@ definitions:
               type: string
               description: Phone type (work, mobile)
               example: "work"
-      groups:
-        type: array
-        readOnly: true
-        items:
-          type: object
-          properties:
-            value:
-              type: string
-              description: Identifier of the group
-              example: "e9e30dba-f08f-4109-8486-d5c6a331660a"
-            $ref:
-              type: string
-              format: uri
-              description: URI of the group resource
-              example: "https://example.com/v2/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a"
-            display:
-              type: string
-              description: Human-readable name of the group
-              example: "Tour Guides"
-            type:
-              type: string
-              description: Type of group membership
-              example: "direct"
       meta:
         $ref: '#/definitions/MetaUser'
 
