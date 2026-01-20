@@ -1508,6 +1508,8 @@ paths:
         Also, as requesting rendition is a background process,
         any rendition failure (e.g. No transformer is currently available) will not fail the whole upload and has the potential to silently fail.
 
+        You can use the **aspectNames** field to add custom aspects.
+
         Use **overwrite** to overwrite an existing file, matched by name. If the file is versionable,
         the existing content is replaced. It is not possible to overwrite an existing file which is not versionable.
 
