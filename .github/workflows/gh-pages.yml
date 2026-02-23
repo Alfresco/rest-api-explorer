@@ -11,6 +11,11 @@ on:
 env:
   SWAGGER_UI_VERSION: 4.19.1
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
