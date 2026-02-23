@@ -61,28 +61,28 @@ public class APIExplorerIntegrationTest
         int titleIndex = indexPageContent.indexOf("<title>Alfresco Content Services REST API Explorer</title>");
         assertTrue("Expected to find page title", titleIndex != -1);
     }
-    
+
     @Test
     public void testCoreAPIDefinition() throws Exception
     {
         String coreDefinitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-core";
-        
+
         // get core definition content
         String coreDefinitionContent = this.retrievePageContent(coreDefinitionUrl+YAML, 200);
 
         // make sure the content is correct
         int swaggerIndex = coreDefinitionContent.indexOf("swagger:");
         assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
-        
+
         int nodeInfoEndpointIndex = coreDefinitionContent.indexOf("'/nodes/{nodeId}':");
         assertTrue("Expected to find '/nodes/{nodeId}':", nodeInfoEndpointIndex != -1);
-        
+
         int commentsEndpointIndex = coreDefinitionContent.indexOf("'/nodes/{nodeId}/comments':");
         assertTrue("Expected to find '/nodes/{nodeId}/comments':", commentsEndpointIndex != -1);
-        
+
         int sharedLinksEndpointIndex = coreDefinitionContent.indexOf("'/shared-links':");
         assertTrue("Expected to find '/shared-links':", sharedLinksEndpointIndex != -1);
-        
+
         // ensure the core API definition can be read and parsed
         validateCoreDefn(coreDefinitionUrl+YAML);
         validateCoreDefn(coreDefinitionUrl+JSON);
@@ -129,14 +129,14 @@ public class APIExplorerIntegrationTest
     @Test
     public void testSearchSQLAPIDefinition() throws Exception {
         String definitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-search-sql";
-        
+
         // get definition content
         String definitionContent = this.retrievePageContent(definitionUrl + YAML, 200);
-        
+
         // make sure the content is correct
         int swaggerIndex = definitionContent.indexOf("swagger:");
         assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
-        
+
         validateSearchSQLDefn(definitionUrl + YAML);
         validateSearchSQLDefn(definitionUrl + JSON);
     }
@@ -152,17 +152,17 @@ public class APIExplorerIntegrationTest
     public void testWorkflowAPIDefinition() throws Exception
     {
         String workflowDefinitionUrl = "http://localhost:8085/api-explorer/definitions/alfresco-workflow";
-        
+
         // get workflow definition content
         String workflowDefinitionContent = this.retrievePageContent(workflowDefinitionUrl+YAML, 200);
-        
+
         // make sure the content is correct
         int swaggerIndex = workflowDefinitionContent.indexOf("swagger:");
         assertTrue("Expected to find 'swagger:'", swaggerIndex != -1);
-        
+
         int deploymentEndpointIndex = workflowDefinitionContent.indexOf("'/deployments/{deploymentId}':");
         assertTrue("Expected to find ''/deployments/{deploymentId}':", deploymentEndpointIndex != -1);
-        
+
         // ensure the workflow API definition can be read and parsed
         validateWorkflow(workflowDefinitionUrl+YAML);
         validateWorkflow(workflowDefinitionUrl+JSON);
@@ -181,7 +181,7 @@ public class APIExplorerIntegrationTest
         assertNotNull("Expected to retrieve a map of paths", paths);
         assertTrue("Expected to find /search path", paths.containsKey("/search"));
     }
-    
+
     private void validateSearchSQLDefn(String definitionUrl) {
         Swagger swagger = validateSwaggerDef(definitionUrl, "Alfresco Insight Engine REST API", "Search SQL API", "1");
         Map<String, Path> paths = swagger.getPaths();
@@ -255,38 +255,38 @@ public class APIExplorerIntegrationTest
     public String retrievePageContent(String url, int expectedStatus) throws Exception
     {
         String pageContent = null;
-        
+
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        try 
+        try
         {
             HttpGet httpGet = new HttpGet(url);
             CloseableHttpResponse response = httpclient.execute(httpGet);
-            try 
+            try
             {
                 // make sure the status was as expected
                 int actualStatus = response.getStatusLine().getStatusCode();
-                assertEquals("Expected status code of " + expectedStatus + " but received " + actualStatus, 
+                assertEquals("Expected status code of " + expectedStatus + " but received " + actualStatus,
                             expectedStatus, actualStatus);
-                
+
                 // grab the page content
                 HttpEntity entity = response.getEntity();
                 StringWriter writer = new StringWriter();
                 IOUtils.copy(entity.getContent(), writer, "UTF-8");
                 pageContent = writer.toString();
-                
+
                 // ensure it is fully consumed
                 EntityUtils.consume(entity);
-            } 
-            finally 
+            }
+            finally
             {
                 response.close();
             }
-        } 
-        finally 
+        }
+        finally
         {
             httpclient.close();
         }
-        
+
         // make sure we got some content
         assertNotNull("Expected content from the index page", pageContent);
 

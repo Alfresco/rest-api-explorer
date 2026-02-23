@@ -3,13 +3,13 @@ info:
   title: Alfresco SCIM v2 API
   description: |
     System for Cross-domain Identity Management (SCIM) v2.0 API implementation for Alfresco.
-    
+
     This API provides endpoints for managing users, groups, and other identity resources in Alfresco
     using the SCIM 2.0 standard. It supports CRUD operations on users and groups, along with
     discovery endpoints for service configuration, resource types, and schemas.
-    
+
     **Note:** These endpoints are available in Alfresco Enterprise 25.3.x and newer versions.
-    
+
     ## Features
     - User management (CRUD operations)
     - Group management (CRUD operations)
@@ -17,7 +17,7 @@ info:
     - Service Provider Configuration
     - Resource Type discovery
     - Schema introspection
-    
+
     ## Limitations
     - Maximum page size limit enforced
     - Limited filtering support for Users Endpoint
@@ -100,10 +100,10 @@ parameters:
     type: string
     description: |
       SCIM filter expression.
-      
+
       ## Limitations
       - Users: Only equality filtering on `userName` is supported.
-      
+
       ## Examples
       - `userName eq "john.doe"`
     x-example: 'userName eq "john.doe"'
@@ -114,7 +114,7 @@ parameters:
     type: string
     description: |
       SCIM filter expression.
-      
+
       ## Examples
       - `displayName eq "Administrators"`
     x-example: 'displayName eq "GROUP_EMAIL_CONTRIBUTORS"'
@@ -125,9 +125,9 @@ parameters:
     type: string
     description: |
       Attribute path for sorting results.
-      
+
       **Note:** Sorting is restricted to a single attribute.
-      
+
       ## Supported Sort Attributes
       - `userName` - Sort by username
       - `name.familyName` - Sort by family name (last name)
@@ -147,12 +147,12 @@ parameters:
     type: string
     description: |
       Attribute path for sorting results.
-      
+
       **Note:** Sorting is restricted to a single attribute.
-      
+
       ## Supported Sort Attributes
       - `displayName` - Sort by group display name
-      
+
       **Note:** Resources without data for the specified sortBy attribute are excluded from the results.
     x-example: "displayName"
 
@@ -172,7 +172,7 @@ parameters:
     description: |
       Comma-separated list of attribute names to include in the response.
       When specified, only the listed attributes are returned.
-      
+
       ## Examples
       - `userName,name.givenName,emails`
       - `displayName,members.value`
@@ -185,7 +185,7 @@ parameters:
     description: |
       Comma-separated list of attribute names to exclude from the response.
       When specified, all attributes except the listed ones are returned.
-      
+
       ## Examples
       - `emails,title`
       - `name.givenName`
@@ -197,15 +197,15 @@ paths:
       summary: List Users
       description: |
         Retrieve a paginated list of users. Supports filtering, sorting, and attribute selection.
-        
+
         ## Filtering
         - Supports only equality filtering by username using SCIM filter expressions
         - Example: `filter=userName eq "john.doe"`
-        
+
         ## Sorting
         - Supports sorting by a single attribute
         - Default sort order is ascending
-        
+
         ## Limitations
         - Maximum page size is configurable (default: 1000)
         - Only filtering using username is currently supported
@@ -255,7 +255,7 @@ paths:
       summary: Create User
       description: |
         Create a new user in the system.
-        
+
         ## Validation Rules
         - Username is required and must be unique
         - Username cannot exceed 100 characters
@@ -324,7 +324,7 @@ paths:
       summary: Update User (Replace)
       description: |
         Replace a user's attributes entirely. This is a complete replacement operation.
-        
+
         ## Behavior
         - All mutable attributes are replaced with provided values
         - Missing mutable attributes are cleared
@@ -358,12 +358,12 @@ paths:
       summary: Update User (Partial)
       description: |
         Partially update a user using SCIM PATCH operations.
-        
+
         ## Supported Operations
         - add: Add values to attributes
         - remove: Remove values from attributes
         - replace: Replace attribute values
-        
+
         ## Path Targeting
         - Simple attributes: `name.givenName`
         - Complex attributes: `emails[primary eq true].value`
@@ -407,7 +407,7 @@ paths:
       summary: Delete User
       description: |
         Delete a user from the system.
-        
+
         ## Behavior
         - User is permanently removed
         - Associated group memberships are cleaned up
@@ -434,11 +434,11 @@ paths:
         Search users using a POST request with search criteria in the request body.
         This endpoint provides the same functionality as GET /Users but allows for
         more complex search criteria to be passed in the request body.
-        
+
         ## Filtering
         - Supports Only equality filtering by username using SCIM filter expressions
         - Example: `filter: "userName eq \"john.doe\""`
-        
+
         ## Sorting
         - Sorting is restricted to a single attribute.
         - Default sort order is ascending
@@ -452,7 +452,7 @@ paths:
           - `phoneNumbers.mobile` - Sort by mobile phone number
           - `title` - Sort by user title
         - **Note:** Resources without data for the specified sortBy attribute are excluded from the results.
-        
+
         ## Limitations
         - Maximum page size is configurable (default: 1000)
         - Only username filtering is currently supported
@@ -491,15 +491,15 @@ paths:
       summary: List Groups
       description: |
         Retrieve a paginated list of groups. Supports filtering, sorting, and attribute selection.
-        
+
         ## Filtering
         - Supports filtering using SCIM filter expressions
         - Example: `filter=displayName eq "Administrators"`
-        
+
         ## Sorting
         - Supports sorting by a single attribute
         - Default sort order is ascending
-        
+
         ## Member References
         - Member $ref URLs are automatically populated with base URI
         - Members include type information (User/Group)
@@ -530,7 +530,7 @@ paths:
       summary: Create Group
       description: |
         Create a new group in the system.
-        
+
         ## Validation Rules
         - displayName is required and must be unique
         - Members must reference existing users or groups by ID
@@ -573,7 +573,7 @@ paths:
       summary: Get Group
       description: |
         Retrieve a specific group by ID.
-        
+
         ## Member Information
         - Members include full reference URLs
         - Display names are populated for members
@@ -603,7 +603,7 @@ paths:
       summary: Update Group (Replace)
       description: |
         Replace a group's attributes entirely. This is a complete replacement operation.
-        
+
         ## Behavior
         - All mutable attributes are replaced with provided values
         - Missing mutable attributes are cleared
@@ -638,12 +638,12 @@ paths:
       summary: Update Group (Partial)
       description: |
         Partially update a group using SCIM PATCH operations.
-        
+
         ## Supported Operations
         - add: Add members to the group
         - remove: Remove members from the group
         - replace: Replace group attributes or member list
-        
+
         ## Special Considerations
         - displayName cannot be removed (required attribute)
         - Member operations support adding/removing individual members (provided they exists)
@@ -687,7 +687,7 @@ paths:
       summary: Delete Group
       description: |
         Delete a group from the system.
-        
+
         ## Behavior
         - Group is permanently removed
         - Member associations are cleaned up
@@ -714,14 +714,14 @@ paths:
         Search groups using a POST request with search criteria in the request body.
         This endpoint provides the same functionality as GET /Groups but allows for
         more complex search criteria to be passed in the request body.
-        
+
         ## Filtering
         - Supports filtering using SCIM filter expressions
         - Example: `filter=displayName eq "Administrators"`
-        
+
         ## Sorting
         - Sorting is restricted to a single attribute.
-        - Default sort order is ascending 
+        - Default sort order is ascending
         - **Supported Sort Attributes:**
             - `displayName` - Sort by group display name
         - **Note:** Resources without data for the specified sortBy attribute are excluded from the results.
@@ -764,7 +764,7 @@ paths:
       description: |
         Retrieve the SCIM service provider configuration. This endpoint provides
         information about the capabilities and configuration of the SCIM service.
-        
+
         ## Information Provided
         - Supported authentication schemes
         - Supported operations (PATCH, bulk, filtering, etc.)
@@ -790,7 +790,7 @@ paths:
       description: |
         Retrieve all available resource types. Resource types define the
         structure and capabilities of different SCIM resources.
-        
+
         ## Available Resource Types
         - User: Core user resource type
         - Group: Core group resource type
@@ -838,7 +838,7 @@ paths:
       description: |
         Retrieve all available schemas. Schemas define the structure and
         validation rules for SCIM resources and their attributes.
-        
+
         ## Available Schemas
         - User schema: Defines user attributes and structure
         - Group schema: Defines group attributes and structure

@@ -2164,7 +2164,7 @@ paths:
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
 
-            The **attachment** flag controls the download method of the generated URL. It defaults 
+            The **attachment** flag controls the download method of the generated URL. It defaults
             to **true**, meaning the value for the Content Disposition response header will be **attachment**.
 
             **true** enables a web browser to download the file as an attachment.
@@ -2249,7 +2249,7 @@ paths:
         ***Receiving the size***
         This endpoint takes ```nodeId``` and ```jobId``` as the path parameters and returns the result after executing above GET request.
         The size details job can be in one of three states:
-        
+
         ```
            NOT-INITIATED: Not Initiated yet.
            IN-PROGRESS:   Calculation is in progress.
@@ -2527,7 +2527,7 @@ paths:
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
 
-            The **attachment** flag controls the download method of the generated URL. It defaults 
+            The **attachment** flag controls the download method of the generated URL. It defaults
             to **true**, meaning the value for the Content Disposition response header will be **attachment**.
 
             **true** enables a web browser to download the file as an attachment.
@@ -3207,7 +3207,7 @@ paths:
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
 
-            The **attachment** flag controls the download method of the generated URL. It defaults 
+            The **attachment** flag controls the download method of the generated URL. It defaults
             to **true**, meaning the value for the Content Disposition response header will be **attachment**.
 
             **true** enables a web browser to download the file as an attachment.
@@ -3636,7 +3636,7 @@ paths:
 
         Please find below sample responses for this endpoint when Alfresco Content Connector for AWS S3 is installed.
 
-        Similar responses will be returned when Alfresco Content Connector for Azure Blob is installed, albeit it with 
+        Similar responses will be returned when Alfresco Content Connector for Azure Blob is installed, albeit it with
         some native storage properties with x-ms- prefix instead of x-amz- prefix.
 
         Standard storage class:
@@ -3742,7 +3742,7 @@ paths:
 
         Please find below sample responses for this endpoint when Alfresco Content Connector for AWS S3 is installed.
 
-        Similar responses will be returned when Alfresco Content Connector for Azure Blob is installed, albeit it with 
+        Similar responses will be returned when Alfresco Content Connector for Azure Blob is installed, albeit it with
         some native storage properties with x-ms- prefix instead of x-amz- prefix.
 
         Standard storage class:
@@ -4234,7 +4234,7 @@ paths:
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
 
-            The **attachment** flag controls the download method of the generated URL. It defaults 
+            The **attachment** flag controls the download method of the generated URL. It defaults
             to **true**, meaning the value for the Content Disposition response header will be **attachment**.
 
             **true** enables a web browser to download the file as an attachment.
@@ -4483,7 +4483,7 @@ paths:
             Note: It is up to the actual ContentStore implementation if it can fulfil this
             request or not.
 
-            The **attachment** flag controls the download method of the generated URL. It defaults 
+            The **attachment** flag controls the download method of the generated URL. It defaults
             to **true**, meaning the value for the Content Disposition response header will be **attachment**.
 
             **true** enables a web browser to download the file as an attachment.
@@ -6145,7 +6145,7 @@ paths:
         '204':
           description: Successful response
         '400':
-          description: | 
+          description: |
             Invalid parameter: **personId** is not a valid format
         '401':
           description: Authentication failed
@@ -6204,8 +6204,8 @@ paths:
       description: |
         **Note:** this endpoint is available in Alfresco Enterprise 25.x and newer versions.
 
-        Reauthorizes the user related to the person's **personId**. 
-        To obtain the encrypted authorization key, the authorization code must be generated and sent to the Alfresco Support. 
+        Reauthorizes the user related to the person's **personId**.
+        To obtain the encrypted authorization key, the authorization code must be generated and sent to the Alfresco Support.
         See: [POST /people/{personId}/reauthorization-code](#people/reauthorizationCode)
 
         You must have admin rights to use this endpoint.
@@ -7168,9 +7168,9 @@ paths:
             * ```where=(tag='tagName')```
 
             * ```where=(tag in ('tag1', 'tag2'))```
-            
+
             * ```where=(tag matches ('*tag*'))```
-            
+
             OR operator is also supported.
           required: false
           type: string
@@ -8261,7 +8261,7 @@ paths:
         ```
 
         The **where** parameter can also be used to filter by ***zone*** and ***displayName***.
-        They may be combined with isRoot to narrow a result set even further. 
+        They may be combined with isRoot to narrow a result set even further.
         For example, the following where clause will only return groups belonging to the `MY.ZONE` zone.
 
         ```
@@ -8273,8 +8273,8 @@ paths:
         ```
         where=(isRoot=false AND zones in ('MY.ZONE'))
         ```
-        The following where clause will only return groups with displayName `MY.GROUP.NAME`. 
-        
+        The following where clause will only return groups with displayName `MY.GROUP.NAME`.
+
         ```
         where=(displayName in ('MY.GROUP.NAME'))
         ```
@@ -8283,15 +8283,15 @@ paths:
         ```
         where=(isRoot=false AND displayName in ('MY.GROUP.NAME'))
         ```
-       
+
         ```
         where=(zones in ('MY.ZONE') AND displayName in ('MY.GROUP.NAME'))
         ```
-        
+
         ```
         where=(isRoot=false AND zones in ('MY.ZONE') AND displayName in ('MY.GROUP.NAME'))
         ```
-        
+
         ***Note:*** restrictions include
         * `AND` is the only supported operator when combining `isRoot`, `zones` and `displayName` filters
         * Only one zone is supported by the filter
@@ -10966,7 +10966,7 @@ definitions:
                       NOT-INITIATED: Not Initiated yet.
                       IN-PROGRESS: Calculation is in progress.
                       COMPLETED: Calculation has been done.
-                      
+
                       ```
       jobId:
         type: string
