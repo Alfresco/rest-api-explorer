@@ -18,43 +18,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Fetch swagger-ui distribution
-        env:
-          SWAGGER_UI_DOWNLOAD_URL: https://github.com/swagger-api/swagger-ui/archive/refs/tags/v${{ env.SWAGGER_UI_VERSION }}.tar.gz
-        run: |
-          mkdir swagger-ui
-          curl -sfL $SWAGGER_UI_DOWNLOAD_URL | tar -xz --strip-components=1 -C swagger-ui
-
-      - name: Prepare artifact
-        run: |
-          mkdir -p swagger-ui/dist/definitions
-          cp src/main/webapp/definitions/*.yaml swagger-ui/dist/definitions/
-          cp .github/gh-pages/swagger-initializer.js swagger-ui/dist/swagger-initializer.js
-
-      - name: Verify initializer lists all YAML definitions
-        run: |
-          DEFS="swagger-ui/dist/definitions/"
-          INIT="swagger-ui/dist/swagger-initializer.js"
-
-          # Iterate on definitions files and ensure they are present in the initializer
-          for file in $DEFS/*.yaml; do
-            filename=$(basename "$file")
-            if ! grep -q "$filename" "$INIT"; then
-              echo "Error: $filename is not present in $INIT"
-              exit 1
-            fi
-          done
+      - name: Build
+        working-directory: .github/gh-pages
+        run: ./build.sh
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
-          path: swagger-ui/dist
+          path: .github/gh-pages/build/dist
 
 
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
-    if: github.ref_name != 'master'
+    if: github.ref_name == 'master'
     concurrency:
       group: pages
       cancel-in-progress: true
