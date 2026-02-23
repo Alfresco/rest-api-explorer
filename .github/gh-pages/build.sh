@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-set -e
-SWAGGER_UI_VERSION="4.19.1"
+set -euo pipefail
+SWAGGER_UI_VERSION="${SWAGGER_UI_VERSION:-4.19.1}"
 
 # Ensure required tools are available
 if ! command -v curl >/dev/null 2>&1; then
@@ -21,7 +21,7 @@ echo "Cleaning up previous build workspace at $ARCHIVE_DEST_DIR"
 rm -rf "$ARCHIVE_DEST_DIR"
 
 mkdir -p "$ARCHIVE_DEST_DIR"
-curl -sfL $SWAGGER_UI_DOWNLOAD_URL | tar -xz -C "$ARCHIVE_DEST_DIR" \
+curl -sfL "$SWAGGER_UI_DOWNLOAD_URL" | tar -xz -C "$ARCHIVE_DEST_DIR" \
   --strip-components=1 swagger-ui-$SWAGGER_UI_VERSION/dist/
 
 mkdir -p "$DEFS_DEST_DIR"
@@ -33,7 +33,7 @@ echo "Verifying that all definitions files are present in $SWAGGER_INIT_DEST_DIR
 
 for file in "$DEFS_DEST_DIR"/*.yaml; do
   filename=$(basename "$file")
-  if ! grep -q "$filename" "$SWAGGER_INIT_DEST_DIR"; then
+  if ! grep -Fq "$filename" "$SWAGGER_INIT_DEST_DIR"; then
     echo "Error: $filename is not present in $SWAGGER_INIT_DEST_DIR"
     exit 1
   fi
