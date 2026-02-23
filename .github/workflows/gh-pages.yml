@@ -54,7 +54,7 @@ jobs:
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
-    if: github.ref_name == 'master'
+    if: github.ref_name != 'master'
     concurrency:
       group: pages
       cancel-in-progress: true
