@@ -13,6 +13,8 @@ window.onload = function() {
       { url: './definitions/alfresco-model.yaml', name: 'Model API' },
       { url: './definitions/alfresco-scim-v2.yaml', name: 'SCIM v2 API (BETA)' },
     ],
+    // disable "Try it out" as we don't have a real backend to test against
+    supportedSubmitMethods: [],
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
