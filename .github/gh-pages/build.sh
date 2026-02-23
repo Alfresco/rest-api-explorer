@@ -2,6 +2,12 @@
 set -e
 SWAGGER_UI_VERSION="4.19.1"
 
+# Ensure required tools are available
+if ! command -v curl >/dev/null 2>&1; then
+  echo "Error: 'curl' is required but not installed. Install curl and retry." >&2
+  exit 1
+fi
+
 BUILD_DIR=$(dirname "$0")
 ARCHIVE_DEST_DIR="./build"
 DEFS_DEST_DIR="$ARCHIVE_DEST_DIR/dist/definitions"
