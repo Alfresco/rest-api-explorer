@@ -10,7 +10,7 @@ fi
 
 BUILD_DIR=$(dirname "$0")
 ARCHIVE_DEST_DIR="./build"
-DEFS_DEST_DIR="$ARCHIVE_DEST_DIR/dist/definitions"
+DEFS_DEST_DIR="$ARCHIVE_DEST_DIR/dist"
 SWAGGER_INIT_DEST_DIR="$ARCHIVE_DEST_DIR/dist/swagger-initializer.js"
 
 SWAGGER_UI_DOWNLOAD_URL="https://github.com/swagger-api/swagger-ui/archive/refs/tags/v${SWAGGER_UI_VERSION}.tar.gz"
