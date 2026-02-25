@@ -7,6 +7,9 @@ on:
   pull_request:
     branches:
       - master
+    paths:
+      - '.github/gh-pages/**'
+      - 'src/main/webapp/definitions/**'
 
 env:
   SWAGGER_UI_VERSION: 4.19.1

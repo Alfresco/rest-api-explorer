@@ -565,12 +565,12 @@ paths:
       summary: Create or update variables
       description: |
         Create or update a variable for a given process.
-        If the variable does not exist yet, it will be created.        
-        
-        
-        **Note:** You can create or update more than one variable by 
+        If the variable does not exist yet, it will be created.
+
+
+        **Note:** You can create or update more than one variable by
         specifying a list of variables in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -586,7 +586,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {
@@ -1230,12 +1230,12 @@ paths:
       summary: Create or update variables
       description: |
         Create or update a variable for the task **taskId**.
-        If the variable does not exist yet, it will be created.      
-        
-        
-        **Note:** You can create or update more than one variable by 
+        If the variable does not exist yet, it will be created.
+
+
+        **Note:** You can create or update more than one variable by
         specifying a list of variables in the JSON body like this:
-        
+
         ```JSON
         [
           {
@@ -1251,7 +1251,7 @@ paths:
         ]
         ```
         If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
-        
+
         ```JSON
         {
           "list": {

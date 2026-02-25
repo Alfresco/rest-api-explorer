@@ -93,7 +93,7 @@ public class YamlToJson {
           //Search SQL
             swagger = parseSwaggerDef(new File(rootPath + SEARCH_SQL_DEFINITION), SEARCH_SQL_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + SEARCH_SQL_JSON_DEFINITION), swagger);
-            
+
             //Discovery
             swagger = parseSwaggerDef(new File(rootPath + DISCOVERY_DEFINITION), DISCOVERY_DEFINITION_TITLE);
             Json.mapper().writeValue(new File(rootPath + DISCOVERY_JSON_DEFINITION), swagger);
