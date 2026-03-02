@@ -2,6 +2,8 @@
 
 This directory contains the scripts and configuration files used to build and deploy the Swagger UI documentation to GitHub Pages.
 
+## Building locally
+
 To quickly test locally, you first need to build the customized Swagger UI by
 running the following commands:
 
@@ -20,3 +22,15 @@ python3 -m http.server
 
 Then open `http://localhost:8000` in your browser to see the Swagger UI
 documentation.
+
+## Building with Docker
+
+Otherwise, you can build and run a Docker image using the provided `Dockerfile`:
+
+```bash
+docker build -t rest-api-explorer .
+docker run -p 8080:8080 rest-api-explorer
+```
+
+This will build the Docker image and run it, exposing the Swagger UI
+documentation on `http://localhost:8080`.
