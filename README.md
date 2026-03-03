@@ -11,7 +11,14 @@ The API Explorer allows you to browse and experiment with the REST APIs availabl
 You can find the pre-built Docker image on Docker Hub:
 [alfresco/rest-api-explorer](https://hub.docker.com/r/alfresco/rest-api-explorer).
 
-You can browse the latest GitHub Pages version of the API Explorer at
+To run the latest built API Explorer on `localhost:8080` using Docker, use the
+following command:
+
+```sh
+docker run -p 8080:8080 alfresco/rest-api-explorer:master
+```
+
+You can also browse the latest GitHub Pages version of the API Explorer directly at
 [https://alfresco.github.io/rest-api-explorer/](https://alfresco.github.io/rest-api-explorer/).
 
 ## Development
@@ -52,6 +59,8 @@ Run the Docker container:
 ```sh
 docker run -p 8080:8080 api-explorer
 ```
+
+Browse the API Explorer at [http://localhost:8080](http://localhost:8080).
 
 ## License
 
