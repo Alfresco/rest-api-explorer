@@ -1,0 +1,32 @@
+# Ignore VCS
+.git
+.gitignore
+
+# Maven / build
+target/
+build/
+dist/
+
+# Local caches and IDE files
+.m2/
+.idea/
+*.iml
+.settings/
+
+# OS
+.DS_Store
+
+# Docker
+Dockerfile*
+
+# Exclude everything in src except the definitions folder (we need that for the Docker build)
+src/*
+!src/main/webapp/definitions
+
+# Exclude everything in .github except the gh-pages folder (we need that for the Docker build)
+.github/*
+!.github/gh-pages
+!.github/gh-pages/**
+
+# CI scripts
+CI
