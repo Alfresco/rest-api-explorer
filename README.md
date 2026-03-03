@@ -6,6 +6,14 @@
 
 The API Explorer allows you to browse and experiment with the REST APIs available in the Alfresco platform.
 
+## Quickstart
+
+You can find the pre-built Docker image on Docker Hub:
+[alfresco/rest-api-explorer](https://hub.docker.com/r/alfresco/rest-api-explorer).
+
+You can browse the latest GitHub Pages version of the API Explorer at
+[https://alfresco.github.io/rest-api-explorer/](https://alfresco.github.io/rest-api-explorer/).
+
 ## Development
 
 ### Building WAR file
@@ -28,6 +36,22 @@ Now the application is running at [http://localhost:8085/api-explorer](http://lo
 The GitHub Pages build is located in the `.github/gh-pages` directory. It is
 suitable if you want something quick and easy to test locally without any java
 dependencies. More details in the [GitHub Pages Build Scripts](.github/gh-pages/README.md) section.
+
+### Building with Docker
+
+You can build a Docker image of the API Explorer and run it in a container.
+
+Build the Docker image:
+
+```sh
+docker build -t api-explorer .
+```
+
+Run the Docker container:
+
+```sh
+docker run -p 8080:8080 api-explorer
+```
 
 ## License
 
