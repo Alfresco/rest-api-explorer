@@ -35,7 +35,7 @@ jobs:
           repository: Alfresco/alfresco-enterprise-repo
           ref: master
           token: ${{ secrets.BOT_GITHUB_TOKEN }}
-          sparse-checkout: ${{ env.AGS_TARGET_PATH }}
+          sparse-checkout: ${{ env.AGS_SWAGGER_FILE_PATH }}
           sparse-checkout-cone-mode: false
           path: ${{ env.AGS_TARGET_PATH }}
 
