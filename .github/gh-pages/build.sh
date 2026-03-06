@@ -28,6 +28,16 @@ mkdir -p "$DEFS_DEST_DIR"
 cp ./../../src/main/webapp/definitions/*.yaml "$DEFS_DEST_DIR"/
 cp ./swagger-initializer.js "$SWAGGER_INIT_DEST_DIR"
 
+AGS_DEFS_FILE="gs-classification-api.yaml"
+AGS_DEFS_PATH="./../../src/main/webapp/definitions/$AGS_DEFS_FILE"
+
+# Remove AGS entry from swagger-initializer.js if definition was not available
+if [ ! -f "$DEFS_DEST_DIR/$AGS_DEFS_FILE" ]; then
+  echo "Removing AGS entry from swagger-initializer.js"
+  sed -i.bak "/$AGS_DEFS_FILE/d" "$SWAGGER_INIT_DEST_DIR"
+  rm -f "$SWAGGER_INIT_DEST_DIR.bak"
+fi
+
 echo "Build completed at $ARCHIVE_DEST_DIR/dist"
 echo "Verifying that all definitions files are present in $SWAGGER_INIT_DEST_DIR"
 
