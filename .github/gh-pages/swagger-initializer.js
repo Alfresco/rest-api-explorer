@@ -12,6 +12,7 @@ window.onload = function() {
       { url: './alfresco-workflow.yaml', name: 'Workflow API' },
       { url: './alfresco-model.yaml', name: 'Model API' },
       { url: './alfresco-scim-v2.yaml', name: 'SCIM v2 API (BETA)' },
+      { url: './gs-classification-api.yaml', name: 'GS Classification API' }, // AGS API definition, will be included only if available
     ],
     // disable "Try it out" as we don't have a real backend to test against
     supportedSubmitMethods: [],

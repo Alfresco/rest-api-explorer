@@ -1,5 +1,8 @@
 /src/main/swagger
 
+#AGS API definition file
+src/main/webapp/definitions/gs-classification-api.yaml
+
 #Maven
 target/
 pom.xml.tag
