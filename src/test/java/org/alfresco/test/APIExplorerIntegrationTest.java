@@ -249,7 +249,7 @@ public class APIExplorerIntegrationTest
         String defs = this.retrievePageContent("http://localhost:8085/api-explorer/definitions/index.jsp", 200);
         List<String> definitions = Json.mapper().readValue(defs, new TypeReference<List<String>>(){});
         assertNotNull(definitions);
-        assertEquals("8 definitions in 2 formats should be 16.", 16, definitions.size());
+        assertEquals("8 definitions in 2 formats + 1 AGS definition should be 17.", 17, definitions.size());
     }
 
     public String retrievePageContent(String url, int expectedStatus) throws Exception

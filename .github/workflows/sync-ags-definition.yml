@@ -31,7 +31,9 @@ jobs:
           path: enterprise-repo
 
       - name: Copy AGS definition
-        run: cp enterprise-repo/${{ env.AGS_FILE_PATH }} ${{ env.LOCAL_DEFS_DIR }}/
+        run: |
+          cp enterprise-repo/${{ env.AGS_FILE_PATH }} ${{ env.LOCAL_DEFS_DIR }}/
+          rm -rf enterprise-repo
 
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
