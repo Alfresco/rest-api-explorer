@@ -48,10 +48,15 @@ dependencies. More details in the [GitHub Pages Build Scripts](.github/gh-pages/
 
 You can build a Docker image of the API Explorer and run it in a container.
 
+Note: The AGS classification API definition (`gs-classification-api.yaml`) is
+automatically synced from the enterprise repository by the
+[Sync AGS Definition](.github/workflows/sync-ags-definition.yml) workflow and
+committed to this repository.
+
 Build the Docker image:
 
 ```sh
-docker build -t api-explorer .
+docker build -t api-explorer . --load
 ```
 
 Run the Docker container:

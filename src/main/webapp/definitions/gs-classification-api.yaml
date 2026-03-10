@@ -1,0 +1,2513 @@
+swagger: '2.0'
+
+info:
+  description: Provides access to classification and security mark related features.
+  version: '1'
+  title: Alfresco Governance Services Security Controls
+basePath: /alfresco/api/-default-/public/gs/versions/1
+
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication
+
+security:
+  - basicAuth: []
+
+consumes:
+  - application/json
+
+produces:
+  - application/json
+
+tags:
+  - name: classification-guides
+    description: Retrieve and manage classification guides
+  - name: classification-reasons
+    description: Retrieve and manage classification reasons
+  - name: declassification-exemptions
+    description: Retrieve and manage declassification exemptions
+  - name: security-control-settings
+    description: Retrieve and manage security control settings
+  - name: default-classification-values
+    description: Retrieve and manage default classification values
+  - name: highest-child-classification
+    description: Retrieve highest child classification
+  - name: secured-nodes
+    description: Retrieve and manage securing marks
+  - name: security-groups
+    description: Retrieve and manage security groups
+  - name: security-marks
+    description: Retrieve and manage security marks
+
+paths:
+  /security-groups:
+    get:
+      summary: List all security groups
+      description: Gets all security groups. There is a property `rm.securitygroup.any.onlyviewassigned` defined in alfresco-global.properties.
+                  When this is set to true then users will only be able to view controls they have been assigned.
+                  When it is set to false then users will be able to see all controls in a security group of type `ANY` if they have been assigned at least one of them.
+      operationId: listSecurityGroups
+      tags:
+        - security-groups
+      parameters:
+        - $ref: '#/parameters/groupInclude'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecurityGroupPaging'
+        '401':
+          $ref: '#/responses/401'
+        default:
+          $ref: '#/responses/default'
+    post:
+      summary: Create a security group
+      description: Creates a new security group.
+      operationId: createSecurityGroup
+      tags:
+        - security-groups
+      parameters:
+        - name: security-group
+          description: Security Group
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SecurityGroupCreateBodyModel'
+        - $ref: '#/parameters/groupInclude'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecurityGroupModel'
+        '400':
+          description: |
+            **groupName** is a mandatory parameter or **groupType** is a mandatory parameter or the value provided for groupType
+            is not one of the values accepted for Enum class: [HIERARCHICAL, USER_REQUIRES_ALL, USER_REQUIRES_ANY]
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "The user doesn't have permission to create a security group."
+        '409':
+          description: "A security group with the name **groupName** already exists."
+        default:
+          $ref: '#/responses/default'
+
+  /security-groups/{securityGroupId}:
+    get:
+      summary: Get security group information
+      description: Gets the security group with id **securityGroupId**.
+      operationId: getSecurityGroup
+      tags:
+        - security-groups
+      parameters:
+        - $ref: '#/parameters/securityGroupId'
+        - $ref: '#/parameters/groupInclude'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecurityGroupModel'
+        '400':
+          description: "Invalid parameter: **securityGroupId** is not in valid format"
+        '401':
+          $ref: '#/responses/401'
+        '404':
+          description: "Could not find security group with id **securityGroupId**"
+        default:
+          $ref: '#/responses/default'
+    put:
+      tags:
+        - security-groups
+      summary: Update a security group
+      description: Updates the security group with id **securityGroupId**. For example, you can rename a security group.
+      operationId: updateSecurityGroup
+      parameters:
+        - $ref: '#/parameters/securityGroupId'
+        - name: security-group
+          description: Security Group
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SecurityGroupUpdateBodyModel'
+        - $ref: '#/parameters/groupInclude'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecurityGroupModel'
+        '400':
+          description: "Invalid parameter: **securityGroupId** is not in valid format or **groupName** is a mandatory parameter"
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "The user doesn't have permission to update a security group"
+        '404':
+          description: "Could not find security group with id **securityGroupId**"
+        '409':
+          description: "A security group with the name **groupName** already exists."
+        default:
+          $ref: '#/responses/default'
+    delete:
+      tags:
+        - security-groups
+      summary: Delete a security group
+      description: Deletes the security group with id **securityGroupId**, including any marks.
+      operationId: deleteSecurityGroup
+      parameters:
+        - $ref: '#/parameters/securityGroupId'
+      responses:
+        '204':
+          $ref: '#/responses/204'
+        '400':
+          description: "Invalid parameter: **securityGroupId** is not in valid format"
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "The user doesn't have permission to delete a security group."
+        '404':
+          description: "Could not find security group with id **securityGroupId**"
+        '422':
+          description: |
+            There is a problem with the internal state that prevents the delete of the security group, for example
+            the security group with id **securityGroupId** is in use.
+        default:
+          $ref: '#/responses/default'
+
+  /security-groups/{securityGroupId}/security-marks:
+    get:
+      summary: Gets all the marks in a security group
+      description: Gets all the marks in a security group with id **securityGroupId**.
+      operationId: getSecurityGroupMarks
+      tags:
+        - security-marks
+      parameters:
+        - $ref: '#/parameters/securityGroupId'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecurityMarksPaging'
+        '400':
+          description: "Invalid parameter: **securityGroupId** is not in valid format"
+        '401':
+          $ref: '#/responses/401'
+        '404':
+          description: "Could not find security group with id: **securityGroupId**"
+        default:
+          $ref: '#/responses/default'
+    post:
+      summary: Create a security mark in the security group with id **securityGroupId**.
+      description: |
+        Creates a new security mark.
+
+        **Note:** You can create more than one security mark by specifying a list of marks in the JSON body.
+        For example, the following JSON body creates two security marks:
+        ```JSON
+        [
+        {
+          "name":"SecurityMark1"
+        },
+        {
+          "name":"SecurityMark2"
+        }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+            {
+              "entry": {
+                         ...
+              }
+            },
+            {
+              "entry": {
+                         ...
+              }
+            }
+            ]
+          }
+        }
+        ```
+      operationId: createSecurityMark
+      tags:
+        - security-marks
+      parameters:
+        - $ref: '#/parameters/securityGroupId'
+        - name: security-mark
+          description: Security Mark
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SecurityMarkBodyModel'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecurityMarkModel'
+        '400':
+          description: "Invalid parameter: **securityGroupId** is not in valid format or **name** is a mandatory parameter"
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "The user doesn't have permission to create a security mark"
+        '404':
+          description: "Could not find security group with id **securityGroupId**"
+        '409':
+          description: "A security mark with the name **name** already exists in the security group."
+        '422':
+          description: |
+            There is a problem with the internal state that prevents adding security marks, for example the mark
+            cannot be added to a system security group.
+        default:
+          $ref: '#/responses/default'
+
+  /security-groups/{securityGroupId}/security-marks/{securityMarkId}:
+    get:
+      summary: Get security mark information
+      description: Gets the security mark with id **securityMarkId** from security group with id **securityGroupId**.
+      operationId: getSecurityGroupMark
+      tags:
+        - security-marks
+      parameters:
+        - $ref: '#/parameters/securityGroupId'
+        - $ref: '#/parameters/securityMarkId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecurityMarkModel'
+        '401':
+          $ref: '#/responses/401'
+        '400':
+          description: "Invalid parameter: **securityGroupId** is not in valid format or **securityMarkId** is not in valid format"
+        '404':
+          description: "Could not find security mark with id **securityMarkId** or security group with id **securityGroupId**"
+        default:
+          $ref: '#/responses/default'
+    put:
+      tags:
+        - security-marks
+      summary: Update a security mark with id **securityMarkId**
+      description: Updates the security mark with id **securityMarkId**. For example, you can rename a security mark.
+      operationId: updateSecurityMark
+      parameters:
+        - $ref: '#/parameters/securityGroupId'
+        - $ref: '#/parameters/securityMarkId'
+        - name: security-mark
+          description: Security Mark
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SecurityMarkBodyModel'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecurityMarkModel'
+        '400':
+          description: |
+            Invalid parameter: **securityGroupId** is not in valid format or **securityMarkId** is not in valid
+            format or **name** is a mandatory parameter
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "The user doesn't have permission to update a security mark"
+        '404':
+          description: "Could not find security mark with id **securityMarkId** or security group with id **securityGroupId**"
+        '409':
+          description: "A security mark with the name **name** already exists in the security group."
+        default:
+          $ref: '#/responses/default'
+    delete:
+      tags:
+        - security-marks
+      summary: Delete a security mark from a security group
+      description: Deletes the security mark with id **securityMarkId**.
+      operationId: deleteSecurityMark
+      parameters:
+        - $ref: '#/parameters/securityGroupId'
+        - $ref: '#/parameters/securityMarkId'
+      responses:
+        '204':
+          $ref: '#/responses/204'
+        '400':
+          description: "Invalid parameter: **securityGroupId** is not in valid format or **securityMarkId** is not in valid format"
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "The user doesn't have permission to delete a security mark"
+        '404':
+          description: "Could not find security mark with id **securityMarkId** or security group with id **securityGroupId**"
+        '422':
+          description: |
+            There is a problem with the internal state that prevents the delete of the security mark, for example the
+            security mark with id **securityMarkId** is a member of **securityGroupId** which is in use.
+        default:
+          $ref: '#/responses/default'
+
+  '/secured-nodes/{nodeId}/securing-marks':
+    get:
+      summary: List all security marks assigned to a node.
+      description: List all the existing security marks assigned to a node with id **nodeId**.
+      operationId: getSecuringMarks
+      produces:
+        - application/json
+      tags:
+        - secured-nodes
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecuringMarksPaging'
+        '400':
+          description: |
+            Invalid parameter: **nodeId** is not in valid format
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: >-
+            Current user does not have permission to retrieve security marks assigned to
+            **nodeId**
+        '404':
+          description: "**nodeId** does not exist"
+        '405':
+          description: "Classification is not supported for **nodeId**"
+        default:
+          $ref: '#/responses/default'
+
+    post:
+      summary: Manage the existing security marks for a node
+      description: Manage the list of existing security marks for a node with id **nodeId**.
+      operationId: updateSecuringMarks
+      produces:
+        - application/json
+      tags:
+        - secured-nodes
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+        - in: body
+          name: securityMarksUpdates
+          description: The list of security marks updates.
+          required: true
+          schema:
+            $ref: '#/definitions/SecurityMarksUpdateBody'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecuringMarksPaging'
+        '400':
+          description: >
+            Invalid parameter: **nodeId** is not in a valid format or the **securityMarksUpdate** is invalid
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: >-
+            Current user does not have permission to update
+            **nodeId**
+        '404':
+          description: '**nodeId** does not exist'
+        '405':
+          description: "Classification is not supported for **nodeId**"
+        '422':
+          description: |
+            There is a problem with the internal state that prevents the update of security marks for a node,
+            for example current user would lose access to **nodeId**.
+        default:
+          $ref: '#/responses/default'
+
+  /classification-guides:
+    get:
+      summary: List all classification guides
+      description: Gets all classification guides.
+      operationId: listClassificationGuides
+      tags:
+        - classification-guides
+      parameters:
+        - $ref: '#/parameters/guideInclude'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - name: where
+          in: query
+          description: |
+            A string to restrict the returned objects by using a predicate. Supported operations are AND, NOT, and OR. Fields to filter on:
+            * enabled - e.g. (enabled = true OR enabled = false)
+          required: false
+          type: string
+      responses:
+        '200':
+          description: A paged array of classifications
+          schema:
+            $ref: '#/definitions/ClassificationGuidePaging'
+        '401':
+          $ref: '#/responses/401'
+        default:
+          $ref: '#/responses/default'
+
+    post:
+      summary: Create a classification guide
+      description: Creates a new classification guide.
+      operationId: createClassificationGuide
+      tags:
+        - classification-guides
+      parameters:
+        - name: classificationGuide
+          description: Classification guide
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ClassificationGuideBody'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ClassificationGuideEntry'
+        '400':
+          description: |
+            Invalid parameter: The **classificationGuide** is invalid
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: Current user doesn't have permission to create classification guides
+        '409':
+          description: There's already a classification guide with this name
+        '422':
+          description: Couldn't create guide. Guide name can't end in a period or contain any of these characters "*\>&lt;?/|
+        default:
+          $ref: '#/responses/default'
+
+
+  /classification-guides/{classificationGuideId}:
+
+    get:
+      summary: Get classification guide information
+      description: Gets the classification guide with id **classificationGuideId**.
+      operationId: showClassificationGuideById
+      tags:
+        - classification-guides
+      parameters:
+        - $ref: '#/parameters/classificationGuideId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ClassificationGuideEntry'
+        '400':
+          description: |
+            Invalid parameter: **classificationGuideId** is not in valid format
+        '401':
+          $ref: '#/responses/401'
+        '404':
+          description: "**classificationGuideId** does not exist"
+        default:
+          $ref: '#/responses/default'
+
+    put:
+      tags:
+        - classification-guides
+      summary: Update a classification guide
+      description: Updates the classification guide with id **classificationGuideId**. For example, you can rename a classification guide.
+      operationId: updateClassificationGuide
+      parameters:
+        - $ref: '#/parameters/classificationGuideId'
+        - name: classificationGuide
+          description: Classification guide
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ClassificationGuideBody'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ClassificationGuideEntry'
+        '400':
+          description: |
+            Invalid parameter: **classificationGuideId** is not in a valid format or the **classificationGuide** is invalid
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: Current user does not have permission to update the guide with id **classificationGuideId**
+        '404':
+          description: "**classificationGuideId** does not exist"
+        '409':
+          description: Name clashes with an existing classification guide
+        '422':
+          description: Couldn't edit guide. Guide name can't end in a period or contain any of these characters "*\>&lt;?/|
+        default:
+          $ref: '#/responses/default'
+
+    delete:
+      tags:
+        - classification-guides
+      summary: Delete a classification guide
+      description: Deletes the classification guide with id **classificationGuideId**, including any topics and instructions.
+      operationId: deleteClassificationGuide
+      parameters:
+        - $ref: '#/parameters/classificationGuideId'
+      responses:
+        '204':
+          $ref: '#/responses/204'
+        '400':
+          description: |
+            Invalid parameter: **classificationGuideId** is not in a valid format
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: |
+            Current user does not have permission to delete **classificationGuideId** or one of its descendents
+        '404':
+          description: "**classificationGuideId** does not exist"
+        default:
+          $ref: '#/responses/default'
+
+
+  /classification-guides/{classificationGuideId}/topics:
+
+    get:
+      summary: List all topics
+      description: Gets all topics.
+      operationId: listTopics
+      tags:
+        - classification-guides
+      parameters:
+        - $ref: '#/parameters/classificationGuideId'
+        - $ref: '#/parameters/topicInclude'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - name: where
+          in: query
+          description: |
+            A string to restrict the returned objects by using a predicate. Supported operations are AND, NOT, and OR e.g. (instruction=true and hasSubtopics=false). Fields to filter on:
+            * hasInstruction
+            * hasSubtopics
+
+          required: false
+          type: string
+        - $ref: '#/parameters/includeSourceParam'
+      responses:
+        '200':
+          description: An paged array of topics
+          schema:
+            $ref: '#/definitions/TopicPaging'
+        '400':
+          description: |
+            Invalid parameter: **classificationGuideId** is not in valid format
+        '401':
+          $ref: '#/responses/401'
+        '404':
+          description: "**classificationGuideId** does not exist"
+        default:
+          $ref: '#/responses/default'
+
+    post:
+      summary: Create a topic
+      description: Creates a new topic.
+      operationId: createTopic
+      tags:
+        - classification-guides
+      parameters:
+        - $ref: '#/parameters/classificationGuideId'
+        - name: topic
+          description: Topic
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TopicBody'
+        - $ref: '#/parameters/topicInclude'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/TopicEntry'
+        '400':
+          description: |
+            Invalid parameter: The **classificationGuideId** is not a valid format
+            or the **topic** is invalid.
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: Current user doesn't have permission to create a topic under this classification guide
+        '404':
+          description: "**classificationGuideId** does not exist"
+        '409':
+          description: Name clashes with an existing topic in this classification guide
+        '422':
+          description: The supplied security marks would cause the user to lose access to the topic.
+        default:
+          $ref: '#/responses/default'
+
+
+  /topics/{topicId}:
+
+    get:
+      summary: Get topic information
+      description: Gets the topic with id **topicId**.
+      operationId: showTopicById
+      tags:
+        - classification-guides
+      parameters:
+        - $ref: '#/parameters/topicId'
+        - $ref: '#/parameters/topicInclude'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/TopicEntry'
+        '400':
+          description: |
+            Invalid parameter: **topicId** is not in a valid format
+        '401':
+          $ref: '#/responses/401'
+        '404':
+          description: "**topicId** does not exist or the current user doesn't have permission to view the instruction for this topic"
+        default:
+          $ref: '#/responses/default'
+
+    put:
+      tags:
+        - classification-guides
+      summary: Update a topic
+      description: |
+        Updates the topic with id **topicId**.
+
+        Use this to rename a topic or to add, edit, or remove the instruction associated with it.
+      operationId: updateTopic
+      parameters:
+        - $ref: '#/parameters/topicId'
+        - name: topic
+          description: Topic
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TopicBody'
+        - $ref: '#/parameters/topicInclude'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/TopicEntry'
+        '400':
+          description: |
+            Invalid parameter: **topicId** is not a valid format, the **topic** is
+            invalid or if this is an attempt to add an instruction to a topic which
+            has subtopics.
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: Current user does not have permission to update the topic with id **topicId**
+        '404':
+          description: "**topicId** does not exist or the current user doesn't have permission to view the instruction for this topic"
+        '409':
+          description: Name clashes with an existing topic in this classification guide
+        '422':
+          description: The supplied security marks would cause the user to lose access to the topic.
+        default:
+          $ref: '#/responses/default'
+
+    delete:
+      tags:
+        - classification-guides
+      summary: Delete a topic
+      description: Deletes the topic with id  **topicId**, including any subtopics and instructions.
+      operationId: deleteTopic
+      parameters:
+        - $ref: '#/parameters/topicId'
+      responses:
+        '204':
+          $ref: '#/responses/204'
+        '400':
+          description: |
+            Invalid parameter: **topicId** is not in a valid format
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: Current user does not have permission to delete **topicId** or one of its descendents
+        '404':
+          description: |
+            "**topicId** does not exist or the current user doesn't have permission to view the instruction for this topic"
+        default:
+          $ref: '#/responses/default'
+
+
+  /topics/{topicId}/subtopics:
+
+    get:
+      summary: List all subtopics
+      description: Gets all subtopics of a topic.
+      operationId: listSubtopics
+      tags:
+        - classification-guides
+      parameters:
+        - $ref: '#/parameters/topicId'
+        - $ref: '#/parameters/topicInclude'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/orderByParam'
+        - name: where
+          in: query
+          description: |
+            A string to restrict the returned objects by using a predicate. Supported operations are AND, NOT, and OR. Fields to filter on:
+            * hasInstruction
+            * hasSubtopics
+          required: false
+          type: string
+        - $ref: '#/parameters/includeSourceParam'
+      responses:
+        '200':
+          description: An paged array of subtopics
+          schema:
+            $ref: '#/definitions/SubtopicPaging'
+        '401':
+          $ref: '#/responses/401'
+        '404':
+          description: "**topicId** does not exist or the current user doesn't have permission to view the instruction for this topic"
+        default:
+          $ref: '#/responses/default'
+
+    post:
+      summary: Create a subtopic
+      description: Creates a new subtopic of a topic.
+      operationId: createSubtopic
+      tags:
+        - classification-guides
+      parameters:
+        - $ref: '#/parameters/topicId'
+        - name: topic
+          description: Subtopic
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TopicBody'
+        - $ref: '#/parameters/topicInclude'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/TopicEntry'
+        '400':
+          description: |
+            Invalid parameter: The **topicId** is not in a valid format, the subtopic
+            **topic** is invalid
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: Current user doesn't have permission to create a subtopic under this topic
+        '404':
+          description: |
+            "**topicId** does not exist or the current user doesn't have permission
+            to view the instruction for the parent topic"
+        '409':
+          description: Name clashes with an existing subtopic of this topic
+        '422':
+          description: |
+            Parent topic already has an instruction and so cannot contain subtopics, or the supplied security marks
+            would cause the user to lose access to the topic.
+        default:
+          $ref: '#/responses/default'
+
+
+  /combined-instructions:
+
+    post:
+      summary: Combined instructions
+      description: Combines instructions from the given topics and the user defined instruction, if any.
+      operationId: combinedInstructions
+      tags:
+        - classification-guides
+      parameters:
+        - name: instructions
+          description: Instructions
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/CombinedInstructionBody'
+      responses:
+        '200':
+          description: An instruction that represents the combination of all the specified instructions.
+          schema:
+            $ref: '#/definitions/InstructionEntry'
+        '400':
+          description: |
+            Invalid parameter: **topicIds** is not a valid format.
+        '401':
+          $ref: '#/responses/401'
+        '404':
+          description: One or more **topicIds**, or a field from the classification information or security mark information has not been found.
+        default:
+          $ref: '#/responses/default'
+
+  /classification-reasons:
+    get:
+      summary: List all classification reasons
+      description: Gets all classification reasons.
+      operationId: listClassificationReasons
+      tags:
+        - classification-reasons
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+        - $ref: '#/parameters/fieldsParam'
+      responses:
+        '200':
+          description: A paged array of classification reasons
+          schema:
+            $ref: '#/definitions/ClassificationReasonsPaging'
+        '401':
+          $ref: '#/responses/401'
+        default:
+          $ref: '#/responses/default'
+    post:
+      summary: Create a classification reason
+      description: |
+        Creates a new classification reason.
+
+        **Note:** You can create more than one reason by specifying a list of reasons in the JSON body.
+        For example, the following JSON body creates two classification reasons:
+        ```JSON
+        [
+          {
+            "code":"My Code1",
+            "description":"My Description1"
+          },
+          {
+            "code":"My Code2",
+            "description":"My Description2"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
+      operationId: createClassificationReason
+      tags:
+        - classification-reasons
+      parameters:
+        - name: classificationReason
+          description: Classification reason
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ClassificationReasonBody'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ClassificationReasonEntry'
+        '400':
+          description: |
+            Invalid parameter: The **classificationReason** is is not in a valid format
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: >-
+            Current user doesn't have permission to create classification
+            reasons **classificationReason**
+        '409':
+          description: Reason code clashes with an existing classification reason
+        default:
+          $ref: '#/responses/default'
+
+  '/classification-reasons/{classificationReasonId}':
+    get:
+      summary: Get classification reason information
+      description: Gets the classification reason  **classificationReasonId**.
+      operationId: showClassificationReasonById
+      tags:
+        - classification-reasons
+      parameters:
+        - $ref: '#/parameters/classificationReasonId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ClassificationReasonEntry'
+        '400':
+          description: |
+            Invalid parameter: **classificationReasonId** is not in valid format
+        '401':
+          $ref: '#/responses/401'
+        '404':
+          description: "**classificationReasonId** does not exist"
+        default:
+          $ref: '#/responses/default'
+
+    put:
+      tags:
+        - classification-reasons
+      summary: Update a classification reason
+      description: >-
+        Updates the classification reason with id **classificationReasonId**.
+        For example, you can change a classification reason code or description.
+      operationId: updateClassificationReason
+      parameters:
+        - $ref: '#/parameters/classificationReasonId'
+        - name: classificationReason
+          description: Classification reason
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ClassificationReasonBody'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ClassificationReasonEntry'
+        '400':
+          description: >
+            Invalid parameter: **classificationReasonId** is not in a valid
+            format or the **classificationReason** is invalid
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: >-
+            Current user does not have permission to update
+            **classificationReasonId**
+        '404':
+          description: '**classificationReasonId** does not exist'
+        '409':
+          description: Reason code clashes with an existing classification reason
+        default:
+          $ref: '#/responses/default'
+    delete:
+      tags:
+        - classification-reasons
+      summary: Delete a classification reason
+      description: >-
+        Deletes the classification reason  **classificationReasonId**. You can't delete a classification reason that is being used to classify content. There must be at least one classification reason.
+      operationId: deleteClassificationReason
+      parameters:
+        - $ref: '#/parameters/classificationReasonId'
+      responses:
+        '204':
+          $ref: '#/responses/204'
+        '400':
+          description: >
+            Invalid parameter: **classificationReasonId** is not in a valid
+            format
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: >
+            Current user does not have permission to delete
+            **classificationReasonId**
+        '404':
+          description: '**classificationReasonId** does not exist'
+        '422':
+          description: >
+            Model integrity exception: **classificationReasonId** is in use or is the last reason on the system.
+        default:
+          $ref: '#/responses/default'
+
+   ## Security control settings
+  '/security-control-settings/{securityControlSettingKey}':
+    get:
+      summary: Get security control setting value
+      description: Gets the value for a selected **securityControlSettingKey**.
+      operationId: getSecurityControlSetting
+      tags:
+        - security-control-settings
+      parameters:
+        - $ref: '#/parameters/securityControlSettingKeyParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecurityControlSettingEntry'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "Current user does not have permission to retrieve the value for **securityControlSettingKey**"
+        '404':
+          description: "**securityControlSettingKey** does not exist"
+        default:
+          $ref: '#/responses/default'
+    put:
+      summary: Update security control setting value
+      description: Updates the value of a selected **securityControlSettingKey**.
+      operationId: updateSecurityControlSetting
+      tags:
+        - security-control-settings
+      parameters:
+        - $ref: '#/parameters/securityControlSettingKeyParam'
+        - name: securityControlSettingValue
+          description: The new value for the security control setting. This can be a string or number, depending on the setting key.
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SecurityControlSettingBody'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SecurityControlSettingEntry'
+        '400':
+          description: >
+            Invalid parameter: **securityControlSettingValue** is not in a valid format or the **securityControlSettingKey** is invalid
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "Current user does not have permission to update the value for the setting with key **securityControlSettingKey**"
+        '404':
+          description: "**securityControlSettingKey** does not exists"
+        '422':
+          description: |
+            There is a problem with the internal state that prevents the value from being updated, for example the
+            declassification date recalculation process is currently running and so the declassification time frame
+            cannot be changed.
+        default:
+          $ref: '#/responses/default'
+  /declassification-exemptions:
+    get:
+      summary: List all declassification exemptions
+      description: Gets all declassification exemptions.
+      operationId: listDeclassificationExemptions
+      tags:
+        - declassification-exemptions
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+      responses:
+        '200':
+          description: A paged array of declassification exemptions
+          schema:
+            $ref: '#/definitions/DeclassificationExemptionsPaging'
+        '401':
+          $ref: '#/responses/401'
+        default:
+          $ref: '#/responses/default'
+    post:
+      summary: Create a declassification exemption
+      description: |
+        Creates a new declassification exemption.
+
+        **Note:** You can create more than one exemption by specifying a list of exemptions in the JSON body.
+        For example, the following JSON body creates two declassification exemptions:
+        ```JSON
+        [
+          {
+            "code":"My Code1",
+            "description":"My Description1"
+          },
+          {
+            "code":"My Code2",
+            "description":"My Description2"
+          }
+        ]
+        ```
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+              {
+                "entry": {
+                  ...
+                }
+              },
+              {
+                "entry": {
+                  ...
+                }
+              }
+            ]
+          }
+        }
+        ```
+      operationId: createDeclassificationExemption
+      tags:
+        - declassification-exemptions
+      parameters:
+        - name: declassificationExemption
+          description: Declassification exemption
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DeclassificationExemptionBody'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DeclassificationExemptionEntry'
+        '400':
+          description: |
+            Invalid parameter: The **declassificationExemption** is invalid
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: >-
+            Current user doesn't have permission to create declassification exemptions
+        '409':
+          description: Exemption code clashes with an existing declassification exemption
+        default:
+          $ref: '#/responses/default'
+
+  '/declassification-exemptions/{declassificationExemptionId}':
+    get:
+      summary: Get declassification exemption information
+      description: Gets the declassification exemption with id **declassificationExemptionId**.
+      operationId: showDeclassificationExemptionById
+      tags:
+        - declassification-exemptions
+      parameters:
+        - $ref: '#/parameters/declassificationExemptionId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DeclassificationExemptionEntry'
+        '400':
+          description: |
+            Invalid parameter: **declassificationExemptionId** is not in valid format
+        '401':
+          $ref: '#/responses/401'
+        '404':
+          description: "**declassificationExemptionId** does not exist"
+        default:
+          $ref: '#/responses/default'
+
+    put:
+      tags:
+        - declassification-exemptions
+      summary: Update a declassification exemption
+      description: >-
+        Updates the declassification exemption with id **declassificationExemptionId**.
+        For example, you can rename a declassification exemption.
+      operationId: updateDeclassificationExemption
+      parameters:
+        - $ref: '#/parameters/declassificationExemptionId'
+        - name: declassificationExemption
+          description: Declassification exemption
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DeclassificationExemptionBody'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DeclassificationExemptionEntry'
+        '400':
+          description: >
+            Invalid parameter: **declassificationExemptionId** is not in a valid
+            format or the **declassificationExemption** is invalid
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: >-
+            Current user does not have permission to update the guide with id
+            **declassificationExemptionId**
+        '404':
+          description: '**declassificationExemptionId** does not exist'
+        '409':
+          description: Exemption code clashes with an existing declassification exemption
+        default:
+          $ref: '#/responses/default'
+    delete:
+      tags:
+        - declassification-exemptions
+      summary: Delete a declassification exemption
+      description: >-
+        Deletes the declassification exemption with id **declassificationExemptionId**. You can't delete a classification exemption that is being used to classify content.
+      operationId: deleteDeclassificationExemption
+      parameters:
+        - $ref: '#/parameters/declassificationExemptionId'
+      responses:
+        '204':
+          $ref: '#/responses/204'
+        '400':
+          description: >
+            Invalid parameter: **declassificationExemptionId** is not in a valid
+            format
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: >
+            Current user does not have permission to delete
+            **declassificationExemptionId**
+        '404':
+          description: '**declassificationExemptionId** does not exist'
+        '422':
+          description: >
+            Model integrity exception: **classificationExemptionId** is in use or is the last exemption on the system.
+        default:
+          $ref: '#/responses/default'
+
+  ## Default classification values
+  '/default-classification-values/{nodeId}/calculate-declassification-date':
+    post:
+      summary: Calculate the default declassification date
+      description: Calculates the default declassification date for **nodeId** based on the properties of the node and the current declassification time frame.
+      operationId: calculateDefaultDeclassificationDate
+      tags:
+        - default-classification-values
+      parameters:
+        - $ref: '#/parameters/nodeIdParam'
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DeclassificationDate'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "Current user does not have permission to retrieve default values for **nodeId**"
+        '404':
+          description: "**nodeId** does not exist"
+        default:
+          $ref: '#/responses/default'
+  '/cleared-authorities/{authorityId}/clearing-marks':
+    get:
+      summary: Get authority clearance information by authorityId.
+      description: |
+        Gets the authority clearance for a user or group. 
+      operationId: showAuthorityClearanceByUser
+      tags:
+        - authority-clearance
+      parameters:
+        -  $ref: '#/parameters/authorityId'
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+
+      responses:
+        '200':
+           description: Successful response
+           schema:
+              $ref: '#/definitions/AuthorityClearanceGroupPaging'
+        '400':
+           description: 'Invalid Parameter'
+        '401':
+           $ref: '#/responses/401'
+        '403':
+           description: >-
+              Current user does not have permission to fetch the authority clearence
+        '404':
+           description: "**authorityId** does not exist"
+        default:
+           $ref: '#/responses/default'        
+    post:
+      tags:
+        - authority-clearance
+      summary: Update an authority clearance
+      description: |
+        Updates the authority clearance.
+        For example, Manage the Security Marks that a user or group has access to.
+        
+        Note: You can update more than one security mark by specifying a list of marks in the
+        ```JSON
+        For example, the following JSON body update two security marks:
+        
+        [
+        {
+          "id":"securityMarkid"
+          "groupId":"securityGroupId"
+          "op":"ADD"
+        },
+        {
+          "id":"securityMarkid"
+          "groupId":"securityGroupId"
+          "op":"REMOVE"
+        }
+        ]
+        ```
+        
+        If you specify a list as input, then a paginated list rather than an entry is returned in the response body. For example:
+        ```JSON
+        
+        {
+          "list": {
+            "pagination": {
+              "count": 2,
+              "hasMoreItems": false,
+              "totalItems": 2,
+              "skipCount": 0,
+              "maxItems": 100
+            },
+            "entries": [
+            {
+              "entry": {
+                         ...
+              }
+            },
+            {
+              "entry": {
+                         ...
+              }
+            }
+            ]
+          }
+        }
+        ```
+      operationId: updateAuthorityClearance
+      parameters:
+        -  $ref: '#/parameters/authorityId'
+        -  name: authorityClearance
+           description: Authority Clearance
+           in: body
+           required: true
+           schema:
+              $ref: '#/definitions/SecurityMarksUpdateBody'
+      produces:
+        - application/json
+      responses:
+        '201':
+           description: Successful response
+           schema:
+              $ref: '#/definitions/SecuringMarksPaging'
+        '400':
+           description: 'Invalid parameter'
+        '401':
+           $ref: '#/responses/401'
+        '403':
+           description: >-
+              Current user does not have permission to update the authority
+        '404':
+           description: Couldn't find AuthorityId with ID **authorityId**
+        default:
+           $ref: '#/responses/default'
+
+  '/declassification-date-recalculation-processes':
+    get:
+      summary: Get declassification date recalculation information
+      description: Find the status of the declassification date recalculation process(es).
+      tags:
+       - default-classification-values
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DeclassificationDateRecalculationProcessPaging'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "Current user does not have permission to retrieve information about declassification date recalculation processes."
+        default:
+          $ref: '#/responses/default'
+    post:
+      summary: Start the declassification date recalculation process
+      description: |
+          Start the declassification date recalculation process with id **processId** if it is not already running.  The only supported id is "-declassificationDateRecalculationProcess-".
+      tags:
+       - default-classification-values
+      parameters:
+        - name: declassificationDateRecalculationProcess
+          in: body
+          description: The entity containing the identifier for the declassification date recalculation process. The id should be set to "-declassificationDateRecalculationProcess-".
+          required: true
+          schema:
+            $ref: '#/definitions/DeclassificationDateRecalculationProcessBody'
+      responses:
+        '202':
+          description: Successful response - the process has been started
+          schema:
+            $ref: '#/definitions/DeclassificationDateRecalculationProcessEntry'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "Current user does not have permission to start the declassification date recalculation process."
+        '404':
+          description: "**processId** does not exist"
+        '422':
+          description: The process is currently running
+        default:
+          $ref: '#/responses/default'
+
+  '/declassification-date-recalculation-processes/{processId}':
+    get:
+      summary: Get declassification date recalculation process information
+      description: Gets the declassification date recalculation process with id **processId**.  The only supported id is "-declassificationDateRecalculationProcess-".
+      tags:
+        - default-classification-values
+      parameters:
+        - name: processId
+          in: path
+          description: The identifier for the declassification date recalculation process. This should be set to "-declassificationDateRecalculationProcess-".
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DeclassificationDateRecalculationProcessEntry'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: "Current user does not have permission to retrieve information about the declassification date recalculation process."
+        '404':
+          description: "**processId** does not exist"
+        default:
+          $ref: '#/responses/default'
+
+   ## Highest Child Classification
+  '/highest-child-classification/{containerNodeId}':
+    get:
+      summary: Get highest classification item in the category or folder
+      description: Gets the classification level of the highest classified child for **containerNodeId**.
+      operationId: showHighestChildClassification
+      tags:
+        - highest-child-classification
+      parameters:
+        - $ref: '#/parameters/containerNodeId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ClassificationLevelEntry'
+        '400':
+          description: |
+            Invalid parameter: **containerNodeId** is not in valid format
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          description: Current user does not have permission to read **containerNodeId**
+        '404':
+          description: "**containerNodeId** does not exist"
+        default:
+          $ref: '#/responses/default'
+
+
+parameters:
+
+  classificationGuideId:
+    name: classificationGuideId
+    in: path
+    description: The identifier for the classification guide
+    type: string
+    required: true
+
+  topicId:
+    name: topicId
+    in: path
+    description: The identifier for the topic
+    type: string
+    required: true
+
+  classificationReasonId:
+    name: classificationReasonId
+    in: path
+    description: The identifier for the classification reason
+    type: string
+    required: true
+
+  declassificationExemptionId:
+    name: declassificationExemptionId
+    in: path
+    description: The identifier for the declassification exemption
+    type: string
+    required: true
+
+  topicInclude:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the topic. The following optional fields can be requested:
+      * hasSubtopics - A flag indicating whether the topic already contains any subtopics.
+      * instruction - Contains details of any instruction in the topic.
+      * path - An ordered list of id-name pairs of all ancestor topics and the classification guide.
+      * classificationGuide - The classification guide this topic is in.
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+
+  securityControlSettingKeyParam:
+    name: securityControlSettingKey
+    in: path
+    description: |
+      The key for the security control setting. You can use one of the following settings:
+      * -declassificationTimeFrame- for the declassification time frame value set in alfresco-global.properties file
+    required: true
+    type: string
+
+  guideInclude:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the guide. The following optional fields can be requested:
+      * hasTopics - A flag indicating whether the guide already contains any topics.
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+
+  containerNodeId:
+    name: containerNodeId
+    in: path
+    description: |
+      The identifier of a container. You can use the following aliases:
+      **-filePlan-**, **-unfiled-**
+    required: true
+    type: string
+
+  securityGroupId:
+    name: securityGroupId
+    in: path
+    description: The identifier for the security group
+    type: string
+    required: true
+
+  securityMarkId:
+    name: securityMarkId
+    in: path
+    description: The identifier for the security mark
+    type: string
+    required: true
+    
+  authorityId:
+    name: authorityId
+    in: path
+    description: The identifier for the user or group
+    type: string
+    required: true
+
+  ## Core parameter
+  nodeIdParam:
+    name: nodeId
+    in: path
+    description: The identifier of a node.
+    required: true
+    type: string
+
+  ## Core parameter
+  skipCountParam:
+    name: skipCount
+    in: query
+    description: The number of entities that exist in the collection before those included in this list.
+    required: false
+    type: integer
+    minimum: 0
+
+  ## Core parameter
+  groupInclude:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the security group. The following optional fields can be requested:
+      * inUse - A flag indicating whether the security group is in use or not.
+    required: false
+    type: string
+
+  ## Core parameter
+  maxItemsParam:
+    name: maxItems
+    in: query
+    description: The maximum number of items to return in the list.
+    required: false
+    type: integer
+    minimum: 1
+
+  ## Core parameter
+  whereParam:
+    name: where
+    in: query
+    description: A string to restrict the returned objects by using a predicate.
+    required: false
+    type: string
+
+  ## Core parameter
+  orderByParam:
+    name: orderBy
+    in: query
+    description: |
+      A string to control the order of the entities returned in a list. You can use the **orderBy** parameter to
+      sort the list by one or more fields.
+
+      Each field has a default sort order, which is normally acending order. Read the API method implementation notes
+      above to check if any fields used in this method have a descending default search order.
+
+      To sort the entities in a specific order, you can use the **ASC** and **DESC** keywords for any field.
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+
+  ## Core parameter
+  includeSourceParam:
+    name: includeSource
+    in: query
+    description: Also include **source** in addition to **entries** with folder information on the parent guide/topic
+    required: false
+    type: boolean
+
+  ## Core definition
+  fieldsParam:
+    name: fields
+    in: query
+    description: |
+      A list of field names.
+
+      You can use this parameter to restrict the fields
+      returned within a response if, for example, you want to save on overall bandwidth.
+
+      The list applies to a returned individual
+      entity or entries within a collection.
+
+      If the API method also supports the **include**
+      parameter, then the fields specified in the **include**
+      parameter are returned in addition to those specified in the **fields** parameter.
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+
+responses:
+  '204':
+    description: Successful response
+  '401':
+    description: Authentication failed
+  default:
+    description: Unexpected error
+    schema:
+      $ref: '#/definitions/Error'
+
+
+definitions:
+
+  ClassificationGuidesBody:
+    required:
+      - name
+      - originatingOrganization
+      - publishedOn
+    properties:
+      name:
+        type: string
+      originatingOrganization:
+        type: string
+      publishedOn:
+        type: string
+        format: date
+      enabled:
+        type: boolean
+        default: false
+      hasTopics:
+        type: boolean
+
+  ClassificationGuideBody:
+    required:
+      - name
+      - originatingOrganization
+      - publishedOn
+    properties:
+      name:
+        type: string
+      originatingOrganization:
+        type: string
+      publishedOn:
+        type: string
+        format: date
+      enabled:
+        type: boolean
+        default: false
+
+  ClassificationGuidesInTopic:
+    description: The classification guide which the topic is contained in. This field is only returned when requested.
+    allOf:
+      - $ref: '#/definitions/ClassificationGuidesBody'
+    required:
+      - id
+      - createdAt
+      - enabled
+    properties:
+      id:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+
+  ClassificationGuideInTopic:
+    description: The classification guide which the topic is contained in. This field is only returned when requested.
+    allOf:
+      - $ref: '#/definitions/ClassificationGuideBody'
+    required:
+      - id
+      - createdAt
+      - enabled
+    properties:
+      id:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+
+  ClassificationGuides:
+    description: A classification guide in a list.
+    allOf:
+      - $ref: '#/definitions/ClassificationGuidesInTopic'
+
+  ClassificationGuide:
+    description: A classification guide.
+    allOf:
+      - $ref: '#/definitions/ClassificationGuideInTopic'
+
+  ClassificationGuidesEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ClassificationGuides'
+
+  ClassificationGuideEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ClassificationGuide'
+
+  ClassificationGuidePaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/ClassificationGuidesEntry'
+
+  TopicBody:
+    required:
+      - name
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      instruction:
+        $ref: '#/definitions/InstructionBody'
+
+  Topic:
+    required:
+      - id
+      - name
+      - hasInstruction
+      - createdAt
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      hasInstruction:
+        type: boolean
+        description: 'Flag indicating whether the topic has an instruction or not.'
+      instruction:
+        $ref: '#/definitions/Instruction'
+      createdAt:
+        type: string
+        format: date-time
+      hasSubtopics:
+        type: boolean
+        default: false
+        description: 'Flag indicating whether the topic has subtopics. This field is only included when requested.'
+      path:
+        $ref: '#/definitions/Path'
+      classificationGuide:
+        $ref: '#/definitions/ClassificationGuideInTopic'
+
+  TopicEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Topic'
+
+  TopicPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/TopicEntry'
+
+  SubtopicPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/TopicEntry'
+
+  Instruction:
+    properties:
+      classificationInformation:
+        $ref: '#/definitions/ClassificationInformation'
+      securityMarkInformation:
+        $ref: '#/definitions/SecurityMarkInformation'
+    description: 'Information about how a piece of content should be secured. This field is only included when requested.'
+
+  InstructionEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/Instruction'
+
+  InstructionBody:
+    properties:
+      classificationInformation:
+        $ref: '#/definitions/ClassificationInformation'
+      securityMarkInformation:
+        $ref: '#/definitions/SecurityMarkInformationBody'
+
+  CombinedInstructionBody:
+    allOf:
+      - $ref: '#/definitions/InstructionBody'
+    required:
+      - topicIds
+    properties:
+      topicIds:
+        type: array
+        items:
+          type: string
+
+  ClassificationInformation:
+    required:
+      - level
+      - reasonIds
+    properties:
+      level:
+        type: string
+      classificationAgency:
+        type: string
+      reasonIds:
+        type: array
+        items:
+          type: string
+        minItems: 1
+      downgradeOn:
+        type: string
+        format: date
+      downgradeEvent:
+        type: string
+      downgradeInstructions:
+        type: string
+      declassifyOn:
+        type: string
+        format: date
+      declassificationEvent:
+        type: string
+      exemptionIds:
+        type: array
+        items:
+          type: string
+
+  SecurityMarkInformation:
+    required:
+      - add
+    properties:
+      add:
+        $ref: '#/definitions/SecurityMarks'
+
+  SecurityMarkInformationBody:
+    required:
+      - add
+    properties:
+      add:
+        $ref: '#/definitions/SecurityMarksBody'
+
+  SecurityMark:
+    required:
+      - id
+      - name
+      - groupId
+      - groupName
+      - groupType
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      groupId:
+        type: string
+      groupName:
+        type: string
+      groupType:
+        type: string
+
+  SecurityMarkBody:
+    required:
+      - id
+      - groupId
+    properties:
+      id:
+        type: string
+      groupId:
+        type: string
+
+  SecurityMarks:
+    type: array
+    items:
+      $ref: '#/definitions/SecurityMark'
+
+  SecurityMarksBody:
+    type: array
+    items:
+      $ref: '#/definitions/SecurityMarkBody'
+
+  SecuringMarksPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/SecuringMarksEntry'
+
+  SecuringMarksEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/SecuringMark'
+
+  SecuringMark:
+    required:
+      - id
+      - name
+      - groupId
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      groupId:
+        type: string
+
+  SecurityMarksUpdateBody:
+    type: array
+    items:
+      $ref: '#/definitions/SecurityMarksUpdateEntry'
+
+  SecurityMarksUpdateEntry:
+    type: object
+    required:
+      - id
+      - groupId
+      - op
+    properties:
+      id:
+        type: string
+      groupId:
+        type: string
+      op:
+        type: string
+        enum:
+          - ADD
+          - REMOVE
+
+  PathElement:
+    required:
+      - id
+      - name
+      - type
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      type:
+         type: string
+    description: The id and name of a topic or classification guide that is an ancestor of this topic, along with a descriptor string to indicate whether its a guide or topic.
+
+  Path:
+    type: array
+    items:
+      $ref: '#/definitions/PathElement'
+    description: |
+      An ordered list of ancestors starting with the classification guide and ending with the parent of this topic.
+      This field is only returned when requested.
+
+  ClassificationReason:
+    required:
+      - id
+      - code
+      - description
+    properties:
+      id:
+        type: string
+      code:
+        type: string
+      description:
+        type: string
+
+  ClassificationReasonBody:
+    required:
+      - code
+      - description
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+
+  ClassificationReasonEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ClassificationReason'
+
+  ClassificationReasonsPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/ClassificationReasonEntry'
+  SecurityControlSetting:
+    required:
+      - key
+      - value
+    properties:
+      key:
+        type: string
+      value:
+        type: object
+
+  SecurityControlSettingEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/SecurityControlSetting'
+
+  SecurityControlSettingBody:
+    required:
+      - value
+    properties:
+      value:
+        type: object
+
+  DeclassificationExemption:
+    required:
+      - id
+      - code
+      - description
+    properties:
+      id:
+        type: string
+      code:
+        type: string
+      description:
+        type: string
+
+  DeclassificationExemptionBody:
+    required:
+      - code
+      - description
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+
+  DeclassificationExemptionEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/DeclassificationExemption'
+
+  DeclassificationExemptionsPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/DeclassificationExemptionEntry'
+
+  DeclassificationDate:
+    type: string
+    format: date-time
+
+  DeclassificationDateRecalculationProcessBody:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        description: The id of the process. The only supported process id is "-declassificationDateRecalculationProcess-".
+
+  DeclassificationDateRecalculationProcessPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/DeclassificationDateRecalculationProcessEntry'
+
+  DeclassificationDateRecalculationProcessEntry:
+    type: object
+    properties:
+      id:
+        type: string
+      startedAt:
+        type: string
+        format: date-time
+      endedAt:
+        type: string
+        format: date-time
+      lastDeclassificationTimeFrame:
+        type: integer
+        description: The declassification time frame when the process last ran (in years).
+
+  ClassificationLevelEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/ClassificationLevel'
+
+  ClassificationLevel:
+    required:
+      - id
+      - displayLabel
+      - isUnmarkedMark
+    properties:
+      id:
+        type: string
+      displayLabel:
+        type: string
+      isUnmarkedMark:
+        type: boolean
+
+  SecurityGroupModelEntry:
+     type: object
+     required:
+        - entry
+     properties:
+        entry:
+           $ref: '#/definitions/SecurityGroupModel'
+
+  SecurityGroupModel:
+    type: object
+    properties:
+      id:
+        type: string
+      groupName:
+        type: string
+      groupType:
+        type: string
+        description: "Can be one of the following: HIERARCHICAL, USER_REQUIRES_ALL, USER_REQUIRES_ANY"
+      inUse:
+        type: boolean
+        description: Returns whether the group is in use or not.
+      systemGroup:
+        type: boolean
+        description: |
+            True if the security group is a system-managed group. Additional restrictions
+            may apply to system groups and so e.g. it may not be possible to use the
+            marks without supplying additional metadata.
+
+  SecurityGroupCreateBodyModel:
+    type: object
+    required:
+      - groupName
+      - groupType
+    properties:
+      groupName:
+        type: string
+      groupType:
+        type: string
+        description: "Can be one of the following: HIERARCHICAL, USER_REQUIRES_ALL, USER_REQUIRES_ANY"
+
+  SecurityGroupUpdateBodyModel:
+    type: object
+    required:
+      - groupName
+    properties:
+      groupName:
+        type: string
+
+  SecurityGroupPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/SecurityGroupModelEntry'
+
+  SecurityMarkModelEntry:
+     type: object
+     required:
+        - entry
+     properties:
+        entry:
+           $ref: '#/definitions/SecurityMarkModel'
+
+  SecurityMarkModel:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      groupId:
+        type: string
+
+  SecurityMarkBodyModel:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+
+  SecurityMarksPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/SecurityMarkModelEntry'
+  
+  AuthorityClearanceGroupPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/AuthorityClearanceGroupEntry'
+              
+  AuthorityClearanceGroupEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/AuthorityClearanceGroup'
+
+  AuthorityClearanceGroup:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The identifier of the security group.
+      displayLabel:
+        type: string
+        description: The name of the security group.
+      systemGroup:
+        type: boolean
+        description: True if the security group is managed by the system, false if it is user-created.
+      type:
+        type: string
+        description: The type of the security mark.
+        enum:
+          - HIERARCHICAL
+          - USER_REQUIRES_ALL
+          - USER_REQUIRES_ANY
+      marks:
+        type: array
+        description: List of security marks from this group that the authority is cleared with.
+        items:
+          $ref: '#/definitions/AuthorityClearanceMark'
+
+  AuthorityClearanceMark:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The id of the security mark.
+      displayLabel:
+        type: string
+        description: The name of the security mark. 
+      applied:
+        type: boolean
+        description: The flag to determine whether this security mark is assigned directly to the authority. 
+      inherited:
+        type: boolean
+        description: The flag to determine whether this security mark is inherited by the authority via group membership. 
+
+  Error:
+    type: object
+    required:
+      - error
+    properties:
+      error:
+        type: object
+        required:
+          - statusCode
+          - briefSummary
+          - stackTrace
+          - descriptionURL
+        properties:
+          errorKey:
+            type: string
+          statusCode:
+            type: integer
+            format: int32
+          briefSummary:
+            type: string
+          stackTrace:
+            type: string
+          descriptionURL:
+            type: string
+            
+  ## Core definition
+  Pagination:
+    type: object
+    required:
+      - count
+      - hasMoreItems
+      - skipCount
+      - maxItems
+    properties:
+      count:
+        type: integer
+        format: int64
+        description: |
+          The number of objects in the entries array.
+      hasMoreItems:
+        type: boolean
+        description: |
+          A boolean value which is **true** if there are more entities in the collection
+          beyond those in this response. A true value means a request with a larger value
+          for the **skipCount** or the **maxItems** parameter will return more entities.
+      totalItems:
+        type: integer
+        format: int64
+        description: |
+          An integer describing the total number of entities in the collection.
+          The API might not be able to determine this value,
+          in which case this property will not be present.
+      skipCount:
+        type: integer
+        format: int64
+        description: |
+          An integer describing how many entities exist in the collection before
+          those included in this list.
+      maxItems:
+        type: integer
+        format: int64
+        description: |
+          The value of the **maxItems** parameter used to generate this list,
+          or if there was no **maxItems** parameter the default value is 100
+
