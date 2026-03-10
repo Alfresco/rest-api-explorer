@@ -1,0 +1,42 @@
+name: Sync AGS Definition
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - master
+
+env:
+  AGS_REPO: Alfresco/alfresco-enterprise-repo
+  AGS_FILE_PATH: amps/ags/rm-enterprise/rm-enterprise-rest-api-explorer/src/main/webapp/definitions/gs-classification-api.yaml
+  LOCAL_DEFS_DIR: src/main/webapp/definitions
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Checkout AGS definition
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: ${{ env.AGS_REPO }}
+          ref: master
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          sparse-checkout: ${{ env.AGS_FILE_PATH }}
+          sparse-checkout-cone-mode: false
+          path: enterprise-repo
+
+      - name: Copy AGS definition
+        run: cp enterprise-repo/${{ env.AGS_FILE_PATH }} ${{ env.LOCAL_DEFS_DIR }}/
+
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+        with:
+          commit_message: "Sync AGS definition from ${{ env.AGS_REPO }}"

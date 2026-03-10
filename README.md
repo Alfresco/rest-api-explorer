@@ -48,15 +48,10 @@ dependencies. More details in the [GitHub Pages Build Scripts](.github/gh-pages/
 
 You can build a Docker image of the API Explorer and run it in a container.
 
-Note: For a local version with AGS API definition, you will need to have the
-`gs-classification-api.yaml` file in the `src/main/webapp/definitions/`
-directory before building the Docker image. You can fetch it using the GitHub
-CLI:
-
-```sh
-gh api "repos/Alfresco/alfresco-enterprise-repo/contents/amps/ags/rm-enterprise/rm-enterprise-rest-api-explorer/src/main/webapp/definitions/gs-classification-api.yaml?ref=master" \
-  -H "Accept: application/vnd.github.v3.raw" > src/main/webapp/definitions/gs-classification-api.yaml
-```
+Note: The AGS classification API definition (`gs-classification-api.yaml`) is
+automatically synced from the enterprise repository by the
+[Sync AGS Definition](.github/workflows/sync-ags-definition.yml) workflow and
+committed to this repository.
 
 Build the Docker image:
 

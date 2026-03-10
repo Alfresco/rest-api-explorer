@@ -22,25 +22,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      AGS_TARGET_PATH: enterprise-repo
-      AGS_SWAGGER_FILE_PATH: amps/ags/rm-enterprise/rm-enterprise-rest-api-explorer/src/main/webapp/definitions/gs-classification-api.yaml
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Checkout AGS definition
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          repository: Alfresco/alfresco-enterprise-repo
-          ref: master
-          token: ${{ secrets.BOT_GITHUB_TOKEN }}
-          sparse-checkout: ${{ env.AGS_SWAGGER_FILE_PATH }}
-          sparse-checkout-cone-mode: false
-          path: ${{ env.AGS_TARGET_PATH }}
-
-      - name: Copy AGS definition
-        run: cp ${{ env.AGS_TARGET_PATH }}/${{ env.AGS_SWAGGER_FILE_PATH }} src/main/webapp/definitions/
 
       - name: Build
         working-directory: .github/gh-pages
@@ -50,7 +34,6 @@ jobs:
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: .github/gh-pages/build/dist
-
 
   deploy:
     name: Deploy to GitHub Pages
