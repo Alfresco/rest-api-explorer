@@ -10,4 +10,4 @@ RUN ./build.sh
 
 FROM nginxinc/nginx-unprivileged:1.29-alpine-perl
 
-COPY --from=builder /workspace/.github/gh-pages/build/dist /usr/share/nginx/html
+COPY --from=builder /workspace/.github/gh-pages/build /usr/share/nginx/html
