@@ -67,6 +67,20 @@ docker run -p 8080:8080 api-explorer
 
 Browse the API Explorer at [http://localhost:8080](http://localhost:8080).
 
+#### Building an older release
+
+To build an older release, before Dockerfile and GitHub Pages build scripts were
+available, you can check out the specific tag, materialize the necessary files,
+and then build the Docker image:
+
+```sh
+TAG=23.3.0
+git checkout $TAG
+git checkout master -- Dockerfile .github/gh-pages
+docker build -t api-explorer:$TAG . --load
+docker run -p 8080:8080 api-explorer:$TAG
+```
+
 ## License
 
 See [LICENSE](LICENSE) file for details.
