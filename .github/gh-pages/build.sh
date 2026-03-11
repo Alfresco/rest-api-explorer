@@ -21,19 +21,7 @@ rm -rf "$ARCHIVE_DEST_DIR"
 mkdir -p "$ARCHIVE_DEST_DIR"
 
 echo "Create index.html with redirect to api-explorer/ folder"
-cat > "$ARCHIVE_DEST_DIR/index.html" <<EOF
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=api-explorer/">
-  <title>Redirecting to API Explorer</title>
-</head>
-<body>
-  <p>Redirecting to <a href="api-explorer/">API Explorer</a>...</p>
-</body>
-</html>
-EOF
+cp ./redirect.html "$ARCHIVE_DEST_DIR/index.html"
 
 echo "Creating Swagger UI directory at $SWAGGER_UI_DEST_DIR"
 mkdir -p "$SWAGGER_UI_DEST_DIR"
