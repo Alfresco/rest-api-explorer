@@ -22,6 +22,7 @@ permissions:
 
 jobs:
   build:
+    name: Build GitHub Pages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,8 +37,8 @@ jobs:
         with:
           path: .github/gh-pages/build
 
-  deploy:
-    name: Deploy to GitHub Pages
+  publish:
+    name: Publish to GitHub Pages
     runs-on: ubuntu-latest
     # Only deploy tags that are not pre-release
     if: github.event_name == 'push' && ! contains(github.ref_name, '-')
