@@ -9306,6 +9306,133 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    post:
+      x-alfresco-since: "26.2"
+      tags:
+        - cascading-dictionaries
+      summary: Create a cascading dictionary definition
+      description: |
+        **Note:** This endpoint is available in Alfresco Enterprise 26.2 and newer versions.
+
+        Creates a new cascading dictionary definition for the specified aspect.
+        The aspect representing the cascading dictionary must be correctly defined and registered in the system before creating a cascading dictionary definition for it.
+        Only one cascading dictionary definition can be created for an aspect.
+
+        You must specify:
+        - the name of the cascading dictionary
+        - the aspect that the cascading dictionary definition is based on
+        - the local name of the key property of the aspect that represents the dictionary key
+        - the local name of the version property of the aspect that represents the dictionary version
+
+        For example:
+
+        ```JSON
+        {
+            "name": "Accounts",
+            "aspect": "cdict:account",
+            "keyProperty": "accountNumber",
+            "versionProperty": "accountDictVersion"
+        }
+        ```
+
+        You must have admin rights to create a cascading dictionary.
+      operationId: createCascadingDict
+      parameters:
+        - in: body
+          name: cascadingDictBodyCreate
+          description: The cascading dictionary information to create.
+          required: true
+          schema:
+            $ref: '#/definitions/CascadingDictBodyCreate'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CascadingDictCreateEntry'
+        '400':
+          description: |
+            Invalid or missing required body parameters: **name**, **aspect**, **keyProperty** or **versionProperty**
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to create cascading dictionary
+        '409':
+          description: The cascading dictionary of the specified name or aspect already exists
+        '422':
+          description: Model integrity exception including a non-existent aspect or incorrect property names
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/cascading-dictionaries/{aspectId}/content':
+    put:
+      x-alfresco-since: "26.2"
+      tags:
+        - cascading-dictionaries
+      summary: Update cascading dictionary content
+      description: |
+        **Note:** This endpoint is available in Alfresco Enterprise 26.2 and newer versions.
+
+        Updates the content of the cascading dictionary registered by **aspectId**.
+
+        The request body for this endpoint is a binary stream.
+        It must represent JSON content with the dictionary definition and data.
+        The structure of the JSON content must conform to the structure of the cascading dictionary definition for the aspect, including the key and version properties.
+
+        The cascading dictionary is versionable. The **majorVersion** parameter can be used to control versioning behaviour.
+        Without this parameter, a new minor version is created by default.
+
+        You must have admin rights to update cascading dictionary content.
+      operationId: updateCascadingDictContent
+      parameters:
+        - $ref: '#/parameters/aspectIdParam'
+        - name: majorVersion
+          in: query
+          description: |
+            If **true**, create a major version.
+          required: false
+          type: boolean
+          default: false
+        - in: body
+          name: contentBodyUpdate
+          description: The binary content
+          required: true
+          schema:
+            type: string
+            format: binary
+      produces:
+        - application/json
+      consumes:
+        - application/octet-stream
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CascadingDictEntry'
+        '400':
+          description: |
+            Invalid parameter: **aspectId** is not a valid format or content body is missing or invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to update cascading dictionary content
+        '404':
+          description: |
+            Cascading dictionary for **aspectId** does not exist
+        '413':
+          description: Content exceeds individual file size limit (configured for network/system)
+        '422':
+          description: Model integrity exception including validation problems of JSON content for cascading dictionary
+        '507':
+          description: Content exceeds overall storage quota limit configured for the network/system
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   '/cascading-dictionaries/{aspectId}':
     get:
       x-alfresco-since: "26.2"
@@ -11938,6 +12065,8 @@ definitions:
       - versionProperty
       - version
       - levels
+      - createdAt
+      - modifiedAt
     properties:
       aspect:
         type: string
@@ -11956,6 +12085,12 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/CascadingDictLevel'
+      createdAt:
+        type: string
+        format: date-time
+      modifiedAt:
+        type: string
+        format: date-time
   CascadingDictLevel:
     type: object
     description: |
@@ -12005,6 +12140,8 @@ definitions:
       - versionProperty
       - version
       - levels
+      - createdAt
+      - modifiedAt
     properties:
       aspect:
         type: string
@@ -12023,6 +12160,12 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/CascadingDictLevel'
+      createdAt:
+        type: string
+        format: date-time
+      modifiedAt:
+        type: string
+        format: date-time
       data:
         type: array
         items:
@@ -12088,3 +12231,51 @@ definitions:
           For leaf items, the children array is empty.
         items:
           $ref: '#/definitions/CascadingDictItem'
+  CascadingDictBodyCreate:
+    type: object
+    description: |
+      The object containing metadata needed to create a cascading dictionary definition. Example:
+      ```JSON
+      {
+          "name": "Accounts",
+          "aspect": "cdict:account",
+          "keyProperty": "accountNumber",
+          "versionProperty": "accountDictVersion"
+      }
+      ```
+    required:
+      - name
+      - aspect
+      - keyProperty
+      - versionProperty
+    properties:
+      name:
+        description: Name of the cascading dictionary
+        type: string
+      aspect:
+        description: |
+          The prefixed name of the aspect describing the cascading dictionary, e.g. 'cdict:account'.
+          The aspect must be already defined in the repository and registered as a cascading dictionary.
+          It must also contain at least the key and version properties defined below.
+        type: string
+      keyProperty:
+        type: string
+        description: The local name of the key property of the cascading dictionary, e.g. 'accountNumber'.
+      versionProperty:
+        type: string
+        description: The local name of the version property of the cascading dictionary, e.g. 'accountDictVersion'.
+  CascadingDictCreateEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/CascadingDictCreate'
+  CascadingDictCreate:
+    type: object
+    required:
+      - createdAt
+    properties:
+      createdAt:
+        type: string
+        format: date-time
