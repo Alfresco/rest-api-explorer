@@ -24,6 +24,10 @@ tags:
     description: Retrieve and execute actions
   - name: activities
     description: Retrieve and manage activities
+  - name: cascading-dictionaries
+    description: Retrieve and manage cascading dictionaries
+  - name: categories
+    description: Retrieve and manage categories
   - name: comments
     description: Retrieve and manage comments
   - name: downloads
@@ -56,8 +60,6 @@ tags:
     description: Storage information for content
   - name: tags
     description: Retrieve and manage tags
-  - name: categories
-    description: Retrieve and manage categories
   - name: trashcan
     description: Retrieve and manage deleted nodes
   - name: versions
@@ -556,6 +558,23 @@ parameters:
     description: |
       Action parameter constraint name to be returned in the response.
     type: string
+  aspectIdParam:
+    name: aspectId
+    in: path
+    description: The prefixed name of an aspect (`prefix:name`) e.g. 'cm:titled'
+    required: true
+    type: string
+  cascadingDictIncludeParam:
+    name: include
+    in: query
+    description: |
+      Returns additional information about the cascading dictionary. The following optional fields can be requested:
+      * data
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
 paths:
   '/nodes/{nodeId}/comments':
     get:
@@ -9253,7 +9272,114 @@ paths:
         '404':
           description: |
             **actionDefinitionId** or **targetId** does not exist
+  '/cascading-dictionaries':
+    get:
+      x-alfresco-since: "26.2"
+      tags:
+        - cascading-dictionaries
+      summary: List registered cascading dictionaries
+      description: |
+        **Note:** This endpoint is available in Alfresco Enterprise 26.2 and newer versions.
 
+        Gets a list of registered cascading dictionaries available in the system.
+        The latest version of each cascading dictionary is returned.
+
+      operationId: listCascadingDict
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/skipCountParam'
+        - $ref: '#/parameters/maxItemsParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CascadingDictList'
+        '400':
+          description: |
+            Invalid parameter: value of **maxItems** or **skipCount** is invalid
+        '401':
+          description: Authentication failed
+        '403':
+          description: Current user does not have permission to retrieve cascading dictionaries information
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/cascading-dictionaries/{aspectId}':
+    get:
+      x-alfresco-since: "26.2"
+      tags:
+        - cascading-dictionaries
+      summary: Get a registered cascading dictionary
+      description: |
+        **Note:** This endpoint is available in Alfresco Enterprise 26.2 and newer versions.
+
+        Gets the cascading dictionary registered in the system for **aspectId**.
+        The latest version of the cascading dictionary is returned.
+
+      operationId: getCascadingDict
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/aspectIdParam'
+        - $ref: '#/parameters/cascadingDictIncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CascadingDictEntry'
+        '400':
+          description: |
+            Invalid parameter: unknown **aspectId** scheme specified
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            Cascading dictionary for **aspectId** is not registered in the system
+        '403':
+          description: Current user does not have permission to retrieve cascading dictionaries information
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/cascading-dictionaries/{aspectId}/versions/{versionId}':
+    get:
+      x-alfresco-since: "26.2"
+      tags:
+        - cascading-dictionaries
+      summary: Get a specific version of a registered cascading dictionary
+      description: |
+        **Note:** This endpoint is available in Alfresco Enterprise 26.2 and newer versions.
+
+        Gets a specific version of the cascading dictionary registered in the system for **aspectId**.
+
+      operationId: getCascadingDictVersion
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/aspectIdParam'
+        - $ref: '#/parameters/versionIdParam'
+        - $ref: '#/parameters/cascadingDictIncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CascadingDictEntry'
+        '400':
+          description: |
+            Invalid parameter: unknown **aspectId** scheme specified
+        '401':
+          description: Authentication failed
+        '404':
+          description: |
+            Cascading dictionary for **aspectId** is not registered in the system or **versionId** does not exist for the cascading dictionary
+        '403':
+          description: Current user does not have permission to retrieve cascading dictionaries information
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -11780,3 +11906,185 @@ definitions:
         description: The Base64 encoded authorization key.
         type: string
         example: 5v02VjCqJmmOfs8My8yV1A7tcym2bIjA
+  CascadingDictList:
+    type: object
+    required:
+      - list
+    properties:
+      list:
+        type: object
+        required:
+          - pagination
+          - entries
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/CascadingDictDefEntry'
+  CascadingDictDefEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/CascadingDictDef'
+  CascadingDictDef:
+    type: object
+    required:
+      - aspect
+      - keyProperty
+      - versionProperty
+      - version
+      - levels
+    properties:
+      aspect:
+        type: string
+        description: |
+          The prefixed name of the aspect describing the cascading dictionary, e.g. 'cdict:account'.
+      keyProperty:
+        type: string
+        description: The prefixed name of the key property of the cascading dictionary, e.g. 'cdict:accountNumber'.
+      versionProperty:
+        type: string
+        description: The prefixed name of the version property of the cascading dictionary, e.g. 'cdict:accountDictVersion'.
+      version:
+        type: string
+        description: The version of the cascading dictionary definition, e.g. '1.5'.
+      levels:
+        type: array
+        items:
+          $ref: '#/definitions/CascadingDictLevel'
+  CascadingDictLevel:
+    type: object
+    description: |
+      An item in the cascading dictionary containing definitions of properties used at each entry level.
+      An example for the "Accounts" 2-level cascading dictionary:
+      ```JSON
+      "levels": [
+        {
+          "level": 0,
+          "properties": [
+            "cdict:accountCategory"
+          ]
+        },
+        {
+          "level": 1,
+          "properties": [
+            "cdict:accountNumber",
+            "cdict:accountName"
+          ]
+        }
+      ]
+      ```
+    required:
+      - level
+      - properties
+    properties:
+      level:
+        type: integer
+        description: The level number of the cascading dictionary definition (starting with 0 for the top level)
+      properties:
+        type: array
+        items:
+          type: string
+        description: The prefixed names of all properties at this level
+  CascadingDictEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/CascadingDict'
+  CascadingDict:
+    type: object
+    required:
+      - aspect
+      - keyProperty
+      - versionProperty
+      - version
+      - levels
+    properties:
+      aspect:
+        type: string
+        description: |
+          The prefixed name of the aspect describing the cascading dictionary, e.g. 'cdict:account'.
+      keyProperty:
+        type: string
+        description: The prefixed name of the key property of the cascading dictionary, e.g. 'cdict:accountNumber'.
+      versionProperty:
+        type: string
+        description: The prefixed name of the version property of the cascading dictionary, e.g. 'cdict:accountDictVersion'.
+      version:
+        type: string
+        description: The version of the cascading dictionary definition, e.g. '1.5'.
+      levels:
+        type: array
+        items:
+          $ref: '#/definitions/CascadingDictLevel'
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/CascadingDictItem'
+  CascadingDictItem:
+    type: object
+    description: |
+      An item in the cascading dictionary containing properties and related child entries.
+      An example item for the "Accounts" 2-level cascading dictionary:
+      ```JSON
+      {
+        "properties": {
+          "cdict:accountCategory": "Current Assets"
+        },
+        "children": [
+          {
+            "properties": {
+              "cdict:accountNumber": 1000,
+              "cdict:accountName": "Cash"
+            }
+          },
+          {
+            "properties": {
+              "cdict:accountNumber": 1100,
+              "cdict:accountName": "Accounts Receivable"
+            }
+          },
+          {
+            "properties": {
+              "cdict:accountNumber": 1200,
+              "cdict:accountName": "Inventory"
+            }
+          },
+          {
+            "properties": {
+              "cdict:accountNumber": 1300,
+              "cdict:accountName": "Prepaid Expenses"
+            }
+          },
+          {
+            "properties": {
+              "cdict:accountNumber": 1400,
+              "cdict:accountName": "Short-term Investments"
+            }
+          }
+        ]
+      }
+      ```
+    required:
+      - properties
+    properties:
+      properties:
+        description: |
+          A map (String-String) of properties for the given dictionary entry. The key is the prefixed name of the property.
+        type: object
+        additionalProperties:
+          type: string
+      children:
+        type: array
+        description: |
+          The child items of this item in the cascading dictionary hierarchy.
+          It is defined by the same object as the parent item, so it can be used recursively for any number of levels in the hierarchy.
+          For leaf items, the children array is empty.
+        items:
+          $ref: '#/definitions/CascadingDictItem'
