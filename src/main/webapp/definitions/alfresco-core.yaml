@@ -558,10 +558,10 @@ parameters:
     description: |
       Action parameter constraint name to be returned in the response.
     type: string
-  aspectIdParam:
+  cascadingDictAspectParam:
     name: aspectId
     in: path
-    description: The prefixed name of an aspect (`prefix:name`) e.g. 'cm:titled'
+    description: The prefixed name of an aspect (`prefix:name`) that represents the cascading dictionary, e.g. 'cdict:account'.
     required: true
     type: string
   cascadingDictIncludeParam:
@@ -9319,21 +9319,10 @@ paths:
         Only one cascading dictionary definition can be created for an aspect.
 
         You must specify:
-        - the name of the cascading dictionary
+        - the unique name of the cascading dictionary
         - the aspect that the cascading dictionary definition is based on
-        - the local name of the key property of the aspect that represents the dictionary key
-        - the local name of the version property of the aspect that represents the dictionary version
-
-        For example:
-
-        ```JSON
-        {
-            "name": "Accounts",
-            "aspect": "cdict:account",
-            "keyProperty": "accountNumber",
-            "versionProperty": "accountDictVersion"
-        }
-        ```
+        - the prefixed name of the key property of the aspect that represents the dictionary key
+        - the prefixed name of the version property of the aspect that represents the dictionary version
 
         You must have admin rights to create a cascading dictionary.
       operationId: createCascadingDict
@@ -9377,19 +9366,14 @@ paths:
       description: |
         **Note:** This endpoint is available in Alfresco Enterprise 26.2 and newer versions.
 
-        Updates the content of the cascading dictionary registered by **aspectId**.
-
-        The request body for this endpoint is a binary stream.
-        It must represent JSON content with the dictionary definition and data.
-        The structure of the JSON content must conform to the structure of the cascading dictionary definition for the aspect, including the key and version properties.
-
+        Uploads a new version of the content to the cascading dictionary registered by **aspectId**.
         The cascading dictionary is versionable. The **majorVersion** parameter can be used to control versioning behaviour.
         Without this parameter, a new minor version is created by default.
 
-        You must have admin rights to update cascading dictionary content.
+        You must have admin rights to update the cascading dictionary content.
       operationId: updateCascadingDictContent
       parameters:
-        - $ref: '#/parameters/aspectIdParam'
+        - $ref: '#/parameters/cascadingDictAspectParam'
         - name: majorVersion
           in: query
           description: |
@@ -9398,16 +9382,15 @@ paths:
           type: boolean
           default: false
         - in: body
-          name: contentBodyUpdate
-          description: The binary content
+          name: cascadingDictContentBody
+          description: The content of the cascading dictionary to upload.
           required: true
           schema:
-            type: string
-            format: binary
+            $ref: '#/definitions/CascadingDictContentBody'
       produces:
         - application/json
       consumes:
-        - application/octet-stream
+        - application/json
       responses:
         '200':
           description: Successful response
@@ -9449,7 +9432,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/aspectIdParam'
+        - $ref: '#/parameters/cascadingDictAspectParam'
         - $ref: '#/parameters/cascadingDictIncludeParam'
       responses:
         '200':
@@ -9483,7 +9466,7 @@ paths:
         You must have admin rights to update a cascading dictionary.
       operationId: updateCascadingDict
       parameters:
-        - $ref: '#/parameters/aspectIdParam'
+        - $ref: '#/parameters/cascadingDictAspectParam'
         - in: body
           name: cascadingDictBodyUpdate
           description: The cascading dictionary information to update.
@@ -9524,11 +9507,12 @@ paths:
 
         Deletes the cascading dictionary metadata and content for the specified aspect.
         All versions of the content will be deleted.
+        The aspect properties used to classify nodes will not be deleted.
 
         You must have admin rights to delete a cascading dictionary.
       operationId: deleteCascadingDict
       parameters:
-        - $ref: '#/parameters/aspectIdParam'
+        - $ref: '#/parameters/cascadingDictAspectParam'
       produces:
         - application/json
       responses:
@@ -9562,7 +9546,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/aspectIdParam'
+        - $ref: '#/parameters/cascadingDictAspectParam'
         - $ref: '#/parameters/versionIdParam'
         - $ref: '#/parameters/cascadingDictIncludeParam'
       responses:
@@ -12309,9 +12293,7 @@ definitions:
         type: object
         example: |
           {
-           "prefix:prop1": "string",
-           "prefix:prop2": 0,
-           "prefix:prop3": true
+           "prop1": "string"
           }
       children:
         type: array
@@ -12321,6 +12303,14 @@ definitions:
           For leaf items, the children array is empty.
         items:
           $ref: '#/definitions/CascadingDictItem'
+        example: |
+          [
+            {
+               "properties": {
+                 "prop2": 0
+               }
+             }
+          ]
   CascadingDictBodyCreate:
     type: object
     description: |
@@ -12329,8 +12319,8 @@ definitions:
       {
           "name": "Accounts",
           "aspect": "cdict:account",
-          "keyProperty": "accountNumber",
-          "versionProperty": "accountDictVersion"
+          "keyProperty": "cdict:accountNumber",
+          "versionProperty": "cdict:accountDictVersion"
       }
       ```
     required:
@@ -12340,7 +12330,7 @@ definitions:
       - versionProperty
     properties:
       name:
-        description: Name of the cascading dictionary
+        description: The unique name of the cascading dictionary.
         type: string
       aspect:
         description: |
@@ -12350,10 +12340,10 @@ definitions:
         type: string
       keyProperty:
         type: string
-        description: The local name of the key property of the cascading dictionary, e.g. 'accountNumber'.
+        description: The prefixed name of the key property of the cascading dictionary, e.g. 'cdict:accountNumber'.
       versionProperty:
         type: string
-        description: The local name of the version property of the cascading dictionary, e.g. 'accountDictVersion'.
+        description: The prefixed name of the version property of the cascading dictionary, e.g. 'cdict:accountDictVersion'.
   CascadingDictCreateEntry:
     type: object
     required:
@@ -12377,7 +12367,7 @@ definitions:
       - name
     properties:
       name:
-        description: Name of the cascading dictionary
+        description: The unique name of the cascading dictionary.
         type: string
   CascadingDictUpdateEntry:
     type: object
@@ -12394,3 +12384,88 @@ definitions:
       modifiedAt:
         type: string
         format: date-time
+  CascadingDictContentBody:
+    type: object
+    description: |
+      The object containing the content of the cascading dictionary to upload. Example:
+      ```JSON
+      {
+        "definition": {
+          "levels": [
+            {
+              "level": 0,
+              "properties": ["cdict:accountCategory"]
+            },
+            {
+              "level": 1,
+              "properties": ["cdict:accountNumber", "cdict:accountName"]
+            }
+          ]
+        },
+        "data": [
+          {
+            "properties": {
+              "cdict:accountCategory": "Current Assets"
+            },
+            "children": [
+              {
+                "properties": {
+                  "cdict:accountNumber": 1000,
+                  "cdict:accountName": "Cash"
+                }
+              },
+              {
+                "properties": {
+                  "cdict:accountNumber": 1100,
+                  "cdict:accountName": "Accounts Receivable"
+                }
+              },
+              {
+                "properties": {
+                  "cdict:accountNumber": 1200,
+                  "cdict:accountName": "Inventory"
+                }
+              },
+              {
+                "properties": {
+                  "cdict:accountNumber": 1300,
+                  "cdict:accountName": "Prepaid Expenses"
+                }
+              },
+              {
+                "properties": {
+                  "cdict:accountNumber": 1400,
+                  "cdict:accountName": "Short-term Investments"
+                }
+              }
+            ]
+          }
+        ]
+      }
+      ```
+    required:
+      - definition
+      - data
+    properties:
+      definition:
+        description: |
+          The level definitions for the cascading dictionary content, specifying the properties used at each level.
+          This is needed to correctly interpret the content data and validate it against the dictionary registered in the system.
+        type: object
+        $ref: '#/definitions/CascadingDictContentDef'
+      data:
+        description: |
+          The actual content of the cascading dictionary, organized in a hierarchical structure according to the levels defined in the definition object.
+          Each item contains a map of property values and an array of child items for the next level in the hierarchy.
+        type: array
+        items:
+          $ref: '#/definitions/CascadingDictItem'
+  CascadingDictContentDef:
+    type: object
+    required:
+      - levels
+    properties:
+      levels:
+        type: array
+        items:
+          $ref: '#/definitions/CascadingDictLevel'
