@@ -9529,8 +9529,6 @@ paths:
       operationId: deleteCascadingDict
       parameters:
         - $ref: '#/parameters/aspectIdParam'
-      consumes:
-        - application/json
       produces:
         - application/json
       responses:
@@ -12139,6 +12137,7 @@ definitions:
   CascadingDictDef:
     type: object
     required:
+      - name
       - aspect
       - keyProperty
       - versionProperty
@@ -12147,6 +12146,9 @@ definitions:
       - createdAt
       - modifiedAt
     properties:
+      name:
+        type: string
+        description: The name of the cascading dictionary, e.g. "Accounts".
       aspect:
         type: string
         description: |
@@ -12214,6 +12216,7 @@ definitions:
   CascadingDict:
     type: object
     required:
+      - name
       - aspect
       - keyProperty
       - versionProperty
@@ -12222,6 +12225,9 @@ definitions:
       - createdAt
       - modifiedAt
     properties:
+      name:
+        type: string
+        description: The name of the cascading dictionary, e.g. "Accounts".
       aspect:
         type: string
         description: |
@@ -12298,10 +12304,15 @@ definitions:
     properties:
       properties:
         description: |
-          A map (String-String) of properties for the given dictionary entry. The key is the prefixed name of the property.
+          A map of properties for the given dictionary entry. The key is the prefixed name of the property.
+          The value is a JSON value that can be deserialized according to aspect property definition (for example, a string or number).
         type: object
-        additionalProperties:
-          type: string
+        example: |
+          {
+           "prefix:prop1": "string",
+           "prefix:prop2": 0,
+           "prefix:prop3": true
+          }
       children:
         type: array
         description: |
