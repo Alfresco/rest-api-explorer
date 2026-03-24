@@ -9358,20 +9358,20 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   '/cascading-dictionaries/{aspectId}/content':
-    put:
+    post:
       x-alfresco-since: "26.2"
       tags:
         - cascading-dictionaries
-      summary: Update cascading dictionary content
+      summary: Create cascading dictionary content
       description: |
         **Note:** This endpoint is available in Alfresco Enterprise 26.2 and newer versions.
 
-        Uploads a new version of the content to the cascading dictionary registered by **aspectId**.
+        Creates a new content version of the cascading dictionary registered by **aspectId**.
         The cascading dictionary is versionable. The **majorVersion** parameter can be used to control versioning behaviour.
         Without this parameter, a new minor version is created by default.
 
         You must have admin rights to update the cascading dictionary content.
-      operationId: updateCascadingDictContent
+      operationId: createCascadingDictContent
       parameters:
         - $ref: '#/parameters/cascadingDictAspectParam'
         - name: majorVersion
@@ -9383,7 +9383,7 @@ paths:
           default: false
         - in: body
           name: cascadingDictContentBody
-          description: The content of the cascading dictionary to upload.
+          description: The content of the cascading dictionary.
           required: true
           schema:
             $ref: '#/definitions/CascadingDictContentBody'
