@@ -10465,6 +10465,9 @@ definitions:
         enum:
          - ALLOWED
          - DENIED
+      authorityDisplayName:
+        type: string
+        readOnly: true
   PermissionsInfo:
     type: object
     properties:
