@@ -16,6 +16,7 @@ on:
     - cron: '0 5 * * 3'
 
 env:
+  JAVA_VERSION: '17'
   MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
   MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
   GIT_USERNAME: ${{ secrets.BOT_GITHUB_USERNAME }}
