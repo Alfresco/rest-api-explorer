@@ -12,7 +12,7 @@ if [ -z "${RELEASE_VERSION}" ] || [ -z "${DEVELOPMENT_VERSION}" ]; then
 fi
 
 # Use full history for release
-git checkout -B master
+git checkout -B "${GITHUB_REF_NAME}"
 
 mvn release:clean release:prepare release:perform \
       -B \
