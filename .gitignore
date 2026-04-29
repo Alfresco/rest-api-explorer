@@ -19,3 +19,6 @@ buildNumber.properties
 # IntelliJ
 .idea
 *.iml
+
+# VS Code
+.vscode
