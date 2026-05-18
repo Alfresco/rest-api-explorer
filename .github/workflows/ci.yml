@@ -6,11 +6,13 @@ on:
       - master
       - fix/**
       - feature/**
+      - release/**
   push:
     branches:
       - master
       - fix/**
       - feature/**
+      - release/**
   workflow_dispatch:
   schedule:
     - cron: '0 5 * * 3'
@@ -76,7 +78,7 @@ jobs:
     needs: [publish]
     if: >
       !(failure() || cancelled()) && contains(github.event.head_commit.message, '[release]') &&
-      github.ref_name == 'master' && github.event_name != 'pull_request'
+      github.ref_name == 'release/25.N' && github.event_name != 'pull_request'
     steps:
       - uses: actions/checkout@v4
         with:
