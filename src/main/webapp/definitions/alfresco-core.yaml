@@ -9392,7 +9392,7 @@ paths:
       consumes:
         - application/json
       responses:
-        '200':
+        '201':
           description: Successful response
           schema:
             $ref: '#/definitions/CascadingDictEntry'
