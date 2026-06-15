@@ -67,7 +67,8 @@ paths:
         ```JSON
         "limits": {
           "permissionEvaluationTime": 20000,
-          "permissionEvaluationCount": 2000
+          "permissionEvaluationCount": 2000,
+          "trackTotalHitsLimit": -1
         }
         ```
 
@@ -1132,6 +1133,20 @@ definitions:
         description:  Maximum count of post query permission evaluations
         type: integer
         default: 2000
+      trackTotalHitsLimit:
+        description: |
+          Maximum count of total items to track accurately for search results.
+
+          Special values:
+          * -1: Unlimited tracking of total hits
+          * 0: Use default search engine setting
+          * Positive integer: Track total hits accurately up to this value
+
+          Default: 10000
+
+          Note: Tracking a large number of total hits may impact query performance for queries that match many documents.
+        type: integer
+        default: 10000
   RequestFacetIntervals:
     description: Facet Intervals
     type: object
