@@ -1963,7 +1963,7 @@ paths:
       summary: Checkout a node
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
-        
+
         Checks out the file node **nodeId** for offline editing.
 
         A private working copy is created and the original node is locked.
@@ -2010,7 +2010,7 @@ paths:
       summary: Cancel checkout for a node
       description: |
         **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
-        
+
         Cancel the checkout workflow for the node **nodeId**.
 
         The private working copy is deleted and the original node is unlocked.
@@ -2050,7 +2050,7 @@ paths:
             $ref: '#/definitions/Error'
   '/nodes/{nodeId}/move':
     post:
-      x-alfresco-since: "5.2"
+      x-alfresco-since:  "5.2"
       tags:
         - nodes
       summary: Move a node
