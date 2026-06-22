@@ -1962,6 +1962,8 @@ paths:
         - nodes
       summary: Checkout a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
         Checks out the file node **nodeId** for offline editing.
 
         A private working copy is created and the original node is locked.
@@ -1984,7 +1986,7 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a file node
+            Invalid parameter: **nodeId** is not a valid format, or is not a file node
         '401':
           description: Authentication failed
         '403':
@@ -2005,8 +2007,10 @@ paths:
       x-alfresco-since: "5.2"
       tags:
         - nodes
-      summary: Cancels the checkout workflow for a Node
+      summary: Cancel checkout for a node
       description: |
+        **Note:** this endpoint is available in Alfresco 5.2 and newer versions.
+        
         Cancel the checkout workflow for the node **nodeId**.
 
         The private working copy is deleted and the original node is unlocked.
@@ -2028,18 +2032,18 @@ paths:
             $ref: '#/definitions/NodeEntry'
         '400':
           description: |
-            Invalid parameter: **nodeId** is not a file node
+            Invalid parameter: **nodeId** is not a valid format, or is not a file node
         '401':
           description: Authentication failed
         '403':
           description: |
-            Current user does not have permission to checkout **nodeId**
+            Current user does not have permission to cancel checkout **nodeId**
         '404':
           description: |
             **nodeId** does not exist
         '409':
           description: |
-            **nodeId** is already checked out or locked
+            **nodeId** is not checked out
         default:
           description: Unexpected error
           schema:
