@@ -63,6 +63,23 @@ paths:
         ```
         This example would ensure that results are **limited by Final Size**, skipping the first 28 results and returning the next 50.
 
+        You can use the **searchAfterToken paging parameter** to page deep into large result sets without the performance cost of **skipCount**.
+        Send an empty **searchAfterToken** on the first page to opt in, for example:
+        ```JSON
+        "paging": {
+          "maxItems": 25,
+          "searchAfterToken": ""
+        }
+        ```
+        The response returns an opaque **nextSearchAfterToken** alongside the pagination information. Pass that value back as the **searchAfterToken** to retrieve the next page, for example:
+        ```JSON
+        "paging": {
+          "maxItems": 25,
+          "searchAfterToken": "eyJwaXRJZCI6Li4u"
+        }
+        ```
+        **Note:** this feature is only available in Alfresco Enterprise. The **nextSearchAfterToken** is **null** once the last page has been returned, and **searchAfterToken** cannot be combined with **skipCount**.
+
         Alternatively, you can limit the results by using the **limits JSON body parameter**. For example,
         ```JSON
         "limits": {
@@ -1004,6 +1021,14 @@ definitions:
         type: integer
         minimum: 0
         default: 0
+      searchAfterToken:
+        description: |
+          An opaque cursor used for deep pagination, as an alternative to **skipCount**.
+          Send an empty string to start a new sequence on the first page.
+          For subsequent pages, pass the **nextSearchAfterToken** value returned in the previous
+          response's **pagination** block. Cannot be combined with **skipCount**.
+          Available in Alfresco Enterprise only.
+        type: string
   Pagination:
     type: object
     required:
@@ -1042,6 +1067,12 @@ definitions:
         description: |
           The value of the **maxItems** parameter used to generate this list,
           or if there was no **maxItems** parameter the default value is 100
+      nextSearchAfterToken:
+        type: string
+        description: |
+          An opaque cursor for fetching the next page, used together with the **searchAfterToken**
+          paging parameter on the request. This value is **null** once the last page has been returned.
+          Available in Alfresco Enterprise only.
   ResponseConsistency:
     description: The consistency state of the index used to execute the query
     type: object
