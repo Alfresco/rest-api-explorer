@@ -19,8 +19,6 @@ env:
   JAVA_VERSION: '21'
   MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
   MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-  GIT_USERNAME: ${{ secrets.BOT_GITHUB_USERNAME }}
-  GIT_PASSWORD: ${{ secrets.BOT_GITHUB_TOKEN }}
   RELEASE_VERSION: "26.2.0"
   DEVELOPMENT_VERSION: "26.3.0-A.1-SNAPSHOT"
   MAVEN_CLI_OPTS: "-B -q -e -fae -V -DinstallAtEnd=true -U"
@@ -85,17 +83,27 @@ jobs:
       !(failure() || cancelled()) && contains(github.event.head_commit.message, '[release]') &&
       github.ref_name == 'master' && github.event_name != 'pull_request'
     steps:
-      - uses: actions/checkout@v4
+      - name: "Generate GitHub App token"
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
-          persist-credentials: false
+          client-id: ${{ vars.GH_APP_ENGINEERING_CONTRIB_CLIENT_ID }}
+          private-key: ${{ secrets.GH_APP_ENGINEERING_CONTRIB_PRIVATE_KEY }}
+          owner: Alfresco
+          repositories: rest-api-explorer
+          permission-contents: write
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+      - name: "Create local release branch"
+        run: git checkout -B "${{ github.ref_name }}"
       - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v8.16.0
       - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v8.16.0
         with:
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: Alfresco/alfresco-build-tools/.github/actions/configure-git-author@v8.16.0
-        with:
-          username: ${{ secrets.BOT_GITHUB_USERNAME }}
-          email: ${{ secrets.BOT_GITHUB_EMAIL }}
-          global: true
       - name: "Release"
-        run: bash CI/release.sh
+        uses: Alfresco/alfresco-build-tools/.github/actions/maven-release-slim@30c1953fd4ad6e52062d7eba444298fe1701d1df # v18.22.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          release-version: ${{ env.RELEASE_VERSION }}
+          development-version: ${{ env.DEVELOPMENT_VERSION }}
