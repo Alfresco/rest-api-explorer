@@ -27,8 +27,8 @@ jobs:
           client-id: ${{ vars.GH_APP_ENGINEERING_CONTRIB_CLIENT_ID }}
           private-key: ${{ secrets.GH_APP_ENGINEERING_CONTRIB_PRIVATE_KEY }}
           owner: Alfresco
-          repositories: alfresco-enterprise-repo
-          permission-contents: read
+          repositories: alfresco-enterprise-repo,rest-api-explorer
+          permission-contents: write
 
       - name: Checkout AGS definition
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -45,8 +45,10 @@ jobs:
           cp enterprise-repo/${{ env.AGS_FILE_PATH }} ${{ env.LOCAL_DEFS_DIR }}/
           rm -rf enterprise-repo
 
-      - name: Git Auto Commit
-        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+      - name: Commit AGS definition update
+        uses: iarekylew00t/verified-bot-commit@33985d44b7719dcaf0b854a0f4b0caad9bdc5b86 # v2.3.3
         with:
-          commit_message: "Sync AGS definition from ${{ env.AGS_REPO }}"
-          branch: master
+          token: ${{ steps.app-token.outputs.token }}
+          ref: master
+          files: ${{ env.LOCAL_DEFS_DIR }}/gs-classification-api.yaml
+          message: "Sync AGS definition from ${{ env.AGS_REPO }}"
