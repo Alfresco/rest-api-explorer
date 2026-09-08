@@ -22,6 +22,8 @@ tags:
     description: Retrieve and manage aspects
   - name: types
     description: Retrieve and manage types
+  - name: namespace-prefix
+    description: Retrieve namespace to prefix mappings
 
 parameters:
   skipCountParam:
@@ -376,6 +378,48 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  '/namespace-prefix':
+    get:
+      tags:
+        - namespace-prefix
+      summary: Get namespace URI to prefix mappings
+      description: |
+        Gets a mapping from namespace URIs to prefixes from the NamespaceService.
+        ```JSON
+        {
+          "list": {
+            "pagination": {
+              "count": 1,
+              "hasMoreItems": false,
+              "totalItems": 1
+            },
+            "entries": [
+              {
+                "entry": {
+                  "prefixUriMap": {
+                    "http://www.alfresco.org/model/content/1.0": "cm",
+                    "http://www.alfresco.org/model/system/1.0": "sys"
+                  }
+                }
+              }
+            ]
+          }
+        }
+        ```
+      operationId: getNamespacePrefixes
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NamespacePrefixPaging'
+        '401':
+          description: Authentication failed
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -616,3 +660,30 @@ definitions:
         type: boolean
       isMandatoryEnforced:
         type: boolean
+  NamespacePrefixPaging:
+    type: object
+    properties:
+      list:
+        type: object
+        properties:
+          pagination:
+            $ref: '#/definitions/Pagination'
+          entries:
+            type: array
+            items:
+              $ref: '#/definitions/NamespacePrefixEntry'
+  NamespacePrefixEntry:
+    type: object
+    required:
+      - entry
+    properties:
+      entry:
+        $ref: '#/definitions/NamespacePrefix'
+  NamespacePrefix:
+    type: object
+    properties:
+      prefixUriMap:
+        type: object
+        additionalProperties:
+          type: string
+        description: Map from namespace URIs to their corresponding prefixes
