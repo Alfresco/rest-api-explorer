@@ -2363,14 +2363,12 @@ paths:
       description: |
         ***Receiving the size***
         This endpoint takes ```nodeId``` and ```jobId``` as the path parameters and returns the result after executing above GET request.
-        The size details job can be in one of the following states:
+        The size details job can be in one of three states:
 
         ```
-           NOT_INITIATED: Not Initiated yet.
-           PENDING:       The request has been accepted and is waiting to be processed.
-           IN_PROGRESS:   Calculation is in progress.
+           NOT-INITIATED: Not Initiated yet.
+           IN-PROGRESS:   Calculation is in progress.
            COMPLETED:     Calculation has been done.
-           FAILED:        Calculation failed.
         ```
 
       operationId: getNodeSizeDetails
@@ -2383,7 +2381,7 @@ paths:
         '200':
           description: Successful Response
           schema:
-            $ref: '#/definitions/getNodeSizeDetailsResponseEntry'
+            $ref: '#/definitions/getNodeSizeDetailsResponse'
         '401':
           description: Authentication failed
         '403':
@@ -11358,13 +11356,6 @@ definitions:
         $ref: '#/definitions/PermissionsInfo'
       definition:
         $ref: '#/definitions/Definition'
-  getNodeSizeDetailsResponseEntry:
-    type: object
-    required:
-      - entry
-    properties:
-      entry:
-        $ref: '#/definitions/getNodeSizeDetailsResponse'
   getNodeSizeDetailsResponse:
     type: object
     properties:
@@ -11372,8 +11363,7 @@ definitions:
         type: string
         description: Provides the nodeId for which POST/size-details has been initiated.
       sizeInBytes:
-        type: integer
-        format: int64
+        type: string
         description: The folder size in bytes.
       calculatedAt:
         type: string
@@ -11383,20 +11373,12 @@ definitions:
         description: Provides the number of files in the folder.
       status:
         type: string
-        enum:
-          - NOT_INITIATED
-          - PENDING
-          - IN_PROGRESS
-          - COMPLETED
-          - FAILED
         description: |
                       Provides a status that signifies the completion of the calculateSize mechanism.
                       ```
-                      NOT_INITIATED: Not Initiated yet.
-                      PENDING: The request has been accepted and is waiting to be processed.
-                      IN_PROGRESS: Calculation is in progress.
+                      NOT-INITIATED: Not Initiated yet.
+                      IN-PROGRESS: Calculation is in progress.
                       COMPLETED: Calculation has been done.
-                      FAILED: Calculation failed.
 
                       ```
       jobId:
