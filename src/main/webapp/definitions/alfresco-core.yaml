@@ -11377,6 +11377,7 @@ definitions:
         description: The folder size in bytes.
       calculatedAt:
         type: string
+        format: date-time
         description: Provides the timestamp when the calculation of folder size is completed.
       numberOfFiles:
         type: integer
@@ -11401,7 +11402,7 @@ definitions:
                       ```
       jobId:
         type: string
-        description: Provides the getId for which POST/size-details has been initiated.
+        description: Provides the jobId for which POST/size-details has been initiated.
   ProbeEntry:
     type: object
     required:
