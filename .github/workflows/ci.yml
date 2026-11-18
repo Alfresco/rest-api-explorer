@@ -26,7 +26,7 @@ jobs:
   pre_commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: Alfresco/alfresco-build-tools/.github/actions/pre-commit@f3b931eb59ada4485cdf7440ae3c65ce34f0a749 # v19.12.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/pre-commit@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
 
   build:
     name: "Build"
@@ -37,8 +37,8 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@f3b931eb59ada4485cdf7440ae3c65ce34f0a749 # v19.12.0
-      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@f3b931eb59ada4485cdf7440ae3c65ce34f0a749 # v19.12.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
         with:
           java-version: ${{ env.JAVA_VERSION }}
       - uses: Alfresco/alfresco-build-tools/.github/actions/cloudsmith-auth@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
@@ -60,8 +60,8 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip tests]')"
     steps:
       - uses: actions/checkout@v4
-      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@f3b931eb59ada4485cdf7440ae3c65ce34f0a749 # v19.12.0
-      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@f3b931eb59ada4485cdf7440ae3c65ce34f0a749 # v19.12.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
         with:
           java-version: ${{ env.JAVA_VERSION }}
       - uses: Alfresco/alfresco-build-tools/.github/actions/cloudsmith-auth@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
@@ -91,15 +91,15 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           token: ${{ steps.app-token.outputs.token }}
-      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@f3b931eb59ada4485cdf7440ae3c65ce34f0a749 # v19.12.0
-      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@f3b931eb59ada4485cdf7440ae3c65ce34f0a749 # v19.12.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
         with:
           java-version: ${{ env.JAVA_VERSION }}
       - uses: Alfresco/alfresco-build-tools/.github/actions/cloudsmith-auth@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
         with:
           oidc-namespace: ${{ vars.CLOUDSMITH_NAMESPACE }}
       - name: "Release"
-        uses: Alfresco/alfresco-build-tools/.github/actions/maven-release-slim@f3b931eb59ada4485cdf7440ae3c65ce34f0a749 # v19.12.0
+        uses: Alfresco/alfresco-build-tools/.github/actions/maven-release-slim@3bbbfc459dd15452e68e3cefcbc56596d88d71ee # v19.15.0
         with:
           token: ${{ steps.app-token.outputs.token }}
           release-version: ${{ env.RELEASE_VERSION }}
