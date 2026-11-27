@@ -14,7 +14,6 @@ repos:
     rev: v4.0.4
     hooks:
       - id: swagger-validation
-        language_version: 20.18.0
         name: Check Alfresco OpenAPI 2.0 definition
         files: (alfresco).*\.(json|ya?ml)$
         args: ["validate"]
